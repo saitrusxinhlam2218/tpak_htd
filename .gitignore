@@ -22,6 +22,10 @@ dr_maint
 fl_maint
 vh_maint
 async
+up_maint
+zn_maint
+mf_maint
+geo_maint
 
 # Shared objects (inc. Windows DLLs)
 *.dll
