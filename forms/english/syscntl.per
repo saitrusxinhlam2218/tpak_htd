@@ -1,0 +1,91 @@
+{
+|***********************************************************************
+|                 RCS INFO
+|
+|  @(#)  $RCSfile: syscntl.per,v $
+|  @(#)  $Revision: 1.2 $
+|  @(#)  $Date: 1999/03/19 21:27:04 $
+|  @(#)  $Author: taxiadm $
+|  @(#)  $Source: /taxi-scan/taxi_proj/cvs/taxi-scan/src/forms/english/syscntl.per,v $
+|
+|  Copyright (c) 1994 - MobileSoft Consulting, Inc. Woodinville WA
+|
+|**********************************************************************/
+|ident "@(#) head:$RCSfile: syscntl.per,v $	$Revision: 1.2 $"
+}
+database mads
+screen
+{
+						SYSTEM CONTROL FILE MAINTENANCE
+                                                                             1. CALLS by call due time 
+    Day Start Time  	Day End Time  		Start Production Run Time    2. OLD CALLS by cab number by due time 
+	[f000]         	   [f001]        		[f002]               3. USER ACTIVITY by user type by user id 
+								             4. DRIVER ACTIVITY by driver id     
+Fleet  #             Reports to Produce             Reports to Print         5. VEHICLE ACTIVITY by vehicle number 		 
+                     11111111112222222222  	      11111111112222222222   6. CALL DISTRIBUTION by zone by due time 		  
+            12345678901234567890123456789    12345678901234567890123456789   7. CALL DISTRIBUTION by cab by due time 
+ [i]  [a]  [f003                         ]  [f004                         ]  8. CALL DISTRIBUTION by call type by zone 	  
+ [j]  [b]  [f005                         ]  [f006                         ]  9. UNZONED CALLS by pickup street name  
+ [k]  [c]  [f007                         ]  [f008                         ] 10. DRIVER MESSAGES by driver by time	   
+ [l]  [d]  [f009                         ]  [f010                         ] 11. EMERGENCIES by time of day 			  
+ [m]  [e]  [f011                         ]  [f012                         ] 12. MANUALLY DISPATCHED CALLS by dispatcher by due time 
+ [n]  [f]  [f013                         ]  [f014                         ] 13. SYSTEM ERRORS by time of day 		  
+ [o]  [g]  [f015                         ]  [f016                         ] 14. SUSPENDED DRIVERS by driver name    
+ [p]  [h]  [f017                         ]  [f018                         ] 15. CHARGE ACCOUNT ACTIVITY by account number 	 
+                                                                            16. CALLBACK CALLS REPORT by driver number 		 
+ Send Mail    System Mgr     Customer Aging	Keep Data        	    18. AVERAGE PICKUP TIME by zone by time 	 
+  [q]         [f019     ]        [f20]          [r ]			    19. AVERAGE FARE DURATION by zone by time
+									    20. CREDIT CARD TRANS. 21. AUTOBOOK ACTIVITY
+}
+end
+tables
+syscntl
+fleet
+attributes
+f000 = syscntl.ss_day_start,include=(0to 59,100 to 159,200 to 259,300 to 359,400 to 459, 500 to 559,600 to 659,700 to 759,
+800 to 859,900 to 959,1000 to 1059,1100 to 1159,1200 to 1259,1300 to 1359,1400 to 1459,1500 to 1559,1600 to 1659,1700 to 1759,
+1800 to 1859,1900 to 1959,2000 to 2059,2100 to 2159,2200 to 2259,2300 to 2359),RIGHT,COMMENTS="Starting time for a complete work day";
+f001 = syscntl.ss_day_end,include=(0to 59,100 to 159,200 to 259,300 to 359,400 to 459, 500 to 559,600 to 659,700 to 759,
+800 to 859,900 to 959,1000 to 1059,1100 to 1159,1200 to 1259,1300 to 1359,1400 to 1459,1500 to 1559,1600 to 1659,1700 to 1759,
+1800 to 1859,1900 to 1959,2000 to 2059,2100 to 2159,2200 to 2259,2300 to 2359),RIGHT,COMMENTS="Ending time for a complete work day";
+f002 = syscntl.ss_prod_start_tm,include=(0to 59,100 to 159,200 to 259,300 to 359,400 to 459, 500 to 559,600 to 659,700 to 759,
+800 to 859,900 to 959,1000 to 1059,1100 to 1159,1200 to 1259,1300 to 1359,1400 to 1459,1500 to 1559,1600 to 1659,1700 to 1759,
+1800 to 1859,1900 to 1959,2000 to 2059,2100 to 2159,2200 to 2259,2300 to 2359),RIGHT,COMMENTS="Time of day to start the daily production run";
+a    = syscntl.ss_0index,UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="Fleet ID",lookup i = fleet.fl_id joining *fleet.fl_nbr;
+f003 = syscntl.ss_gen_rpt0_n,UPSHIFT,COMMENTS="A (Y/N) flag for each report";
+f004 = syscntl.ss_print_rpt0_n,UPSHIFT,COMMENTS="A (Y/N) flag for each report";
+b    = ss_index1,UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="Fleet ID",DEFAULT = 1,lookup j = fleet.fl_id joining fleet.fl_nbr;
+f005 = syscntl.ss_gen_rpt1_n,UPSHIFT,COMMENTS="A (Y/N) flag for each report";
+f006 = syscntl.ss_print_rpt1_n,UPSHIFT,COMMENTS="A (Y/N) flag for each report"; c    = ss_index2,UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="Fleet ID",DEFAULT = 2,lookup k = fleet.fl_id joining fleet.fl_nbr; f007 = syscntl.ss_gen_rpt2_n,UPSHIFT,COMMENTS="A (Y/N) flag for each report";
+f008 = syscntl.ss_print_rpt2_n,UPSHIFT,COMMENTS="A (Y/N) flag for each report";
+d    = ss_index3,UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="Fleet ID",DEFAULT = 3,lookup l = fleet.fl_id joining fleet.fl_nbr;
+f009 = syscntl.ss_gen_rpt3_n,UPSHIFT,COMMENTS="A (Y/N) flag for each report";
+f010 = syscntl.ss_print_rpt3_n,UPSHIFT,COMMENTS="A (Y/N) flag for each report";
+e    = ss_index4,UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="Fleet ID",DEFAULT = 4,lookup m = fleet.fl_id joining fleet.fl_nbr;
+f011 = syscntl.ss_gen_rpt4_n,UPSHIFT,COMMENTS="A (Y/N) flag for each report";
+f012 = syscntl.ss_print_rpt4_n,UPSHIFT,COMMENTS="A (Y/N) flag for each report";
+f    = ss_index5,UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="Fleet ID",DEFAULT = 5,lookup n = fleet.fl_id joining fleet.fl_nbr;
+f013 = syscntl.ss_gen_rpt5_n,UPSHIFT,COMMENTS="A (Y/N) flag for each report";
+f014 = syscntl.ss_print_rpt5_n,UPSHIFT,COMMENTS="A (Y/N) flag for each report";
+g    = ss_index6,UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="Fleet ID",DEFAULT = 6,lookup o = fleet.fl_id joining fleet.fl_nbr;
+f015 = syscntl.ss_gen_rpt6_n,UPSHIFT,COMMENTS="A (Y/N) flag for each report";
+f016 = syscntl.ss_print_rpt6_n,UPSHIFT,COMMENTS="A (Y/N) flag for each report";
+h    = ss_index7,UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="Fleet ID",DEFAULT = 7,lookup p = fleet.fl_id joining fleet.fl_nbr;
+f017 = syscntl.ss_gen_rpt7_n,UPSHIFT,COMMENTS="A (Y/N) flag for each report";
+f018 = syscntl.ss_print_rpt7_n,UPSHIFT,COMMENTS="A (Y/N) flag for each report";
+q    = syscntl.ss_send_mail,UPSHIFT,COMMENTS="Send purge report to system manager";
+f019 = syscntl.ss_system_mgr,COMMENTS="Login Name of System Manager";
+f20  = syscntl.ss_keep_cust_days, COMMENTS="Number of days to keep idle customer record";
+r    = syscntl.ss_keep_data_days, COMMENTS="How many days of data to keep in TaxiPak database";
+
+instructions
+after display of syscntl
+let a = 0
+let b = 1
+let c = 2
+let d = 3
+let e = 4
+let f = 5
+let g = 6
+let h = 7
+end

@@ -1,0 +1,792 @@
+static char sz__FILE__[]="@(#)up_maint.c	10.1(ver) Date Release 12/2/94" ;
+ /****************************************************************************
+ *                                                                           *
+ *                           S C C S   I N F O                               *
+ *                                                                           *
+ * @(#)  up_maint.c; Rel: 10.1.0.0; Get date: 4/18/95 at 16:48:26
+ * @(#)  Last delta: 12/2/94 at 11:39:47
+ * @(#)  SCCS File: /taxi/sccs/s.up_maint.c
+ *                                                                           *
+ *****************************************************************************/
+
+#include <pwd.h>
+#include <stdio.h>
+#include <errno.h>
+#include <sys/types.h>
+#include <sys/ipc.h>
+#include <isam.h>
+#include <cursesX.h>
+#include <signal.h>
+
+#define DECLARING
+#include "comm_strdefs.h"
+#include "up_m_strdefs.h"
+#include "path.h"
+#include "mads_types.h"
+#include "key.h"
+#include "Fleet_db.h"
+#include "up_maint.h"
+#include "literals.h"
+#include "mad_error.h"
+#include "menu.h"
+#include "userpwd.h"
+#include "language.h"
+
+#define FEXIST		0
+
+/*  Declare an array of pointers to functions which check the field entered
+ *  for validity.  
+ */
+
+extern int (*check_field[])();	/* Array of pointers to routines to 
+				   validate the data input by the user */
+int bAttrSelect;
+
+extern struct up_scr_fields up_scr_flds[];
+extern int up_cl_flds();
+extern int read_field();
+extern char buf[];		/* buffer used for interface to db routine */
+extern char req_buf[];		/* buffer used for interface to db routine */
+extern int iserrno;		/* C-isam error number */
+extern int errno;		/* Error number returned from system calls */
+
+char o_file[F_NAME_SIZE];	/* output file as specified by the user */
+char mode[2];			/* user specifies Append or Create */
+
+extern int prt_query_hdr(), prt_add_hdr();
+extern int prt_scr(), process_intr();
+extern void prt_hdr(), prt_labels();
+extern char read_request(), prompt_confirm();
+extern int prompt_fname(), prompt_mode();
+extern int prt_data(), process_input(), send_ipc();
+extern int prt_upd_hdr(), prt_error(), prt_cisam_err();
+extern int prt_unix_err(), clear_flds();
+extern int clear_err_line(), clear_hdr_line();
+extern int process_query(), process_next();
+extern int process_previous(), process_add();
+extern int process_update(), process_remove(), process_output();
+int name_flag = 0;
+int usr_id_flag = 0;
+int ret_val;			/* return value  */
+int intr_allowed;		/* interrupts allowed */
+int saw_intr;			/* indicates an interrupt signal was entered */
+char intr_char;			/* interrupt character */
+int end_read_field;		/* flag, 0/1, set to end read_field function */
+short ipc_required;		/* Set if a field changed which is in shared memory */
+char read_buf[BUFFER_SIZE];	/* buffer for reading fields */
+int piu = 3;			/* field number to start reading input from */
+int field_entered;		/* field entered or not */
+int key_val;			/* value of key entered */
+int cur_list;			/* Indicates a row is in the current list */
+int record_nbr;			/* C-ISAM record number */
+int err_n_fld;			/* set if an error in field condition exists */
+int doing_add;			/* performing add operation */
+int fl_flags;
+int city_flags;
+int file_open;			/* set this flag to 1 when the user file is opened and check it in cleanup */
+char fl_names[FLEET_MAX][21];	/* Stores fleet names for fld_desc() */
+char mf_names[MENU_MAX][34];	/* Stores menu names for fld_desc() */
+char eg_names[12][8];		/* Stores exception group names for fld_desc() */
+char et_names[32][31]; 		/* Stores exception type names for fld_desc() */
+char channel_names[18][32];
+
+struct df_maint df_maint_ipc;	/* structure for passing information 
+				   to dispatch  */
+struct cisam_up *up_ptr;	/* pointer to user profile file structure */
+struct cisam_up *temp_up_ptr;
+struct cisam_up temp_up_buf;
+
+struct offsets *offset;		/* shared memory offset for redundant db routine */
+struct offsets *get_offsets();
+
+/*****************************************************************************
+*  up_maint - main for the user profile file maintenance program.
+*******************************************************************************/
+
+main(argc,argv)
+int argc;
+char *argv[];
+{
+	char request;			/*  User request : Q, N, P, A, U, R, O, or E */
+
+	/*
+	 * Set up for internationalization by setting the locale and opening the catalog
+	 */
+	setlocale(LC_ALL, "");
+	open_catalog(&COMMON_m_catd, "common", 0, 0);
+	open_catalog(&UP_MAINT_m_catd, "up_maint", 0, 0);
+	open_catalog(&LITERAL_m_catd, "literals", 0, 0);
+
+	file_open = 0;
+
+
+	init();
+	if(argc == 3)  { 	/* program was called to add a default user */
+		if (atoi(argv[2]) == 910) /* removed user */
+			rem_login(argv[1]);  /* user name */
+
+		else	/* add a user to the profile table */
+			add_default(argv[1],atoi(argv[2]));  /* user name, user type */
+
+		cleanup();
+	}
+
+#ifdef DEBUG
+	sprintf(trace_str,"Entering up_maint\n");
+	TRACE(trace_str);
+#endif
+	temp_up_ptr = (struct cisam_up *)req_buf;
+	temp_up_ptr = &temp_up_buf;
+	prt_hdr();
+	prt_labels();
+
+	/*  Get the first record from the user profile file */
+
+	up_ptr->user_id = 0;
+	if((db(USER_FILE_ID,READ_KEYS,&up_key1,ISGTEQ,0)) < 0)  {
+		prt_error(catgets(UP_MAINT_m_catd, UP_MAINT_SET, UP_MAINT_2, "No record found, ADD first !"));
+#ifdef DEBUG
+	sprintf(trace_str,"Leaving up_maint - 1\n");
+	TRACE(trace_str);
+#endif
+	}
+	else  {
+
+	/*  Display the data from the first record */
+
+		prt_data();
+
+		record_nbr = isrecnum; 	/* save record number for future read */
+		cur_list = 1;		/* valid row in current list */
+	}
+
+	/*  Input the users request (Query, Next, Previous, Add, Update,
+	    Remove, Output, Exit).  					*/
+
+	 while(request = read_request())  {
+		usr_id_flag = 0;
+		fl_flags = 1;
+		city_flags = 0;
+		err_n_fld = 0;
+		ipc_required = 0;
+	    	switch(request)  {
+			case M_QUERY:
+				clear_err_line();
+				process_query();
+				break;
+
+			case M_NEXT:
+				clear_err_line();
+				process_next();
+				break;
+
+			case M_PREVIOUS:
+				clear_err_line();
+				process_previous();
+				break;
+
+			case M_ADD:
+				clear_err_line();
+				process_add();
+				/* No ipc_send for add since
+				   no user with new id is logged in yet */
+				break;
+
+			case M_UPDATE:
+				clear_err_line();
+				process_update();
+				/*****
+				  Dispatch ignores ipc request from up_maint.
+				  No point in sending anything out over ipc.
+				if (ipc_required)
+				  send_ipc();
+				**********/
+				break;
+
+			case M_REMOVE:
+				clear_err_line();
+				process_remove();
+				/*****
+				  Dispatch ignores ipc request from up_maint.
+				  No point in sending anything out over ipc.
+				if (ipc_required)
+				  send_ipc();
+				**********/
+				break;
+
+			case M_OUTPUT:
+				clear_err_line();
+				process_output();
+				break;
+		
+			case M_EXIT:
+#ifdef DEBUG
+	sprintf(trace_str,"Leaving up_maint - 2\n");
+	TRACE(trace_str);
+#endif
+				cleanup();
+				break;
+
+			default:
+#ifdef DEBUG
+	sprintf(trace_str,"Leaving up_maint - 3\n");
+	TRACE(trace_str);
+#endif
+				cleanup();
+				break;
+		}
+	    }
+
+#ifdef DEBUG
+	sprintf(trace_str,"Leaving up_maint - 4\n");
+	TRACE(trace_str);
+#endif
+	    cleanup();
+	    catclose(COMMON_m_catd);
+	    catclose(UP_MAINT_m_catd);
+	    catclose(LITERAL_m_catd); 
+
+
+}  /* End of main */
+
+
+/******************************************************************************
+* init - open files, initialize variables, setup signals, prepare curses.
+*******************************************************************************/
+
+init()
+{
+	struct cisam_fl *fl_ptr;	/* Pointer to fleet file structure */
+	struct cisam_mf *mf_ptr;	/* Pointer to menu file structure */
+	struct cisam_eg *eg_ptr;	/* Pointer to exception group structure */
+	struct cisam_et *et_ptr;	/* Pointer to exception type structure */
+	struct cisam_channel *channel_ptr;
+	int	x, i;			/* Temp counter */
+
+#ifdef DEBUG
+	if((trace_fp = fopen(TRACE_FILE,"w")) == NULL)  {
+		prt_error(TRACE_OPEN_ERR);
+		sleep(3);
+		ERROR(' ',PROFILE_FILE,"Unable to open trace file");
+		cleanup();
+	}
+
+	sprintf(trace_str,"Entering init\n");
+	TRACE(trace_str);
+#endif
+
+	intr_allowed = 0;	/* interrupts not allowed */
+	saw_intr = 0;		/* an interrupt signal has not been entered */
+	cur_list = 0;		/* no row in current list */
+	initscr();
+	noecho();
+/*
+	keypad(stdscr,TRUE);
+*/
+	term_setup(getenv("TERM"));
+	config_tty();
+
+	cbreak();
+
+	if((offset = get_offsets()) == 0)  {
+		prt_error(NO_ATTACH);
+		sleep(3);
+		cleanup();
+	}
+
+	signal(SIGQUIT,SIG_IGN);
+	signal(SIGINT,process_intr);
+	signal(SIGTERM,cleanup);
+	signal(SIGHUP,cleanup);
+	signal(SIGPIPE,cleanup);
+	signal(SIGTSTP, SIG_IGN);
+
+	/*  Get fleet names from fleet file */
+
+	fl_ptr = (struct cisam_fl *) req_buf;
+
+	if((db(FLEET_FILE_ID,OPEN,&fl_key2,ISINOUT+ISMANULOCK,0)) < 0)  {   
+		prt_error(FLEET_OPEN_ERR);
+		sleep(3);
+		prt_cisam_err(iserrno,FLEET_OPEN_ERR);
+		ERROR(' ',FLEET_FILE,"Unable to open fleet file");
+#ifdef DEBUG
+	sprintf(trace_str,"Leaving init - fleet file open error\n");
+	TRACE(trace_str);
+#endif
+		cleanup();
+	}
+
+	if((db(FLEET_FILE_ID,READ_KEYS,&fl_key2,ISFIRST,0)) < 0)
+			fl_names[0][0] = '\0';
+		else
+			strcpy(fl_names[fl_ptr->nbr], fl_ptr->name);
+
+	for(x = 1; x < FLEET_MAX; x++)
+		if((db(FLEET_FILE_ID,READ_KEYS,&fl_key2,ISNEXT,0)) < 0)  	
+			fl_names[fl_ptr->nbr][0] = '\0';
+		else
+			strcpy(fl_names[fl_ptr->nbr], fl_ptr->name);
+	
+	/* Close the fleet file */
+
+	if((db(FLEET_FILE_ID,CLOSE,&fl_key2,ISEQUAL,0)) < 0)  {
+		prt_error(FLEET_CLOSE_ERR);
+		prt_cisam_err(iserrno,FLEET_CLOSE_ERR);
+		ERROR(' ',FLEET_FILE,"Unable to close fleet file");
+	}
+
+	/* Get the menu names from the menu file */
+
+	mf_ptr = (struct cisam_mf *) req_buf;
+
+	if((db(MENU_FILE_ID,OPEN,&mf_key1,ISINOUT+ISMANULOCK,0)) < 0)  {   
+                prt_error(catgets(UP_MAINT_m_catd, UP_MAINT_SET, UP_MAINT_3, "Unable to open menu file"));
+		sleep(3);
+                prt_cisam_err(iserrno,catgets(UP_MAINT_m_catd, UP_MAINT_SET, UP_MAINT_3, "Unable to open menu file"));
+		ERROR(' ',MENU_FILE,"Unable to open menu file");
+#ifdef DEBUG
+	sprintf(trace_str,"Leaving init - menu file open error\n");
+	TRACE(trace_str);
+#endif
+		cleanup();
+	}
+
+	mf_ptr->command = 0;
+	db(MENU_FILE_ID,READ_KEYS,&mf_key2,ISGTEQ,0);
+
+	for(x = 0; x < MENU_MAX; x++)
+		if((db(MENU_FILE_ID,READ_KEYS,&mf_key2,ISNEXT,0)) < 0)  	
+			mf_names[x][0] = '\0';
+		else
+		{
+			strcpy(mf_names[x], mf_ptr->desc);
+#ifdef DEBUG
+	sprintf(trace_str, "menu name %d - %s\n", x, mf_names[x]);
+	TRACE(trace_str);
+#endif
+		}
+	
+	/* Close the menu file */
+
+	if((db(MENU_FILE_ID,CLOSE,&mf_key2,ISEQUAL,0)) < 0)  {
+                prt_error(catgets(UP_MAINT_m_catd, UP_MAINT_SET, UP_MAINT_4, "Unable to close menu file"));
+                prt_cisam_err(iserrno,catgets(UP_MAINT_m_catd, UP_MAINT_SET, UP_MAINT_4, "Unable to close menu file"));
+		ERROR(' ',MENU_FILE,"Unable to close menu file");
+	}
+
+	if((db(ZONE_FILE_ID,OPEN,&zn_key1,ISINOUT+ISMANULOCK,0)) < 0)  {
+	  prt_error(ZONE_OPEN_ERR);
+	  sleep(3);
+	  prt_cisam_err(iserrno,ZONE_OPEN_ERR);
+	  ERROR(' ',ZONE_FILE,ZONE_OPEN_ERR);
+	  cleanup();
+	}
+
+	/*  Get exception group names from exception group file */
+
+	eg_ptr = (struct cisam_eg *) req_buf;
+
+	if((db(EXC_GROUP_ID,OPEN,&eg_key1,ISINOUT+ISMANULOCK,0)) < 0)  {   
+                prt_error(catgets(UP_MAINT_m_catd, UP_MAINT_SET, UP_MAINT_5, "Unable to open exception group file"));
+		sleep(3);
+                prt_cisam_err(iserrno,catgets(UP_MAINT_m_catd, UP_MAINT_SET, UP_MAINT_5, "Unable to open exception group file"));
+		ERROR(' ',EXC_GROUP_ID,"Unable to open exception group file");
+#ifdef DEBUG
+	sprintf(trace_str,"Leaving init - exception group file open error\n");
+	TRACE(trace_str);
+#endif
+		cleanup();
+	}
+
+	for (x = 0; x < 12; x++)
+		eg_names[x][0] = '\0';
+
+	if((db(EXC_GROUP_ID,READ_KEYS,&eg_key1,ISFIRST,0)) >= 0)
+		strcpy(eg_names[eg_ptr->nbr-1], eg_ptr->name);
+
+	for (x = 1; x < 12; x++) {
+		if((db(EXC_GROUP_ID,READ_KEYS,&eg_key1,ISNEXT,0)) >= 0)  	
+			strcpy(eg_names[eg_ptr->nbr-1], eg_ptr->name);
+	}
+	
+	if((db(EXC_GROUP_ID,CLOSE,&eg_key1,ISEQUAL,0)) < 0)  {				/* Close the exception group file */
+                prt_error(catgets(UP_MAINT_m_catd, UP_MAINT_SET, UP_MAINT_6, "Unable to close exception group file"));
+                prt_cisam_err(iserrno,catgets(UP_MAINT_m_catd, UP_MAINT_SET, UP_MAINT_6, "Unable to close exception group file"));
+		ERROR(' ',EXC_GROUP_ID,"Unable to close exception group file");
+	}
+
+	et_ptr = (struct cisam_et *) req_buf;				/*  Get exception type names from exception type file */
+
+	if((db(EXC_TYPE_ID,OPEN,&et_key1,ISINOUT+ISMANULOCK,0)) < 0)  {   
+                prt_error(catgets(UP_MAINT_m_catd, UP_MAINT_SET, UP_MAINT_7, "Unable to open exception type file"));
+		sleep(3);
+                prt_cisam_err(iserrno,catgets(UP_MAINT_m_catd, UP_MAINT_SET, UP_MAINT_7, "Unable to open exception type file"));
+		ERROR(' ',EXC_TYPE_ID,"Unable to open exception type file");
+#ifdef DEBUG
+	sprintf(trace_str,"Leaving init - exception type file open error\n");
+	TRACE(trace_str);
+#endif
+		cleanup();
+	}
+
+	for(x = 0; x < 32; x++)
+		et_names[x][0] = '\0';
+
+	if((db(EXC_TYPE_ID,READ_KEYS,&et_key1,ISFIRST,0)) >= 0)
+		strcpy(et_names[et_ptr->nbr-1], et_ptr->desc);
+
+	for(x = 1; x < 32; x++) {
+		if((db(EXC_TYPE_ID,READ_KEYS,&et_key1,ISNEXT,0)) >= 0)  	
+			strcpy(et_names[et_ptr->nbr-1], et_ptr->desc);
+	}
+	
+	if((db(EXC_TYPE_ID,CLOSE,&et_key1,ISEQUAL,0)) < 0)  {				/* Close the exception type file */
+                prt_error(catgets(UP_MAINT_m_catd, UP_MAINT_SET, UP_MAINT_8, "Unable to close exception type file"));
+                prt_cisam_err(iserrno,catgets(UP_MAINT_m_catd, UP_MAINT_SET, UP_MAINT_8, "Unable to close exception type file"));
+		ERROR(' ',EXC_TYPE_ID,"Unable to close exception type file");
+	}
+
+#ifdef NAMERICA
+	if((db(CHANNEL_FILE_ID,OPEN,&channel_key1,ISINOUT+ISMANULOCK,0)) < 0)
+	  {
+	    ERROR(' ',CHANNEL_FILE_ID,"Unable to open channel file");
+	    prt_error(catgets(UP_MAINT_m_catd, UP_MAINT_SET, UP_MAINT_7, "Unable to open channel file"));
+	  }
+	channel_ptr = (struct cisam_channel *)req_buf;
+	for (x = 0; x < 18; x++)
+	  channel_names[x][0] = '\0';
+	i = 0;
+	if ((db(CHANNEL_FILE_ID,READ_KEYS,&channel_key1,ISFIRST,0)) >= 0)
+	  strcpy(channel_names[i], channel_ptr->channel_descript);
+	for (x = 1; x < 18; x++)
+	  {
+	    i++;
+	    if ((db(CHANNEL_FILE_ID,READ_KEYS,&channel_key1,ISNEXT,0)) >= 0)
+	      strcpy(channel_names[i], channel_ptr->channel_descript);
+	  }
+	db(CHANNEL_FILE_ID,CLOSE,&channel_key1,ISEQUAL,0);
+#endif
+	
+	/* Open user file. */
+
+	up_ptr = (struct cisam_up *) req_buf;
+
+	if((db(USER_FILE_ID,OPEN,&up_key1,ISINOUT+ISMANULOCK,0)) < 0)  {   
+		prt_error(PROFILE_OPEN_ERR);
+		sleep(3);
+		prt_cisam_err(iserrno,PROFILE_OPEN_ERR);
+		ERROR(' ',PROFILE_FILE,"Unable to open user profile file");
+#ifdef DEBUG
+	sprintf(trace_str,"Leaving init - 1\n");
+	TRACE(trace_str);
+#endif
+		cleanup();
+	} else
+		file_open = 1;
+
+#ifdef DEBUG
+	sprintf(trace_str,"Leaving init - 2\n");
+	TRACE(trace_str);
+#endif
+	return;
+
+}  /*  End of init()  */
+
+/******************************************************************************
+* cleanup - if an error has occured, close files and terminate curses.
+*******************************************************************************/
+
+cleanup()
+{
+#ifdef DEBUG
+	sprintf(trace_str,"Entering cleanup\n");
+	TRACE(trace_str);
+#endif
+
+	if (file_open)
+		if((db(USER_FILE_ID,CLOSE,&up_key1,ISEQUAL,0)) < 0)  {
+			prt_error(PROFILE_CLOSE_ERR);
+			prt_cisam_err(iserrno,PROFILE_CLOSE_ERR);
+			ERROR(' ',PROFILE_FILE,"Unable to close user profile file");
+		}
+
+#ifdef DEBUG
+	sprintf(trace_str,"Leaving cleanup\n");
+	TRACE(trace_str);
+
+	if(fclose(trace_fp) == -1)   {
+		prt_error(TRACE_CLOSE_ERR);
+		sleep(3);
+		ERROR(' ',PROFILE_FILE,"Unable to close trace file");
+	}
+#endif
+
+	shmdt(offset);
+
+	nocbreak();
+	echo();
+	erase();
+	refresh();
+	endwin();
+
+	exit(0);
+
+}  /*  End of cleanup()  */
+
+/******************************************************************************
+* add_defaults - add a default profile for a new user.
+******************************************************************************/
+
+add_default(u_name,u_type)
+char *u_name;
+int u_type;
+{
+  struct passwd *pw_ptr;
+
+  /* Look for prototype user in DB */
+  up_ptr->user_id = u_type;
+  
+  if((db(USER_FILE_ID, READ_KEYS, &up_key1, ISEQUAL, 0)) < 0)
+    {
+      prt_error(NO_ROWS);
+      return;
+    }
+  
+  /* Get the user's id, based on their user name */
+  if ((pw_ptr = getpwnam(u_name)) == (struct passwd *) NULL)
+    {
+      prt_error(NO_U_NAME);
+      return;
+    }
+  
+  up_ptr->user_id = (short)pw_ptr->pw_uid;
+  up_ptr->auto_free_text = 'N';
+  strcpy(up_ptr->fullname, pw_ptr->pw_gecos);
+  strcpy(up_ptr->user_name, u_name);
+
+  if(db(USER_FILE_ID, ADD_REC, &up_key1, 0, 0) < 0)
+    {
+      prt_error(ADD_PROFILE_ERR);
+      prt_cisam_err(iserrno, ADD_PROFILE_ERR);
+      ERROR(' ', PROFILE_FILE, "Unable to add new record to user profile file");
+    }
+  return;
+}
+
+/******************************************************************************
+* rem_login - remove a user from the profile table.
+******************************************************************************/
+
+rem_login(u_name)
+char *u_name;
+{
+	FILE	*fp, *fp1;
+	char	buff[1024];
+	char	iobuff[1024];
+	char	*tptr;
+	struct passwd *getpwnam(), *pw_ptr;
+
+	char	*strrem(), *strfnd();
+
+	setuid(0);
+
+	/* Get the users id, based on their user name */
+	if((pw_ptr = getpwnam(u_name)) == NULL)  {
+		prt_error(NO_U_NAME);
+		return;
+	}
+	else  up_ptr->user_id = (short)pw_ptr->pw_uid;
+	
+	/* Copy the password and group files */
+	sprintf(buff,"/bin/cp /etc/passwd %s; /bin/cp /etc/group %s", PASSFILE, GROUPFILE);
+	system(buff);
+
+	/* find the login in the temporary password file */
+	sprintf(buff,"grep -v '^%s:' %s > %s", u_name, PASSFILE, SCRATCHFILE);
+	system(buff);
+
+	/* replace the temporary password file */
+	sprintf(buff,"mv %s %s", SCRATCHFILE, PASSFILE);
+	system(buff); 		
+	
+	/* find and delete uname from temp group file */
+
+	/* find the login in the temporary group file */
+	sprintf(buff,"grep %s %s > %s", u_name, GROUPFILE, TEMPFILE);
+	system(buff);
+
+	/* copy the rest to a scratch file */
+	sprintf(buff,"grep -v %s %s > %s", u_name, GROUPFILE, SCRATCHFILE);
+	system(buff);
+
+	/* Open the temp file for read only */
+	if(!(fp = fopen(TEMPFILE, "r"))) {
+		printf("%s %s %s.\n", catgets(UP_MAINT_m_catd, UP_MAINT_SET, UP_MAINT_9, "Cannot read"), TEMPFILE, catgets(UP_MAINT_m_catd, UP_MAINT_SET, UP_MAINT_10, "file"));
+		printf(catgets(UP_MAINT_m_catd, UP_MAINT_SET, UP_MAINT_11, "<cr> to continue.."));
+		fflush(stdin);
+		fflush(stdout);
+		gets(iobuff);
+		exit(-1);
+	}
+
+	/* Open the scratch file for appending */
+	if(!(fp1 = fopen(SCRATCHFILE, "a"))) {
+		printf("%s %s %s.\n", catgets(UP_MAINT_m_catd, UP_MAINT_SET, UP_MAINT_9, "Cannot read"), SCRATCHFILE, catgets(UP_MAINT_m_catd, UP_MAINT_SET, UP_MAINT_10, "file"));
+		printf(catgets(UP_MAINT_m_catd, UP_MAINT_SET, UP_MAINT_11, "<cr> to continue.."));
+		fflush(stdin);
+		fflush(stdout);
+		gets(iobuff);
+		exit(-1);
+	}
+
+	while(fgets(iobuff, 1024, fp) != NULL) { 
+		strcpy(buff, ":");
+		strcat(buff, u_name);
+		strcat(buff, ",");
+		if((tptr = strfnd(iobuff, buff)) != NULL) {
+			tptr++;
+			strcpy(buff, u_name);
+			strcat(buff, ",");
+			strrem(tptr, buff);
+		}
+		else {
+			strcpy(buff, ",");
+			strcat(buff, u_name);
+			strcat(buff, ",");
+			if((tptr = strfnd(iobuff, buff)) != NULL) {
+				tptr++;
+				strcpy(buff, u_name);
+				strcat(buff, ",");
+				strrem(tptr, buff);
+			}
+			else {
+				strcpy(buff, ",");
+				strcat(buff, u_name);
+				strcat(buff, "\n");
+				if((tptr = strfnd(iobuff, buff)) != NULL) {
+					strcpy(buff, ",");
+					strcat(buff, u_name);
+					strrem(tptr, buff);
+				}
+				else {
+					strcpy(buff, ":");
+					strcat(buff, u_name);
+					strcat(buff, "\n");
+					if((tptr = strfnd(iobuff, buff)) != NULL) {
+						strcpy(buff, u_name);
+						strrem(tptr, buff);
+					}
+				}
+			}
+		}
+
+		fputs(iobuff, fp1);
+	}
+
+	fclose(fp1); 	/* close the scratch file */
+	fclose(fp); 	/* close the temp file */
+
+	/* Move the temporary files back to /etc */
+	sprintf(buff,"/bin/mv %s /etc/passwd; /bin/mv %s /etc/group", PASSFILE, SCRATCHFILE);
+	system(buff);
+
+	/* Remove remaining temp files */
+	sprintf(buff,"/bin/rm %s %s", TEMPFILE, GROUPFILE);
+	system(buff);
+
+	/* remove the login directory */
+	sprintf(iobuff,"%s%s", HOMEDIR, u_name);
+	if(!access(iobuff, FEXIST)) {
+		sprintf(buff, "/bin/rm -rf %s", iobuff);
+		system(buff);
+	}
+
+	/* the key field is up_ptr->user_id and was set from the passwd file */
+	/* read the record before deleting it */
+	if(db(USER_FILE_ID,READ_KEYS,&up_key1,ISEQUAL,0) < 0)  {
+		prt_error(READ_PROFILE_ERR_1);
+		prt_cisam_err(iserrno,READ_PROFILE_ERR_1);
+		ERROR(' ',PROFILE_FILE,"Unable to read first record in user profile file");
+	}
+
+	if(db(USER_FILE_ID,DELETE,&up_key1,0,0) < 0)  {
+		prt_error(DEL_PROFILE_ERR);
+		prt_cisam_err(iserrno,DEL_PROFILE_ERR);
+		ERROR(' ',PROFILE_FILE,"Unable to delete record from user profile file");
+	}
+	return;
+}
+
+/********************************************************/
+/*							*/
+/* strrem() - Remove a string from a string.		*/
+/*							*/
+/* Return: Pointer to string 1.				*/
+/*	   ERROR - NULL.				*/
+/*							*/
+/********************************************************/
+
+char *
+strrem(s1, s2)
+char	*s1;
+char	*s2;
+{
+	int	num;
+	char	found = 0;
+	char	*ptr1, *ptr2;
+
+	num = strlen(s2);
+
+	ptr1 = s1;
+	while(!found && *ptr1 != '\0') {
+		if(strncmp(ptr1, s2, num) == 0) {
+			found = 1;
+			ptr2 = ptr1 + num;
+		}
+		else
+			ptr1++;
+	}	
+	
+	if(*ptr1 == '\0')
+		return(NULL);
+
+	while((*ptr1++ = *ptr2++) != '\0')
+		;
+
+	return(s1);
+}
+
+/********************************************************/
+/*							*/
+/* strfnd() - Find a string in a string.		*/
+/*							*/
+/* Return: Pointer to string 1.				*/
+/*	   ERROR - NULL.				*/
+/*							*/
+/********************************************************/
+
+char *
+strfnd(s1, s2)
+char	*s1;
+char	*s2;
+{
+	int	num;
+	char	found = 0;
+	char	*ptr1;
+
+	num = strlen(s2);
+
+	ptr1 = s1;
+	while(!found && *ptr1 != '\0') {
+		if(strncmp(ptr1, s2, num) == 0) 
+			found = 1;
+		else
+			ptr1++;
+	}	
+	
+	if(*ptr1 == '\0')
+		return(NULL);
+
+	return(ptr1);
+}

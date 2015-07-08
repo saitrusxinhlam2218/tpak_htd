@@ -1,0 +1,48 @@
+{
+|***********************************************************************
+|                 RCS INFO
+|
+|  @(#)  $RCSfile: stat.per,v $
+|  @(#)  $Revision: 1.2 $
+|  @(#)  $Date: 1999/03/19 21:26:52 $
+|  @(#)  $Author: taxiadm $
+|  @(#)  $Source: /taxi-scan/taxi_proj/cvs/taxi-scan/src/forms/english/stat.per,v $
+|
+|  Copyright (c) 1994 - MobileSoft Consulting, Inc. Woodinville WA
+|
+|**********************************************************************/
+|ident "@(#) head:$RCSfile: stat.per,v $	$Revision: 1.2 $"
+}
+database mads
+screen
+{
+Fleet     ID #        User Statistical From     User Statistical To
+[a]       [f000]      [f001    ]                [f002    ]  
+
+Calls   Passenger    Delivery     Type "X"     Wake-up      Killed     Backs       
+        [f007]       [f008]       [f009]       [f010]       [f011]     [f012]
+
+Calls   Unzoned      Cancelled    Messages     M-assigns     Overrides     Exceptions
+        [f013]       [f014]       [f015]       [f016]        [f018]        [f019]
+}
+end
+tables
+statusr
+attributes
+a = statusr.su_fleet,REQUIRED,UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="Fleet ID";
+f000 = statusr.su_user_id,REQUIRED,RIGHT,NOENTRY,NOUPDATE,COMMENTS="User ID" ;
+f001 = statusr.su_from_dt_tm,NOENTRY,NOUPDATE,RIGHT,COMMENTS="Beginning of the time period"; 
+f002 = statusr.su_to_dt_tm,NOENTRY,NOUPDATE,RIGHT,COMMENTS="Ending of the time period"; 
+f007 = statusr.su_pass_calls,NOENTRY,NOUPDATE,RIGHT,COMMENTS="Number of passenger calls";
+f008 = statusr.su_del_calls,NOENTRY,NOUPDATE,RIGHT,COMMENTS="Number of delivery calls";
+f009 = statusr.su_typex_calls,NOENTRY,NOUPDATE,RIGHT,COMMENTS="Number of type 'X' calls" ;
+f010 = statusr.su_wkup_calls,NOENTRY,NOUPDATE,RIGHT,COMMENTS="Number of make-up calls";
+f011 = statusr.su_killed,NOENTRY,NOUPDATE,RIGHT,COMMENTS="Number of calls killed by this userduring the above time period";
+f012 = statusr.su_callbacks,NOENTRY,NOUPDATE,RIGHT,COMMENTS="Number of callbacks processed by this user during this time period";
+f013 = statusr.su_unzoned,NOENTRY,NOUPDATE,RIGHT,COMMENTS="Number of unzoned calls entered by this user during this time period";
+f014 = statusr.su_cancelled,NOENTRY,NOUPDATE,RIGHT,COMMENTS="Number of calls cancelled by this user during this time period";
+f015 = statusr.su_messages,NOENTRY,NOUPDATE,RIGHT,COMMENTS="Number of messages sent by this user druing this time period";
+f016 = statusr.su_man_assigns,NOENTRY,NOUPDATE,RIGHT,COMMENTS="Number of calls manully assigned by this user diring this time period";
+f018 = statusr.su_overrides,NOENTRY,NOUPDATE,RIGHT,COMMENTS="Number of calls force assigned by a dispatcher";
+f019 = statusr.su_exceptions,NOENTRY,NOUPDATE,RIGHT,COMMENTS="Number of exceptions processed by dispatcher";
+end

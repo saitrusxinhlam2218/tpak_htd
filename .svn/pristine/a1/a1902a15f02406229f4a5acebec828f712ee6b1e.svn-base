@@ -1,0 +1,25 @@
+$ /****************************************************************************
+$ *                                                                           *
+$ *                           S C C S   I N F O                               *
+$ *                                                                           *
+$ * @(#)  da_cabs_hr.MSF.fin; Rel: 10.1.3.1; Get date: 5/18/95 at 10:17:37
+$ * @(#)  Last delta: 12/5/94 at 11:01:55
+$ * @(#)  SCCS File: /taxi/sccs/s.da_cabs_hr.MSF.fin
+$ *                                                                           *
+$ * Copyright (c) 1990 - MDI Seattle                                          *
+$ *                                                                           *
+$ *****************************************************************************/
+$ #ident "@(#) head:da_cabs_hr.MSF.f/usr/users/brian/enh_src/src/msf/fin	10.1.3.1"
+
+$quote "
+$delset 4
+$set 4
+
+1	"Tiedoston AVAUSVIRHE %d iserrno %d\n"
+2	"     AJOJAKAUTUMA autojen ja määräajan mukaan"
+3	"      YHTEENSÄ        KESKIYÖ                        AAMU                          PUOLIPÄIVÄ                   ILTAPÄIVÄ        \n"
+4	"AUTO  TILAUKS  10   11   12    1    2    3    4    5    6    7    8    9   10   11   12    1    2    3    4    5    6    7    8    9\n"
+5	"Yht:"
+6	"Prosent:"
+7	"Autot käyt.:"
+8	"Prosent:   "

@@ -1,0 +1,154 @@
+{
+|***********************************************************************
+|                 RCS INFO
+|
+|  @(#)  $RCSfile: subcall.per,v $
+|  @(#)  $Revision: 1.4 $
+|  @(#)  $Date: 1998/01/08 19:36:06 $
+|  @(#)  $Author: taxiadm $
+|  @(#)  $Source: /taxi-scan/taxi_proj/cvs/taxi-scan/src/forms/danish/subcall.per,v $
+|
+|  Copyright (c) 1994 - MobileSoft Consulting, Inc. Woodinville WA
+|
+|**********************************************************************/
+|ident "@(#) head:$RCSfile: subcall.per,v $	$Revision: 1.4 $"
+}
+database mads
+screen
+{
+						VISNING AF ABONN.TURS-FIL
+
+Best.nummer             Vgnpk  Type   
+[f000                ]  [a]    [f001 ] 
+
+Husnr.          Suf            Navn                   Type               Lejl/vær  Kom    Dist    Adressebemærkning     
+       [f003  ] [c]    [a0]    [f004                ] [a1 ]   [a2]       [f006 ]   [a6 ]  [f008]   [f002                          ]
+
+Gadekryds                      Navn                   Type              Passagernavn             Telefonnummer           lok       
+                       [a3]    [f005                ] [a4 ]   [a5]      [f007                ]  [a7 ]        [f009   ] [f010 ] 
+ 
+Dest   Husnr.   Suf            Navn                   Type               Lejl/vær  Kom    Dist    Dest.adressebemærkning
+       [f015  ] [d]    [a8]    [f016                ] [a9 ]  [b0]        [f017 ]   [b1 ]  [f018]   [f014                          ]
+ 
+Bemærkning
+[f011                                                            ]
+                 Vogn             Attributter             Chauffør        Attributter
+Pers. ønske      Flag     1  2  3  4  5  6  7  8         Flag     1  2  3  4  5  6  7  8      Ant vgn  Prioritet    Advise Arrival
+[f019]   [e]      [f]     [j][k][l][m][n][o][p][q]        [g]     [r][s][t][u][v][w][x][y]       [h]     [f022]          [z]
+}
+screen
+{
+						VISNING AF ABONN.TURS-FIL
+
+Kontonummer             Bestilt af              Kontakt               Best.pris     Fra dato     Til dato        Lokal
+[f023              ]  [f024                ]  [f025                ]  [f026    ]    [f027     ]  [f028     ]     [b]
+
+                   Mandag   Tirsdag  Onsdag     Torsdag   Fredag   Lørdag     Søndag                            Kort
+Planlagt opsml.    [f029]   [f031]   [f033]     [f035]    [f037]   [f039]    [f041]          Opsml. Koord  [f055    ]
+Engangsændring     [f030]   [f032]   [f034]     [f036]    [f038]   [f040]    [f042]          Dest Koord    [f056    ]
+
+Dato indskr.  Tid indskr.   L.Bev Indskr. af  ændret af     Best nummer 1           Best nummer 2        
+[f048     ]    [f049  ]     [i]   [f044]      [f045]        [f046                ]  [f047                ]
+
+Yderligere information 1    Yderligere information 2    Chauf.besk                             Firmanavn             
+[f050                     ] [f051                     ] [f054                                ] [f053                     ]
+}
+end
+tables
+subcall zone
+attributes
+f000 = subcall.sc_nbr,RIGHT,REQUIRED,NOENTRY,COMMENTS="Systemtildelt abonn.bestillingsnr.";
+a = subcall.sc_fleet = zone.zn_fleet,QUERYCLEAR,UPSHIFT,REQUIRED,NOENTRY,COMMENTS="Vognparkindikator";
+f001 = subcall.sc_extend_type,UPSHIFT,NOENTRY,COMMENTS="Udvidet bestilling ";
+f003 = subcall.sc_pckup_str_nbr,RIGHT,NOENTRY,COMMENTS="Et sekscifret husnummer";
+c = subcall.sc_pckup_str_suf,UPSHIFT,RIGHT,NOENTRY,COMMENTS="Et alfa-husnummer suffiks";
+a0 = subcall.sc_pckup_pre_dir,UPSHIFT,NOENTRY,COMMENTS="  ";
+f004 = subcall.sc_pckup_str_name,UPSHIFT,NOENTRY,COMMENTS="Gadenavn";
+a1 = subcall.sc_pckup_str_type,UPSHIFT,NOENTRY,COMMENTS="F eks 'VEJ' i P.W.Tegners Vej";
+a2 = subcall.sc_pckup_post_dir,UPSHIFT,NOENTRY,COMMENTS=" ";
+f006 = subcall.sc_pckup_apt_room,UPSHIFT,NOENTRY,COMMENTS="Lejligheds- eller værelsenummer";
+a6 = subcall.sc_pckup_city,UPSHIFT,NOENTRY,COMMENTS="Forkortelse for kommunen";
+f008 = subcall.sc_pckup_zone = zone.zn_nbr,QUERYCLEAR,RIGHT,include=(1 to 999),NOENTRY,COMMENTS="Bruger-indskrevet eller computerbestemt distriktnummer";
+f002 = subcall.sc_pckup_adr_cmnt,UPSHIFT,NOENTRY,COMMENTS="Adressebemærkning fra geo-filen";
+a3 = subcall.sc_intr_pre_dir,UPSHIFT,NOENTRY,COMMENTS="  ";
+f005 = subcall.sc_intr_str_name,UPSHIFT,NOENTRY,COMMENTS="Krydsende gadenavn";
+a4 = subcall.sc_intr_str_type,UPSHIFT,NOENTRY,COMMENTS="Krydsende gadetype";
+a5 = subcall.sc_intr_post_dir,UPSHIFT,NOENTRY,COMMENTS="  ";
+f007 = subcall.sc_passenger_name,UPSHIFT,NOENTRY,COMMENTS="Passagernavn";
+a7 = subcall.sc_phone_area,NOENTRY,COMMENTS="  ";
+f009 = subcall.sc_phone_nbr,NOENTRY,COMMENTS="Telefonnummer";
+f010 = subcall.sc_phone_ext,NOENTRY,COMMENTS="Telefon-lokalnummer";
+f015 = subcall.sc_dest_str_nbr,RIGHT,NOENTRY,COMMENTS="Et sekscifret husnummer";
+d = subcall.sc_dest_str_suf,UPSHIFT,NOENTRY,COMMENTS="Et alfa-husnummer suffiks";
+a8 = subcall.sc_dest_pre_dir,UPSHIFT,NOENTRY,COMMENTS="  ";
+f016 = subcall.sc_dest_str_name,UPSHIFT,NOENTRY,COMMENTS="Dest.gadenavn";
+a9 = subcall.sc_dest_str_type,UPSHIFT,NOENTRY,COMMENTS="F eks 'VEJ' i P.W.Tegners Vej";
+b0 = subcall.sc_dest_post_dir,UPSHIFT,NOENTRY,COMMENTS="  ";
+f017 = subcall.sc_dest_apt_room,UPSHIFT,NOENTRY,COMMENTS="Dest. lejligheds- eller værelsenummer";
+b1 = subcall.sc_dest_city,UPSHIFT,NOENTRY,COMMENTS="Forkortelse for destinationskommune";
+f018 = subcall.sc_dest_zone,RIGHT,include=(1 to 9999),NOENTRY,COMMENTS="Bruger-indskrevet eller computerbestemt dest distriktsnr.";
+f014 = subcall.sc_dest_adr_cmnt,UPSHIFT,NOENTRY,COMMENTS="Destinationsadressebemærkning fra geo-fil";
+f011 = subcall.sc_general_cmnt,UPSHIFT,NOENTRY,COMMENTS="Bemærkning";
+f019 = subcall.sc_personal_veh,RIGHT,include=(0 to 9999,NULL),NOENTRY,COMMENTS="Nummer på vogn specielt forlangt af kunden";
+e = subcall.sc_personal_rqst,UPSHIFT,include=(O,I,NULL),NOENTRY,COMMENTS="'K'un den vogn  må få turen eller 'H'vis den er til rådighed";
+f = subcall.sc_veh_attr_flag,UPSHIFT,include=(J,N),NOENTRY,autonext,COMMENTS="J/N. Vogne med specielle attributter som er nødvendige for denne tur";
+j = subcall.sc_veh_attr[1,1],UPSHIFT,include=(J,N,NULL),NOENTRY,autonext,COMMENTS="J/N. Definerer vognattribut.";
+k = subcall.sc_veh_attr[2,2],UPSHIFT,include=(J,N," "),NOENTRY,autonext,COMMENTS="J/N. Definerer vognattribut.";
+l = subcall.sc_veh_attr[3,3],UPSHIFT,include=(J,N," "),NOENTRY,autonext,COMMENTS="J/N. Definerer vognattribut.";
+m = subcall.sc_veh_attr[4,4],UPSHIFT,include=(J,N," "),NOENTRY,autonext,COMMENTS="J/N. Definerer vognattribut.";
+n = subcall.sc_veh_attr[5,5],UPSHIFT,include=(J,N," "),NOENTRY,autonext,COMMENTS="J/N. Definerer vognattribut.";
+o = subcall.sc_veh_attr[6,6],UPSHIFT,include=(J,N," "),NOENTRY,autonext,COMMENTS="J/N. Definerer vognattribut.";
+p = subcall.sc_veh_attr[7,7],UPSHIFT,include=(J,N," "),NOENTRY,autonext,COMMENTS="J/N. Definerer vognattribut.";
+q = subcall.sc_veh_attr[8,8],UPSHIFT,include=(J,N," "),NOENTRY,autonext,COMMENTS="J/N. Definerer vognattribut.";
+g = subcall.sc_drv_attr_flag,UPSHIFT,include=(J,N),NOENTRY,autonext,COMMENTS="J/N. Chauffører med specielle karakteristikker som er nødvendige for denne tur";
+r = subcall.sc_drv_attr[1,1],UPSHIFT,include=(J,N,NULL),NOENTRY,COMMENTS="Definerer chaufførattribut nødvendig for denne tur";
+s = subcall.sc_drv_attr[2,2],UPSHIFT,include=(J,N," "),NOENTRY,COMMENTS="Definerer chaufførattribut nødvendig for denne tur";
+t = subcall.sc_drv_attr[3,3],UPSHIFT,include=(J,N," "),NOENTRY,COMMENTS="Definerer chaufførattribut nødvendig for denne tur";
+u = subcall.sc_drv_attr[4,4],UPSHIFT,include=(J,N," "),NOENTRY,COMMENTS="Definerer chaufførattribut nødvendig for denne tur";
+v = subcall.sc_drv_attr[5,5],UPSHIFT,include=(J,N," "),NOENTRY,COMMENTS="Definerer chaufførattribut nødvendig for denne tur";
+w = subcall.sc_drv_attr[6,6],UPSHIFT,include=(J,N," "),NOENTRY,COMMENTS="Definerer chaufførattribut nødvendig for denne tur";
+x = subcall.sc_drv_attr[7,7],UPSHIFT,include=(J,N," "),NOENTRY,COMMENTS="Definerer chaufførattribut nødvendig for denne tur";
+y = subcall.sc_drv_attr[8,8],UPSHIFT,include=(J,N," "),NOENTRY,COMMENTS="Definerer chaufførattribut nødvendig for denne tur";
+h = subcall.sc_nbr_of_vehs,include=(1 to 9),NOENTRY,COMMENTS="Antal vogne som behøves på denne tur";
+f022 = subcall.sc_priority,include=(1 to 63),RIGHT,NOENTRY,COMMENTS="Best. prioritet";
+z = subcall.sc_advise_arrival,NOENTRY,include=(J,N),default="N",UPSHIFT,COMMENTS="Whether the driver should advise the dispatcher upon arrival (Y,N)";
+f023 = subcall.sc_charge_nbr,NOENTRY,COMMENTS="Kundekonto- eller kontokortnummer";
+f024 = subcall.sc_requested_by,UPSHIFT,NOENTRY,COMMENTS="Navn på den person som bestiller vogn";
+f025 = subcall.sc_person_to_see,UPSHIFT,NOENTRY,COMMENTS="Kontaktperson på destinationsadressen";
+f026 = subcall.sc_call_rate,RIGHT,FORMAT="#####.##",NOENTRY,COMMENTS="Pris fra prislisten som gives til kunder";
+f027 = subcall.sc_from_date,NOENTRY,COMMENTS="Startdato på abonnementsbestilling";
+f028 = subcall.sc_to_date,NOENTRY,COMMENTS="Slutdato på abonnementsbestilling";
+b = subcall.sc_local,UPSHIFT,include=(J,N),NOENTRY,COMMENTS="J/N. Om denne tur er en lokaltur eller ej";
+f029 = subcall.sc_mon_time,RIGHT,NOENTRY,COMMENTS="Opsaml.tid for hver mandag i ugen";
+f030 = subcall.sc_mon_time_change,RIGHT,NOENTRY,COMMENTS="Engangs tidsændring for mandag";
+f031 = subcall.sc_tue_time,RIGHT,NOENTRY,COMMENTS="Opsaml.tid for hver tirsdag i ugen";
+f032 = subcall.sc_tue_time_change,RIGHT,NOENTRY,COMMENTS="Engangs tidsændring for tirsdag";
+f033 = subcall.sc_wed_time,RIGHT,NOENTRY,COMMENTS="Opsaml.tid for hver onsdag i ugen";
+f034 = subcall.sc_wed_time_change,RIGHT,NOENTRY,COMMENTS="Engangs tidsændring for onsdag";
+f035 = subcall.sc_thu_time,RIGHT,NOENTRY,COMMENTS="Opsaml.tid for hver torsdag i ugen";
+f036 = subcall.sc_thu_time_change,RIGHT,NOENTRY,COMMENTS="Engangs tidsændring for torsdag";
+f037 = subcall.sc_fri_time,RIGHT,NOENTRY,COMMENTS="Opsaml.tid for hver fredag i ugen";
+f038 = subcall.sc_fri_time_change,RIGHT,NOENTRY,COMMENTS="Engangs tidsændring for fredag";
+f039 = subcall.sc_sat_time,RIGHT,NOENTRY,COMMENTS="Opsaml.tid for hver lørdag i ugen";
+f040 = subcall.sc_sat_time_change,RIGHT,NOENTRY,COMMENTS="Engangs tidsændring for hver lørdag";
+f041 = subcall.sc_sun_time,RIGHT,NOENTRY,COMMENTS="Opsaml.tid for hver søndag i ugen";
+f042 = subcall.sc_sun_time_change,RIGHT,NOENTRY,COMMENTS="Engangs tidsændring for søndag";
+f055 = subcall.sc_pckup_pmap,UPSHIFT,NOENTRY,COMMENTS="Formateret adresse kortinfo til chaufføren";
+f056 = subcall.sc_dest_dmap,UPSHIFT,NOENTRY,COMMENTS="Formateret destinationsadresse kortinfo til chaufføren";
+f048 = subcall.sc_date_in,NOENTRY,NOUPDATE,COMMENTS="Dato denne tur blev indskrevet";
+f049 = subcall.sc_time_in,NOENTRY,NOUPDATE,COMMENTS="Tid denne tur blev noteret";
+i = subcall.sc_pod_required,UPSHIFT,include=(J,N),NOENTRY,COMMENTS="J/N. Om leveringsbevis behøves";
+f044 = subcall.sc_enter_by,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Bruger-ID for den person som har noteret denne tur";
+f045 = subcall.sc_last_changed_by,RIGHT,NOENTRY,COMMENTS="Bruger-ID for den person som sidst ændrede denne abonn.bestilling";
+f046 = subcall.sc_call_nbr1,RIGHT,NOENTRY,COMMENTS="Best.nr. på abonnementsbest. for de næste 24 timer";
+f047 = subcall.sc_call_nbr2,RIGHT,NOENTRY,COMMENTS="Best.nr.på turen fremstillet fra denne abonn.bestilling for 25-48 timer";
+f050 = subcall.sc_ac_addt1_info1,UPSHIFT,NOENTRY,COMMENTS="Information noteret som svar på spørgsmål fra konto-filen";
+f051 = subcall.sc_ac_addt1_info2,UPSHIFT,NOENTRY,COMMENTS="Information noteret som svar på spørgsmål fra konto-filen";
+f054 = subcall.sc_driver_msg,UPSHIFT,NOENTRY,COMMENTS="Besked som skal sendes til chauffør fra konto-filen hvis dette er en kontotur";
+f053 = subcall.sc_company_name,UPSHIFT,NOENTRY,COMMENTS="Firmanavn hvis det er en kontotur";
+
+instructions
+   delimiters "()";
+composites <subcall.sc_fleet, subcall.sc_pckup_zone>
+	*<zone.zn_fleet, zone.zn_nbr>
+end

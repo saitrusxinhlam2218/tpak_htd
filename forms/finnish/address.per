@@ -1,0 +1,40 @@
+database mads
+screen
+{
+						Osoitetiedoston näyttö
+
+Katuhakemisto
+[f000                ]
+
+Kadun alin nro      Korkein nro             Nimi                   Tyyppi           Kunta    Puoli 
+       [f003  ]     [f002  ]                [f001                ] [a1 ]            [a3 ]   [a]
+
+Paikan nimi  Postinro      Alaruutu    X-koordinaatti          Y-koordinaatti      
+[b]          [f004 ]       [f005 ]     [f006                ]  [f007                ]
+
+Kartan viitesivu    Kartan viiteruutu    Huomautus
+[a5 ]               [a4  ]               [f009                          ]
+}
+end
+tables
+address
+attributes
+f000 = address.ad_str_index,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Systeemille annettu numero katutiedostosta";
+f003 = address.ad_low_nbr,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Kadun alin numero. Jos tietty osoite, sen on oltava sama kuin korkein numero";
+f002 = address.ad_high_nbr,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Kadun korkein numero. Jos tietty osoite, sen on oltava sama kuin alin numero";
+f001 = address.ad_str_name,NOENTRY,NOUPDATE,UPSHIFT,COMMENTS="Kadun nimi";
+a1 = address.ad_str_type,NOENTRY,NOUPDATE,UPSHIFT,COMMENTS="Kadun tyyppi";
+a3 = address.ad_str_city,NOENTRY,NOUPDATE,UPSHIFT,COMMENTS="Kuntakoodi";
+a = address.ad_odd_even,NOENTRY,NOUPDATE,UPSHIFT,COMMENTS="Parillinen/pariton puoli. P - parill, R - pariton, TYHJ[ - molemmat.";
+b = address.ad_place_names,NOENTRY,NOUPDATE,UPSHIFT,COMMENTS="Osoitteella on paikannimi (K/E)?";
+f004 = address.ad_str_zip,NOENTRY,NOUPDATE,COMMENTS="Osoitteen tai osoitealueen postinumero";
+f005 = address.ad_str_subzone,NOENTRY,NOUPDATE,UPSHIFT,COMMENTS="Osoitteen tai osoitealueen alaosoite";
+f006 = address.ad_str_x_coord,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Kadun x-koordinaatti";
+f007 = address.ad_str_y_coord,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Kadun y-koordinaatti";
+a5 = address.ad_map_ref_page,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Karttasivun viitenumero";
+a4 = address.ad_map_ref_block,NOENTRY,NOUPDATE,UPSHIFT,COMMENTS="Karttalohkon koodi (esim F3)";
+f009 = address.ad_str_comment,NOENTRY,NOUPDATE,UPSHIFT,COMMENTS="Sijaintihuomautus tästä katutietueesta";
+end
+instructions
+   delimiters "()";
+end

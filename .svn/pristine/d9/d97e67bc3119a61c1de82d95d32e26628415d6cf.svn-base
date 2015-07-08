@@ -1,0 +1,23 @@
+$ /****************************************************************************
+$ *                                                                           *
+$ *                           S C C S   I N F O                               *
+$ *                                                                           *
+$ * @(#)  chosfleets.MSF.fin; Rel: 10.1.3.1; Get date: 5/18/95 at 10:17:17
+$ * @(#)  Last delta: 12/5/94 at 11:01:45
+$ * @(#)  SCCS File: /taxi/sccs/s.chosfleets.MSF.fin
+$ *                                                                           *
+$ * Copyright (c) 1990 - MDI Seattle                                          *
+$ *                                                                           *
+$ *****************************************************************************/
+$ #ident "@(#) head:chosfleets.MSF.f/usr/users/brian/enh_src/src/msf/fin	10.1.3.1"
+
+$quote "
+$delset 2
+$set 2
+
+1	"Tiedoston AVAUSVIRHE %s iserrno %d\n"
+2	"Tiedoston SULKEMISVIRHE %d iserrno %d\n"
+3	"%sSeuraavat yhtiöt ovat käytössä: "
+4	"\n\n%sValitse raportoitavat yhtiöt. "
+5	"<CR> on lopeta, * on kaikki yhtiöt: "
+6	"valitut yhtiöt %s\n"

@@ -1,0 +1,59 @@
+{
+|***********************************************************************
+|                 RCS INFO
+|
+|  @(#)  $RCSfile: statdrv.per,v $
+|  @(#)  $Revision: 1.4 $
+|  @(#)  $Date: 1998/01/08 19:35:58 $
+|  @(#)  $Author: taxiadm $
+|  @(#)  $Source: /taxi-scan/taxi_proj/cvs/taxi-scan/src/forms/danish/statdrv.per,v $
+|
+|  Copyright (c) 1994 - MobileSoft Consulting, Inc. Woodinville WA
+|
+|**********************************************************************/
+|ident "@(#) head:$RCSfile: statdrv.per,v $	$Revision: 1.4 $"
+}
+
+database mads
+screen
+{
+Vgnprk  ID       Vgnnr    Chauffør statist.  fra     Chauffør statist.    til
+[a]     [ f000]  [f001]   [f002      ]       	     [f003      ]
+
+Besked sendt     Nødopkald        Tilmeldt           Frameldt      Taleønske
+[f020]           [f024]           [f025]             [f026]        [f019]
+
+IDIST    SL     BDIST    IK ACPT    AFVST    OPKAL/KND FEJLT    GADET   FR VLG   BEST.    PAUSER   KORTMET   SENTMET   RYKKERE 
+[f011]   [f013]  [f012]   [f016]     [f017]   [f022]   [f023]    [f009]  [f010]   [f008]   [f018]   [f014]    [f015]    [f021]
+}
+end
+tables
+statdrv
+attributes
+a = statdrv.sd_fleet,REQUIRED,UPSHIFT,NOUPDATE,COMMENTS="Vognpark-ID";
+f000 = statdrv.sd_drv_id,REQUIRED,NOUPDATE,RIGHT,COMMENTS="Chauffør-ID";
+f001 = statdrv.sd_veh_nbr,REQUIRED,NOUPDATE,RIGHT,COMMENTS="Vognnummer";
+f002 = statdrv.sd_from_dt_tm,RIGHT,COMMENTS="Tid begynder (C format)";
+f003 = statdrv.sd_to_dt_tm,RIGHT,COMMENTS="Tid slutter (C format)";
+f020 = statdrv.sd_messages,RIGHT,COMMENTS="Antal meddelelser sendt";
+f024 = statdrv.sd_emergencies,RIGHT,COMMENTS="Antal nødopkald";
+f025 = statdrv.sd_sign_ins,RIGHT,COMMENTS="Antal tilmeldinger";
+f026 = statdrv.sd_sign_offs,RIGHT,COMMENTS="Antal frameldinger";
+f019 = statdrv.sd_req_to_talk,RIGHT,COMMENTS="Antal gange denne chauffør sendte taleønske";
+f011 = statdrv.sd_posts,RIGHT,COMMENTS="Antal gange denne chauffør meldte i dist.";
+f013 = statdrv.sd_enroute_posts,RIGHT,COMMENTS="Antal gange denne chauffør meldte snart-ledig";
+f012 = statdrv.sd_cond_posts,RIGHT,COMMENTS="Antal gange denne chauffør meldte betinget i dist.";
+f016 = statdrv.sd_no_accepts,RIGHT,COMMENTS="Antal ikke-accepteret";
+f017 = statdrv.sd_rejects,RIGHT,COMMENTS="Antal afvisninger";
+f022 = statdrv.sd_callouts,RIGHT,COMMENTS="Antal opkald/kunde";
+f023 = statdrv.sd_no_shows,RIGHT,COMMENTS="Antal fejlture";
+f009 = statdrv.sd_flags,RIGHT,COMMENTS="Antal gadeture";
+f010 = statdrv.sd_bids,RIGHT,COMMENTS="Antal frit-valg";
+f008 = statdrv.sd_calls,RIGHT,COMMENTS="Antal ture tildelt denne chauffør af system eller trafikleder";
+f018 = statdrv.sd_breaks,RIGHT,COMMENTS="Antal pauser";
+f014 = statdrv.sd_short_meters,RIGHT,COMMENTS="Antal kort taxametertid";
+f015 = statdrv.sd_late_meters,RIGHT,COMMENTS="Antal taxameter på for sent";
+f021 = statdrv.sd_callbacks,RIGHT,COMMENTS="Antal rykkere";
+instructions
+   delimiters "()";
+end

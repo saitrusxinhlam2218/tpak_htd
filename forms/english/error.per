@@ -1,0 +1,39 @@
+{
+|***********************************************************************
+|                 RCS INFO
+|
+|  @(#)  $RCSfile: error.per,v $
+|  @(#)  $Revision: 1.2 $
+|  @(#)  $Date: 1999/03/19 21:26:31 $
+|  @(#)  $Author: taxiadm $
+|  @(#)  $Source: /taxi-scan/taxi_proj/cvs/taxi-scan/src/forms/english/error.per,v $
+|
+|  Copyright (c) 1994 - MobileSoft Consulting, Inc. Woodinville WA
+|
+|**********************************************************************/
+|ident "@(#) head:$RCSfile: error.per,v $	$Revision: 1.2 $"
+}
+database mads
+screen
+{
+						ERROR LOG FILE MAINTENANCE
+
+Error Number            Fleet  File       Date         Time
+[f000                ]  [a]    [f001   ]  [f002    ]  [f003    ]
+
+Source File        Line Number  Message
+[f004           ]  [f005  ]     [f006                                         ]
+}
+end
+tables
+error
+attributes
+f000 = error.el_nbr,NOENTRY,RIGHT,NOUPDATE,COMMENTS="System assigned error number";
+a = error.el_fleet,UPSHIFT,COMMENTS="Fleet ID";
+f001 = error.el_file,UPSHIFT,COMMENTS="File name designator to identify the C-ISAM data file having a problem";
+f002 = error.el_date,COMMENTS="Date when the problem was encountered  MM/DD/YY format";
+f003 = error.el_time,COMMENTS="Time when the problem was encountered HH:MM:SS format";
+f004 = error.el_source_file,COMMENTS="Source code file name where the error occured";
+f005 = error.el_line_nbr,RIGHT,COMMENTS="Source code file line number where the error occured";
+f006 = error.el_error_msg,UPSHIFT,COMMENTS="Error message text";
+end

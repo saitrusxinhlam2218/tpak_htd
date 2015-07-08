@@ -1,0 +1,43 @@
+{
+|***********************************************************************
+|                 RCS INFO
+|
+|  @(#)  $RCSfile: zntrans.per,v $
+|  @(#)  $Revision: 1.2 $
+|  @(#)  $Date: 2002/03/25 16:38:21 $
+|  @(#)  $Author: jwelch $
+|  @(#)  $Source: /taxi-scan/taxi_proj/cvs/taxi-scan/src/forms/finnish/zntrans.per,v $
+|
+|  Copyright (c) 1994 - MobileSoft Consulting, Inc. Woodinville WA
+|
+|**********************************************************************/
+|ident "@(#) head:$RCSfile: zntrans.per,v $	$Revision: 1.2 $"
+}
+
+database mads
+screen
+{
+
+                                Interlink Zone Translation
+
+Taxi800 Zone ID                 TaxiPak Zone Nbr                
+[f000 ]                         [a01]
+
+Comment
+[f001                                                           ]
+
+}
+end
+tables
+zonetrans
+zone
+attributes
+f000 = zonetrans.zntr_t800, REQUIRED, UPSHIFT,COMMENTS="Taxi800 Zone Identifier";
+a01 = zonetrans.zntr_tpak, REQUIRED, COMMENTS="TaxiPak Zone Number", LOOKUP JOINING * zone.zn_nbr;
+f001 = zonetrans.zntr_comment, COMMENTS="Comment for translation";
+end
+instructions
+   delimiters "()";
+end
+
+

@@ -1,0 +1,79 @@
+{
+|***********************************************************************
+|                 RCS INFO
+|
+|  @(#)  $RCSfile: cust.per,v $
+|  @(#)  $Revision: 1.6 $
+|  @(#)  $Date: 2002/04/04 20:10:38 $
+|  @(#)  $Author: jwelch $
+|  @(#)  $Source: /taxi-scan/taxi_proj/cvs/taxi-scan/src/forms/swedish/cust.per,v $
+|
+|  Copyright (c) 1994 - MobileSoft Consulting, Inc. Woodinville WA
+|
+|**********************************************************************/
+|ident "@(#) head:$RCSfile: cust.per,v $	$Revision: 1.6 $"
+}
+
+database mads
+screen
+{
+
+						CUSTOMER PROFILE MAINTENANCE
+
+Telefon
+[f001    ]
+
+Adress                         Uppgång  Kommun Zon 
+[f008                ] [f007 ] [f011 ]   [a6 ]  [m  ]
+
+Passagerare             Kommentar
+[f013               ]   [f015                                                           ]
+
+Bil/Förare       1-3      4-6      7-9     10-12    13-15   16-18   19-21   22-24   25-27   28-30   31-32
+    Bilattr     [j1 ]    [j2 ]    [j3 ]    [j4 ]    [j5 ]   [j6 ]   [j7 ]   [j8 ]   [j9 ]   [j10]   [l1]	   
+    Förarattr   [k1 ]    [k2 ]    [k3 ]    [k4 ]    [k5 ]   [k6 ]   [k7 ]   [k8 ]   [k9 ]   [k10]   [l2]
+
+Number of Calls
+[f014    ]
+}
+end
+tables
+customer
+attributes
+f001 = customer.cust_phone_nbr, COMMENTS = "Customer's Local Phone Number";
+f008 = customer.cust_pckup_strname,UPSHIFT,COMMENTS="Pickup street name";
+f007 = customer.cust_pckup_str_nbr,RIGHT,COMMENTS="Pickup street number";
+f011 = customer.cust_pckup_apt,UPSHIFT,COMMENTS="Pickup apartment or room number";
+a6 = customer.cust_pckup_city,UPSHIFT,COMMENTS="Abbreviation of the pickup city";
+m = customer.cust_pckup_zone,include=(0 to 999),COMMENTS="User entered or computer generated pickup zone number (1-999)";
+f013 = customer.cust_pass_name,UPSHIFT,COMMENTS="Name of passenger";
+f015 = customer.cust_comment, UPSHIFT,COMMENTS="Comment to be added to call entry screen";
+j1 = customer.cust_veh_attr[1, 3], UPSHIFT, COMMENTS="Begärda bilattribut (J/N)", DEFAULT = "NNN";
+j2 = customer.cust_veh_attr[4, 6], UPSHIFT, COMMENTS="Begärda bilattribut (J/N)", DEFAULT = "NNN";
+j3 = customer.cust_veh_attr[7, 9], UPSHIFT, COMMENTS="Begärda bilattribut (J/N)", DEFAULT = "NNN";
+j4 = customer.cust_veh_attr[10, 12], UPSHIFT, COMMENTS="Begärda bilattribut (J/N)", DEFAULT = "NNN";
+j5 = customer.cust_veh_attr[13, 15], UPSHIFT, COMMENTS="Begärda bilattribut (J/N)", DEFAULT = "NNN";
+j6 = customer.cust_veh_attr[16, 18], UPSHIFT, COMMENTS="Begärda bilattribut (J/N)", DEFAULT = "NNN";
+j7 = customer.cust_veh_attr[19, 21 ], UPSHIFT, COMMENTS="Begärda bilattribut (J/N)", DEFAULT = "NNN";
+j8 = customer.cust_veh_attr[22, 24], UPSHIFT, COMMENTS="Begärda bilattribut (J/N)", DEFAULT = "NNN";
+j9  = customer.cust_veh_attr[25, 27], UPSHIFT, COMMENTS="Begärda bilattribut (J/N)", DEFAULT = "NNN";
+j10  = customer.cust_veh_attr[28, 30], UPSHIFT, COMMENTS="Begärda bilattribut (J/N)", DEFAULT = "NNN";
+l1  = customer.cust_veh_attr[31, 32], UPSHIFT, COMMENTS="Begärda bilattribut (J/N)", DEFAULT = "NNN";
+k1 = customer.cust_drv_attr[1, 3], UPSHIFT, COMMENTS="Begärda förarattribut (J/N)", DEFAULT = "NNN";
+k2 = customer.cust_drv_attr[4, 6], UPSHIFT, COMMENTS="Begärda förarattribut (J/N)", DEFAULT = "NNN";
+k3 = customer.cust_drv_attr[7, 9], UPSHIFT, COMMENTS="Begärda förarattribut (J/N)", DEFAULT = "NNN";
+k4 = customer.cust_drv_attr[10, 12], UPSHIFT, COMMENTS="Begärda förarattribut (J/N)", DEFAULT = "NNN";
+k5 = customer.cust_drv_attr[13, 15], UPSHIFT, COMMENTS="Begärda förarattribut (J/N)", DEFAULT = "NNN";
+k6 = customer.cust_drv_attr[16, 18], UPSHIFT, COMMENTS="Begärda förarattribut (J/N)", DEFAULT = "NNN";
+k7 = customer.cust_drv_attr[19, 21], UPSHIFT, COMMENTS="Begärda förarattribut (J/N)", DEFAULT = "NNN";
+k8 = customer.cust_drv_attr[22, 24], UPSHIFT, COMMENTS="Begärda förarattribut (J/N)", DEFAULT = "NNN";
+k9 = customer.cust_drv_attr[25, 27], UPSHIFT, COMMENTS="Begärda förarattribut (J/N)", DEFAULT = "NNN";
+k10 = customer.cust_drv_attr[28, 30], UPSHIFT, COMMENTS="Begärda förarattribut (J/N)", DEFAULT = "NNN";
+l2 = customer.cust_drv_attr[31, 32], UPSHIFT, COMMENTS="Begärda förarattribut (J/N)", DEFAULT = "NNN";
+f014 = customer.cust_made_calls, COMMENTS="Number of calls made by this customer";
+
+end
+instructions
+delimiters "()";
+end
+

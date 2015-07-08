@@ -1,0 +1,27 @@
+database mads
+screen
+{
+						Feljournal underhåll 
+
+Felnummer            Bilpark  Fil        Datum         Tid
+[f000           ]    [a]      [f001   ]  [f002    ]    [f003    ]
+
+Källfil        Radnummer  Meddelande
+[f004       ]  [f005  ]   [f006                                              ]
+}
+end
+tables
+error
+attributes
+f000 = error.el_nbr,NOENTRY,RIGHT,NOUPDATE,COMMENTS="Felnummer tilldelat av systemet";
+a = error.el_fleet,UPSHIFT,COMMENTS="Bilpark ID";
+f001 = error.el_file,UPSHIFT,COMMENTS="Filnamn som ska identifiera den C-ISAM datafil som har problem";
+f002 = error.el_date,COMMENTS="Datum då problemet påträffades ]]-MM-DD-format";
+f003 = error.el_time,COMMENTS="Klockslag då problemet påträffades TT:MM:SS-format";
+f004 = error.el_source_file,COMMENTS="Filnamn för källa där felet uppstod";
+f005 = error.el_line_nbr,RIGHT,COMMENTS="Filradnummer för källa där felet uppstod";
+f006 = error.el_error_msg,UPSHIFT,COMMENTS="Text för felmeddelande";
+end
+instructions
+   delimiters "()";
+end

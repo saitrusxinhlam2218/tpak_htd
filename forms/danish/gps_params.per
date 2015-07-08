@@ -1,0 +1,46 @@
+{
+|***********************************************************************
+|                 RCS INFO
+|
+|  @(#)  $RCSfile: gps_params.per,v $
+|  @(#)  $Revision: 1.3 $
+|  @(#)  $Date: 1998/11/14 14:48:16 $
+|  @(#)  $Author: taxiadm $
+|  @(#)  $Source: /taxi-scan/taxi_proj/cvs/taxi-scan/src/forms/danish/gps_params.per,v $
+|
+|  Copyright (c) 1994 - MobileSoft Consulting, Inc. Woodinville WA
+|
+|**********************************************************************/
+|ident "@(#) head:$RCSfile: gps_params.per,v $	$Revision: 1.3 $"
+}
+
+
+
+database mads
+screen
+{
+
+						GPS PARAMETER VEDLIGEHOLD
+
+	Differential Korrektionsmodtager
+Breddegrad	Længdegrad	Højde		Frekvens
+[f001      ]    [f002       ]   [f003 ]         [f004 ]
+
+Server          	        Port
+[f005                       ]   [f006  ]
+
+}
+end
+tables
+gps_params
+attributes
+f001=diff_lat;
+f002=diff_long;
+f003=diff_height;
+f004=diff_frequency;
+f005=diff_server;
+f006=diff_port;
+
+instructions
+	delimiters "()";
+end

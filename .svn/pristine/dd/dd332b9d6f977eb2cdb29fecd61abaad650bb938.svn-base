@@ -1,0 +1,75 @@
+$ /****************************************************************************
+$ *                                                                           *
+$ *                           S C C S   I N F O                               *
+$ *                                                                           *
+$ * @(#)  f_msg_defs.MSF.fin; Rel: 6.5.0.0; Get date: 12/11/90 at 16:42:00
+$ * @(#)  Last delta: 12/11/90 at 13:41:08
+$ * @(#)  SCCS File: /taxi/sccs/s.f_msg_defs.MSF.fin
+$ *                                                                           *
+$ * Copyright (c) 1990 - MDI Seattle                                          *
+$ *                                                                           *
+$ *****************************************************************************/
+$ #ident "@(#) head:f_msg_defs.MSF.f/usr/users/barnett/foo	6.5.0.0"
+
+$quote "
+$set 2
+
+1	"OMIN:"
+2	"AIKARAJA"
+3	"AJO"
+4	"AJO TARJOLLA RUUDUSSA"
+5	"AN:"
+6	"PERUUTUS"
+7	"KT:"
+8	"UUSI VÄLITYS"
+9	"UUSJAKO, RUUTUUN"
+10	"L"
+11	"SI:"
+12	"T"
+13	"K:"
+14	"("
+15	") "
+16	"RUUTUVIRHE:"
+17	"EDELL AJO"
+18	"PAIKL"
+19	"MINUUTT"
+20	"VIES:"
+21	"JAKOTIL:"
+22	"/"
+23	"NIMI: "
+24	"M"
+25	"TYYPPI JOS"
+26	"TYYPPI VAIN"
+27	"TYY"
+28	"TILAAJA:"
+29	"RJ"
+30	"TIL:"
+31	" -> "
+32	"HNK:"
+33	"J"
+34	"MÄÄRÄ:"
+35	"EN:"
+36	"TYYP:"
+37	"X:"
+38	"X"
+39	"RUUT"
+40	"ILMSAAP"
+41	"KORTT:"
+42	"KRT SIVU:"
+43	"J"
+44	"E"
+45	"JA:"
+46	"KO:"
+47      "AJO EJ KUIT.#"				/* Message about suspension...  */
+48      "EJ KUITANNUT AJOA               "	/* dispatch-center.		*/
+49      "KIELTO                          "      /* Message about suspension...  */
+50      "KIELTO                          "      /* to MDT's.	        	*/
+51      "PALUU                           "
+52      "PALUU                           "
+53      "MATK AJO          "
+54      "TAVARA AJO        "
+55      "ERIK AJO          "
+56      "HENKILÖ KULJETUS                "
+57      "TAVARA KULJETUS                 "
+58      "ERIKOIS AJO                     "
+59      "VIESTI:                         "

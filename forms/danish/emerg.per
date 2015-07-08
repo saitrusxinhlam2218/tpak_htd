@@ -1,0 +1,52 @@
+{
+|***********************************************************************
+|                 RCS INFO
+|
+|  @(#)  $RCSfile: emerg.per,v $
+|  @(#)  $Revision: 1.4 $
+|  @(#)  $Date: 1998/01/08 19:35:31 $
+|  @(#)  $Author: taxiadm $
+|  @(#)  $Source: /taxi-scan/taxi_proj/cvs/taxi-scan/src/forms/danish/emerg.per,v $
+|
+|  Copyright (c) 1994 - MobileSoft Consulting, Inc. Woodinville WA
+|
+|**********************************************************************/
+|ident "@(#) head:$RCSfile: emerg.per,v $	$Revision: 1.4 $"
+}
+
+
+database mads
+screen
+{
+						VEDLIGEH. AF NØDOPKALDS-FIL
+
+Vgnpk  Nødopkaldsnummer        Undtagelsesnummer       Best nummer             Vgnnr     Chauf-ID    Distnr
+[a]    [f000                ]  [f001                ]  [f002                ]  [f008]    [f009 ]     [f01]
+ 
+Hændt dato   Tid        Afklaret dato   Tid           Afklaret af
+[f004     ] [f005  ]    [f006     ]    [f007  ]      [f012]
+
+Comment
+[comment                                                                       ]
+}
+end
+tables
+emerg
+attributes
+a = emerg.em_fleet,UPSHIFT,REQUIRED,COMMENTS="Vognpark-ID";
+f000 = emerg.em_nbr,REQUIRED,NOENTRY,NOUPDATE,RIGHT,COMMENTS="En systemstildelt nødopkalds-ID";
+f001 = emerg.em_exc_nbr,RIGHT,COMMENTS="Undtagelsesnummer p] den modsvarende undtagelse";
+f002 = emerg.em_call_nbr,RIGHT,COMMENTS="Bestillingsnummer";
+f008 = emerg.em_veh_nbr,RIGHT,COMMENTS="Nummer på den vogn som sendte nødopkald";
+f009 = emerg.em_drv_id,RIGHT,COMMENTS="ID på den chauffør som sendte nødopkald";
+f01 = emerg.em_zone_nbr,RIGHT,COMMENTS="Nummer på distrikt chaufføren var tilmeldt eller hvor turen begyndte";
+f004 = emerg.em_event_date,NOENTRY,NOUPDATE,COMMENTS="Dato for hændelse";
+f005 = emerg.em_event_time,NOENTRY,NOUPDATE,COMMENTS="Tid for hændelse";
+f006 = emerg.em_resolved_date,NOENTRY,NOUPDATE,COMMENTS="Dato nødopkald blev afklaret";
+f007 = emerg.em_resolved_time,NOENTRY,NOUPDATE,COMMENTS="Tid nødopkald blev afklaret";
+f012 = emerg.em_resolved_by,RIGHT,COMMENTS="Bruger-ID på person som behandlede nødopkald";
+comment = emerg.em_comment, NOENTRY, NOUPDATE, COMMENTS="Bemærkning noteret da nødopkaldet blev afklaret";
+end
+instructions
+   delimiters "()";
+end

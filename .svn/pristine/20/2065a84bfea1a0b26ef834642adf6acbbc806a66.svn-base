@@ -1,0 +1,26 @@
+$ /****************************************************************************
+$ *                                                                           *
+$ *                           S C C S   I N F O                               *
+$ *                                                                           *
+$ * @(#)  man_veh.MSF.fin; Rel: 10.1.3.1; Get date: 5/18/95 at 10:19:41
+$ * @(#)  Last delta: 12/5/94 at 11:03:57
+$ * @(#)  SCCS File: /taxi/sccs/s.man_veh.MSF.fin
+$ *                                                                           *
+$ * Copyright (c) 1990 - MDI Seattle                                          *
+$ *                                                                           *
+$ *****************************************************************************/
+$ #ident "@(#) head:man_veh.MSF.fin	10.1.3.1"
+
+$quote "
+$set 1
+
+1	"Tiedoston AVAUSVIRHE %d iserrno %d\n"
+2	"KÄSIN välitetyt tilaukset"
+3	"KÄSIN VÄLITETYT TILAUKS välittäjän ja määräajan mukaan"
+4	"TYYPPI...NOUTOAIKA.. RUUTUALUE ...........NOUTO-OSOITE...............  AS.  ......MATKUSTAJA.... ...PUH. NUMERO.... TP AU YH  TILAUS\n"
+5	"     ..TAKSA.. TI1.2.3.4.5.6.7.8        ......RISTEYSKATU.....      PV1.2.3.4.5.6.7.8  KUIT .....ALLEKIRJ...... .AIKA. .YRIT.\n"
+6	"     ..TAKSA.. TYYPPI RUUTUALUE .........PÄÄMÄÄRÄOSOITE..........  AS.  ....TILAAJA.... ....YHTEYSHENKILÖ ..... ODOTA PAIK\n"
+7	"     ..SYÖTTÖAIKA.. .HNK. VAIHD ..ARV.. ..VÄLITYSAIKA. .HNK. ...NOUTOAIKA.. ...SULK. AIKA... AUTO AJAJA .TILA. TILAUSNRO.\n"
+8	"     ......LASKUT.NRO...... UMPEEN. .HYVKSKOODI .HNK. ....YRITYS.... ...KÄYTTÄJÄ SYÖT1... ...KÄYTTÄJÄ SYÖT2...\n"
+9	"     .............................................HUOMAUTUSRIVI..............................................................\n"
+10	"     ........... AJAJAVIESTI ............\n"

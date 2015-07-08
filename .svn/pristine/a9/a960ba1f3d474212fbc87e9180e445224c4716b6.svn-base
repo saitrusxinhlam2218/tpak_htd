@@ -1,0 +1,234 @@
+$ /****************************************************************************
+$ *                                                                           *
+$ *                           S C C S   I N F O                               *
+$ *                                                                           *
+$ * @(#)  fl_maint.MSF.fin; Rel: 10.1.3.2; Get date: 8/9/95 at 11:09:31
+$ * @(#)  Last delta: 8/9/95 at 11:09:21
+$ * @(#)  SCCS File: /taxi/sccs/s.fl_maint.MSF.fin
+$ *                                                                           *
+$ * Copyright (c) 1990 - MDI Seattle                                          *
+$ *                                                                           *
+$ *****************************************************************************/
+$ #ident "@(#) head:fl_maint.MSF.fin/usr/taxi/enh_src/src/msf/fin	10.1.3.2"
+
+$ /*
+$  * Message file for PROGRAM: fl_maint
+$  * CATALOG:   fl_maint
+$  * MNEMONICS: fl_m_strdefs.h
+$  */
+
+$quote "
+$set 1
+
+$ /*    NOTE TO THE TRANSLATOR                          		*/
+$ /*    Quoted text will be followed by a maximum string length if the  */
+$ /*    text length is different than the number of chars in the string.*/
+$ /*    If no string length is entered default to the current number of */
+$ /*    characters.  A comment about the string is also included where  */
+$ /*    necessary.                                                      */
+$ /* 	------- Translate ALL `Ä` to '(' and ALL 'Å' to ')' ----------- */
+$ /* 	Examples, FL_MAINT_8 ... FL_MAINT_36				*/
+$ /*	Check constants being used for 'P'assenger, 'D'elivery,		*/
+$ /*	'W'akeup and 'X' type in FL_MAINT_20.._23			*/
+
+FL_MAINT_1	"On annettava arvo"					/* 60	*/
+FL_MAINT_2	"C-isam-virhe numero ="					/* 60   */
+FL_MAINT_3	"Unix-virhe numero ="					/* 60   */
+FL_MAINT_4	"Tietuetta ei löydy, LISÄÄ ensin !"				/* 60   */
+FL_MAINT_5	"Paina ESC suorittaaksesi"					/* 60   */
+FL_MAINT_6	"Yhtiötiedoston lukuvirhe"					/* 60	*/
+FL_MAINT_7	"TN   no.  Aktiivi   Nimi                                                  Tas1 Primary Tas2 Tas3 Tas4 Tas5 Tas6 Tas7 Tas8"
+FL_MAINT_8	"( )  ( )  ( )       (                    )               Hylkäyssakot     ( )  ( )     ( )  ( )  ( )  ( )  ( )  ( )  ( )"
+FL_MAINT_9	"Kommentit   (                                          ) Varausaika       (  ) (  )    (  ) (  ) (  ) (  ) (  ) (  ) (  )"
+FL_MAINT_10	"         Toistot         Tärkeys          Toiminto        Kesto            Rangaistus          Info                  Maksimi"
+FL_MAINT_11	"  RUUTUUN   (     )   JULLIK  ( )     JULLIK ( )    HYVKS   (     )   EIHYVKS ( )       Ajotarjous   ( )  HYLKMÄÄRÄ      (   )"
+FL_MAINT_12     "  ERUUTU    (     )   PERUUT  ( )     PERUUT ( )    TAUKO   (     )   EIHYVKS (     )                     Ajajan tunnist (  )"
+FL_MAINT_13     "  AJOTIEDUS (     )   Tavall  ( )     MRUUTU ( )    Lyhyt M (     )   NAK     ( )                         Auton ominais  (  )"
+FL_MAINT_14	"  Ruutitied (     )   Paikall ( )   M Action ( )    M Action(     )          Ennakko            Sallittu  Autot/Tilaukset(   ) "
+FL_MAINT_15	"  RJ        (     )   Tilap   (  )                  Paikall (     )      MRUUTU  (     )   MRUUTU    ( )  Enn.til. kirj. (  )"
+FL_MAINT_16	"  Ruututila (     )                              Tilaustäsm (     )   Ennakkotil (     )   Erik.pyynt( )  Tyyppiennakko  (     )"
+FL_MAINT_17	"  Ennakkotil(     )   Vastaus tarjousajoon   ( ) CNX to MOFF(     )   Myöh mitt  (     )                  Ennakkotil.aika(     )"
+FL_MAINT_18	"                                                Lyhyt Jullik  (   )   Herätys    (     )                  Time Call Intvl(  )"
+FL_MAINT_19	"              Piirteet                     Piirteet            Oletustärk..       Oletustärk.     Käsimittari  Taksalask."
+FL_MAINT_20	"  Lupatarkist   ( )     Asemakäsip.käsittely  ( )      Jatk.tilaus (  )     'M'atkustaja(  )        ( )           ( ) "
+FL_MAINT_21	"  Pidä linja    ( )     Ruutujen varataso     ( )      Jatk.tilaus (  )     'T'avara-ajo(  )        ( )           ( )"
+FL_MAINT_22	"  Tervehdysrivi ( )     Ajajaviestien hyväks  ( )      Ennakkotil  (  )     'X'-tyyppi  (  )        ( )"
+FL_MAINT_23	"  GPS active    ( )     Jatk.til.tarkistus    ( )                           'H'erätys   (  )"
+FL_MAINT_24	"                       Systeemitiedot                             Raportointitiheys      "
+FL_MAINT_25	" Avoim. enn. portti  (                    )      Enn.tilausraportti   (      )           "
+FL_MAINT_26	"                                                 Viestiraportti        (     )           "
+FL_MAINT_27	"              Oletukset                             Korkea alue Arvioteksti                                                  "
+FL_MAINT_28	"Kuntakoodi        (   )             1. arvio            (     )   (       )                                                  "
+FL_MAINT_29	"Suuntanumero      (   )             2. arvio            (     )   (       )                                                  "
+FL_MAINT_30	"Tilaustyyppi      ( )               3. arvio            (     )   (       )                                                  "
+FL_MAINT_31	"Historia          (     )           4. arvio            (     )   (       )                                                  "
+FL_MAINT_32	"Täsmäysalgoritmi  ( )               5. arvio            (     )   (       )                                                  "
+FL_MAINT_33	"GPS Max X         (          )      6. arvio            (     )   (       )                                                  "
+FL_MAINT_34	"GPS Min X         (          )      7. arvio            (     )   (       )                                                  "
+FL_MAINT_35	"GPS Max Y         (          )      8. arvio            (     )   (       )                                                   "
+FL_MAINT_36	"GPS Min Y         (          )      Oletus                        (       )                                                   "
+FL_MAINT_37     "Kuitt. aikaraja   (     )"
+FL_MAINT_38     "Kuitt. yrityksiä  (     )"
+FL_MAINT_39     "Väärä valinta - ole hyvä anna (L/U) lisåtåksesi tai alkaaksesi uuden"
+FL_MAINT_40	"  GPS tid     (   )     Auto Flag Time      (   )"
+FL_MAINT_41     "                                                FRI aika    (     )                                       Lead Supplement(  )"
+
+
+$ /*
+$  * Strings extracted from fl_scr_ary.h
+$  */
+
+$set 2
+
+$	/* Note to the translator				*/
+$	/* The length on all of the following strings can be 	*/
+$	/* up to 70 characters					*/
+
+FL_SCR_FLDS_1	"Yhtiön TN"
+FL_SCR_FLDS_2	"Systeemin antama yhtiön numero (0-7), jota käytetään sisäisiin viittauksiin"
+FL_SCR_FLDS_3	"K-Yhtiö on käytössä, E-Yhtiö ei käytössä"
+FL_SCR_FLDS_4	"Yhtiön nimi"
+FL_SCR_FLDS_5	"Huomautus"
+FL_SCR_FLDS_6	"1-tason hylkäyssakko: 1 - ei sallittu; 2 - ei sakkoa ; 3 - jonon loppuun; 4 - Auto reject processing"
+FL_SCR_FLDS_7	"Perustason hylkäyssakko: 1 - ei sallittu; 2 - ei sakkoa ; 3 - jonon loppuun; 4 - Auto reject processing"
+FL_SCR_FLDS_8	"2-tason hylkäyssakko: 1 - ei sallittu; 2 - ei sakkoa ; 3 - jonon loppuun; 4 - Auto reject processing"
+FL_SCR_FLDS_9	"3-tason hylkäyssakko: 1 - ei sallittu; 2 - ei sakkoa ; 3 - jonon loppuun; 4 - Auto reject processing"
+FL_SCR_FLDS_10	"4-tason hylkäyssakko: 1 - ei sallittu; 2 - ei sakkoa ; 3 - jonon loppuun; 4 - Auto reject processing"
+FL_SCR_FLDS_11	"5-tason hylkäyssakko: 1 - ei sallittu; 2 - ei sakkoa ; 3 - jonon loppuun; 4 - Auto reject processing"
+FL_SCR_FLDS_12	"6-tason hylkäyssakko: 1 - ei sallittu; 2 - ei sakkoa ; 3 - jonon loppuun; 4 - Auto reject processing"
+FL_SCR_FLDS_13	"7-tason hylkäyssakko: 1 - ei sallittu; 2 - ei sakkoa ; 3 - jonon loppuun; 4 - Auto reject processing"
+FL_SCR_FLDS_14	"8-tason hylkäyssakko: 1 - ei sallittu; 2 - ei sakkoa ; 3 - jonon loppuun; 4 - Auto reject processing"
+FL_SCR_FLDS_15	"1-tason varoitusaika. (Minuuteissa)"
+FL_SCR_FLDS_16	"Perustason varoitusaika. (Minuuteissa)"
+FL_SCR_FLDS_17	"2-tason varoitusaika. (Minuuteissa)"
+FL_SCR_FLDS_18	"3-tason varoitusaika. (Minuuteissa)"
+FL_SCR_FLDS_19	"4-tason varoitusaika. (Minuuteissa)"
+FL_SCR_FLDS_20	"5-tason varoitusaika. (Minuuteissa)"
+FL_SCR_FLDS_21	"6-tason varoitusaika. (Minuuteissa)"
+FL_SCR_FLDS_22	"7-tason varoitusaika. (Minuuteissa)"
+FL_SCR_FLDS_23	"8-tason varoitusaika. (Minuuteissa)"
+FL_SCR_FLDS_24	"Kuinka usein ajaja saa painaa RUUTUUN-näppäintä.  (Sekunneissa)"
+FL_SCR_FLDS_25	"Kuinka usein ajaja saa painaa ERUUT-näppäintä.  (Sekunneissa)"
+FL_SCR_FLDS_26	"Kuinka usein ajaja saa painaa AJOTIED-näppäintä.  (Sekunneissa)"
+FL_SCR_FLDS_27	"Kuinka usein ruutu- ja tarjoustiedot lähetetään MDT:lle. (Sekunneissa)"
+FL_SCR_FLDS_28	"Kuinka usein ajaja saa painaa RJ-näppäintä.  (Sekunneissa)"
+FL_SCR_FLDS_29	"Kuinka usein ruuduntilanäyttö uusitaan.  (Sekunneissa)"
+FL_SCR_FLDS_30	"Kuinka usein systeemi tarkistaa onko ennakkotilausten määräaika.  (Minuuteissa)"
+FL_SCR_FLDS_31	"Etusija annettu JULLI-näppäintä painaneille ajajille. (1-suurin, 5-alin)"
+FL_SCR_FLDS_32	"Etusija annettu ajajille joiden ajo peruutettiin. (1-suurin, 5-alin)"
+FL_SCR_FLDS_33	"Etusija annettu vakinaisille ajajille. (1-suurin, 5-alin)"
+FL_SCR_FLDS_34	"Etusija annettu paikallisen ajon tehneille ajajille. (1-suurin, 5-alin)"
+FL_SCR_FLDS_35	"Suurin etusija-ajo jonka tilapäinen voi ajaa. (1-suurin, 63-alin)"
+FL_SCR_FLDS_36	"1-väl.hyväks.;2-kuin 1 & autom.per. & ruutuun; 4-autom.peruutus, näytä välitt."
+FL_SCR_FLDS_37	"1-välitt. hyväks. tarpeen;2-kuin 1 & autom.ruutuun;3-autom.per. & ruutuun"
+FL_SCR_FLDS_38	"Pitääkö systeemi tilaukset perustasolla, jos taksit ovat kohta-vapaa-ruudussa"
+FL_SCR_FLDS_39	"Number of M_ACTION retries"
+FL_SCR_FLDS_40	"1-viitattu HYVKS asema & perus;2-viitattu HYVKS;3-suora HYVKS"
+FL_SCR_FLDS_41	"Sekuntimäärä joka ajajalla on aikaa painaa HYVKS-näppäintä. (Sekunneissa)"
+FL_SCR_FLDS_42	"Suurin hyväksyttävä tauon pituus. (Minuuteissa)"
+FL_SCR_FLDS_43	"Lyhin sallittu mittari-pois/mittari-päälle -jakso. (Minuuteissa)"
+FL_SCR_FLDS_44	"Duration of M_ACTION timer (i sek.)"
+FL_SCR_FLDS_45	"Lyhin sallittu mittari-pois/mittari-päälle -jakso paik.ajoissa. (Minuuteissa)"
+FL_SCR_FLDS_46	"Systeemin saama aika tilauksen täsmäämiseen ennen AIKARAJAA.  (Minuuteissa)"
+FL_SCR_FLDS_47	"1-ei;2-jonon loppuun;3-pois ruudusta ja sakko ajajalle"
+FL_SCR_FLDS_48	"Aikaväli ei-saadun jälkeen jolloin ajaja ei enää pääse ruutuun.  (Minuuteissa)"
+FL_SCR_FLDS_49	"Suurin sallittu aika välillä KOHTA-VAPAA-RUUDUSSA ja RUUTUUN.  (Minuuteissa)"
+FL_SCR_FLDS_50	"Ilmoitusennakko tulevan ajon kirjaamiseksi. (Minuuteissa)"
+FL_SCR_FLDS_51	"Suurin sallittu aika välille HYVKS ja NOUTO/M-PÄÄLLÄ. (Minuuteissa)"
+FL_SCR_FLDS_52	"Aika ennen määräaikaa jolloin HERÄTYS-tilaus on poikkeus. (Minuuteissa)"
+FL_SCR_FLDS_53	"1-rtuinfo;2-rtuinfo, til.typpi ja karttalohko;3-rtu;4-koko nouto-os."
+FL_SCR_FLDS_54	"1-aina;2-jälkeen NOUTO/M-PÄÄLLÄ;3-jälkeen NOUTO/M-PÄÄLLÄ systemin väl. ajoissa"
+FL_SCR_FLDS_55	"Sallitaanko tyyppipyyntöjen kirjaaminen"
+FL_SCR_FLDS_56	"Montako kertaa ajo voidaan hylätä ennen kuin siitä tulee poikkeus"
+FL_SCR_FLDS_57	"Montako ajajan ominaisuutta tilauksen ottaja voi määritellä ajoa varten"
+FL_SCR_FLDS_58	"Montako auton ominaisuutta tilauksen ottaja voi määritellä ajoa varten"
+FL_SCR_FLDS_59	"Montako autoa voidaan määrätä yhdelle ajolle"
+FL_SCR_FLDS_60	"Montako päivää ennen til.ottaja saa kirjata ennakkotilauksen ilman hyväksyntää."
+FL_SCR_FLDS_61	"Aika ennenkuin erikoispyyntö annetaan välittäjälle. (Minuuteissa)"
+FL_SCR_FLDS_62	"Kuinka pitkälle eteenpäin valitaan ennakkotilauksia. (Minuuteissa)"
+FL_SCR_FLDS_63	"Poistetaanko lupien tarkistus"
+FL_SCR_FLDS_64	"Mahdollistetaanko linjalla odotus tälle yhtiölle"
+FL_SCR_FLDS_65	"Näytetäänkö tervehdysrivit tilauksenkirjausnäytöllä"
+FL_SCR_FLDS_66	"1-ei sallittu;2-välitt.hyvks;3-autom.hyvks ja tilauksen uusi välitys"
+FL_SCR_FLDS_67	"Montako ruututasoa käytetään tilausta täsmättäessä"
+FL_SCR_FLDS_68	"1-välittäjän hyväksyminen tarpeen;2-viesti lähetetään automaattisesti"
+FL_SCR_FLDS_69	"1-tarvitaan välittäjän hyväksyntä;2-ajot annetaan automaattisesti"
+FL_SCR_FLDS_70	"Oletustärkeys laskutusajoille"
+FL_SCR_FLDS_71	"Oletustärkeys jatk.tilauksille"
+FL_SCR_FLDS_72	"Oletustärkeys tuleville ajoille"
+FL_SCR_FLDS_73	"Oletustärkeys matkustaja-ajoille"
+FL_SCR_FLDS_74	"Oletustärkeys tavara-ajoille"
+FL_SCR_FLDS_75	"Oletustärkeys \'X\'-tyypin ajoille"
+FL_SCR_FLDS_76	"Oletustärkeys herätystilauksille"
+FL_SCR_FLDS_77	"Sallitaanko manuaalinen mittari päälle/pois matkustaja-ajoissa"
+FL_SCR_FLDS_78	"Sallitaanko manuaalinen mittari päälle/pois tavara-ajoissa"
+FL_SCR_FLDS_79	"Sallitaanko manuaalinen mittari päälle/pois x-tyypin ajoissa"
+FL_SCR_FLDS_80	"1-ei;2-manuaalinen;3-ruudusta ruutuun -taul.;4-postinumerosta toiseen -taul."
+FL_SCR_FLDS_81	"Mihin porttiin tämän yhtiön avoim. ennak. kirjoitin on liitetty"
+FL_SCR_FLDS_82	"Kuinka usein ennakkotilausraportti tulostetaan"
+FL_SCR_FLDS_83	"Kuinka usein viestiraportti tulostetaan"
+FL_SCR_FLDS_84	"Alueen oletuskoodi, jos tämän käyttäjän käyttäjätiedot eivät anna sitä"
+FL_SCR_FLDS_85	"Oletussuuntanumero jota käytetään, jos tämän käyttäjän käyttäjätiedot eivät anna sitä"
+FL_SCR_FLDS_86	"Tilauksen oletustyyppi, jos käyttäjän käyttäjätiedot eivät anna sitä"
+FL_SCR_FLDS_87	"Oletusarvo tilaushistorian etsinnälle. (Minuuteissa)"
+FL_SCR_FLDS_88	"3-tilap. ruutujärj.;4-Closest Taxi(GPS)/FIFO;5-Zone Queueing Primary/Closest Taxi(GPS) backups"
+FL_SCR_FLDS_89	"Ensimmäinen yläraja-alue. (Minuuteissa)"
+FL_SCR_FLDS_90	"Teksti joka vastaa ensimmäistä yläraja-aluetta (esim. 10-15)"
+FL_SCR_FLDS_91	"Toinen yläraja-alue. (Minuuteissa)"
+FL_SCR_FLDS_92	"Teksti joka vastaa toista yläraja-aluetta(esim. 10-15)"
+FL_SCR_FLDS_93	"Kolmas yläraja-alue. (Minuuteissa)"
+FL_SCR_FLDS_94	"Teksti joka vastaa kolmatta yläraja-aluetta(esim. 10-15)"
+FL_SCR_FLDS_95	"Neljäs yläraja-alue. (Minuuteissa)"
+FL_SCR_FLDS_96	"Teksti joka vastaa neljättä yläraja-aluetta(esim. 10-15)"
+FL_SCR_FLDS_97	"Viides yläraja-alue. (Minuuteissa)"
+FL_SCR_FLDS_98	"Teksti joka vastaa viidettä yläraja-aluetta(esim. 10-15)"
+FL_SCR_FLDS_99	"Kuudes yläraja-alue. (Minuuteissa)"
+FL_SCR_FLDS_100	"Teksti joka vastaa kuudetta yläraja-aluetta(esim. 10-15)"
+FL_SCR_FLDS_101	"Seitsemäs yläraja-alue. (Minuuteissa)"
+FL_SCR_FLDS_102	"Teksti joka vastaa seitsemättä yläraja-aluetta(esim. 10-15)"
+FL_SCR_FLDS_103	"Kahdeksas yläraja-alue. (Minuuteissa)"
+FL_SCR_FLDS_104	"Teksti joka vastaa kahdeksatta yläraja-aluetta(esim. 10-15)"
+FL_SCR_FLDS_105 "Oletusarvo tekstille, jos raja-alueita ei ole annettu"
+FL_SCR_FLDS_106 "Puuttuva kuittausaikarajajakso sekunneissa"
+FL_SCR_FLDS_107 "Puuttuva kuittauspyyntöjen uusintakertojen raja"
+FL_SCR_FLDS_108	"Kuinka usein tarkistetaan joutilaat autot (minuuteissa)"
+FL_SCR_FLDS_109	"Tuntimäärä jonka auto saa olla joutilaana ennen kuin se poistetaan systeemistä"
+FL_SCR_FLDS_110	"1-Ei tulomaksua; 2-Mittari päällä ennen noutoa"
+FL_SCR_FLDS_111	"Varmistustasojen määrä noutoajan laskemiseksi (1-8)"
+FL_SCR_FLDS_112	"Kuinka usein noutoaika-arviot lasketaan (minuuteissa)"
+FL_SCR_FLDS_113	"Miten systeemikutsut käsitellään: 1-Pakollinen systeemimääritysten hyväksyminen; 2-Ohita systeemimääritykset"
+FL_SCR_FLDS_114	"Aikaraja ei voimassa        (  )"
+FL_SCR_FLDS_115	"Tulomaksu                   ( )"
+FL_SCR_FLDS_116	"Arviotasojen määrä          ( )"
+FL_SCR_FLDS_117	"Arviotaajuus                (   )"
+FL_SCR_FLDS_118	"Systeemikutsut              ( )"
+FL_SCR_FLDS_119	"Joutentarkistus             (   )"
+FL_SCR_FLDS_120	"0-vain ruutu; 1-ruutu ja ruudun kuvaus; 2-kuten 1 plus kartta; 3- n/a; 4-täydellinen osoite"
+FL_SCR_FLDS_121	"Ajonvälitysmuoto: 0-Muoto 0; 1-Muoto 1"
+FL_SCR_FLDS_122	"Ajonväl      ( )"
+FL_SCR_FLDS_123 "Enin määrä puuttuvia kuittauksia, joita voi pyytää ITM:ltä. 0=ei yhtään."
+FL_SCR_FLDS_124 "1-ei;2-jonon loppuun;3-pois ruudusta ja sakko ajajalle"
+FL_SCR_FLDS_125 "Number of minutes past call due time to allow flag request."
+FL_SCR_FLDS_126 "Number of time call intervals to send on F35 requests."
+FL_SCR_FLDS_127 "Time call lead time supplement (minutes)"
+FL_SCR_FLDS_128 "Flat Rate Distance Filter   ( )"
+FL_SCR_FLDS_129 "F"
+FL_SCR_FLDS_130 "GPS active: K - active E - inactive"
+FL_SCR_FLDS_131 "GPS time: how old can a GPS position be?"
+FL_SCR_FLDS_132 "GPS distance limit used in matching algorithm (meters)"
+FL_SCR_FLDS_133 "Send Call Type              ( )"
+FL_SCR_FLDS_134 "Auto Reject Time            (   )"
+FL_SCR_FLDS_135 "Whether the call type will be sent in the trip offer (K/E)"
+FL_SCR_FLDS_136 "Allowed aging on a call for determination of auto-reject approval (secs)"
+FL_SCR_FLDS_137 "Maximum X coordinate allowed for GPS"
+FL_SCR_FLDS_138 "Minimum X coordinate allowed for GPS"
+FL_SCR_FLDS_139 "Maximum Y coordinate allowed for GPS"
+FL_SCR_FLDS_140 "Minimum Y coordinate allowed for GPS"
+FL_SCR_FLDS_141 "Coordinate system used for GPS: 1 - Latitude/Longitude ; 2 - UTM coordinates"
+FL_SCR_FLDS_142 "Should system automatically book taxis based on GPS position? (J/N)"
+FL_SCR_FLDS_143 "Minimum number of minutes required for no show request"
+FL_SCR_FLDS_144 "Aika minuuteissa, minka jalkeen tilaus siirtyy FRI tilaan"
+FL_SCR_FLDS_145 "Emergency Range             (     )"
+FL_SCR_FLDS_146 "Enroute Break               ( )"
+FL_SCR_FLDS_147 "Range for sending emergency broadcast message (meters)"
+FL_SCR_FLDS_148 "Should Enroute Breaks be allowed (Y/N)"

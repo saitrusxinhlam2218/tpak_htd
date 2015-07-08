@@ -1,0 +1,94 @@
+$ /****************************************************************************
+$ *                                                                           *
+$ *                           S C C S   I N F O                               *
+$ *                                                                           *
+$ * @(#)  sysmgmt.MSF.fin; Rel: 10.1.3.1; Get date: 5/18/95 at 10:20:12
+$ * @(#)  Last delta: 12/5/94 at 11:04:06
+$ * @(#)  SCCS File: /taxi/sccs/s.sysmgmt.MSF.fin
+$ *                                                                           *
+$ * Copyright (c) 1990 - MDI Seattle                                          *
+$ *                                                                           *
+$ *****************************************************************************/
+$ #ident "@(#) head:sysmgmt.MSF.fin	10.1.3.1"
+
+$ /*
+$  * Message file for PROGRAM: system_mgmt
+$  * CATALOG:   system_mgmt.cat
+$  * MNEMONICS: smgmt_strdefs.h
+$  */
+
+$quote "
+$delset 1
+$set 1
+
+$ /*    NOTE TO THE TRANSLATOR                        			*/
+$ /*    Quoted text will be followed by a maximum string length if the  */
+$ /*    text length is different than the number of chars in the string.*/
+$ /*    If no string length is entered default to the current number of */
+$ /*    characters.  A comment about the string is also included where  */
+$ /*    necessary.                                                      */
+
+1	"  TaxiPak ohjaustoiminnot\n"					/* 50 */
+2	"   SYSTEEMIN HOITO\n"					/* 50 */
+3	"1  Kylmä aloitus          "					/* 50 */
+4	"2  Lämmin aloitus         "					/* 50 */
+5	"3  Start Select Process   "					/* 50 */
+6	"4  Stop Select Process"				/* 50 */
+7	"5  Reserved"				/* 50 */
+8	"6  Näytä prosessit"					/* 50 */
+9	"7  Pysäytä TaxiPak-systeemi"					/* 50 */
+10	"8  Varmistuskoneen tila"				/* 50 */
+11	"9  Siirrä kontrolli varakoneelle"		/* 50 */
+12	"\'e\' on edellinen valikko tai lopetus."	/* 50 */
+13	"Anna numero ja sen jälkeen <CR>"		/* 50 */
+14	"valinnan suorittamiseksi: "				/* 50 */
+15	"Näyttöpääte ei ole päällä ......"				/* 50 */
+16	"Paina <CR> jatkaaksesi ........"			/* 50 */
+17	"Ole hyvä ja odota kun näyttöpääte lämpiää ........"		/* 50 */
+18	"Yhteyttä ei saatu ... kumottu"		/* 50 */
+19	"Kylmä aloitus käynnissä ...."		/* 50 */
+20	"Lämmin aloitus käynnissä ...."		/* 50 */
+21	"Peilauksen aloitus käynnissä ...."		/* 50 */
+22	"TaxiPak pysäytetään ...."		/* 50 */
+23	"Oletko varma?(K/E)"			/* 50 */
+24	"Paina valinnaista näppäintä ..."			/* 50 */
+25	"Up"						/* Do not translate */
+26	"Down"						/* Do not translate */
+27	"Suspended"					/* Do not translate */
+28	"Ignore"					/* Do not translate */
+29	"Stopped"					/* Do not translate */
+30	"Manager"					/* Do not translate */
+31	"Secondary"					/* Do not translate */
+32	"User Load"					/* Do not translate */
+33	"No Look"					/* Do not translate */
+34	"Unknown"					/* Do not translate */
+35	"PROCESS"					/* Do not translate */
+36	"PID"						/* Do not translate */
+37	"STATUS"					/* Do not translate */
+38	"LAST CONTACT TIME"				/* Do not translate */
+39	"GROUP"						/* Do not translate */
+40	"PID"						/* Do not translate */
+41	"PPID"						/* Do not translate */
+42	"LOADED"					/* Do not translate */
+43	"Paina <CR> jatkaaksesi ...."				/* 50 */
+44	"TaxiPak:in lämminaloitus on tehty ...."					/* 50 */
+45	"TaxiPak:in kylmäaloitus on tehty ...."					/* 50 */
+46	"TaxiPak toimii jo, pysäytä syst. ja lataa taas."		/* 50 */
+47	"TaxiPak on pysäytetty ... "					/* 50 */
+48	"Peilaus on aloitettu ......"					/* 50 */
+49	"Peilausta EI ole aloitettu ......"					/* 50 */
+50	"Peilaus on lopetettu"					/* 50 */
+51	"Varmistuskonetta EI läsnä tai yhdistetty ....."	/* 50 */
+52	"Varmistuskone ON läsnä ja yhdistetty ....."		/* 50 */
+53	"               NÄILLÄ TIEDOSTOILLA EHKÄ PEILAUS"		/* 50 */
+54	"Kirjoita tiedoston numero 1.."					/* 50 */
+55	"halutun tiedoston peilaamiseksi"					/* 50 */
+56	"'e' on edellinen valikko, * on kaikki tiedostot"		/* 50 */
+57	"Vastaus EI kelpaa"					/* 50 */
+58	"Näyttöpääte on hävinnyt...."					/* 50 */
+59	"TaxiPak aloitus epäonnistui ....."					/* 50 */
+60        "Ei voi aloittaa TaxiPak systeemi varakoneella ....."
+61        "Poistetaanko nykyiset autotilanteet tietokannasta (K/E)?"
+62        "Nykyiset autotilanteet poistetaan."
+63	"8  Aloita tapahtuman varmistus"
+64	"9  Lopeta tapahtuman varmistus"

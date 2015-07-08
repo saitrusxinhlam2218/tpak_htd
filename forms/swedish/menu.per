@@ -1,0 +1,26 @@
+database mads
+screen
+{
+						Menyfil underhåll
+
+Nummer      Kommando   Sista menyobjekt     Typ    Beskrivning
+[f000    ]  [abc]      [a]                  [b]    [f002                                ]
+
+UNIX-kommando                               Föregående skärm
+[f003                                    ]  [c]
+}
+end
+tables
+menu
+attributes
+f000 = menu.mf_nbr,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Sekventiellt nummer använt för korsref. för rättigheter";
+abc = menu.mf_command,RIGHT,REQUIRED,NOUPDATE,COMMENTS="En kommandosträng som tilldelats varje menyobjekt";
+a = menu.mf_last_menu_item,include=(J,N),UPSHIFT,COMMENTS="J/N. Om detta menyobjekt är det sista på menyn eller inte";
+b = menu.mf_type,UPSHIFT,include=(E,M,I),COMMENTS="Menyobjekt kan vara 'M'eny, 'K'ommando,'S'kärm.";
+f002 = menu.mf_desc,COMMENTS="Den eg. teckenbeskrivn. som ska visas på skärmmenyn";
+f003 = menu.mf_unix_string,COMMENTS="UNIX-kommando som ska köras om menyobj. är ext. exekverbart";
+c = menu.mf_prev_scr_flag,UPSHIFT,COMMENTS="Föregående skärmflagga";
+end
+instructions
+   delimiters "()";
+end

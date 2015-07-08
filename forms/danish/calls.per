@@ -1,0 +1,152 @@
+{
+|***********************************************************************
+|                 RCS INFO
+|
+|  @(#)  $RCSfile: calls.per,v $
+|  @(#)  $Revision: 1.4 $
+|  @(#)  $Date: 1998/01/08 19:35:23 $
+|  @(#)  $Author: taxiadm $
+|  @(#)  $Source: /taxi-scan/taxi_proj/cvs/taxi-scan/src/forms/danish/calls.per,v $
+|
+|  Copyright (c) 1994 - MobileSoft Consulting, Inc. Woodinville WA
+|
+|**********************************************************************/
+|ident "@(#) head:$RCSfile: calls.per,v $	$Revision: 1.4 $"
+}
+database mads
+screen
+{
+						VEDLIGEH. AF BESTILLINGS-FIL
+
+Best.nummer             Grupperet med           Vgnpk  Type     Forlangt
+[f000                ]  [f001                ]  [c]    [f002 ]  [a]/[b]
+
+Adresse           Nr Suf            Navn                   Type             Lejl/vær  Kom   Dist   Bemærkning                     
+         [f007  ]    [d]    [a0]    [f008                ] [a1 ]  [a2]      [f011 ]   [a6 ] [m  ]  [f003                          ]
+
+Krydsende gade                   Navn                   Type             Passagernavn            Telefon           Lok         
+                        [a3]      [f010                ] [a4 ]  [a5]   [f013                ]    [a7 ] [f014   ] [f015 ]
+
+Dest adresse   Nr Suf            Navn                   Type             Lejl/vær   Kom   Dist   Bemærkning                     
+       [f017  ]   [e]    [a8]    [f018                ] [a9 ]  [b0]    [f019 ]  [b1 ] [n  ]  [f016                          ]
+
+Bemærkning
+[f004                                                            ]
+
+Pers. ønske         Vogn Flag  Attribut       Chauf. Flag  Attribut       Ant vgn Prioritet   Advise Arrival
+[f021]   [f]             [g]   [f022    ]            [h]   [f023    ]        [i]     [o ]       [p]
+}
+screen
+{
+						VEDLIGEH. AF BESTILLINGS-FIL
+
+Kontonummer          Bestilt af              Kontakt                 Leveringsbevis          Kvitter.tid  Lokal  Ventlinie
+[f027              ] [f028                ]  [f029                ]  [f030                ]  [f033  ]     [j]    [f026]
+
+Pris         Noter.dato    Noter.tid    L.bev      Noteret af  ændret af   Forf.dato    Forf.tid   Ber.ventetid 
+[f034    ]  [f031     ]   [f032  ]      [k]        [f038]      [f039]      [f037     ]  [f042  ]   [f036   ]
+
+Afsendel.dato   Afsendel.tid     Opsml.dato   Opsml.tid    Slutdato    Sluttid      Pris          Abonnementsbest.nr.      
+[f043     ]      [f044  ]         [f045     ]  [f046  ]     [f050     ] [f051  ]     [f053    ]    [f054                ]
+
+Vgnnr    Chauffør  Afsendt af     Udløbsdato   Godkend.kode          Dato/tid              af      Prioritetsstatus  
+[f055 ]  [f056 ]   [f057]         [f058    ]            [f052      ] [f059              ] [f060]  [b2]
+
+Tilføj info 1                Tilføj info 2                Chaufførbesk                           Firmanavn               
+[f061                     ]  [f062                     ]  [f063                               ]  [f047                     ]
+
+A kort-koord D kort-koord  Dist.beskrivelse        Skærmtype  Status
+[f064    ]   [f065    ]    [f067                ]  [l]       [f068    ]
+}
+end
+tables
+calls
+attributes
+f000 = calls.cl_nbr,NOENTRY,NOUPDATE,COMMENTS="Systemstildelt best.nummer";
+f001 = calls.cl_grouped_with,NOENTRY,UPSHIFT,COMMENTS="Best.nr på turen som denne tur er grupperet sammen med";
+c = calls.cl_fleet,NOENTRY,UPSHIFT,COMMENTS="Vognpark-ID";
+f002 = calls.cl_extended_type,NOENTRY,UPSHIFT,COMMENTS="En kombination af best.typer som afgør hvordan denne bestilling fremvises";
+a = calls.cl_pos_in_group,include=(0 to 9),default=0,NOENTRY,UPSHIFT,COMMENTS="Best. position hvis flere vogne behøves";
+b = calls.cl_nbr_in_group,include=(0 to 9),default=0,NOENTRY,UPSHIFT,COMMENTS="Antal bestillinger grupperede sammen til flere vogne";
+f007 = calls.cl_pckup_str_nbr,NOENTRY,RIGHT,COMMENTS="Adressens husnummer";
+d = calls.cl_pckup_str_suf,NOENTRY,UPSHIFT,COMMENTS="Alfab. husnummersuffiks";
+a0 = calls.cl_pckup_pre_dir,NOENTRY,UPSHIFT,COMMENTS="  ";
+f008 = calls.cl_pckup_str_name,NOENTRY,UPSHIFT,COMMENTS="Gadenavn";
+a1 = calls.cl_pckup_str_type,NOENTRY,UPSHIFT,COMMENTS="Gadetype (f.eks. VEJ)";
+a2 = calls.cl_pckup_post_dir,NOENTRY,UPSHIFT,COMMENTS="  ";
+f011 = calls.cl_pckup_apt_room,NOENTRY,UPSHIFT,COMMENTS="Adressens lejligheds-eller værelsenummer";
+A6 = calls.cl_pckup_city,NOENTRY,UPSHIFT,COMMENTS="Forkortelse på kommunenavn";
+m = calls.cl_pckup_zone,NOENTRY,include=(0 to 999),COMMENTS="Bruger-indskrevet distriktnr. eller computerfremstillet distriktnr. (1-999)";
+f003 = calls.cl_pckup_adr_cmnt,NOENTRY,UPSHIFT,COMMENTS="Adressebemærkning fra geo-filen";
+a3 = calls.cl_intr_pre_dir,NOENTRY,UPSHIFT,COMMENTS="  ";
+f010 = calls.cl_intr_str_name,NOENTRY,UPSHIFT,COMMENTS="Krydsende gades navn";
+a4 = calls.cl_intr_str_type,NOENTRY,UPSHIFT,COMMENTS="Krydsende gades type";
+a5 = calls.cl_intr_post_dir,NOENTRY,UPSHIFT,COMMENTS="  ";
+f013 = calls.cl_passenger_name,NOENTRY,UPSHIFT,COMMENTS="Passagerens navn";
+a7 = calls.cl_phone_area,NOENTRY,COMMENTS="  ";
+f014 = calls.cl_phone_nbr,NOENTRY,COMMENTS="Telefonnumer";
+f015 = calls.cl_phone_ext,NOENTRY,COMMENTS="Telefon lokalnummer";
+f017 = calls.cl_dest_str_nbr,NOENTRY,RIGHT,COMMENTS="Destinations husnummer";
+e = calls.cl_dest_str_suf,NOENTRY,UPSHIFT,COMMENTS="Alfab. husnummersuffiks";
+a8 = calls.cl_dest_pre_dir,NOENTRY,UPSHIFT,COMMENTS="  ";
+f018 = calls.cl_dest_str_name,NOENTRY,UPSHIFT,COMMENTS="Destinationens gadenavn";
+a9 = calls.cl_dest_str_type,NOENTRY,UPSHIFT,COMMENTS="Destinationens gadetype";
+b0 = calls.cl_dest_post_dir,NOENTRY,UPSHIFT,COMMENTS="  ";
+f019 = calls.cl_dest_apt_room,NOENTRY,UPSHIFT,COMMENTS="Destinationens lejligheds- eller værelsenummer";
+b1 = calls.cl_dest_city,NOENTRY,UPSHIFT,COMMENTS="Forkortelse på destinationskommune";
+n = calls.cl_dest_zone,NOENTRY,include=(0 to 999),default=0,COMMENTS="Bruger-indskrevet eller computerfremstillet destinations-distriktnummer (1-999)";
+f016 = calls.cl_dest_adr_cmnt,NOENTRY,UPSHIFT,COMMENTS="Destinations adressebemærkning fra geo-filen";
+f004 = calls.cl_general_cmnt,NOENTRY,UPSHIFT,COMMENTS="Bemærkningslinie";
+f021 = calls.cl_personal_veh,NOENTRY,include=(0 to 9999),default=0,COMMENTS="Nummer på den vogn som blev specielt forlangt af kunden (1-9999)";
+f = calls.cl_personal_rqst,NOENTRY,include=(" ",K,H),UPSHIFT,COMMENTS="'K'un denne specielle vogn eller send den 'H'vis den er til rådighed";
+g = calls.cl_veh_attr_flag,NOENTRY,include=(J,N),default="N",UPSHIFT,COMMENTS="Om en vogn med specielle karakteristikker behøves for denne tur (J,N)";
+f022 = calls.cl_veh_attr,NOENTRY,default="NNNNNNNN",UPSHIFT,COMMENTS="Definerer specifikke attributter nødvendige for denne tur";
+h = calls.cl_drv_attr_flag,NOENTRY,include=(J,N),default="N",UPSHIFT,COMMENTS="Om en chauffør med specielle karakteristikker behøves for denne tur (J,N)";
+f023 = calls.cl_drv_attr,NOENTRY,default="NNNNNNNN",UPSHIFT,COMMENTS="Definerer specifikke attributter nødvendige for denne tur";
+i = calls.cl_nbr_of_vehs,NOENTRY,include=(1 to 9),default=1,COMMENTS="Antal vogne nødvendige for denne tur";
+o = calls.cl_priority,NOENTRY,include=(1 to 63),default=25,COMMENTS="Bestillingsprioritet";
+p = calls.cl_advise_arrival,NOENTRY,include=(J,N),default="N",UPSHIFT,COMMENTS="Whether the driver should advise the dispatcher upon arrival (Y,N)";
+f027 = calls.cl_charge_nbr,NOENTRY,UPSHIFT,COMMENTS="Kundekontonummer eller kontokort";
+f028 = calls.cl_requested_by,NOENTRY,UPSHIFT,COMMENTS="Navn på person som bestilte turen";
+f029 = calls.cl_person_to_see,NOENTRY,UPSHIFT,COMMENTS="Kontaktperson på destinationsadressen";
+f030 = calls.cl_pod_name,NOENTRY,UPSHIFT,COMMENTS=" Navn på person som kvitterede for leveringen";
+f033 = calls.cl_pod_time,NOENTRY,RIGHT,COMMENTS="Tid personen kvitterede for leveringen";
+j = calls.cl_local,NOENTRY,include=(J,N),default="N",UPSHIFT,COMMENTS="Om dette er en lokaltur eller ej (J,N)";
+f026 = calls.cl_hold_line,NOENTRY,COMMENTS="Liniens lokalnummer hvor kunden venter";
+f034 = calls.cl_call_rate,NOENTRY,RIGHT,COMMENTS="Den pris fra pristabellen som blev givet til kunden";
+f031 = calls.cl_date_in,UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="Dato bestillingen blev noteret";
+f032 = calls.cl_time_in,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Tid bestillingen blev noteret";
+k = calls.cl_pod_required,NOENTRY,include=(J,N),default="N",UPSHIFT,COMMENTS="Om leveringsbevis ønskes (J,N)";
+f038 = calls.cl_entered_by,NOENTRY,RIGHT,COMMENTS="Bruger-ID på personen som har noteret bestillingen";
+f039 = calls.cl_last_changed_by,NOENTRY,RIGHT,COMMENTS="Bruger-ID på den sidste person som ændrede denne abonnementsbestilling";
+f037 = calls.cl_due_date,NOENTRY,NOUPDATE,COMMENTS="Bestillingens startdato";
+f042 = calls.cl_due_time,NOENTRY,NOUPDATE,COMMENTS="Bestillingens starttid";
+f036 = calls.cl_est_wait_time,NOENTRY,UPSHIFT,COMMENTS="Beregnet ventetid som er givet til kunden";
+f043 = calls.cl_dispd_date,NOENTRY,NOUPDATE,COMMENTS="Dato denne tur blev afsendt";
+f044 = calls.cl_dispd_time,NOENTRY,NOUPDATE,COMMENTS="Tid denne tur blev afsendt";
+f045 = calls.cl_pckup_date,NOUPDATE,NOENTRY,NOUPDATE,COMMENTS="Dato kunden blev hentet";
+f046 = calls.cl_pckup_time,NOUPDATE,NOENTRY,NOUPDATE,COMMENTS="Tid kunden blev hentet";
+f050 = calls.cl_close_date,NOENTRY,NOUPDATE,COMMENTS="Dato kunden blev sat af";
+f051 = calls.cl_close_time,NOENTRY,NOUPDATE,COMMENTS="Tid kunden blev sat af";
+f053 = calls.cl_fare_amount,NOENTRY,RIGHT,COMMENTS="Beløb krævet for turen";
+f054 = calls.cl_subsc_call_nbr,NOENTRY,RIGHT,COMMENTS="Abonnementsbest. nummer";
+f055 = calls.cl_veh_nbr,NOENTRY,RIGHT,COMMENTS="Vognen som kørte turen";
+f056 = calls.cl_drv_id,NOENTRY,RIGHT,COMMENTS="Chauffør som kørte turen";
+f057 = calls.cl_dispatched_by,NOENTRY,include=(-1,1 to 9999),RIGHT,COMMENTS="Bruger-ID på den person som manuelt afsendte denne tur"; 
+f058 = calls.cl_expire_date,NOENTRY,COMMENTS="Kontokorts udløbsdato";
+f052 = calls.cl_approve_code,NOENTRY,UPSHIFT,COMMENTS="Konto-service godkendelseskode";
+f059 = calls.cl_approve_date,NOENTRY,RIGHT,COMMENTS="Godkendelsesdato";
+f060 = calls.cl_approve_by,NOENTRY,RIGHT,COMMENTS="Telefonistnummer som godkendte konto";
+b2=calls.cl_pri_status,NOENTRY,RIGHT,COMMENTS="Best. prioritet hvis det er en åben tur; 64 hvis turen en færdig";
+f061 = calls.cl_ac_addt1_info1,NOENTRY,UPSHIFT,COMMENTS="Information indskrevet som svar på spørgsmål fra konto-filen ";
+f062 = calls.cl_ac_addt1_info2,NOENTRY,UPSHIFT,COMMENTS="Information indskrevet som svar på spørgsmål fra konto-filen ";
+f063 = calls.cl_driver_msg,NOENTRY,UPSHIFT,COMMENTS="En besked sendt fra telefonist til chauffør";
+f047 = calls.cl_company_name,NOENTRY,UPSHIFT,COMMENTS="Firmanavn hvis turen er en kontotur";
+f064 = calls.cl_pckup_pmap,NOENTRY,UPSHIFT,COMMENTS="Adressens kortkode";
+f065 = calls.cl_dest_dmap,NOENTRY,UPSHIFT,COMMENTS="Destinations kortkode";
+f067 = calls.cl_zone_desc,NOENTRY,UPSHIFT,COMMENTS="Distriktsbeskrivelse";
+l = calls.cl_screen_type,NOENTRY,include=(A,U),UPSHIFT,COMMENTS="Skærmtype : 'A'lmindelig eller 'U'dvidet";
+f068 = calls.cl_status,NOENTRY,UPSHIFT,COMMENTS="Best.status (f eks F[RDIG)";
+instructions
+   delimiters "()";
+end

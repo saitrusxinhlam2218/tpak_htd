@@ -1,0 +1,35 @@
+{
+|***********************************************************************
+|                 RCS INFO
+|
+|  @(#)  $RCSfile: exctype.per,v $
+|  @(#)  $Revision: 1.4 $
+|  @(#)  $Date: 1998/01/08 19:35:36 $
+|  @(#)  $Author: taxiadm $
+|  @(#)  $Source: /taxi-scan/taxi_proj/cvs/taxi-scan/src/forms/danish/exctype.per,v $
+|
+|  Copyright (c) 1994 - MobileSoft Consulting, Inc. Woodinville WA
+|
+|**********************************************************************/
+|ident "@(#) head:$RCSfile: exctype.per,v $	$Revision: 1.4 $"
+}
+
+database mads
+screen
+{
+						VEDLIGEH. AF UNDTAGELSESTYPE-FIL
+
+Nummer    Gruppe     Beskrivelse                       Kort beskr.
+[f0]      [a ]       [f002                          ]  [f003    ] 
+}
+end
+tables
+exctype
+attributes
+f0   = exctype.et_nbr,RIGHT,REQUIRED,NOENTRY,NOUPDATE,COMMENTS="Et permanent nummer som identif. denne undtagelse";
+a    = exctype.et_group_nbr,include=(1 to 12),RIGHT,UPSHIFT,COMMENTS="Undt.sammenfatningsgruppe hvor denne undtagelse hører til (1-12)";
+f002 = exctype.et_desc,UPSHIFT,COMMENTS="Beskrivelse af denne undtagelse";
+f003 = exctype.et_short_desc,UPSHIFT,REQUIRED,COMMENTS="Kort beskrivelse af denne undtagelse";
+instructions
+   delimiters "()";
+end

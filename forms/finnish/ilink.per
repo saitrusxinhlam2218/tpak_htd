@@ -1,0 +1,79 @@
+{
+|***********************************************************************
+|                 RCS INFO
+|
+|  @(#)  $RCSfile: ilink.per,v $
+|  @(#)  $Revision: 1.2 $
+|  @(#)  $Date: 2002/03/25 16:38:21 $
+|  @(#)  $Author: jwelch $
+|  @(#)  $Source: /taxi-scan/taxi_proj/cvs/taxi-scan/src/forms/finnish/ilink.per,v $
+|
+|  Copyright (c) 1994 - MobileSoft Consulting, Inc. Woodinville WA
+|
+|**********************************************************************/
+|ident "@(#) head:$RCSfile: ilink.per,v $	$Revision: 1.2 $"
+}
+
+database mads
+screen
+{
+						Tilaustiedoston hoito
+
+TaxiPak Call Nbr        T800 Call ID            Status          Origin
+[f000           ]       [f001         ]         [f002      ]    [a   ]
+
+Noutokatunro                    Nimi                   Tyyppi           Huoneisto Kunta  Ruutu  Huomautus                      
+        [f007  ]                [f008                ] [a1 ]            [f011 ]   [a6 ] [m  ]  [f003                          ]
+
+Risteys                         Nimi                   Tyyppi           Matkustaja                Puhelinnumero
+	                        [f010                ] [a4 ]            [f013                ]    [f014              ]
+
+M‰‰r‰np Katunro                 Katu                   Tyyppi           Huoneisto Kunta  Ruutu  Huomautus                   
+        [f017  ]                [f018                ] [a9 ]            [f019 ]   [b1 ] [n  ]  [f016                          ]
+
+Muita huomautuksia
+[f004                                                            ]
+
+Erik.pyynnˆt     Autoja  T‰rkeys     Ilmoita saapuminen
+[f021]   [f]      [i]     [o ]            [p]
+}
+end
+tables
+ilink
+calls
+attributes
+f000 = ilink.tpak_nbr=calls.cl_nbr,color=REVERSE,NOENTRY,NOUPDATE,COMMENTS="TaxiPak Systeemin antama tilauksen numero";
+f001 = ilink.t800_nbr,NOENTRY,NOUPDATE,COMMENTS="Taxi800 Systeemin antama tilauksen numero";
+f002 = ilink.status,NOENTRY,NOUPDATE,COMMENTS="Interlink Order status";
+a = ilink.origin,NOENTRY,NOUPDATE,COMMENTS="Originating system for order";
+f007 = calls.cl_pckup_str_nbr,NOENTRY,RIGHT,COMMENTS="Noutokadun katunumero";
+f008 = calls.cl_pckup_str_name,NOENTRY,UPSHIFT,COMMENTS="Noutokadun kadunnimi";
+a1 = calls.cl_pckup_str_type,NOENTRY,UPSHIFT,COMMENTS="Noutokadun tyyppi(esim UMPIKUJA)";
+f011 = calls.cl_pckup_apt_room,NOENTRY,UPSHIFT,COMMENTS="Nouto-osoitteen huoneisto";
+A6 = calls.cl_pckup_city,NOENTRY,UPSHIFT,COMMENTS="Noutoalueen lyhenne";
+m = calls.cl_pckup_zone,NOENTRY,include=(0 to 999),COMMENTS="K‰ytt‰j‰n tai tietokoneen antama noutoalueen numero (1-999)";
+f003 = calls.cl_pckup_adr_cmnt,NOENTRY,UPSHIFT,COMMENTS="Noutoalueen selitys karttatiedostosta";
+f010 = calls.cl_intr_str_name,NOENTRY,UPSHIFT,COMMENTS="Risteyksen kadunnimi";
+a4 = calls.cl_intr_str_type,NOENTRY,UPSHIFT,COMMENTS="Risteyksen katutyyppi";
+f013 = calls.cl_passenger_name,NOENTRY,UPSHIFT,COMMENTS="Matkustajan nimi";
+f014 = calls.cl_phone_number,NOENTRY,COMMENTS="Puhelinnumero";
+f017 = calls.cl_dest_str_nbr,NOENTRY,RIGHT,COMMENTS="P‰‰m‰‰r‰osoitteen katunumero";
+f018 = calls.cl_dest_str_name,NOENTRY,UPSHIFT,COMMENTS="P‰‰m‰‰r‰osoitteen kadunnimi";
+a9 = calls.cl_dest_str_type,NOENTRY,UPSHIFT,COMMENTS="P‰‰m‰‰r‰osoitteen katutyyppi";
+f019 = calls.cl_dest_apt_room,NOENTRY,UPSHIFT,COMMENTS="P‰‰m‰‰r‰osoitteen huoneisto";
+b1 = calls.cl_dest_city,NOENTRY,UPSHIFT,COMMENTS="P‰‰m‰‰r‰alueen lyhenne";
+n = calls.cl_dest_zone,NOENTRY,include=(0 to 999),default=0,COMMENTS="K‰ytt‰j‰n tai tietokoneen antama p‰‰m‰‰r‰alueen numero (1-999)";
+f016 = calls.cl_dest_adr_cmnt,NOENTRY,UPSHIFT,COMMENTS="P‰‰m‰‰r‰alueen selitys karttatiedostosta";
+f004 = calls.cl_general_cmnt,NOENTRY,UPSHIFT,COMMENTS="Ensimm‰inen osa muille huomautuksille varatusta alueesta";
+f021 = calls.cl_personal_veh,NOENTRY,include=(0 to 9999),default=0,COMMENTS="Asiakkaan erityisesti pyyt‰m‰n auton tunnus (1-9999)";
+f = calls.cl_personal_rqst,NOENTRY,include=(" ",V,J),UPSHIFT,COMMENTS="'V'ain erityisesti pyydetty auto tai l‰het‰ 'J'os saatavana";
+i = calls.cl_nbr_of_vehs,NOENTRY,include=(1 to 9),default=1,COMMENTS="Autom‰‰r‰ t‰m‰n ajon hoitamiseen";
+o = calls.cl_priority,NOENTRY,include=(1 to 63),default=25,COMMENTS="Tilauksen t‰rkeys";
+p = calls.cl_advise_arrival,NOENTRY,include=(K,E),default="E",UPSHIFT,COMMENTS="Pit‰‰kˆ ajajan ilmoittaa v‰litt‰j‰lle saapumisesta (K,E)";
+
+end
+instructions
+   delimiters "()";
+        ilink master of calls;
+end
+

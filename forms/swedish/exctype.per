@@ -1,0 +1,20 @@
+database mads
+screen
+{
+						Fil för undantagstyp underhåll
+
+Nummer    Grupp      Beskrivning                       Kort beskr
+[f0]      [a ]       [f002                          ]  [f003    ] 
+}
+end
+tables
+exctype
+attributes
+f0   = exctype.et_nbr,RIGHT,REQUIRED,NOENTRY,NOUPDATE,COMMENTS="Ett permanent nr som identifierar detta undantag";
+a    = exctype.et_group_nbr,include=(1 to 12),RIGHT,UPSHIFT,COMMENTS="Sammanfattningsgrupp för undantag som detta undantag tillhör (1-12)";
+f002 = exctype.et_desc,UPSHIFT,COMMENTS="Beskrivning av detta undantag";
+f003 = exctype.et_short_desc,UPSHIFT,REQUIRED,COMMENTS="Kort beskrivning av detta undantag";
+end
+instructions
+   delimiters "()";
+end

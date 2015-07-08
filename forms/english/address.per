@@ -1,0 +1,56 @@
+{
+|***********************************************************************
+|                 RCS INFO
+|
+|  @(#)  $RCSfile: address.per,v $
+|  @(#)  $Revision: 1.2 $
+|  @(#)  $Date: 1999/03/19 21:26:20 $
+|  @(#)  $Author: taxiadm $
+|  @(#)  $Source: /taxi-scan/taxi_proj/cvs/taxi-scan/src/forms/english/address.per,v $
+|
+|  Copyright (c) 1994 - MobileSoft Consulting, Inc. Woodinville WA
+|
+|**********************************************************************/
+|ident "@(#) head:$RCSfile: address.per,v $	$Revision: 1.2 $"
+}
+database mads
+screen
+{
+						ADDRESS FILE DISPLAY
+
+Street Index
+[f000                ]
+
+Street Low Address  High Address  Pre-dir   Name                   Type  Post-dir   City    Block Face
+       [f003  ]     [f002  ]      [a0]      [f001                ] [a1 ] [a2]       [a3 ]   [a]
+
+Place Names  Zip Code      Subzone     X-coordinate            Y-coordinate        
+[b]          [f004 ]       [f005 ]     [f006                ]  [f007                ]
+
+Map Reference Page  Map Reference Block  Comment
+[a5 ]               [a4  ]               [f009                          ]
+}
+end
+tables
+address
+attributes
+f000 = address.ad_str_index,RIGHT,NOENTRY,NOUPDATE,COMMENTS="A system assigned number from the street file";
+f003 = address.ad_low_nbr,RIGHT,NOENTRY,COMMENTS="Low number of the street. If specific address, must be same as high number";
+f002 = address.ad_high_nbr,RIGHT,NOENTRY,COMMENTS="High number of the street. If specific address, must be same as low number";
+a0 = address.ad_str_pre_dir,NOENTRY,UPSHIFT,COMMENTS="Street pre-direction";
+f001 = address.ad_str_name,NOENTRY,UPSHIFT,COMMENTS="Street name";
+a1 = address.ad_str_type,NOENTRY,UPSHIFT,COMMENTS="Street type";
+a2 = address.ad_str_post_dir,NOENTRY,UPSHIFT,COMMENTS="Street post-direction";
+a3 = address.ad_str_city,NOENTRY,UPSHIFT,COMMENTS="City code";
+a = address.ad_odd_even,NOENTRY,UPSHIFT,COMMENTS="Odd/Even block face flag. E - even, O - odd, BLANK - both.";
+b = address.ad_place_names,NOENTRY,UPSHIFT,COMMENTS="Place names exist for this address (Y/N)?";
+f004 = address.ad_str_zip,NOENTRY,COMMENTS="Zip code associated with this address or address stretch";
+f005 = address.ad_str_subzone,NOENTRY,UPSHIFT,COMMENTS="Subzone associated with this address or address stretch";
+f006 = address.ad_str_x_coord,RIGHT,NOENTRY,COMMENTS="X coordinate of this street";
+f007 = address.ad_str_y_coord,RIGHT,NOENTRY,COMMENTS="Y coordinate of this street";
+a5 = address.ad_map_ref_page,RIGHT,NOENTRY,COMMENTS="Map Page reference number";
+a4 = address.ad_map_ref_block,NOENTRY,UPSHIFT,COMMENTS="Map block designation (E.g. F3)";
+f009 = address.ad_str_comment,NOENTRY,UPSHIFT,COMMENTS="Location comment for this street record";
+end
+
+

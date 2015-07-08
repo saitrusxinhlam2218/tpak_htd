@@ -1,0 +1,156 @@
+{
+|***********************************************************************
+|                 RCS INFO
+|
+|  @(#)  $RCSfile: calls.per,v $
+|  @(#)  $Revision: 1.2 $
+|  @(#)  $Date: 1999/03/19 21:26:25 $
+|  @(#)  $Author: taxiadm $
+|  @(#)  $Source: /taxi-scan/taxi_proj/cvs/taxi-scan/src/forms/english/calls.per,v $
+|
+|  Copyright (c) 1994 - MobileSoft Consulting, Inc. Woodinville WA
+|
+|**********************************************************************/
+|ident "@(#) head:$RCSfile: calls.per,v $	$Revision: 1.2 $"
+}
+database mads
+screen
+{
+						CALL FILE MAINTENANCE
+
+Call Number             Grouped With            Fleet  Type     Request 
+[f000                ]  [f001                ]  [c]    [f002 ]  [a]/[b]
+
+Pickup  Street # Suffix Pre-dir Name                   Type   Post-dir  Apt/Room  City  Zone   Comment                        
+        [f007  ] [d]    [a0]    [f008                ] [a1 ]  [a2]      [f011 ]   [a6 ] [m  ]  [f003                          ]
+
+Intersection            Pre-dir Name                   Type   Post-dir  Passenger Name         Ph Area  Number    Extension
+	                [a3]    [f010                ] [a4 ]  [a5]      [f013                ]    [a7 ] [f014   ] [f015 ]
+
+Dest    Street # Suffix Pre-dir Name                   Type   Post-dir  Apt/Room  City  Zone   Comment                     
+        [f017  ] [e]    [a8]    [f018                ] [a9 ]  [b0]      [f019 ]   [b1 ] [n  ]  [f016                          ]
+
+General Comment
+[f004                                                            ]
+
+Personal Req     Vehicle Flag  Attributes     Driver Flag  Attributes       # Veh   Priority   Advise Arrival    
+[f021]   [f]             [g]   [f022    ]            [h]   [f023    ]        [i]     [o ]      [p] 
+}
+screen
+{
+						CALL FILE MAINTENANCE
+
+Charge Number        Requested By            Person To See           Signed For Delivery     Time Signed  Local  Hold Line
+[f027              ] [f028                ]  [f029                ]  [f030                ]  [f033  ]     [j]    [f026]
+
+Rate        Date Entered  Time Entered  Proof Req  Entered By  Changed By  Due Date     Due Time   Est Wait Time
+[f034   ]   [f031     ]   [f032  ]      [k]        [f038]      [f039]      [f037     ]  [f042  ]   [f036   ]
+
+Date Dispatched  Time Dispatched  Pickup Date  Pickup Time  Close Date  Close Time   Fare Amount   Subscription Call Number
+[f043     ]      [f044  ]         [f045     ]  [f046  ]     [f050     ] [f051  ]     [f053    ]    [f054                ]
+
+Veh #   Driver   Dispatched by  Expire Date  Approved Code         Date/Time            By      Priority Status   
+[f055]  [f056]   [f057]         [f058    ]            [f052      ] [f059              ] [f060]  [b2]
+
+Add Info 1                   Add Info 2                   Driver Msg                             Company Name            
+[f061                     ]  [f062                     ]  [f063                               ]  [f047                     ]
+
+P Map Coord  D Map Coord  Zone Description        Scr Type  Status
+[f064    ]   [f065    ]   [f067                ]  [l]       [f068    ]
+}
+end
+tables
+calls
+attributes
+f000 = calls.cl_nbr,NOENTRY,NOUPDATE,COMMENTS="System assigned call number";
+f001 = calls.cl_grouped_with,NOENTRY,UPSHIFT,COMMENTS="Call number of the call this call is grouped with";
+c = calls.cl_fleet,NOENTRY,UPSHIFT,COMMENTS="Fleet indicator";
+f002 = calls.cl_extended_type,NOENTRY,UPSHIFT,COMMENTS="A combination of call types that applies to this call as it is to be displayed";
+a = calls.cl_pos_in_group,include=(0 to 9),default=0,NOENTRY,UPSHIFT,COMMENTS="Call positioning if multiple taxis required";
+b = calls.cl_nbr_in_group,include=(0 to 9),default=0,NOENTRY,UPSHIFT,COMMENTS="Number of calls grouped together for multiple cabs";
+f007 = calls.cl_pckup_str_nbr,NOENTRY,RIGHT,COMMENTS="Pickup street number";
+d = calls.cl_pckup_str_suf,NOENTRY,UPSHIFT,COMMENTS="Alpha street number suffix";
+a0 = calls.cl_pckup_pre_dir,NOENTRY,UPSHIFT,COMMENTS="Pickup address pre-direction";
+f008 = calls.cl_pckup_str_name,NOENTRY,UPSHIFT,COMMENTS="Pickup street name";
+a1 = calls.cl_pckup_str_type,NOENTRY,UPSHIFT,COMMENTS="Pickup street type(e.g. AVE)";
+a2 = calls.cl_pckup_post_dir,NOENTRY,UPSHIFT,COMMENTS="Pickup address post-direction";
+f011 = calls.cl_pckup_apt_room,NOENTRY,UPSHIFT,COMMENTS="Pickup apartment or room number";
+A6 = calls.cl_pckup_city,NOENTRY,UPSHIFT,COMMENTS="Abbreviation of the pickup city";
+m = calls.cl_pckup_zone,NOENTRY,include=(0 to 999),COMMENTS="User entered or computer generated pickup zone number (1-999)";
+f003 = calls.cl_pckup_adr_cmnt,NOENTRY,UPSHIFT,COMMENTS="Pickup address comment from the geo file";
+a3 = calls.cl_intr_pre_dir,NOENTRY,UPSHIFT,COMMENTS="Intersection address pre-direction";
+f010 = calls.cl_intr_str_name,NOENTRY,UPSHIFT,COMMENTS="Intersection street name";
+a4 = calls.cl_intr_str_type,NOENTRY,UPSHIFT,COMMENTS="Intersection street type";
+a5 = calls.cl_intr_post_dir,NOENTRY,UPSHIFT,COMMENTS="Intersection address post-direction";
+f013 = calls.cl_passenger_name,NOENTRY,UPSHIFT,COMMENTS="Name of passenger";
+a7 = calls.cl_phone_area,NOENTRY,COMMENTS="Telephone area code";
+f014 = calls.cl_phone_nbr,NOENTRY,COMMENTS="Telephone number";
+f015 = calls.cl_phone_ext,NOENTRY,COMMENTS="Telephone extension";
+f017 = calls.cl_dest_str_nbr,NOENTRY,RIGHT,COMMENTS="Destination street number";
+e = calls.cl_dest_str_suf,NOENTRY,UPSHIFT,COMMENTS="Alpha street number suffix";
+a8 = calls.cl_dest_pre_dir,NOENTRY,UPSHIFT,COMMENTS="Destination address pre-direction";
+f018 = calls.cl_dest_str_name,NOENTRY,UPSHIFT,COMMENTS="Destination street name";
+a9 = calls.cl_dest_str_type,NOENTRY,UPSHIFT,COMMENTS="Destination street type";
+b0 = calls.cl_dest_post_dir,NOENTRY,UPSHIFT,COMMENTS="Destination address post-direction";
+f019 = calls.cl_dest_apt_room,NOENTRY,UPSHIFT,COMMENTS="Destination apartment or room number";
+b1 = calls.cl_dest_city,NOENTRY,UPSHIFT,COMMENTS="Abbreviation of the destination city";
+n = calls.cl_dest_zone,NOENTRY,include=(0 to 999),default=0,COMMENTS="User entered or computer generated destination zone number (1-999)";
+f016 = calls.cl_dest_adr_cmnt,NOENTRY,UPSHIFT,COMMENTS="Destination address comment from the geo file";
+f004 = calls.cl_general_cmnt,NOENTRY,UPSHIFT,COMMENTS="Comment Line";
+f021 = calls.cl_personal_veh,NOENTRY,include=(0 to 9999),default=0,COMMENTS="Vehicle number of the vehicle specifically requested by the customer (1-9999)";
+f = calls.cl_personal_rqst,NOENTRY,include=(" ",O,I),UPSHIFT,COMMENTS="'O'nly send the specified vehicle or send it 'I'f its availalbe";
+g = calls.cl_veh_attr_flag,NOENTRY,include=(Y,N),default="N",UPSHIFT,COMMENTS="Whether a vehicle with specific characteristics is required for this call (Y,N)";
+f022 = calls.cl_veh_attr,NOENTRY,default="NNNNNNNN",UPSHIFT,COMMENTS="Defines specific attributes required for this call";
+h = calls.cl_drv_attr_flag,NOENTRY,include=(Y,N),default="N",UPSHIFT,COMMENTS="Whether a driver with specific characteristics is required for this call (Y,N)";
+f023 = calls.cl_drv_attr,NOENTRY,default="NNNNNNNN",UPSHIFT,COMMENTS="Defines specific attributes required for this call";
+i = calls.cl_nbr_of_vehs,NOENTRY,include=(1 to 9),default=1,COMMENTS="Number of vehicles required to service this call";
+o = calls.cl_priority,NOENTRY,include=(1 to 63),default=25,COMMENTS="Call priority";
+p = calls.cl_advise_arrival,NOENTRY,include=(Y,N),default="N",UPSHIFT,COMMENTS="Whether the driver should advise the dispatcher upon arrival (Y,N)";
+f027 = calls.cl_charge_nbr,NOENTRY,UPSHIFT,COMMENTS="Customer account number or charge card";
+f028 = calls.cl_requested_by,NOENTRY,UPSHIFT,COMMENTS="Name of person requesting service";
+f029 = calls.cl_person_to_see,NOENTRY,UPSHIFT,COMMENTS="Person to see at the destination address";
+f030 = calls.cl_pod_name,NOENTRY,UPSHIFT,COMMENTS=" Name of person signing for delivery";
+f033 = calls.cl_pod_time,NOENTRY,RIGHT,COMMENTS="Time the person signed for delivery";
+j = calls.cl_local,NOENTRY,include=(Y,N),default="N",UPSHIFT,COMMENTS="Whether this call is a local run or not (Y,N)";
+f026 = calls.cl_hold_line,NOENTRY,COMMENTS="The extension number of the line the customer is holding";
+f034 = calls.cl_call_rate,NOENTRY,RIGHT,FORMAT="####.##",COMMENTS="Rate from the rate table, given to the customer";
+f031 = calls.cl_date_in,UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="Date this call was entered";
+f032 = calls.cl_time_in,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Time this call was entered";
+k = calls.cl_pod_required,NOENTRY,include=(Y,N),default="N",UPSHIFT,COMMENTS="Whether proof of delivery is required (Y,N)";
+f038 = calls.cl_entered_by,NOENTRY,RIGHT,COMMENTS="User ID of the person who entered this call";
+f039 = calls.cl_last_changed_by,NOENTRY,RIGHT,COMMENTS="User ID of the last person who changed this subscription call";
+f037 = calls.cl_due_date,NOENTRY,NOUPDATE,COMMENTS="Date this call is due";
+f042 = calls.cl_due_time,NOENTRY,NOUPDATE,COMMENTS="Time this call is due";
+f036 = calls.cl_est_wait_time,NOENTRY,UPSHIFT,COMMENTS="Estimated waiting time given to the customer";
+f043 = calls.cl_dispd_date,NOENTRY,NOUPDATE,COMMENTS="Date this call was dispatched";
+f044 = calls.cl_dispd_time,NOENTRY,NOUPDATE,COMMENTS="Time this call was dispatched";
+f045 = calls.cl_pckup_date,NOUPDATE,NOENTRY,NOUPDATE,COMMENTS="Date the customer was picked up";
+f046 = calls.cl_pckup_time,NOUPDATE,NOENTRY,NOUPDATE,COMMENTS="Time the customer was picked up";
+f050 = calls.cl_close_date,NOENTRY,NOUPDATE,COMMENTS="Date the customer was dropped off";
+f051 = calls.cl_close_time,NOENTRY,NOUPDATE,COMMENTS="Time the customer was dropped off";
+f053 = calls.cl_fare_amount,NOENTRY,RIGHT,COMMENTS="The dollar amount of the fare charged";
+f054 = calls.cl_subsc_call_nbr,NOENTRY,RIGHT,COMMENTS="Subscription call number";
+f055 = calls.cl_veh_nbr,NOENTRY,RIGHT,COMMENTS="Vehicle that serviced this call";
+f056 = calls.cl_drv_id,NOENTRY,RIGHT,COMMENTS="Driver that serviced this call";
+f057 = calls.cl_dispatched_by,NOENTRY,include=(-1,1 to 9999),RIGHT,COMMENTS="User ID of the person who manually dispatched this call";
+f058 = calls.cl_expire_date,NOENTRY,COMMENTS="Credit card expiration date";
+f052 = calls.cl_approve_code,NOENTRY,UPSHIFT,COMMENTS="Credit service approval code";
+f059 = calls.cl_approve_date,NOENTRY,RIGHT,COMMENTS="Approval date";
+f060 = calls.cl_approve_by,NOENTRY,RIGHT,COMMENTS="Call taker number that approved this charge";
+b2=calls.cl_pri_status,NOENTRY,RIGHT,COMMENTS="Call priority if open call; 64 if this call was completed";
+f061 = calls.cl_ac_addt1_info1,NOENTRY,UPSHIFT,COMMENTS="Information entered on response to the prompt from the account file ";
+f062 = calls.cl_ac_addt1_info2,NOENTRY,UPSHIFT,COMMENTS="Information entered on response to the prompt from the account file ";
+f063 = calls.cl_driver_msg,NOENTRY,UPSHIFT,COMMENTS="A message sent from the call taker to the driver";
+f047 = calls.cl_company_name,NOENTRY,UPSHIFT,COMMENTS="Company name if this is a charge account call";
+f064 = calls.cl_pckup_pmap,NOENTRY,UPSHIFT,COMMENTS="Pickup map code";
+f065 = calls.cl_dest_dmap,NOENTRY,UPSHIFT,COMMENTS="Destination map code";
+f067 = calls.cl_zone_desc,NOENTRY,UPSHIFT,COMMENTS="Zone description";
+l = calls.cl_screen_type,NOENTRY,include=(B,E),UPSHIFT,COMMENTS="Screen type : 'B'asic or 'E'xtended";
+f068 = calls.cl_status,NOENTRY,UPSHIFT,COMMENTS="Call status (e.g. COMPLETE)";
+
+instructions
+before editadd editupdate of calls
+	abort
+before remove of calls
+	abort
+end

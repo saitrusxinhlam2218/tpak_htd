@@ -1,0 +1,167 @@
+static char sz__FILE__[]="@(#)in_l_kys.c	10.1.2.1(ver) Date Release 12/2/94" ;
+ /****************************************************************************
+ *                                                                           *
+ *                           S C C S   I N F O                               *
+ *                                                                           *
+ * @(#)  in_l_kys.c; Rel: 10.1.2.1; Get date: 4/19/95 at 08:48:57
+ * @(#)  Last delta: 12/2/94 at 18:06:29
+ * @(#)  SCCS File: /taxi/sccs/s.in_l_kys.c
+ *                                                                           *
+ *****************************************************************************/
+
+/* Make sure location constants are defined. Create a compile error if they
+   are not defined or both are defined. */
+#ifdef SCANDINAVIA
+#ifdef NAMERICA
+ERROR: "Both compile time constants SCANDINAVIA and NAMERICA are defined."
+#endif
+#else
+#ifdef NAMERICA
+#else
+ERROR: "Compile time constant SCANDINAVIA or NAMERICA undefined."
+#endif
+#endif
+
+#include <cursesX.h>
+#include <sys/types.h>
+
+#include "mads_types.h"
+#include "mads_isam.h"
+#define SRCH_EXTERNS
+#include "srch.h"
+#include "ui_def.h"
+#include "func_keys.h"
+#include "ui_error.h"
+#include "call_entry.h"
+#include "screens.h"
+#include "zgeo.h"
+#include "language.h"
+#include "ui_ipc.h"
+#include "enhance.h"
+#include "switch_ext.h"
+
+#define 	FORWARD 		1
+#define 	BACKWARD 		0
+
+extern int scr_name;
+extern struct cisam_cl srch_calls[];
+extern struct scr_flds extended_scr_fld[];
+extern short max_piu;
+struct scr_flds *scr_ptr;
+int *get_call();
+extern int doing_detail;
+void clear_s();
+local_keys(function_key)
+int function_key;
+{
+	int first_element = 0;		/* first element in the srch_calls array */
+	int got_calls;			/* indicates that the search was successful */
+
+	/* user entered a local function key */
+	switch (function_key)  {
+
+		case NEXT_PG_KEY:
+			get_call(&got_calls,FORWARD, NO);
+			if(!got_calls)  {
+				prt_error(UI_NO_RECORD,"");
+				return(DONE);
+			}
+			scr_name = INDIVIDUAL_CALLS_SCR;
+			clear_s();
+			prt_eold_fields(&srch_calls[0]);
+			return(DONE);
+			break;
+
+		case PREV_PG_KEY:    
+			get_call(&got_calls,BACKWARD, NO);
+			if(!got_calls)  {
+				prt_error(UI_NO_RECORD,"");
+				return(DONE);
+			}
+			scr_name = INDIVIDUAL_CALLS_SCR;	
+			clear_s();
+			prt_eold_fields(&srch_calls[0]);
+			return(DONE);
+			break;
+
+		case HISTORY_KEY:
+			call_history(srch_calls[0].nbr);
+			return(DONE);
+			break;
+
+		case UPDATE_KEY :
+			update_key(&first_element);
+
+			/* display the updated screen */
+			scr_name = INDIVIDUAL_CALLS_SCR;
+
+			if ((0) && (srch_calls[0].call_msg_nbr > '0')) /* ENH0002: Determine whether the 'number of call messages'
+									  field should be displayed */
+				disp_extended_scr(1);
+			else
+				disp_extended_scr(0);
+
+			prt_entry_areas(stdscr,scr_ptr,max_piu);
+			prt_eold_fields(&srch_calls[0]);
+			return(DONE);
+			break;
+
+		default :
+			return(NOT_DONE);
+			break;
+		
+	} /* end of switch */
+
+}  /* end local_keys() */
+
+/*****************************************************************************
+* clear_screen - Clear the data fields.
+*****************************************************************************/
+void
+clear_s()
+{
+	int i;
+	int underline_off = 0;
+
+	attrset(A_UNDERLINE);
+	move(E_FLEET_ROW,E_PERSONEL1_COL);
+	clrtoeol();
+
+	for(i = 1; i <= MAX_PIU_EXTENDED; i++) {
+
+	    /* Intersection fields are cleared to be non-underlined */
+	    if ((scr_name == BASIC_CALL_SCR || scr_name == SUBS_BASIC_SCR) &&
+#ifdef SCANDINAVIA
+		(i == B_INTERS_ST_NAME) ||
+#else
+		(i >= B_INTERS_PRE_DIR && i <= B_INTERS_POST_DIR) ||
+#endif
+
+		(scr_name == EXTENDED_CALL_SCR || scr_name == SUBS_EXTENDED_SCR ||
+		 scr_name == INDIVIDUAL_CALLS_SCR || doing_detail) &&
+#ifdef SCANDINAVIA
+		(i == E_INTERS_ST_NAME)) {
+#else
+		(i >= E_INTERS_PRE_DIR && i <= E_INTERS_POST_DIR)) {
+#endif
+		attrset(0);
+		underline_off = 1;
+	    }
+		
+	    clear_field(stdscr,extended_scr_fld,i);
+
+	    if (underline_off) {
+		attrset(A_UNDERLINE);
+		underline_off = 0;
+	    }
+	}
+
+	/* Clear the pickup/destination zone description and comment fields */
+	attrset(0);
+	get_zone_desc(C_CLEAR, PICKUP_ADDR, NULL, NULL);
+	get_zone_desc(C_CLEAR, DEST_ADDR, NULL, NULL);
+	print_addr_comment(C_CLEAR, PICKUP_ADDR);
+	print_addr_comment(C_CLEAR, DEST_ADDR);
+	clear_charge_fields_only(extended_scr_fld);
+
+} /* End of clear_screen()  */

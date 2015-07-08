@@ -1,0 +1,882 @@
+/***********************************************************************
+*                 RCS INFO
+*
+*  @(#)  $RCSfile: TimeCall_private.c,v $
+*  @(#)  $Revision: 1.31 $
+*  @(#)  $Date: 2005/04/21 06:45:25 $
+*  @(#)  $Author: jwelch $
+*  @(#)  $Source: /taxi-scan/taxi_proj/cvs/taxi-scan/src/dispatch/TimeCall_private.c,v $
+*
+*  Copyright (c) 1994 - MobileSoft Consulting, Inc. Woodinville WA
+*
+***********************************************************************/
+
+static char rcsid[] = "$Id: TimeCall_private.c,v 1.31 2005/04/21 06:45:25 jwelch Exp $";
+
+#include <stdio.h>
+#include <sys/types.h>
+#include <time.h>
+#include <sys/ipc.h>
+
+#include "taxipak.h"
+#include "Object.h"
+#include "mad_ipc.h"
+#include "ui_ipc.h"
+#include "mad_error.h"
+#include "acc.h"
+#include "except.h"
+#include "taxi_db.h"
+#include "path.h"
+#include "Timer_public.h"
+#include "timers.h"
+#include "Fleet_public.h"
+#include "Fleet_private.h"
+#include "Call_public.h"
+#include "Call_private.h"
+#include "TimeCalls_public.h"
+#include "TimeCalls_private.h"
+#include "Call_db.h"
+#include "Driver_public.h"
+#include "List_public.h"
+#include "Vehicle_public.h"
+#include "Vehicle_private.h"
+#include "Zone_lists_public.h"
+#include "Zone_public.h"
+#include "Zone_private.h"
+#include "ui_ipc.h"
+#include "language.h"
+#include "writer.h"
+#include "enhance.h"
+
+extern long glEnhSwitch;
+extern time_t mads_time;
+extern int num_tc;
+extern int dis_msgqid;
+extern time_t mads_time;
+int    bIsDST = -1;
+void TC_adjustDST();
+time_t get_internal_time(char *, char *);
+
+TC_process( )
+{
+
+  int  i,k;
+  FLEET_HNDL    fleet_hndl;
+  ZONE_HNDL     zone_hndl;
+  char          active;
+  ZONE_TC_LIST_HNDL  tc_list;
+  TC_HNDL       tc_hndl;
+  struct call_ipc_rec call_ipc_rec;
+  FLEET         *fl_ptr;
+  TC_HNDL       tc_to_launch[ 1001 ];
+  int           tc_count = 0;
+  time_t        now_time = 0;
+  struct tm     *t_now;
+
+  now_time = (time_t)time(NULL);
+  t_now = localtime(&now_time);  
+  if ( bIsDST == -1 )  // first time through, just set it.
+    bIsDST = t_now->tm_isdst;
+  else
+    {
+      if ( bIsDST == 1 && t_now->tm_isdst == 0 ) // Summer --> Winter
+	  TC_adjustDST();
+      else if ( bIsDST == 0 && t_now->tm_isdst == 1 ) // Winter --> Summer
+	  TC_adjustDST();
+      bIsDST = t_now->tm_isdst;      
+    }
+  
+  for ( i = 0; i < 1000; i++ )
+    tc_to_launch[i] = HNDL_NULL;
+
+  for ( i = 0; i < FLEET_MAX; i++ )
+    {
+      Fleet_get_hndl( BY_NBR, i, &fleet_hndl );
+      if ( ( fleet_hndl == HNDL_NULL ) ||
+	  ( ( active = (char)Fleet_get_value( (FLEET_HNDL) fleet_hndl, FLEET_ACTIVE ) ) == NO ) )
+	continue;
+
+      fl_ptr = ( FLEET * )fleet_hndl;
+      
+      for ( k = 0; k < ZONE_MAX; k++ )
+	{
+	  Zone_get_hndl( k, i, &zone_hndl );
+	  if ( zone_hndl == HNDL_NULL )
+	    continue;
+	  tc_list = (ZONE_TC_LIST_HNDL)Zone_get_value( (ZONE_HNDL) zone_hndl, ZONE_TC_LIST );
+	  Zone_tc_list_each_get( tc_list, tc_hndl )
+	    {
+	      if ( TC_check( tc_hndl, zone_hndl, fleet_hndl ) == SUCCESS )
+		{
+		  tc_to_launch[ tc_count ] = tc_hndl;
+		  ++tc_count;
+		}	      
+	    } Zone_tc_list_each_end(tc_list)
+	}
+      
+    }
+  
+  for (k = 0; k < tc_count; k++ )
+    {
+      if ( tc_to_launch[ k ] != HNDL_NULL )
+	{
+	  tc_hndl = tc_to_launch[ k ];
+	  Zone_get_hndl( (short)TC_get_value( tc_hndl, TC_ZONE ),
+			 (int)TC_get_value( tc_hndl, TC_FLEET ),
+			 &zone_hndl );
+	  Fleet_get_hndl( BY_NBR, (int)TC_get_value( tc_hndl, TC_FLEET ), &fleet_hndl );	  
+	  tc_list = (ZONE_TC_LIST_HNDL)Zone_get_value( (ZONE_HNDL) zone_hndl, ZONE_TC_LIST );
+	  
+	  /** TC_to_Call returns FAIL if call is not PENDING **/
+	  bzero( &call_ipc_rec, sizeof( call_ipc_rec ) );
+	  if ( TC_to_Call( (TC_HNDL)tc_hndl, (ZONE_HNDL)zone_hndl, (FLEET_HNDL)fleet_hndl, &call_ipc_rec ) == SUCCESS )
+	    {
+	      Zone_tc_list_remove( tc_list, tc_hndl );
+	      free( tc_hndl );
+	      --num_tc;
+	      tc_to_launch[k] = HNDL_NULL;	      
+	      Call_initialize( &call_ipc_rec, FALSE );
+	    }
+	  else
+	    {
+	      Zone_tc_list_remove( tc_list, tc_hndl );
+	      free( tc_hndl );
+	      --num_tc;
+	      tc_to_launch[k] = HNDL_NULL;	      
+	    }
+
+	}
+    }
+
+  (void) Timer_create(
+		      TIMER_TYPE, T_TIMECALLS,
+		      TIMER_EXPIRE_TIME, 60,
+		      TIMER_NOTIFY_FUNC, TC_process,
+		      ATTRIBUTE_END );
+}
+
+RET_STATUS
+TC_check( TC_HNDL tc_hndl, ZONE_HNDL zone_hndl, FLEET_HNDL fleet_hndl )
+{
+  TC_STRUCT *pTimeCall;
+
+  if ( tc_hndl == HNDL_NULL || zone_hndl == NULL || fleet_hndl == HNDL_NULL )
+    return( FAIL );
+  
+  pTimeCall = ( TC_STRUCT * ) tc_hndl;
+
+  if ( mads_time >=
+      (time_t)TC_get_value( (TC_HNDL)pTimeCall, TC_LEAD_TIME ))
+    return( SUCCESS );
+  else
+    return( FAIL );
+}
+
+RET_STATUS
+
+TC_to_Call( TC_HNDL tc_hndl,
+	    ZONE_HNDL zone_hndl,
+	    FLEET_HNDL fleet_hndl,
+	    struct call_ipc_rec *cipc )
+{
+  int               i;
+  struct cisam_cl   db_call;
+  TC_STRUCT         *pTimeCall;
+  
+  if ( tc_hndl == NULL ||
+       zone_hndl == NULL ||
+       fleet_hndl == NULL )
+    return( FAIL );
+
+  TC_debug( TC_DEBUG_LAUNCH, tc_hndl );
+  
+  pTimeCall = ( TC_STRUCT * ) tc_hndl;
+  bzero( &db_call, sizeof( struct cisam_cl ) );
+  db_call.nbr = pTimeCall->nbr;
+
+  if ( db_read_key( CALL_FILE_ID, &db_call, &cl_key1, DB_EQUAL ) != SUCCESS )
+    {
+      sprintf(error_str, "TC_to_Call - error reading DB (%d) zone(%d)", pTimeCall->nbr,
+	      pTimeCall->zone);
+      ERROR( ' ', " ", error_str );
+      return( FAIL );
+    }
+
+  if ( pTimeCall->zone != 1000 )
+    {
+      if ( db_call.pckup_zone != pTimeCall->zone )
+	return( FAIL );
+    }
+  
+  if ( strncmp( db_call.status, PENDING, 5 ) )
+    return( FAIL );
+  
+  bzero( cipc, sizeof( struct call_ipc_rec ) );
+  cipc->u_prcs_id = 0;
+  cipc->msg_nbr = 0;
+  cipc->FTJ_nbr = db_call.ext_nbr;
+  cipc->offer_type = db_call.offer_type;
+  cipc->detail_type = db_call.detail_type;
+  cipc->call_msg_nbr = db_call.call_msg_nbr;
+  cipc->c_isam_nbr = isrecnum;
+  cipc->call_nbr = db_call.nbr;
+  cipc->grouped_with = db_call.grouped_with;
+  cipc->fleet = db_call.fleet;
+  TC_get_call_type( &db_call, cipc );
+  cipc->pickup_zone = db_call.pckup_zone;
+  cipc->dest_zone = db_call.dest_zone;
+  cipc->personal_veh = db_call.personal_veh;
+  cipc->personal_rqst = db_call.personal_rqst;
+  if ( db_call.veh_attr_flag == YES )
+    {
+      for ( i = 0; i < ATTR_MAX; i++ )
+	{
+	  if ( db_call.veh_attr[i] == YES )
+	    TC_set_bit( i, 1, &cipc->veh_attr );
+	}
+    }
+  if ( db_call.drv_attr_flag == YES )
+    {
+      for ( i = 0; i < ATTR_MAX; i++ )
+	{
+	  if ( db_call.drv_attr[i] == YES )
+	    TC_set_bit( i, 1, &cipc->drv_attr );
+	}
+    }
+  cipc->priority = db_call.priority;
+  cipc->due_time = db_call.due_date_time;
+
+  /* temporarily use old_due_time_field to store activation time of TC */
+  cipc->old_due_time = mads_time;
+  cipc->gps_lat = db_call.gps_lat;
+  cipc->gps_long = db_call.gps_long;
+
+  TC_update_call( &db_call );
+  
+  return( SUCCESS );
+}
+
+TC_update_call( cl_ptr )
+     struct cisam_cl  *cl_ptr;
+{
+  if (!((0) && (cl_ptr->ext_nbr > NOT_EXTERNAL) &&    
+					 ((cl_ptr->offer_type > ' ') ||
+					 (cl_ptr->detail_type > ' ') ||
+					 (cl_ptr->call_msg_nbr > ' '))))
+    //  cl_ptr->grouped_with = 0;
+  
+  cl_ptr->pri_status = cl_ptr->priority;
+  strcpy(cl_ptr->status, UNASSGND); 
+
+  if (db_update(CALL_FILE_ID, cl_ptr) != SUCCESS)
+    {
+      sprintf(error_str,"Error updating record: call_nbr = %d", cl_ptr->nbr);
+      ERROR(' ',CALL_FILE,error_str);
+    }
+
+}
+
+TC_get_call_type( call, cpipe_rec )
+     struct cisam_cl  *call;
+     struct call_ipc_rec *cpipe_rec;
+{
+  
+  
+  if (!call)
+    return(0);
+  
+  bzero(&cpipe_rec->call_type, sizeof(struct call_types));
+  
+  cpipe_rec->call_type.time = 1;  
+  switch (call->extended_type[0] ) {
+  case PASS:
+    cpipe_rec->call_type.passenger = 1;
+    break;
+  case DELIV:
+    cpipe_rec->call_type.delivery = 1;
+    break;
+  case TYPEX:
+    cpipe_rec->call_type.xtype = 1;
+    break;
+  case WAKEUP:
+    cpipe_rec->call_type.wakeup = 1;
+    break;
+  }
+  
+  if ( call->extended_type[1] == '\0' )
+    return;
+  
+  switch ( call->extended_type[2] ) { 			/* check the other char's */
+  case SUBS:
+    cpipe_rec->call_type.subscription = 1;
+    cpipe_rec->call_type.time = 1;
+    break;
+  case TIMEC:
+    cpipe_rec->call_type.time = 1;
+    break;
+  case CHARGE:
+    cpipe_rec->call_type.charge = 1;
+    break;
+  }  /* end switch */
+  
+  switch ( call->extended_type[3] ) { 			/* check the last char's */
+  case SUBS:
+    cpipe_rec->call_type.subscription = 1;
+    cpipe_rec->call_type.time = 1;    
+    break;
+  case TIMEC:
+    cpipe_rec->call_type.time = 1;
+    break;
+  case CHARGE:
+    cpipe_rec->call_type.charge = 1;
+    break;
+  }
+
+  if(call->extended_type[4] == MULT_CALL)
+   {
+    cpipe_rec->call_type.multiple = 1;
+    cpipe_rec->status.multiple = 1;
+   }
+
+
+  
+}
+
+TC_set_bit(bit_num,size,struct_ptr)
+	int bit_num;	
+	int size;		
+	unsigned char *struct_ptr;
+{
+	unsigned char *bit_ptr;		
+	unsigned char mask;
+	int shift_by;			
+
+	mask = 0x80;
+	bit_ptr = (unsigned char *)struct_ptr + bit_num/8;
+	shift_by = bit_num % 8;
+	mask >>= shift_by;
+
+	*bit_ptr = *bit_ptr | mask;
+
+}
+  
+  
+HNDL
+tc_value( tc_hndl, op, attr, value )
+     TC_HNDL   tc_hndl;
+     int       op;
+     int       attr;
+     HNDL      value;
+{
+  TC_STRUCT  *tc_ptr;
+  int        tmp_time;
+  time_t     lead_time;
+
+  tc_ptr = (TC_STRUCT *)tc_hndl;
+
+  if ( tc_ptr == NULL )
+    return((HNDL)FAIL);
+
+  switch (attr)
+    {
+    case TC_DUE_TIME:
+      if ( op == PUT )
+	tc_ptr->due_time = (time_t) value;
+      else
+	return( (HNDL)tc_ptr->due_time );
+      return ((HNDL) SUCCESS);
+
+    case TC_LEAD_TIME:
+      if ( op == PUT )
+	tc_ptr->lead_time = (time_t) value;
+      else
+	return( (HNDL)tc_ptr->lead_time );
+      return ((HNDL) SUCCESS);
+
+    case TC_CALL_NBR:
+      if ( op == PUT )
+	tc_ptr->nbr = (int) value;
+      else
+	return( (HNDL)tc_ptr->nbr );
+      return ((HNDL)SUCCESS);
+
+    case TC_ZONE:
+      if ( op == PUT )
+	tc_ptr->zone = (short) value;
+      else
+	  return( (HNDL)tc_ptr->zone );
+      return ((HNDL) SUCCESS);      
+
+    case TC_FLEET:
+      if ( op == PUT )
+	tc_ptr->fleet = (int) value;
+      else
+	return( (HNDL)tc_ptr->fleet );
+      return ((HNDL)SUCCESS);
+      
+    default:
+      printf("ILLEGAL VALUE FOR call_value %d\n", attr);
+      if (op == PUT)
+	return ((HNDL) FAIL);
+      else
+	return ((HNDL) NULL);
+    }				/* end case */
+  return ((HNDL) SUCCESS);
+}				/* end call_value */
+
+HNDL
+TC_get_value(tc_hndl, attr)
+   TC_HNDL tc_hndl;
+   int   attr;
+{
+  return (tc_value(tc_hndl, GET, attr, NULL));
+}				/* end Fleet_get_value */
+
+
+RET_STATUS
+TC_set_value( tc_hndl, attr, hndl )
+     TC_HNDL  tc_hndl;
+     int      attr;
+     HNDL     hndl;
+{
+   return((short)tc_value(tc_hndl, PUT, attr, hndl));
+ }
+
+
+/* removes a tc_hndl from the list if there is one matching */
+/* the call_number that is passed                           */
+RET_STATUS
+TC_remove( call_hndl )
+     CALL_HNDL   call_hndl;
+{
+  TC_HNDL     tc_hndl;
+  ZONE_HNDL   zone_hndl;
+  ZONE_TC_LIST_HNDL  tc_list;
+  int         cl_nbr;
+  short       zone_nbr, fleet_nbr;
+
+  
+  if ( call_hndl == HNDL_NULL )
+    return (FAIL);
+
+  zone_nbr = (short)Call_get_value( call_hndl, CALL_PICKUP_ZONE );
+  cl_nbr = (int)Call_get_value( call_hndl, CALL_NBR );
+  fleet_nbr = (short)Call_get_value( call_hndl, CALL_FLEET_NBR );
+  Zone_get_hndl( zone_nbr, fleet_nbr, &zone_hndl );
+
+  if ( zone_hndl == HNDL_NULL )
+    return (FAIL);
+  
+  tc_list = (ZONE_TC_LIST_HNDL)Zone_get_value( zone_hndl, ZONE_TC_LIST );
+  Zone_tc_list_each_get( tc_list, tc_hndl )
+    {
+      if ( (int)TC_get_value( tc_hndl, TC_CALL_NBR ) == cl_nbr )
+	{
+	  Zone_tc_list_remove( tc_list, tc_hndl );
+	  free( tc_hndl );
+	  --num_tc;
+	  break;
+	}
+    } Zone_tc_list_each_end(tc_list)
+      
+   return( SUCCESS );
+}
+
+RET_STATUS
+TC_load( CALL_HNDL call_hndl, TC_HNDL tc_hndl )
+{
+  short i,j;
+  unsigned char *drv_addr;
+  unsigned char *veh_addr;
+  unsigned char mask = 0x01;
+  char          drv_attr[32];
+  char          veh_attr[32];
+  TC_STRUCT     *pTimeCall;
+  
+  if ( call_hndl == HNDL_NULL || tc_hndl == HNDL_NULL )
+    return(FAIL);
+
+  pTimeCall = ( TC_STRUCT * )tc_hndl;
+  for ( i = 0; i < ATTR_MAX; i++ )
+    {
+      drv_attr[i] = NO;
+      veh_attr[i] = NO;
+    }
+  
+  TC_set_value((TC_HNDL)tc_hndl, TC_CALL_NBR, (HNDL)Call_get_value(call_hndl, CALL_NBR));
+  TC_set_value((TC_HNDL)tc_hndl, TC_DUE_TIME, (HNDL)Call_get_value(call_hndl, CALL_TIME_DUE));
+  TC_set_value((TC_HNDL)tc_hndl, TC_LEAD_TIME, (HNDL)Call_get_value(call_hndl, CALL_PICKUP_LEAD_TIME));
+  TC_set_value((TC_HNDL)tc_hndl, TC_ZONE, (HNDL)Call_get_value(call_hndl, CALL_PICKUP_ZONE));
+  TC_set_value((TC_HNDL)tc_hndl, TC_FLEET, (HNDL)Call_get_value(call_hndl, CALL_FLEET_NBR));
+  drv_addr = (unsigned char *)Call_get_value( call_hndl, CALL_DRIVER_ATTR_HNDL );
+  veh_addr = (unsigned char *)Call_get_value( call_hndl, CALL_VEH_ATTR_HNDL );
+  for ( i = 0; i < 4; i++ )
+    {
+      mask = 0x80;
+      for ( j = 0; j < 8; j++ )
+	{
+	  if ( *drv_addr & mask )
+	    drv_attr[ i*8 + j ] = YES;
+	  if ( *veh_addr & mask )
+	    veh_attr[ i*8 + j ] = YES;
+	  mask>>=1;
+	}
+      ++drv_addr;
+      ++veh_addr;
+    }
+  
+  for ( i = 0; i < ATTR_MAX; i++ )
+    {
+      pTimeCall->drv_attr[i] = drv_attr[i];
+      pTimeCall->veh_attr[i] = veh_attr[i];
+    }
+  
+  return(SUCCESS);
+}
+
+RET_STATUS
+TC_send_status( to_msgqid, req_ptr )
+     int    to_msgqid;
+     struct tc_rqst *req_ptr;
+{
+  TC_RESP_REC  tc_resp;
+  short            zone_nbr;
+  ZONE_HNDL        zone_hndl;
+  FLEET_HNDL       fleet_hndl;
+  TC_HNDL          tc_hndl;
+  short            num_time_calls;
+  int              time_block_minutes, i;
+  time_t           current_time, future_max_time;
+  
+  memset( (char *) &tc_resp, '\0', sizeof( TC_RESP_REC ) );
+  tc_resp.u_prcs_id = req_ptr->u_prcs_id;
+  tc_resp.rec_type = TC_REQ;
+
+  (void)Fleet_get_hndl( BY_ID, req_ptr->fleet, &fleet_hndl );
+
+  if ( Zone_get_hndl( req_ptr->zone_nbr, (short)Fleet_get_value( fleet_hndl, FLEET_NBR ), &zone_hndl ) != FAIL )
+    {
+  
+      for ( i = 0; i <= UI_TCR_MAX_TIME_SLOTS; i++ )
+	memset( &tc_resp.time_slots[i], '\0', sizeof(TIMES) );
+      
+      current_time = mads_time;
+
+      if (0)
+	{
+	  if ( (short)Zone_get_value( zone_hndl, ZONE_TC_RESTRICT_INTERVAL ) > 0 )
+	    time_block_minutes = (int)( (short)Zone_get_value( zone_hndl, ZONE_TC_RESTRICT_INTERVAL ) * 60 );
+	  else
+	    time_block_minutes = (int)( (short)Fleet_get_value( fleet_hndl, FLEET_TC_RESTRICT_INTERVAL ) * 60 );
+	}
+      else
+	time_block_minutes = ( 5 * 60 );
+      
+      future_max_time = (time_t)Fleet_get_value( fleet_hndl, FLEET_FUTURE_CALL_MAXIMUM );
+      
+      TC_set_time_slot_strings( tc_resp.time_slots, time_block_minutes, req_ptr->due_date_time );
+      
+      
+      Zone_tc_list_each_get( Zone_get_value( zone_hndl, ZONE_TC_LIST ), tc_hndl )
+	{
+	  if ( ( (time_t)TC_get_value( tc_hndl, TC_DUE_TIME ) <= current_time + future_max_time ) &&
+	       ( (time_t)TC_get_value( tc_hndl, TC_DUE_TIME ) >= current_time ) )
+	    TC_set_time_slot_totals( tc_resp.time_slots, time_block_minutes, req_ptr->due_date_time,
+				     (time_t)TC_get_value( tc_hndl, TC_DUE_TIME ));
+	}
+      Zone_tc_list_each_end(Zone_get_value(zone_hndl, ZONE_TC_LIST))
+   }
+				     
+	    
+  if (msgsnd(to_msgqid, (struct msgbuf *) & tc_resp, sizeof(TC_RESP_REC), IPC_NOWAIT) < 0)
+    {
+      ERROR(' ', "", "TC_send_status - TC status not sent.\n");
+    }
+
+  return(SUCCESS);
+}
+
+TC_set_time_slot_strings(time_slots, time_block_seconds, current_due_date_time)
+	TIMES				 time_slots[];
+	short				 time_block_seconds;
+	long				 current_due_date_time;
+{
+	long				 current_time_block,
+						 actual_C_time,
+						 time;
+	int					 i;
+
+
+	current_time_block = (long)(current_due_date_time / time_block_seconds);
+	
+	time = current_time_block - (UI_TCR_MAX_TIME_SLOTS / 2);
+	
+	for (i = 1; i <= UI_TCR_MAX_TIME_SLOTS; i++)
+	  {
+		if (time == current_time_block)
+		  {
+			actual_C_time = (long)(time * time_block_seconds);
+			time_slots[UI_TCR_REQUESTED_SLOT].date_time = actual_C_time;
+			get_srch_time(actual_C_time, 
+					time_slots[UI_TCR_REQUESTED_SLOT].time_string);
+			get_srch_date(actual_C_time, 
+					time_slots[UI_TCR_REQUESTED_SLOT].date_string);
+			time++;
+		  }
+
+		actual_C_time = (long)(time * time_block_seconds);
+		time_slots[i].date_time = actual_C_time;
+		get_srch_time(actual_C_time, time_slots[i].time_string);
+		get_srch_date(actual_C_time, time_slots[i].date_string);
+
+		time++;
+	  }
+
+	return(TRUE);
+}
+
+TC_set_time_slot_totals(time_slots, time_block, current_due_date_time, 
+			time_call_due_date_time)
+	TIMES				 time_slots[];
+	short				 time_block;
+	time_t				 current_due_date_time,
+						 time_call_due_date_time;
+{
+	time_t				 current_time_block,
+						 time_call_time_block;
+	short				 index;
+
+
+	current_time_block = current_due_date_time / time_block;
+	time_call_time_block = time_call_due_date_time / time_block;
+	
+	if (abs(current_time_block - time_call_time_block) > 
+			(UI_TCR_MAX_TIME_SLOTS / 2))
+		return(TRUE);
+
+	if (time_call_time_block == current_time_block)
+	  {
+		time_slots[UI_TCR_REQUESTED_SLOT].count++;
+		return(TRUE);
+	  }
+
+	index = (time_call_time_block - current_time_block) + 
+			(UI_TCR_MAX_TIME_SLOTS / 2);
+
+	if (index < (UI_TCR_MAX_TIME_SLOTS / 2))
+		index++;
+
+	time_slots[index].count++;
+
+	return(TRUE);
+}
+
+TC_LeadTimeModify( FLEET_HNDL fleet_hndl, short new_lead_supp, short old_lead_supp )
+{
+  ZONE_HNDL          zone_hndl;
+  ZONE_TC_LIST_HNDL  tc_list;
+  int                i;
+  TC_HNDL            tc_hndl;
+  time_t             lead_time;
+  
+  if ( fleet_hndl == HNDL_NULL )
+    return(FAIL);
+
+  for ( i = 0; i < ZONE_MAX; i++ )
+    {
+      Zone_get_hndl( i, (int)Fleet_get_value( fleet_hndl, FLEET_NBR ), &zone_hndl );
+      if ( zone_hndl == HNDL_NULL )
+        continue;
+
+      tc_list = (ZONE_TC_LIST_HNDL)Zone_get_value( (ZONE_HNDL) zone_hndl, ZONE_TC_LIST );
+      Zone_tc_list_each_get( tc_list, tc_hndl )
+        {
+          lead_time = (time_t)TC_get_value(tc_hndl, TC_LEAD_TIME) + (old_lead_supp * 60)
+                       - (new_lead_supp * 60);
+          TC_set_value((TC_HNDL)tc_hndl, TC_LEAD_TIME, (HNDL)lead_time);
+        } Zone_tc_list_each_end(tc_list)
+            
+    }
+      
+}
+  
+TC_debug( debug_action,  tc_hndl )
+     int debug_action;
+     TC_STRUCT  *tc_hndl;
+{
+  time_t  tmtime;
+  time_t  due_time;
+  time_t  lead_time;
+  char    sDueTime[32];
+  char    sLeadTime[32];
+  char    sAction[16];
+  FILE    *debug_file;
+  char    *stime, *ctime();
+  
+  if ( ( debug_file = fopen("/usr/taxi/run/traces/tc_dbug", "a" )) == NULL )
+      return;
+  else
+    tmtime = time((time_t) 0 );
+
+  stime = (char *)ctime(&tmtime);
+  fprintf( debug_file, "%.8s", &stime[11] );
+
+  switch (debug_action)
+    {
+    case TC_DEBUG_LOAD:
+      strcpy( sAction, "TC_LOAD   " );
+      break;
+    case TC_DEBUG_LAUNCH:
+      strcpy( sAction, "TC_LAUNCH " );
+      break;
+    case TC_DEBUG_REMOVE:
+      strcpy( sAction, "TC_REMOVE " );
+      break;
+    default:
+      strcpy( sAction, "TC_UNKNOWN" );
+      break;
+    }
+
+  due_time = (time_t) TC_get_value( (TC_HNDL)tc_hndl, TC_DUE_TIME );
+  stime = ctime( &due_time );
+  strncpy( sDueTime, &stime[11], 8 );
+  sDueTime[8] = '\0';
+  lead_time = (time_t) TC_get_value( (TC_HNDL)tc_hndl, TC_LEAD_TIME );
+  stime = ctime( &lead_time );
+  strncpy( sLeadTime, &stime[11], 8 );
+  sLeadTime[8] = '\0';
+
+  fprintf(  debug_file, " %s Call %d Due Time %s Lead Time %s Zone %d \n",
+	   sAction, (int)TC_get_value( (TC_HNDL)tc_hndl, TC_CALL_NBR ),
+	   sDueTime, sLeadTime,
+	   (short)TC_get_value( (TC_HNDL)tc_hndl, TC_ZONE ) );
+  fclose( debug_file );
+
+}
+
+void TC_adjustDST()
+{
+  FLEET_HNDL    fleet_hndl;
+  FLEET         *fl_ptr;  
+  ZONE_HNDL     zone_hndl;
+  ZONE_TC_LIST_HNDL  tc_list;
+  TC_HNDL       tc_hndl;
+  char          active;
+  struct cisam_cl   db_call;
+  TC_STRUCT         *pTimeCall;  
+  int i, k, tmp_time;
+
+  for ( i = 0; i < FLEET_MAX; i++ )
+    {
+      Fleet_get_hndl( BY_NBR, i, &fleet_hndl );
+      if ( ( fleet_hndl == HNDL_NULL ) ||
+	  ( ( active = (char)Fleet_get_value( (FLEET_HNDL) fleet_hndl, FLEET_ACTIVE ) ) == NO ) )
+	continue;
+
+      fl_ptr = ( FLEET * )fleet_hndl;
+      
+      for ( k = 0; k < ZONE_MAX; k++ )
+	{
+	  Zone_get_hndl( k, i, &zone_hndl );  
+	  if ( zone_hndl == HNDL_NULL )
+	    continue;
+	  tc_list = (ZONE_TC_LIST_HNDL)Zone_get_value( (ZONE_HNDL) zone_hndl, ZONE_TC_LIST );
+	  Zone_tc_list_each_get( tc_list, tc_hndl )
+	    {
+	      // Update the due_date_time field
+	      pTimeCall = (TC_STRUCT *)tc_hndl;
+	      bzero( &db_call, sizeof( struct cisam_cl ) );
+	      db_call.nbr = pTimeCall->nbr;
+
+	      if ( db_read_key( CALL_FILE_ID, &db_call, &cl_key1, DB_EQUAL ) == SUCCESS )
+		{
+		  db_call.due_date_time = get_internal_time(db_call.due_date, db_call.due_time);
+		  db_update(CALL_FILE_ID, &db_call);
+		  TC_set_value( tc_hndl, TC_DUE_TIME, (HNDL)db_call.due_date_time );
+		  if (db_call.extended_type[0] == 'X')
+		    tmp_time = (short)Zone_get_value( zone_hndl, ZONE_X_LEAD_TIME );
+		  else
+		    tmp_time = (short)Zone_get_value( zone_hndl, ZONE_LEAD_TIME );
+		  
+		  TC_set_value( tc_hndl, TC_LEAD_TIME, (HNDL)(db_call.due_date_time - (int)tmp_time) );
+		}
+	      
+	    } Zone_tc_list_each_end(tc_list)
+	}
+      
+    }
+}
+
+/**************************************************************************************/
+/* get_internal_time: gets the time in internal C format; from the display formats    */
+/*	of date & time								      */
+/*	Returns 	0  if invalid date/time arg is passed to function	      */
+/*			time in unix format 					      */
+/**************************************************************************************/
+time_t get_internal_time(date_copy,time_copy)
+	char *date_copy;			/* assumed to be in mm/dd/yy format */
+	char *time_copy;			/* assumed to be in 24hr or 12hr format; hh:mm{a/p} */
+{
+	char date_time[15];			/* date & time formatted in YYMMDDhhmmss format */
+	char scratch_ptr[3];			/* scratch area */
+	int hours=0;
+
+	if (DATE_FORMAT == YEAR_FIRST_IN_DATE)
+	{
+		date_time[0] = date_copy[0];
+		date_time[1] = date_copy[1];
+		date_time[2] = date_copy[3];
+		date_time[3] = date_copy[4];
+		date_time[4] = date_copy[6];
+		date_time[5] = date_copy[7];	  
+	} else
+	{
+		date_time[0] = date_copy[6]; 			/* copy year from date */
+		date_time[1] = date_copy[7];
+
+		if (DATE_FORMAT == DAY_FIRST_IN_DATE) {
+	    	date_time[4] = date_copy[0]; 			/* copy the day */
+	    	date_time[5] = date_copy[1];
+
+	    	date_time[2] = date_copy[3]; 			/* copy month from date */
+	    	date_time[3] = date_copy[4];
+		}
+		else {
+	    	date_time[2] = date_copy[0]; 			/* copy month from date */
+	    	date_time[3] = date_copy[1];
+	    
+	    	date_time[4] = date_copy[3]; 			/* copy the day */
+	    	date_time[5] = date_copy[4];
+		}
+	}
+
+	/* copy the hour */
+	date_time[6] = time_copy[0];
+	date_time[7] = time_copy[1];
+
+#ifdef HR12
+	strncpy(scratch_ptr,time_copy,2);			/* extract just the hours */
+	scratch_ptr[2] = '\0';					/* null terminate it */
+	hours = atoi(scratch_ptr);				/* convert to integer hours */
+	if (time_copy[5] == 'p' || time_copy[5] == 'P'){	/* PM time; take care of 1:00p - 11:59p */
+		if(hours < 12)
+			hours += 12;
+	}
+	else							/* AM time; take care of 12:01a - 12:59a */
+		if(hours == 12)
+			hours -= 12;
+	sprintf(scratch_ptr, "%02d", hours);			/* convert back to ascii format */
+	date_time[6] = scratch_ptr[0];
+	date_time[7] = scratch_ptr[1];
+#endif
+
+	date_time[8] = time_copy[3]; 			/* copy the min from time */
+	date_time[9] = time_copy[4];
+	
+	date_time[10] = '0'; 				/* copy sec's to be 0 secs */
+	date_time[11] = '0';
+	date_time[12] = '\0';
+	
+	return(conversion(date_time)); 			/* now get the internal time */
+
+}  							/* end get_internal_time() */

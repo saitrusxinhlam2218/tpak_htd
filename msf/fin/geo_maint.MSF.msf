@@ -1,0 +1,205 @@
+$ /****************************************************************************
+$ *                                                                           *
+$ *                           S C C S   I N F O                               *
+$ *                                                                           *
+$ * @(#)  geo_maint.MSF.fin; Rel: 10.1.3.1; Get date: 5/18/95 at 10:19:20
+$ * @(#)  Last delta: 12/5/94 at 11:00:06
+$ * @(#)  SCCS File: /taxi/sccs/s.geo_maint.MSF.fin
+$ *                                                                           *
+$ * Copyright (c) 1990 - MDI Seattle                                          *
+$ *                                                                           *
+$ *****************************************************************************/
+$ #ident "@(#) head:geo_maint.MSF.fi/usr/users/brian/enh_src/src/msf/fin	10.1.3.1"
+
+$ /*
+$  * Message file for PROGRAM: geo_maint
+$  * CATALOG:   geo_maint.cat
+$  * MNEMONICS: geo_m_strdefs.h
+$  */
+
+$quote "
+$delset 1
+$set 1
+
+$ /*    NOTE TO THE TRANSLATOR                          */
+$ /*    Quoted text will be followed by a maximum string length if the  */
+$ /*    text length is different than the number of chars in the string.*/
+$ /*    If no string length is entered default to the current number of */
+$ /*    characters.  A comment about the string is also included where  */
+$ /* 	necessary.							*/
+$ /*	From GEO_MAINT_116 to GEO_MAINT_    translate `Ä` to `(' and	*/
+$ /*	'Å' to ')'							*/
+
+1	"On annettava kadun nimi"			/* 50	*/
+2	"Paina ESC suorittaaksesi"				/* 50	*/
+3	"On annettava kadun tyyppi"			/* 50	*/
+4	"W"						/* do not translate 	*/
+5	"E"						/* do not translate     */
+6	"N"						/* do not translate     */
+7	"S"						/* do not translate     */
+8	"NW"						/* do not translate     */
+9	"NE"						/* do not translate     */
+10	"SE"						/* do not translate     */
+11	"SW"						/* do not translate     */
+12	"                     "				/* 50	*/	
+13	"                      "			/* 50   */
+14	"Väärä kuntakoodi"				/* 50   */
+15	"Virhe kentässä"				/* 50   */
+16	"Väärä kadun numero"				/* 50   */
+17	"              "				/* 50   */
+18	"Väärä postinumero"				/* 50   */
+19	"Väärä alaruutu"			/* 50   */
+20	"Väärä x-koordinaatti"				/* 50   */
+21	"Väärä y-koordinaatti"				/* 50   */
+22	"Väärä karttaviitteen sivunumero"		/* 50   */
+23	"Väärä matala numero"				/* 50   */
+24	"Alue limittäin"				/* 50   */
+25	"Väärä numero"				/* 50   */
+26	"Väärä korkea numero"				/* 50   */
+27	"Väärä sivun viitenumero"			/* 50   */
+28	"Alaruutu ei täsmää"				/* 50   */
+29	"                     "				/* 50   */
+30	"                    "				/* 50   */
+31	"Kadunnimitiedoston avausvirhe"			/* 50   */
+32	"Osoitetiedoston avausvirhe"			/* 50   */
+33	"Paikannimitiedoston avausvirhe"			/* 50   */
+34	"Paikkatiedoston avausvirhe"			/* 50   */
+35	"Paikkanimitiedoston avausvirhe"			/* 50   */
+36	"Alaruututiedoston avausvirhe"			/* 50   */
+37	"Alaruutunimitiedoston avausvirhe"			/* 50   */
+38	"Tietue ei löydy"				/* 50   */
+39	"Kadunnimitiedoston lukuvirhe"			/* 30	*/
+40	"Kadunnimitiedoston sulkemisvirhe"		/* 30	*/
+41	"Paikannimitiedoston sulkemisvirhe"			/* 30	*/
+42	"Osoitenimitiedoston sulkemisvirhe"		/* 30   */
+43	"Paikkatiedoston sulkemisvirhe"			/* 30   */
+44	"Alaruututiedoston sulkemisvirhe"			/* 30   */
+45	"Paina ESC suorittaaksesi"				/* 50	*/
+46	"On annettava arvo"				/* 50	*/
+47	"Tietuetta ei löydy"				/* 50 	*/
+48    " (SEUR-TILA)   (0) Päävalikko (1) Kadun nimi & tyyppi (2) Lyhenne (3) Aliakset (4) Paikannimi (5) Osoite : "
+$                       /* change ÄÅ around NEXT MODE to ()     */
+49	"Tietuetta ei löydy"
+50    " (SEUR-TILA)   (0) Päävalikko (1) Kadun nimi & tyyppi (2) Lyhenne (3) Aliakset (4) Paikannimi (5) Osoite : "
+$                       /* change ÄÅ around PREV MODE to ()     */
+51    " (LISÄÄ-TILA) (0) Päävalikko (1) Uusi kadunnimi & tyyppi (2) Lyhenne (3) Aliakset (4) Paikannimi (5) Osoite : "
+$                       /* change ÄÅ around ADD MODE to ()     */
+52	"On annettava kadun nimi"			/* 50	*/
+53	"Sama kadunnimi ja tyyppi löytyi"		/* 50	*/
+54	"Tietueen lisäysvirhe"				/* 50	*/
+55	"Tietue lisätty"					/* 50	*/
+56	"Väärä kunta"					/* 50   */
+57	"Väärä alaruutu"				/* 50   */
+58	"Osoitetietueen päivitysvirhe"			/* 50   */
+59	"Lisäysvirhe"					/* 50   */
+60    " (PÄIVITÄ-TILA)  (0) Päävalikko (1) Lyhenne (2) Aliakset (3) Paikannimi (4) Osoite : "
+$                       /* change ÄÅ around UPDATE MODE to ()     */
+61	"Lukuvirhe"					/* 50   */
+62	"Päivitysvirhe"					/* 50   */
+63	"Tietue päivitetty"				/* 50   */
+64	"Lukuvirhe 1"					/* 50   */
+65	"Lukuvirhe 2"					/* 50   */
+66	"Lukuvirhe 3"					/* 50   */
+67	"Lukuvirhe 4"					/* 50   */
+68	"Lukuvirhe 5"					/* 50   */
+69	"Päivitettävä tietue puuttuu"		/* 50   */
+70	"Päivitettävä tietue puuttuu"		/* 50   */
+71	"Kadun nimi             Tyyppi                                          Lyhenne                         Aliakset                "
+$			/* Starting positions for text must remain the same.  Street name can be 15 chars	*/
+$			/* Abbreviation can be 15 chars and Aliases can be 15 chars. Type can be 4 chars	*/
+72	" Paikannimi                   Alue P/R Katunro.   Pnro  Alaruutu Huomautus                      X-koord   Y-koord  Krtsivu/ Ruut Pkk"
+$			/* Starting positions for text must remain the same	*/
+73	"Alueet              Alue P/R  Alh nro  Kork nro Pnro   Alaruutu  Huomautus                      X-koord   Y-koord  Krtsivu/ Ruut"
+$			/* Starting postions for text must remain the same	*/
+74	"Ruututiedoston hoidon viestihaku epäonnistui "		/* 50	*/
+75	"Ruututiedoston hoidon viestihaku epäonnistui"			/* 50   */
+76	"Ruututiedoston hoidon viestiläh epäonnistui "		/* 50   */
+77	"Ruututiedoston hoidon viestiläh epäonnistui"			/* 50   */
+78	"KYSELY: ESC suorittaa, CTRL-X keskeyttää. "	/* 50, escape key, interrupt key	*/
+79    "Query Next Previous Add Update Remove Output Exit" 
+80	"KARTTATIEDOSTON HOITO"
+81	"PÄIVITÄ: ESC suorittaa, CTRL-X keskeyttää. "	/* 50, escape key, interrupt key	*/
+82	"Anna tulostustied. nimi (oletus geo_scr.out): "	/* Don't translate filename geo_scr.out	*/
+83	"Tulostustiedosto"					/* Tulostustiedosto XXX, Lisää tai Uusi	*/
+84	"Lisää tai Uusi (oletus : U) "		/* Tulostustiedosto XXX, Lisää tai Uusi    */
+85	"C-isam-virhe numero ="				/* C- Indexed Sequential Access Method	*/
+86	"Unix-virhe numero ="
+87    " (POISTO-TILA)   (0) Päävalikko(1) Kadun nimi & tyyppi(2) Lyhenne (3) Aliakset (4) Paikannimi (5) Osoite : "
+$                       /* change ÄÅ around REMOVE MODE to ()     */
+88	" Paina ESC poistaaksesi tietue kohdistimen alta "
+89	"Paina ESC poistaaksesi kaikki tietueet"		/* 50	*/
+90	"Lukuvirhe"					/* 50	*/
+91	"Poistovirhe"					/* 50   */
+92	"Tietue poistettu"				/* 50   */
+93	"Poistettu-virhe"				/* 50   */
+94	" Hakemistonumero "				/* 50, keep leading space	*/
+95	" Kadun koko nimi "				/* 50, keep leading space	*/
+96	" Kadun tyyppi "					/* 50, keep leading space       */
+97	" Katunimen lyhenne "			/* 50, keep leading space       */
+98	" Kadun aliasnimi  "				/* 50, keep leading space       */
+99	" Paikannimi "					/* 50, keep leading space       */
+100	"                      "			/* 50, keep leading space       */
+101	"                       "			/* 50, keep leading space       */
+102	" Kuntakoodi "					/* 50, keep leading space       */
+103	"  P-Parillinen, R-Pariton, M-Molemmat "			/* 50, keep lead space, check translated values for E,O,B	*/
+104	" Katuosoitteen numero "			/* 50, keep leading space       */
+105	"                 "				/* 50, keep leading space       */
+106	" Tähän osoitteeseen liittyvä postinumero "	/* 50, keep leading space       */
+107	" Tähän osoitteeseen liittyvä alaruutu "	/* 50, keep leading space       */
+108	" Paikan selitys tälle katutietueelle "	/* 50, keep leading space       */
+109	" Kadun X-koordinaatti "			/* 50, keep leading space       */
+110	" Kadun Y-koordinaatti "			/* 50, keep leading space       */
+111	" Karttasivun viitenumero "			/* 50, keep leading space       */
+112	" Karttalohkon nimitys  "			/* 50, keep leading space       */
+113	" K/E, osoittaako tämä paikannimi paikallista noutoa "	/* 50, keep leading space, verify Y/N values       */
+114	" Kadun osan alhainen numero "		/* 50, keep leading space       */
+115	" Kadun osan korkea numero "		/* 50, keep leading space       */
+$		/* translate Ä to ( and Å to ) on the next 5 lines	*/
+116	"(                  )  "
+117	"(                    ) (   )                                           (                    )          (                    )  "
+118	"                                                                       (                    )          (                    )  "
+119	"(                    )(  )(  )(   )( )(      )( )(     )(     )(                              )(        )(        ) (   ) /(    )( )"
+120	"         (  ) (  ) (   ) ( ) (      ) (      ) (     ) (     ) (                              )(        )(        ) (   ) / (    )"
+121   "Väärä valinta - ole hyvä anna (L/U) lisätäksesi tai aloittaaksesi uuden"
+
+$ /*
+$  * The following strings were extracted from geo_msg.h
+$  */
+
+$delset 2
+$set 2
+
+1	"Syöttö on lopetettava painamalla ESC"		/* 40	*/
+2	"Virhe kentässä"				/* 40   */
+3	"Ensimmäisen tietueen lukuvirhe"			/* 40   */
+4	"Yhtiötiedoston avausvirhe"				/* 40   */
+5	"Lupatiedoston avausvirhe"				/* 40   */
+6	"Ei ole rivejä jotka täyttävät ehdot"	/* 40   */
+7	"Ruututiedoston lukuvirhe"				/* 40   */
+8	"Ei rivejä nykyisessä listassa"		/* 40   */
+9	"Menosuunnassa ei ole enää rivejä"	/* 40   */
+10	"Seuraavan lukuvirhe"				/* 40   */
+11	"Edellisen lukuvirhe"				/* 40   */
+12	"Tietueen lisäysvirhe"				/* 40   */
+13	"Tietueen lukitusvvirhe"				/* 40   */
+14	"Ruututiedoston päivitysvirhe"			/* 40   */
+15	"Tietue päivitetty"				/* 40   */
+16	"Nykyisen tietueen vapautusvirhe"			/* 40   */
+17	"Ruututiedoston poistovirhe"			/* 40   */
+18	"Tulostetiedoston avausvirhe"			/* 40   */
+19	"Ruututiedoston hoidon viestihaku epäonnistui"			/* 40   */
+20	"Ruutuprof.tied. hoid. viestiläh epäonnistui"		/* 40   */
+21	"KYSELY: ESC=suorita, CTRL-X=keskeytä."	/* 40, escape key, interrupt key   */
+22	"LISÄÄ: ESC=suorita, CTRL-X=keskeytä. "		/* 40, escape key, interrupt key  */
+23      "Query Next Previous Add Update Remove Output Exit "
+24	"RUUTUTIEDOSTON HOITO"
+25	"PÄIVITÄ: ESC=suorita, CTRL-X=keskeytä"		/* 40, escape key, interrupt key   */
+26	"Poista (K/E)? "
+27	"Anna tulostustied.(oletus zn_scr.out): "	/* do not translate filename zn_scr.out	*/
+28	"Tulostustiedosto %s Lisää/Uusi (oletus: U)? "	/* do not translate %s. A filename will be substituted	*/
+$				/* for %s.  Position %s wherever it makes the most sense	*/
+29	"Jäljitystiedoston avausvirhe"				/* 40   */
+30	"Ruututiedoston avausvirhe"				/* 40   */
+31	"Ruututiedoston sulkemisvirhe"				/* 40   */
+32	"Jäljitystiedoston sulkemisvirhe"			/* 40   */
+33	"Käyttäjän nimeä ei löydy"			/* 40   */

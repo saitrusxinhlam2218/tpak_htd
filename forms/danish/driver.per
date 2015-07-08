@@ -1,0 +1,95 @@
+{
+|***********************************************************************
+|                 RCS INFO
+|
+|  @(#)  $RCSfile: driver.per,v $
+|  @(#)  $Revision: 1.4 $
+|  @(#)  $Date: 1998/01/08 19:35:29 $
+|  @(#)  $Author: taxiadm $
+|  @(#)  $Source: /taxi-scan/taxi_proj/cvs/taxi-scan/src/forms/danish/driver.per,v $
+|
+|  Copyright (c) 1994 - MobileSoft Consulting, Inc. Woodinville WA
+|
+|**********************************************************************/
+|ident "@(#) head:$RCSfile: driver.per,v $	$Revision: 1.4 $"
+}
+database mads
+screen
+{
+						VEDLIGEH. AF CHAUFFØR-FIL
+Vognpk-ID       Klasse  Navn                         Adresse                      Kom                     Postnr  Suf
+[a]    [f000 ]  [b]     [f001                     ]  [f002                     ]  [f003                ]  [f004 ] [f005]
+
+Telefon         Kørekortsnr        Taxikort           Bevillinger
+[f006        ]  [f007           ]  [f008    ]         [f009            ]
+
+Attributter         Suspend. fra           Suspend. til           Suspend.årsag              "P"  "B"  "X"
+   [f010    ]       [f011              ]   [f012              ]   [f013                ]  [c]  [d]  [e]
+
+Suspenderingsbesked
+[f014                            ][f015                            ][f016                            ]
+
+Chaufførbemærkning                                                                       Kørek forny   Taxik forny
+[f018                                    ][f019                                    ][f020     ]  [f021     ]
+Sidste nødopk. på           Nødopk. afklaret         Tilmeldt              Frameldt              Vgnnr   Ture kørt
+     [f022              ]  [f023              ]     [f024              ]  [f025              ]  [f026]  [f027              ]
+
+IDIST  BDIST  SL     ik ACPT AFVST  OPKALD FEJLT  GADET  FR VL  TALE   BSK    PAUSR  Tildeln  Best  Kortmet Sentmet Rykkere
+[f032] [f033] [f034] [f037]  [f038] [f043] [f044] [f030] [f031] [f040] [f041] [f039] [f029]  [f028] [f035]  [f036] [f042]
+}
+end
+tables
+driver
+attributes
+a = driver.dr_fleet,UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="Vognpark-ID";
+f000 = driver.dr_id,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Chauffør-ID (1-99999)";
+b = driver.dr_class,UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="Chaufførklassifikation 1-Rutineret, 2-Begynder";
+f001 = driver.dr_name,UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="Chaufførnavn";
+f002 = driver.dr_address,UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="Chaufførs bopælsadresse";
+f003 = driver.dr_city,UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="Chaufførs hjemkommune";
+f004 = driver.dr_zip,NOENTRY,NOUPDATE,COMMENTS="Chaufførs postnummer";
+f005 = driver.dr_zip_suf,NOENTRY,NOUPDATE,COMMENTS="  ";
+f006 = driver.dr_phone,NOENTRY,NOUPDATE,COMMENTS="Chaufførs telefonnr";
+f007 = driver.dr_license_nbr,UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="Kørekortnummer";
+f008 = driver.dr_taxi_license,UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="Chaufførs taxikortnummer";
+f009 = driver.dr_seals,UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="Seksten flag for bevillinger";
+f010 = driver.dr_attributes,UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="Otte flag for attributter";
+f011 = driver.dr_susp_from_dt_tm,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Dato og tid chauffør blev suspenderet";
+f012 = driver.dr_susp_to_dt_tm,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Dato og tid chaufførs suspendering blev hævet";
+f013 = driver.dr_susp_reason,UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="Suspenderingsårsag";
+c = driver.dr_susp_pass_call,UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="Om chaufføren er udelukket fra passagerture";
+d = driver.dr_susp_del_call,UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="Om chaufføren er udelukket fra budkørsler";
+e = driver.dr_susp_typex_call,UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="Om chaufføren er udelukket fra type X ture";
+f014 = driver.dr_susp_message[1,32],UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="Suspenderingsbesked som sendes til chaufføren";
+f015 = driver.dr_susp_message[33,64],UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="Suspenderingsbesked som sendes til chaufføren";
+f016 = driver.dr_susp_message[65,96],UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="Suspenderingsbesked som sendes til chaufføren";
+f018 = driver.dr_comments[1,40],UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="Alm. chaufførbemærkningsområde";
+f019 = driver.dr_comments[41,80],UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="Alm. chaufførbemærkningsområde";
+f020 = driver.dr_lic_renew,NOENTRY,NOUPDATE,COMMENTS="Kørekorts fornyelsesdato";
+f021 = driver.dr_taxi_lic_renew,NOENTRY,NOUPDATE,COMMENTS="Chaufførens taxikorts fornyelsesdato";
+f022 = driver.dr_emerg_on_dt_tm,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Sidste dato og tid chauffør sendte nødopkald";
+f023 = driver.dr_emerg_of_dt_tm,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Sidste dato og tid chaufførs seneste nødopkald blev afklaret";
+f024 = driver.dr_signed_on_dt_tm,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Sidste dato og tid denne chauffør blev tilmeldt";
+f025 = driver.dr_signed_of_dt_tm,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Sidste dato og tid denne chauffør blev inaktiv";
+f026 = driver.dr_last_veh_nbr,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Sidste vogn denne chauffør kørte";
+f027 = driver.dr_last_call,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Sidste tur kørt af denne chauffør";
+f032 = driver.dr_posts,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Antal gange chaufføren meldte ind på sidste vagt";
+f033 = driver.dr_cond_posts,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Antal gange chauffør meldte betinget i distrikt på sidste vagt";
+f034 = driver.dr_enroute_posts,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Antal gange chauffør meldte snart-ledig på sidste vagt";
+f037 = driver.dr_no_accepts,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Antal gange chauffør meldte ikke-acpt på sidste vagt";
+f038 = driver.dr_rejects,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Antal gange chauffør afviste på sidste vagt";
+f043 = driver.dr_callouts,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Antal opkald til kunder chauffør havde på sidste vagt";
+f044 = driver.dr_no_shows,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Antal fejlture chauffør havde på sidste vagt";
+f030 = driver.dr_flags,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Antal gadeture chauffør havde på sidste vagt";
+f031 = driver.dr_bids,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Antal frit-valg chauffør havde på sidste vagt";
+f040 = driver.dr_req_to_talk,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Antal taleønsker chauffør sendte på sidste vagt";
+f041 = driver.dr_messages,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Antal meddelelser chauffør sendte til trafikleder på sidste vagt";
+f039 = driver.dr_breaks,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Antal pauser chauffør tog på sidste vagt";
+f029 = driver.dr_assigns,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Antal ture sendt manuelt til chauffør på sidste vagt";
+f028 = driver.dr_calls,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Antal ture sendt til chauffør på sidste vagt";
+f035 = driver.dr_short_meters,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Antal kort taxametertid forsøgt af denne chauffør på sidste vagt";
+f036 = driver.dr_late_meters,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Antal sent taxameter på denne chaufførs sidste vagt";
+f042 = driver.dr_callbacks,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Antal rykkere denne chauffør havde på sidste vagt";
+instructions
+   delimiters "()";
+end

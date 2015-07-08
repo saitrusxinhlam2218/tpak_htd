@@ -1,0 +1,32 @@
+{
+|***********************************************************************
+|                 RCS INFO
+|
+|  @(#)  $RCSfile: strname.per,v $
+|  @(#)  $Revision: 1.2 $
+|  @(#)  $Date: 1999/03/19 21:26:58 $
+|  @(#)  $Author: taxiadm $
+|  @(#)  $Source: /taxi-scan/taxi_proj/cvs/taxi-scan/src/forms/english/strname.per,v $
+|
+|  Copyright (c) 1994 - MobileSoft Consulting, Inc. Woodinville WA
+|
+|**********************************************************************/
+|ident "@(#) head:$RCSfile: strname.per,v $	$Revision: 1.2 $"
+}
+database mads
+screen
+{
+						STREET NAME FILE DISPLAY
+
+Name                    Str Type   Record Type  Index
+[f000                ]  [a0 ]      [a]           [f001                ]
+}
+end
+tables
+strname
+attributes
+f000 = strname.sn_name,NOENTRY,NOUPDATE,UPSHIFT,COMMENTS="Street name, abbreviation, alias name or place name";
+a0 = strname.sn_str_type,NOENTRY,NOUPDATE,UPSHIFT,COMMENTS="Street type (AVE. ST.) etc";
+a = strname.sn_rec_type,NOENTRY,NOUPDATE,COMMENTS="Type of name record. Choices: 1. Main record, 2. Abbrev, 3. Alias name";
+f001 = strname.sn_index,NOENTRY,NOUPDATE,RIGHT,COMMENTS="System assigned unique identifier of this street name/type combination";
+end

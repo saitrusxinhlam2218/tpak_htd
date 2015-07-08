@@ -1,0 +1,43 @@
+database mads
+screen
+{
+						Toistoviestitiedoston hoito
+
+Numero                               Toisto    Yhtiö  Saajatyyppi  Saaja       Kuinka usein
+[f000                ]               [a]       [b]       [c ]      [f001 ]     [f002  ]   
+
+Luonti:   TN      Pvm         Aika          Systeemipvm/aika
+          [f003]  [f004    ]  [f005  ]      [f006              ]  
+
+Voim:   Pvm         Aika       Systeemipvm/aika
+        [f007    ]  [f008  ]   [f009              ]
+
+Viestirivi   
+[f010                                              ][f011                                              ]
+[f012                                              ][f013                                              ]
+}
+end
+tables
+rptmsg
+attributes
+a = rptmsg.rm_repeat,include=(K,E),default="K",UPSHIFT,COMMENTS="K/E.  Onko tämä toistuva viesti";
+b = rptmsg.rm_fleet,UPSHIFT,COMMENTS="Yhtiö johon tämä viesti liittyy";
+c = rptmsg.rm_to_type,UPSHIFT,COMMENTS="Käyttäjätyyppi jolle viesti lähetettiin";
+f000 = rptmsg.rm_msg_nbr,NOENTRY,RIGHT,NOUPDATE,COMMENTS="Systeemin tälle viestille antama numero";
+f001 = rptmsg.rm_to_selection,UPSHIFT,COMMENTS="Henkilö jolle viesti lähetettiin";
+f002 = rptmsg.rm_how_often,RIGHT,COMMENTS="Kuinka usein viesti tulee lähettää";
+f003 = rptmsg.rm_created_by,RIGHT,REQUIRED,COMMENTS="Toistuvan viestin luoneen käyttäjän tunnusnumero"; 
+f004 = rptmsg.rm_cr_date,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Luontipäivämäärä";
+f005 = rptmsg.rm_cr_time,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Luonnin kellonaika";
+f006 = rptmsg.rm_created_dt_tm,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Systeemin antama päivämäärä ja aika luonnille";
+f007 = rptmsg.rm_until_date,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Viestin umpeenmenopäivä";
+f008 = rptmsg.rm_until_time,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Viestin umpeenmenoaika";
+f009 = rptmsg.rm_until_dt_tm,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Systemin antama viestin umpeenmenopäivä ja -aika";
+f010 = rptmsg.rm_line_1[1,50],UPSHIFT,COMMENTS="Viestin ensimmäinen rivi";
+f011 = rptmsg.rm_line_1[51,100],UPSHIFT,COMMENTS="Viestin ensimmäinen rivi";
+f012 = rptmsg.rm_line_2[1,50],UPSHIFT,COMMENTS="Viestin toinen rivi";
+f013 = rptmsg.rm_line_2[51,100],UPSHIFT,COMMENTS="Viestin toinen rivi";
+end
+instructions
+   delimiters "()";
+end

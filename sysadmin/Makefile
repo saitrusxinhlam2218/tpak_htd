@@ -1,0 +1,52 @@
+include ../Makefile.inc
+
+LIBFLAGS = -L../lib \
+	-lcommon -lm -ldb -lfill -lcurses $(CISAMDB_LIBS)
+
+COM = ../common
+.c.o:
+	xlc $(CFLAGS) -c $<
+
+admin_mgmt: adminmgmt.o getreturn.o 
+	xlc $(CFLAGS) adminmgmt.o getreturn.o  $(LIBFLAGS) -o admin_mgmt
+
+system_mgmt:  sysmgmt.o sysfuncs.o getreturn.o clr_vh_context.o
+	xlc $(CFLAGS) sysmgmt.o sysfuncs.o getreturn.o clr_vh_context.o $(LIBFLAGS) -o  system_mgmt
+
+# system_main is the manager user interface main program.
+system_main: sysmain.c  ../include/machdep.h ../include/smain_strdefs.h $(COM)/open_catalog.o ../common/cls.o
+	$(CC) $(CFLAGS) sysmain.c $(COM)/open_catalog.o ../common/cls.o \
+		$(LIBFLAGS) -o  system_main
+
+# file_mgmt is a main program run by system_main.
+# file_mgmt runs backup, restore, and b-check scripts.
+file_mgmt: filemgmt.c ../reports/chosfleets.o
+	$(CC) $(CFLAGS) filemgmt.c ../reports/chosfleets.o $(LIBFLAGS) -o  file_mgmt
+
+# credit is the executable that loads, updates, backs up, restores the
+# bad credit file.
+CREDIT_OBJ = credit_main.o do_credit.o convert_credit.o update_credit.o \
+	../common/lock_credit.o ../common/lang.o
+credit: $(CREDIT_OBJ)
+	cc $(CFLAGS) -o credit $(CREDIT_OBJ) 
+
+# unload_tables is the executable that unloads db tables to an ASCII file
+unload_tables: unload_tables.c ../include/comm_strdefs.h \
+	../include/mads_types.h ../include/fmgmt_strdefs.h ../include/key.h ../include/language.h \
+	../db/db.o ../common/cls.o $(COM)/open_catalog.o $(COM)/toupper.o
+	cc $(CFLAGS) unload_tables.c ../db/db.o ../common/cls.o \
+	$(COM)/open_catalog.o  $(COM)/toupper.o -L$(LIB) -lfill -lrate -lm -lisam -o  unload_tables
+						 
+# bcheck_files is the executable that checks the .dat and .idx files for consistency
+bcheck_files: bcheck_files.c ../include/path.h
+	cc $(CFLAGS) bcheck_files.c -L$(LIB) -lfill -lm -lisam -o bcheck_files
+
+credit_main.o : ../include/comm_strdefs.h ../include/credit_strdefs.h
+credit_main.o : ../include/language.h
+convert_credit.o : ../include/credit.h ../include/credit_strdefs.h
+convert_credit.o : ../include/path.h
+do_credit.o : ../include/credit.h ../include/credit_strdefs.h
+do_credit.o : ../include/language.h ../include/path.h
+update_credit.o : ../include/credit.h ../include/credit_strdefs.h
+update_credit.o : ../include/path.h
+sysmgmt.o:../include/sysmgmt_scr.h

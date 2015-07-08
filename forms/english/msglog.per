@@ -1,0 +1,49 @@
+{
+|***********************************************************************
+|                 RCS INFO
+|
+|  @(#)  $RCSfile: msglog.per,v $
+|  @(#)  $Revision: 1.2 $
+|  @(#)  $Date: 1999/03/19 21:26:44 $
+|  @(#)  $Author: taxiadm $
+|  @(#)  $Source: /taxi-scan/taxi_proj/cvs/taxi-scan/src/forms/english/msglog.per,v $
+|
+|  Copyright (c) 1994 - MobileSoft Consulting, Inc. Woodinville WA
+|
+|**********************************************************************/
+|ident "@(#) head:$RCSfile: msglog.per,v $	$Revision: 1.2 $"
+}
+database mads
+screen
+{
+						MESSAGE LOG FILE MAINTENANCE
+
+Number                  Sender ID     Date Sent    Time Sent 
+[f000                ]  [f001 ]       [f004     ]  [f005  ]   
+
+Dispatcher ID     Processed    Repeat    Fleet      To  Type Selection
+[f003]            [a]          [b]       [c]            [d]  [ f006]
+
+Message
+[f007                                              ] [f008                                              ]
+[f009                                              ] [f010                                              ]
+}
+end
+tables
+msglog
+attributes
+f000 = msglog.ml_nbr,RIGHT,NOENTRY,NOUPDATE,COMMENTS="A number assigned to this message by the system";
+f001 = msglog.ml_from,include=(1 to 9999),RIGHT,COMMENTS="User ID who sent ths message";
+f004 = msglog.ml_date_sent,COMMENTS="Date message sent";
+f005 = msglog.ml_time_sent,COMMENTS="Time message sent";
+f003 = msglog.ml_supervisor_id,include=(1 to 9999),RIGHT,COMMENTS="Dispatcher ID";
+a = msglog.ml_supervisor_saw,include=(A,D,S,I),UPSHIFT,COMMENTS="Message is 'A'pproved, 'D'enied, 'I'n progress";
+b = msglog.ml_repeat,include=(Y,N),UPSHIFT,COMMENTS="Repeat message (Y/N)";
+c = msglog.ml_fleet,UPSHIFT,REQUIRED,COMMENTS="Fleet associated with this message";
+d = msglog.ml_to_type,include=("*",F,S,C,M,T,D,Z," "),UPSHIFT,COMMENTS="Type of user this message was sent to";
+f006 = msglog.ml_to_selection,UPSHIFT,COMMENTS="Who the message was sent to";
+f007 = msglog.ml_msg_line1[1,50],UPSHIFT,COMMENTS="First line of messages";
+f008 = msglog.ml_msg_line1[51,100],UPSHIFT,COMMENTS="First line of messages"; 
+f009 = msglog.ml_msg_line2[1,50],UPSHIFT,COMMENTS="Second line of messages"; 
+f010 = msglog.ml_msg_line2[51,100],UPSHIFT,COMMENTS="Second line of messages";
+end

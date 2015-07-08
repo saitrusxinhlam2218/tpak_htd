@@ -1,0 +1,28 @@
+{
+|***********************************************************************
+|                 RCS INFO
+|
+|  @(#)  $RCSfile: canmsg.per,v $
+|  @(#)  $Revision: 1.2 $
+|  @(#)  $Date: 1999/03/19 21:22:43 $
+|  @(#)  $Author: taxiadm $
+|  @(#)  $Source: /taxi-scan/taxi_proj/cvs/taxi-scan/src/forms/english/canmsg.per,v $
+|
+|  Copyright (c) 1994 - MobileSoft Consulting, Inc. Woodinville WA
+|
+|**********************************************************************/
+|ident "@(#) head:$RCSfile: canmsg.per,v $	$Revision: 1.2 $"
+}
+database mads
+screen
+{
+Canmsg #	Canmsg Text
+[ a1]		[f000                                    ]
+}
+end
+tables
+canmsg
+attributes
+a1 = canmsg.cm_nbr,include = (0 to 999),REQUIRED,NOUPDATE,RIGHT,COMMENTS="Canned message number (0 - 999)";
+f000 = canmsg.cm_text,UPSHIFT,COMMENTS="Canned message text";
+end

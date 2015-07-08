@@ -1,0 +1,64 @@
+$ /****************************************************************************
+$ *                                                                           *
+$ *                           S C C S   I N F O                               *
+$ *                                                                           *
+$ * @(#)  msg_text.MSF.fin; Rel: 5.8.0.0; Get date: 7/27/90 at 15:56:18
+$ * @(#)  Last delta: 7/10/90 at 12:32:57
+$ * @(#)  SCCS File: /taxi/sccs/s.msg_text.MSF.fin
+$ *                                                                           *
+$ * Copyright (c) 1990 - MDI Seattle                                          *
+$ *                                                                           *
+$ *****************************************************************************/
+$ #ident "@(#) head:msg_text.MSF.fin/taxi/int/msf	5.8.0.0"
+
+$quote "
+$set 1
+
+1	"JO TAUOLLA"
+2	"HYVKS AJO ENSIN"
+3	"EI PUHETTA"
+4	"VÄÄRÄ TN"
+5	"MYÖHÄSSÄ"
+6	"VANHENTUNUT"
+7	"LISÄÄ VIESTEJÄ"
+8	"EIHVKS TA ENSIN"
+9	"EI MUKANA"
+10	"JO AJOSSA"
+11	"EI AJOTARJOUSTA"
+12	"EI TARJ RUUDUSSA"
+13	"EIHVKS AJOSSA"
+14	"EIHVKS JO HYVKS"
+15	"EIHVKS MIT PÄÄL"
+16	"EIHVKS AJOTARJ"
+17	"EI AJOTARJOUSTA"
+18	"EIHVKS MIT PÄÄL"
+19	"JULLIKKA EI OK"
+20	"VÄÄRÄ RUUTU"
+21	"EIHVKS AIKAINEN"
+22	"EI MATKALLA"
+23	"EI KV RUUDUSSA"
+24	"MITT EI PÄÄL"
+25	"EIHVKS"
+26	"EI ENÄÄ HYLK"
+27	"JULLIKKA HYVKS"
+28	"EI SOPIMUSAJOA"
+29	"HYLKÄYS EI OK"
+30	"JULLIKKA OK"
+31	"JULLIKKA EI OK"
+32	"JUL ODOTA VIELÄ"
+33	"JO MUKANA"
+34	"TN KÄYTÖSSÄ"
+35	"AUTO KÄYTÖSSÄ"
+36	"ASEMA KIINNI"
+37	"AJAJA KIELLOSSA"
+38	"AUTO KIELLOSSA"
+39	"EI VOI TARKIST"
+40      "RUUDUTTAMATON ALUE"
+41	"GPS EI PAIKANNA"
+42	"RUUTU"
+43	"OLET RUUDUSSA"
+44	"VÄÄRÄ KV RUUTU"
+45	"SIIRRY PUHEELLE"
+46	"AUTO %d EI K"
+47	"AUTO %d EI MUKANA"
+48	"VALMISVIESTI %d"

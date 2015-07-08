@@ -1,0 +1,53 @@
+$ /****************************************************************************
+$ *                                                                           *
+$ *                           S C C S   I N F O                               *
+$ *                                                                           *
+$ * @(#)  credit_main.MSF.fin; Rel: 10.1.3.1; Get date: 5/18/95 at 10:17:32
+$ * @(#)  Last delta: 12/5/94 at 11:01:53
+$ * @(#)  SCCS File: /taxi/sccs/s.credit_main.MSF.fin
+$ *                                                                           *
+$ * Copyright (c) 1990 - MDI Seattle                                          *
+$ *                                                                           *
+$ *****************************************************************************/
+$ #ident "@(#) head:credit_main.MSF./usr/users/brian/enh_src/src/msf/fin	10.1.3.1"
+$quote "
+$delset 1
+$set 1
+
+1	"Väärät luottoargumentit:"
+2	"-l for load, update or restore, -b for back up." /* do not translate */
+3	"Paina <CR>"
+4	"Ei voi muuttaa oikeaan hakemistoon."
+5	"Jos haluat varmuuskopion katteettomien korttien tiedostosta,"
+6	"aseta nauha paikoilleen ja anna 'K' sekä <CR>"
+7	"Katteettomien korttien tiedostoa ei varmistettu."
+8	"Katteettomien korttien tiedostosta on tehty varakopio. Poista nauha."
+9	"Jos haluat ladata uuden katteettomien korttien tiedoston "
+10	"tai päivittää nykyisen katteettomien korttien tiedoston,"
+11	"Katteettomien korttien tiedostoa ei ladattu."
+12	"Luetaan katteettomien korttien tiedostoa ..."
+13	"Katteettomien korttien tiedostoa ei ladattu oikein."
+14	"Katteettomien korttien tiedosto on ladattu."
+15	"Katteettomien korttien tiedosto entistetään ..."
+16	"Ei voi lukita katteettomien korttien tiedostoa."
+17	"Katteettomien korttien tiedostoa EI entistetty."
+18	"Ei voi muuttaa katteettomien korttien tiedostoa uuteen muotoon."
+19	"Ei muutosta katteettomien korttien tiedostoon."
+20	"Katteettomien korttien tiedostoa luodaan tai muutetaan ..."
+21	"Katteettomien korttien tiedostoa EI vaihdettu tai luotu."
+22	"Päivitetään katteettomien korttien tiedostoa ..."
+23	"Ei voi päivittää katteettomien korttien tiedostoa uusilla tiedoilla."
+24	"Katteettomien korttien tiedostoa EI päivitetty."
+25	"VIRHE: Tuntematon tiedostotyyppi. Ei muutosta katteett. korttien tiedostoon."
+26	"Katteettomien korttien tiedosto ladattu. Poista nauha."
+27	"Ei voi avata syöttötiedostoa:"
+28	"Ei voi avata tulostustiedostoa:"
+29	"Ristiriita syöttötiedoston tietuelistan ja "
+30	"siellä sijaitsevien tietueitten määrän välillä."
+31	"Käytetään määrää, joka on tiedostossa, mutta haluat ehkä"
+32	"tarkistaa syöttötiedoston nähdäksesi onko siinä virheitä."
+33	"Tietuenro on lyhyt, se ohitetaan..."
+34	"Ei voi avata luottotiedostoa:"
+35	"Ei voi avata päivitystiedostoa:"
+36	"Tiedoston lukuvirhe:"
+37	"Liian monta samaa tietuetta. Viimeiset ohitetaan."

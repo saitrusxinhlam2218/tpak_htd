@@ -1,0 +1,42 @@
+$ #***********************************************************************
+$ #                 RCS INFO
+$ #
+$ #  @(#)  $RCSfile: res_per.MSF,v $
+$ #  @(#)  $Revision: 1.3 $
+$ #  @(#)  $Date: 1998/06/18 15:28:56 $
+$ #  @(#)  $Author: taxiadm $
+$ #  @(#)  $Source: /taxi-scan/taxi_proj/cvs/taxi-scan/src/msf/fin/res_per.MSF,v $
+$ #
+$ #  Copyright (c) 1994 - MobileSoft Consulting, Inc. Dublin, OH
+$ #
+$ #**********************************************************************/
+$ #ident "@(#) head:$RCSfile: res_per.MSF,v $	$Revision: 1.3 $"
+
+$ static char rcsidÄÅ = "$Id: res_per.MSF,v 1.3 1998/06/18 15:28:56 taxiadm Exp $";
+
+
+$quote "
+$set 1
+
+$ /*    NOTE TO THE TRANSLATOR                          */
+$ /*    Quoted text will be followed by a maximum string length if the  */
+$ /*    text length is different than the number of chars in the string.*/
+$ /*    If no string length is entered default to the current number of */
+$ /*    characters.  A comment about the string is also included where  */
+$ /*    necessary.                                                      */
+
+1	"Period"
+2	"Start"
+3	"End"
+4	"Active Days"
+5	"smtktplH"
+6	"Lead Time Factor"
+7	"res_per_scr.out"
+8	"Period file read error"
+9	"No record found, ADD first"
+10	"Period Number"
+11	"Period Start Time"
+12	"Period End Time"
+13	"Active Days-(s)unnuntai, (m)aanantai, (t)iistai..."
+14	"Time Calls Lead Time Factor"
+15	"Entries must be either '0' or '1'"

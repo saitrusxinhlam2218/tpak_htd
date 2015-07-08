@@ -1,0 +1,33 @@
+{
+|***********************************************************************
+|                 RCS INFO
+|
+|  @(#)  $RCSfile: localty.per,v $
+|  @(#)  $Revision: 1.2 $
+|  @(#)  $Date: 1999/03/19 21:26:39 $
+|  @(#)  $Author: taxiadm $
+|  @(#)  $Source: /taxi-scan/taxi_proj/cvs/taxi-scan/src/forms/english/localty.per,v $
+|
+|  Copyright (c) 1994 - MobileSoft Consulting, Inc. Woodinville WA
+|
+|**********************************************************************/
+|ident "@(#) head:$RCSfile: localty.per,v $	$Revision: 1.2 $"
+}
+database mads
+screen
+{
+						LOCALITY FILE MAINTENANCE
+					
+Abbrev   Actual    Full Name                     Subzone   Zip Code
+[a0 ]    [a1 ]     [f000                     ]   [f001 ]   [f002    ]
+}
+end
+tables
+localty
+attributes
+a0 = localty.lo_code,UPSHIFT,REQUIRED,NOUPDATE,COMMENTS="Locality code or abbreviation (e.g. AR for ARLINGTON)";
+a1 = localty.lo_act_city_code,UPSHIFT,REQUIRED,COMMENTS="Actual locality code (e.g. ARL for ARLINGTON)";
+f000 = localty.lo_full_name,UPSHIFT,COMMENTS="Locality full name";
+f001 = localty.lo_subzone,UPSHIFT,COMMENTS="Specify subzone if no individual addresses will be entered for this locality";
+f002 = localty.lo_zip,RIGHT,COMMENTS="Specify zip code if no individual addresses will be entered for this locality";
+end

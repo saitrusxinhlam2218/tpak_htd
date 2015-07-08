@@ -1,0 +1,40 @@
+{
+|***********************************************************************
+|                 RCS INFO
+|
+|  @(#)  $RCSfile: subzone.per,v $
+|  @(#)  $Revision: 1.4 $
+|  @(#)  $Date: 1998/01/08 19:36:07 $
+|  @(#)  $Author: taxiadm $
+|  @(#)  $Source: /taxi-scan/taxi_proj/cvs/taxi-scan/src/forms/danish/subzone.per,v $
+|
+|  Copyright (c) 1994 - MobileSoft Consulting, Inc. Woodinville WA
+|
+|**********************************************************************/
+|ident "@(#) head:$RCSfile: subzone.per,v $	$Revision: 1.4 $"
+}
+
+database mads
+screen
+{
+						VEDLIGEHOLD. AF UNDERDISTRIKTS-FIL
+
+Nummer     Vgnpk A   Vgnpk B   Vgnpk C   Vgnpk D   Vgnpk E   Vgnpk F   Vgnpk G   Vgnpk H
+[f000 ]    [f01]     [f02]     [f03]     [f04]     [f05]     [f06]     [f07]     [f08]
+}
+end
+tables
+subzone
+attributes
+f000 = subzone.sz_nbr,UPSHIFT,REQUIRED,COMMENTS="Et unikt subdistriktsnr. (kan inkludere bogstaver)";
+f01  = subzone.sz_zone_fleet1,RIGHT,COMMENTS="Modsvarende distriktsnr. for vognpark A";
+f02  = subzone.sz_zone_fleet2,RIGHT,COMMENTS="Modsvarende distriktsnr. for vognpark B";
+f03  = subzone.sz_zone_fleet3,RIGHT,COMMENTS="Modsvarende distriktsnr. for vognpark C";
+f04  = subzone.sz_zone_fleet4,RIGHT,COMMENTS="Modsvarende distriktsnr. for vognpark D";
+f05  = subzone.sz_zone_fleet5,RIGHT,COMMENTS="Modsvarende distriktsnr. for vognpark E";
+f06  = subzone.sz_zone_fleet6,RIGHT,COMMENTS="Modsvarende distriktsnr. for vognpark F";
+f07  = subzone.sz_zone_fleet7,RIGHT,COMMENTS="Modsvarende distriktsnr. for vognpark G";
+f08  = subzone.sz_zone_fleet8,RIGHT,COMMENTS="Modsvarende distriktsnr. for vognpark H";
+instructions
+   delimiters "()";
+end

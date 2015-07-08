@@ -1,0 +1,42 @@
+{
+|***********************************************************************
+|                 RCS INFO
+|
+|  @(#)  $RCSfile: error.per,v $
+|  @(#)  $Revision: 1.4 $
+|  @(#)  $Date: 1998/01/08 19:35:32 $
+|  @(#)  $Author: taxiadm $
+|  @(#)  $Source: /taxi-scan/taxi_proj/cvs/taxi-scan/src/forms/danish/error.per,v $
+|
+|  Copyright (c) 1994 - MobileSoft Consulting, Inc. Woodinville WA
+|
+|**********************************************************************/
+|ident "@(#) head:$RCSfile: error.per,v $	$Revision: 1.4 $"
+}
+
+database mads
+screen
+{
+						VEDLIGEH. AF FEJLPOST-FIL
+
+Fejlnummer              Vgnpk  Fil       Dato         Tid
+[f000                ]  [a]    [f001   ]  [f002    ]  [f003    ]
+
+Kilde-fil          Linienummer  Besked
+[f004           ]  [f005  ]     [f006                                         ]
+}
+end
+tables
+error
+attributes
+f000 = error.el_nbr,NOENTRY,RIGHT,NOUPDATE,COMMENTS="Systemstildelt fejlnummer";
+a = error.el_fleet,UPSHIFT,COMMENTS="Vognpark-ID";
+f001 = error.el_file,UPSHIFT,COMMENTS="Fil-navnsbetegnelse til at identif. C-ISAM data-fil som har problem";
+f002 = error.el_date,COMMENTS="Dato da problemet opstod  DD.MM.]] format";
+f003 = error.el_time,COMMENTS="Tid da problemet opstod TT:MM:SS format";
+f004 = error.el_source_file,UPSHIFT,COMMENTS="Kildens kode-fil-navn hvor fejlen opstod";
+f005 = error.el_line_nbr,RIGHT,COMMENTS="Kildens kode-fils linienummer hvor fejlen opstod";
+f006 = error.el_error_msg,UPSHIFT,COMMENTS="Fejlbeskedstekst";
+instructions
+   delimiters "()";
+end

@@ -1,0 +1,54 @@
+{
+|***********************************************************************
+|                 RCS INFO
+|
+|  @(#)  $RCSfile: unzoned.per,v $
+|  @(#)  $Revision: 1.4 $
+|  @(#)  $Date: 1998/01/08 19:36:10 $
+|  @(#)  $Author: taxiadm $
+|  @(#)  $Source: /taxi-scan/taxi_proj/cvs/taxi-scan/src/forms/danish/unzoned.per,v $
+|
+|  Copyright (c) 1994 - MobileSoft Consulting, Inc. Woodinville WA
+|
+|**********************************************************************/
+|ident "@(#) head:$RCSfile: unzoned.per,v $	$Revision: 1.4 $"
+}
+database mads
+screen
+{
+						VEDLIGEH. AF IKKE DIST.BESTEMTE ADR. FIL
+
+Best.nr                Best.dato    Best.tid   Noteret af  Distnr    Dstbest af  Best.type   Kontonummer
+[f000                ]  [f001     ]  [f002  ]   [f003]      [f04]      [f005]     [a]        [f007              ]
+
+Husnummer                    Navn                   Type             
+               [f006  ]   [a6]      [f008                ] [a0 ]    [a1]        [a5 ]
+
+Gadekryds                    Navn                   Type       
+                          [a2]      [f010                ] [a3 ]    [a4]   
+}
+end
+tables
+unzoned
+attributes
+f000 = unzoned.uz_call_nbr,RIGHT,REQUIRED,NOUPDATE,COMMENTS="Best.nr. denne adresse er forbundet med";
+f001 = unzoned.uz_call_date,COMMENTS="Dato denne tur kom ind";
+f002 = unzoned.uz_call_time,RIGHT,COMMENTS="Tid denne tur kom ind";
+f003 = unzoned.uz_entered_by,RIGHT,COMMENTS="Bruger-ID på den telefonist som har noteret turen";
+f04  = unzoned.uz_zoned_as,RIGHT,COMMENTS="Dist.nr. tildelt denne adresse";
+f005 = unzoned.uz_zoned_by,RIGHT,COMMENTS="Bruger-ID på personen som dist.bestemte turen";
+a = unzoned.uz_type_of_service,UPSHIFT,COMMENTS="Best.type (f eks. 'P'assager)";
+f007 = unzoned.uz_charge_nbr,COMMENTS="Kontonummer";
+f006 = unzoned.uz_street_nbr,RIGHT,COMMENTS="Husnummer";
+a6 = unzoned.uz_pre_dir1,UPSHIFT,COMMENTS="  ";
+f008 = unzoned.uz_str_place_name1,UPSHIFT,REQUIRED,COMMENTS="Gadenavn, stednavn, alias osv.";
+a0 = unzoned.uz_str_type1,UPSHIFT,REQUIRED,COMMENTS="Gadetype";
+a1 = unzoned.uz_post_dir1,UPSHIFT,COMMENTS="  " ;
+a5 = unzoned.uz_city,UPSHIFT,COMMENTS="Kommunenavn";
+a2 = unzoned.uz_pre_dir2,UPSHIFT,COMMENTS="  ";
+f010 = unzoned.uz_str_place_name2,UPSHIFT,COMMENTS="Krydsende gadenavn";
+a3 = unzoned.uz_str_type2,UPSHIFT,COMMENTS="Krydsende gadetype";
+a4 = unzoned.uz_post_dir2,UPSHIFT,COMMENTS="  ";
+instructions
+   delimiters "()";
+end

@@ -1,0 +1,172 @@
+{
+|***********************************************************************
+|                 RCS INFO
+|
+|  @(#)  $RCSfile: fleet.per,v $
+|  @(#)  $Revision: 1.4 $
+|  @(#)  $Date: 1998/01/08 19:35:37 $
+|  @(#)  $Author: taxiadm $
+|  @(#)  $Source: /taxi-scan/taxi_proj/cvs/taxi-scan/src/forms/danish/fleet.per,v $
+|
+|  Copyright (c) 1994 - MobileSoft Consulting, Inc. Woodinville WA
+|
+|**********************************************************************/
+|ident "@(#) head:$RCSfile: fleet.per,v $	$Revision: 1.4 $"
+}
+
+database mads
+screen
+{
+                                                 VISNING AF VOGNPARK-FIL
+ID   Nr   Navn                                                           Niv1 Primær   Niv2 Niv3 Niv4 Niv5 Niv6 Niv7 Niv8
+[a] [b]   [f001                ]                         Afvisn. straffe  [a1] [a2]    [a3] [a4] [a5] [a6] [a7] [a8] [a9]
+Bemærkn.  [f002                                    ]     Ekskl. tid       [b1] [b2]    [b3] [b4] [b5] [b6] [b7] [b8] [b9]
+
+         Frekvens        Prioritet         Aktion          Længde           Straf               Info                  Maksimalt
+IDIST     [f003 ]   FEJLT   [c1]    FEJLT  [c]    ACPT    [f011 ]     Ik ACPT [h]    Best tildel.  [k]     AFVST tal      [d1]
+BDIST     [f004 ]    ANNUL  [c2]     ANNUL [d]    PAUSE   [f012 ]     Ik ACPT [f017 ]                     Chauf.attr      [d2]
+DISTINFO  [f006 ]  Rutineret[c4]    SL     [e]    Kortmet [f013 ]     NAK     [f049 ]                     Vognattr        [d3]
+TURINFO   [f007 ]   Lokal   [c5]    FR VL  [f]    FR VL   [f014 ]            Forudtid         Tilladt      Vogn/best      [d4]    
+K\\       [f008 ]   Begynder[c6]                  Lokal   [f015 ]     SL      [f018 ]   SL        [l]    Forudbest noter. [f021 ]
+Dist stat [f009 ]                              Best afpas [f016 ]  Forudbest  [f020 ]   Personlig [m]     Pers. forudtid  [f022 ]
+Forudbest [f010 ]   Svar på turtilbud      [g]                     Sentmet    [f019 ]                     Forudbest proc  [f023] 
+								   Vækning    [f025 ]
+
+            Funktioner                   Funktioner          Stdværdi pri.      Stdværdi pri.   Man meter    Priskalk. 
+Kontrol.bevil.[n]     Holdepl.gadet behandl [o]      Kontotur    [e5]     "P"assager   [e1]        [u]           [x] 
+Ventlinie     [p]     Dist backupniveau     [q]      Abonn. ture [e6]     "B"udkørsel  [e2]        [v]           [y]
+Hilse-linie   [t]     Chauf.beskedgodk.     [r]      Forudbest   [e7]     "X"type      [e3]        [w]
+                      Abonn.tur gennemsyn   [s]                           "V"ækning    [e4]
+}
+screen
+{
+
+
+          System information                         Rapport Frekv.
+Skriverport  [f024                ]               Forudbest. rapport   [f029 ]
+                                                 Beskedsrapport    [f030 ]
+
+              Standardværdier                       Højt omr.     Ber.tekst
+Kom-kode        [f1 ]               1. beregning      [f032 ]   [f033   ]
+Omr.kode        [f2 ]               2. beregning      [f034 ]   [f035   ]
+Best type       [f3 ]               3. beregning      [f036 ]   [f037   ]
+Hist. søgn.     [f4 ]               4. beregning      [f038 ]   [f039   ]
+Afpas.algoritm  [z]                 5. beregning      [f040 ]   [f041   ]
+                                    6. beregning      [f042 ]   [f043   ]
+                                    7. beregning      [f044 ]   [f045   ]
+                                    8. beregning      [f046 ]   [f047   ]
+                                    Stdværdi                    [f048   ]
+}
+end
+tables
+fleet
+attributes
+a    = fl_id,UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="Vognpark-ID";
+b    = fl_nbr,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Vognparknummer (0-7) tildelt af systemet, brugt til int. krydsref.";
+f001 = fl_name,UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="Vognparknavn";
+f002 = fl_comments,UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="Bemærkninger";
+a1   = fl_lev1_rej_penalt,UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="Niveau 1 afvisn.straf: 1 - ikke tilladt; 2 - ingen straf; 3 - sidst i køen"; 
+a2   = fl_main_rej_penalt,UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="Primær afvisn.straf: 1 - ikke tilladt; 2 - ingen straf; 3 - sidst i køen";
+a3   = fl_lev2_rej_penalt,UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="Niveau 2 afvisn. straf: 1 - ikke tilladt; 2 - ingen straf; 3 - sidst i køen";
+a4   = fl_lev3_rej_penalt,UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="Niveau 3 afvisn. straf: 1 - ikke tilladt; 2 - ingen straf; 3 - sidst i køen";
+a5   = fl_lev4_rej_penalt,UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="Niveau 4 afvisn. straf: 1 - ikke tilladt; 2 - ingen straf; 3 - sidst i køen";
+a6   = fl_lev5_rej_penalt,UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="Niveau 5 afvisn. straf: 1 - ikke tilladt; 2 - ingen straf; 3 - sidst i køen";
+a7   = fl_lev6_rej_penalt,UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="Niveau 6 afvisn. straf: 1 - ikke tilladt; 2 - ingen straf; 3 - sidst i køen";
+a8   = fl_lev7_rej_penalt,UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="Niveau 7 afvisn. straf: 1 - ikke tilladt; 2 - ingen straf; 3 - sidst i køen";
+a9   = fl_lev8_rej_penalt,UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="Niveau 8 afvisn. straf: 1 - ikke tilladt; 2 - ingen straf; 3 - sidst i køen";
+b1   = fl_lev1_excl_time,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Niveau 1 eksklusiv tid (i minutter)";
+b2   = fl_main_excl_time,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Primær eksklusiv tid (i minutter)";
+b3   = fl_lev2_excl_time,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Niveau 2 eksklusiv tid (i minutter)";
+b4   = fl_lev3_excl_time,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Niveau 3 eksklusiv tid (i minutter)";
+b5   = fl_lev4_excl_time,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Niveau 4 eksklusiv tid (i minutter)";
+b6   = fl_lev5_excl_time,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Niveau 5 eksklusiv tid (i minutter)";
+b7   = fl_lev6_excl_time,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Niveau 6 eksklusiv tid (i minutter)";
+b8   = fl_lev7_excl_time,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Niveau 7 eksklusiv tid (i minutter)";
+b9   = fl_lev8_excl_time,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Niveau 8 eksklusiv tid (i minutter)";
+f003 = fl_post_freq,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Hvor ofte en chauffør må trykke IDIST. (I sekunder)";
+f004 = fl_cond_post_freq,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Hvor ofte en chauffør må trykke BDIST. (I sekunder)";
+f006 = fl_veh_inqry_freq,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Hvor ofte en chauffør må trykke forespørgselstast.  (I sekunder)";
+f007 = fl_zone_info_freq,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Systemets søgningsrapport-fremstillingsfrekvens.  (I sekunder)";
+f008 = fl_zone_inqry_freq,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Hvor ofte en chauffør må trykke INFO.  (I sekunder)";
+f009 = fl_zone_stat_freq,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Hvor ofte distriktstatusskærmen er genopfrisket. (I sekunder)";
+f010 = fl_time_call_freq,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Hvor ofte systemet undersøger om der er forfaldne forudbest.  (I minutter)";
+c1   = fl_drv_no_show_pri,include=(1 to 5),NOENTRY,NOUPDATE,COMMENTS="Prioritet tildelt chauf. som trykker fejltur. (1-højeste, 5-laveste)";
+c2   = fl_drv_cancel_pri,include=(1 to 5),NOENTRY,NOUPDATE,COMMENTS="Prioritet tildelt chauf. hvis tur er blevet annulleret. (1-højeste, 5-laveste)";
+c4   = fl_drv_regular_pri,include=(1 to 5),NOENTRY,NOUPDATE,COMMENTS="Prioritet tildelt rutinerede chauffører. (1-højeste, 5-laveste)";
+c5   = fl_drv_local_pri,include=(1 to 5),NOENTRY,NOUPDATE,COMMENTS="Prioritet tildelt chauffører som har kørt lokalture. (1-højeste, 5-laveste)";
+c6   = fl_high_rookie_pri,include=(1 to 63),NOENTRY,NOUPDATE,COMMENTS="Højeste prioritetsbestilling en begynder må tage. (1-højeste, 63-laveste)";
+c    = fl_no_show_action,include=(1 to 4),NOENTRY,NOUPDATE,COMMENTS="1-trfldr godk;2-som 1 & auto book;3-auto annul & book;4-auto annul, send trfldr";
+d    = fl_cancel_action,include=(1 to 3),NOENTRY,NOUPDATE,COMMENTS="1-trfldr godk. behøves;2-som 1 & auto book;3-auto annul & book";
+e    = fl_enr_post_action,include=("J", "N"),default="N",UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="Skal systemet holde ture på prim. niveau hvis vogne har meldt SL i dist.";
+f    = fl_bid_action,include=(1 to 2),NOENTRY,NOUPDATE,COMMENTS="1-trafikleder godk.; 2-ingen trafikleder involveret";
+g    = fl_call_offer_proc,include=(1 to 3),NOENTRY,NOUPDATE,COMMENTS="1-formod. ACPT på holdepl. & primær;2-formod. ACPT;3-bestemt ACPT";
+f011 = fl_call_accept_per,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Antal sekunder for chaufføren at trykke ACPT. (I sekunder)";
+f012 = fl_break_duration,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Max. længde på en gyldig pause. (I minutter)";
+f013 = fl_short_meter_dur,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Korteste tilladte taxameter-på/fra interval. (I minutter)";
+f014 = fl_bid_duration,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Antal sekunder alle chauffører har til at trykke FRIT VALG";
+f015 = fl_local_calls_dur,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Korteste tilladte taxameter-på/fra interval for lokalture. (I minutter)";
+f016 = fl_avl_call_q_time,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Tid systemet har til at afpasse en tur inden TID-UDE. (I minutter)";
+h    = fl_no_acpt_penalt,include=(1 to 3),NOENTRY,NOUPDATE,COMMENTS="1-ingen;2-sidst i kø;3-meld uddist og straf chauffør";
+f017 = fl_no_acpt_penalty,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Tid (minutter) efter ikke-accept før chaufføren har tilladelse til at melde ind";
+f018 = fl_enr_post_lead,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Max. tilladte tid mellem SL og IDIST meldinger (I minutter)";
+f020 = fl_future_call_min,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Tidslængde nødvendig for notering af forudbestilling. (I minutter)";
+f019 = fl_late_meter,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Max. tilladte tid mellem ACPT og OPSML/METER P]. (I minutter)";
+k    = fl_cal_assign_info,include=(1 to 5),NOENTRY,NOUPDATE,COMMENTS="1-ingen;2-dist info;3-dist info,type,kortsd;4-dist og husnr.;5-adresse";
+l    = fl_when_enr_post,include=(1 to 3),NOENTRY,NOUPDATE,COMMENTS="1-altid;2-efter OPSML/METER P];3-efter OPSML/METER P] på systemstildelte ture";
+m    = fl_no_personal,include=("J", "N"),default="N",UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="Om personlige vognønsker skal tillades eller ej";
+d1   = fl_max_rej_count,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Max. antal gange en tur kan afvises før den bliver til en undtagelse";
+d2   = fl_max_nbr_drv_atr,include=(1 to 8),NOENTRY,NOUPDATE,COMMENTS="Max. antal chaufførattr. en telefonist kan specificere på en tur";
+d3   = fl_max_nbr_veh_atr,include=(1 to 8),NOENTRY,NOUPDATE,COMMENTS="Max. antal vognattr. en telefonist kan specificere på en tur";
+d4   = fl_max_vehs_call,include=(1 to 9),RIGHT,NOENTRY,NOUPDATE,COMMENTS="Max. antal vogne som kan specificeres for en bestilling";
+f021 = fl_future_call_max,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Dage forud, uden godkendelse, en telefonist kan notere en forudbestilling";
+f022 = fl_pers_lead_tm,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Forudtid for en personlig bestilling. (I minutter)";
+f023 = fl_time_call_max,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Hvor langt ud i fremtiden for at udvælge forudbestillinger. (I minutter)";
+n    = fl_no_seals,include=("J", "N"),UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="Om bevillings-kontrol skal udelades eller ej";
+p    = fl_hold_line_flag,include=("J", "N"),UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="Om vent-linie egenskaben er i funktion for denne vognpark";
+t    = fl_greeting_line,include=("J", "N"),UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="Om hilse-linien skal vises på bestillingsskærmene";
+o    = fl_auto_stand_flag,NOENTRY,NOUPDATE,COMMENTS="1-ikke tilladt;2-trfldr godk;3-auto godk. og best. gentildeling";
+q    = fl_zone_backup_lev,include=(1 to 8),NOENTRY,NOUPDATE,COMMENTS="Hvor mange distriktsniveauer skal tages i betragtning ved turafpasning";
+r    = fl_drv_msg_approve,include=(1 to 2),NOENTRY,NOUPDATE,COMMENTS="1-trafikleder godk.nødvendig;2-besked sendt automatisk";
+s    = fl_subsc_review,include=(1 to 2),NOENTRY,NOUPDATE,COMMENTS="1-trafikleder godk. nødvendig;2-besked. automatisk fremsendt";
+e5   = fl_charge_pri_def,include=(6 to 63),RIGHT,NOENTRY,NOUPDATE,COMMENTS="Stdværdi-prioritet for kontobest.";
+e6   = fl_subsc_pri_def,include=(6 to 63),RIGHT,NOENTRY,NOUPDATE,COMMENTS="Stdværdi-prioritet for abonn. best.";
+e7   = fl_calls_pri_def,include=(6 to 63),RIGHT,NOENTRY,NOUPDATE,COMMENTS="Stdværdi-prioritet for forudbest.";
+e1   = fl_pass_pri_def,include=(6 to 63),RIGHT,NOENTRY,NOUPDATE,COMMENTS="Stdværdi-prioritet for passagerbest.";
+e2   = fl_del_pri_def,include=(6 to 63),RIGHT,NOENTRY,NOUPDATE,COMMENTS="Stdværdi-prioritet for budkørselbest.";
+e3   = fl_typex_pri_def,include=(6 to 63),RIGHT,NOENTRY,NOUPDATE,COMMENTS="Stdværdi-prioritet for type 'X' best.";
+e4   = fl_wake_up_pri_def,include=(6 to 63),RIGHT,NOENTRY,NOUPDATE,COMMENTS="Stdværdi-prioritet for vækningsbest.";
+u    = fl_met_pass_call,include=("J", "N"),UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="Om manuelt taxameter på/fra er tilladt på passagerture";
+v    = fl_met_del_call,include=("J", "N"),UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="Om manuelt taxameter på/fra er tilladt på budkørsler";
+w    = fl_met_typex_call,include=("Y", "N"),UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="Om manuelt taxameter på/fra er tilladt på type X ture";
+x    = fl_pass_rate_calc,include=(1 to 4),NOENTRY,NOUPDATE,COMMENTS="1-ingen;2-manuelt;3-dist til dist tabel;4-postnr til postnr tabel";
+y    = fl_dlv_rate_calc,include=(1 to 4),NOENTRY,NOUPDATE,COMMENTS="1-ingen;2-manuelt;3-dist til dist tabel;4-postnr til postnr tabel";
+f024 = fl_audt_trail_port,NOENTRY,NOUPDATE,COMMENTS="Hvilken port rapportskriver er tilsluttet for denne vognpark";
+f025 = fl_wakeup_lead_tm,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Forudtid for vækninger (I minutter).";
+f029 = fl_time_calls_freq,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Hvor ofte forudbestillingsrapporter vil blive udskrevet";
+f030 = fl_msg_rpt_freq,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Hvor ofte beskedsrapporten vil blive udskrevet";
+f1   = fl_city_default,UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="Stdværdi-kom-kode som skal bruges hvis denne brugers profil ikke har en";
+f2   = fl_phone_area_def,NOENTRY,NOUPDATE,COMMENTS="  ";
+f3   = fl_call_type_def,default="P ",UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="Stdværdi-best.type som skal bruges hvis denne bruger profil ikke har en";
+f4   = fl_hist_search_def,default=30,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Stdværdi for best.hist.søgninger. (I minutter)";
+z    = fl_match_algorithm,include=(1 to 3),NOENTRY,NOUPDATE,COMMENTS="1-sekv.ef dist, tidsm. ef vogn;2-sekv ef dist,vognkøordn.;3-tids. ef disttype";
+f032 = fl_range_limit1,NOENTRY,NOUPDATE,COMMENTS="Første øverste grænseomr. (I minutter)";
+f033 = fl_estimate_text1,NOENTRY,NOUPDATE,UPSHIFT,COMMENTS="Tekst svarende til første øverste grænseomr.(f eks 10-15)";
+f034 = fl_range_limit2,NOENTRY,NOUPDATE,COMMENTS="Andet øverste grænseomr. (I minutter)";
+f035 = fl_estimate_text2,NOENTRY,NOUPDATE,UPSHIFT,COMMENTS="Tekst svarende til andet øverste grænseomr.(f eks 10-15)";
+f036 = fl_range_limit3,NOENTRY,NOUPDATE,COMMENTS="Tredie øverste grænseomr. (I minutter)";
+f037 = fl_estimate_text3,NOENTRY,NOUPDATE,UPSHIFT,COMMENTS="Tekst svarende til tredie øverste grænseomr.(f eks 10-15)";
+f038 = fl_range_limit4,NOENTRY,NOUPDATE,COMMENTS="Fjerde øverste grænseomr. (I minutter)";
+f039 = fl_estimate_text4,NOENTRY,NOUPDATE,UPSHIFT,COMMENTS="Tekst svarende til fjerde øverste grænseomr.(f eks 10-15)";
+f040 = fl_range_limit5,NOENTRY,NOUPDATE,COMMENTS="Femte øverste grænseomr. (I minutter)";
+f041 = fl_estimate_text5,NOENTRY,NOUPDATE,UPSHIFT,COMMENTS="Tekst svarende til femte øverste grænseomr.( f eks 10-15)";
+f042 = fl_range_limit6,NOENTRY,NOUPDATE,COMMENTS="Sjette øverste grænseomr. (I minutter)";
+f043 = fl_estimate_text6,NOENTRY,NOUPDATE,UPSHIFT,COMMENTS="Tekst svarende til sjette øverste grænseomr.(f eks 10-15)";
+f044 = fl_range_limit7,NOENTRY,NOUPDATE,COMMENTS="Syvende øverste grænseomr. (I minutter)";
+f045 = fl_estimate_text7,NOENTRY,NOUPDATE,UPSHIFT,COMMENTS="Tekst svarende til syvende øverste grænseomr.(f eks 10-15)";
+f046 = fl_range_limit8,NOENTRY,NOUPDATE,COMMENTS="Ottende øverste grænseomr. (I minutter)";
+f047 = fl_estimate_text8,NOENTRY,NOUPDATE,UPSHIFT,COMMENTS="Tekst svarende til ottende øverste grænseomr.(f eks 10-15)";
+f048 = fl_def_est_text,NOENTRY,NOUPDATE,UPSHIFT,COMMENTS="Stdværdi-beregn.tekst, hvis områder ikke noteres";
+f049 = fl_nak_offer_penal,include=(1 to 3),NOENTRY,COMMENTS="1-ingen;2-sidst i kø;3-meld uddist og straf chauffør";
+instructions
+    delimiters "()";
+end

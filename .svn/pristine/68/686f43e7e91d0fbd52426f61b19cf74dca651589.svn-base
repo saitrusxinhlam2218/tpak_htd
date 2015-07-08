@@ -1,0 +1,1230 @@
+/***********************************************************************
+*                 RCS INFO
+*
+*  @(#)  $RCSfile: getpar.c,v $
+*  @(#)  $Revision: 1.2 $
+*  @(#)  $Date: 1999/07/21 17:37:46 $
+*  @(#)  $Author: taxiadm $
+*  @(#)  $Source: /taxi-scan/taxi_proj/cvs/taxi-scan/src/async_dual/getpar.c,v $
+*
+*  Copyright (c) 1992 - Motorola Mobile Data Division, Seattle, WA
+*
+***********************************************************************/
+#ident "@(#) head:$RCSfile: getpar.c,v $	$Revision: 1.2 $"
+
+/* HEADER */
+/******************************************************************************
+NAME:
+		getpar.c
+		========
+
+
+DESCRIPTION:
+		PARMAN module with functions to be performed on user
+	application code request. For detailed description see document:
+	"Parameter Manager Programmer`s Manual".
+
+
+INPUT DATA:
+
+
+OUTPUT DATA:
+
+
+NOTES:
+
+
+UPDATE HISTORY:
+
+Darko N. Vranesic	March 25, 1987		Original.
+Raymond Chau		June 15, 1987		Phase II Implementation.
+
+
+*******************************************************************************
+*
+*		Copyright (c), 1988
+*		All rights reserved
+*
+*	MOBILE DATA INTERNATIONAL, INC.
+*		RICHMOND, BRITISH COLUMBIA
+*		CANADA
+*
+******************************************************************************/
+/* END HEADER */
+
+/* INCLUDE FILES */
+
+#include	<errno.h>
+#include	<stdio.h>
+#include	<unistd.h>
+#include	<fcntl.h>
+#include	<sys/types.h>
+#include	<sys/ipc.h>
+#include	<sys/shm.h>
+#include	<sys/sem.h>
+#include	"std.h"
+#include	"parman.h"
+#include	"_parman.h"
+#include        "taxipak.h"
+
+#define	ERROR	-1
+
+LOCAL CHAR SccsId[]="@(#)getpar.c	1.0	88/03/09	PT	NG";
+
+/* IMPORTED VARIABLES AND FUNCTIONS */
+
+
+/* LOCAL DEFINES */
+
+/* LOCAL TYPEDEFS */
+
+INT	open_set_cnt;		/* # of parmaeter Sets currently opened */
+INT	parset_index;		/* Index within par_set table */
+EXPORT	INT	par_errno;	/* PARMAN error code */
+
+struct
+{
+	CHAR	set_name[MAXLEN_PS_NAME]; /* Parameter Set name */
+	INT	id;		/* Parameter Set file descriptor */
+	BYTE	*status_ptr;	/* Abs. address of the status in Status Area */
+} par_set[MAX_SET_OPENED];
+
+CHAR	pm_path[80];		/* PARMAN Sets directory path */
+INT	pm_sal_id;		/* Status Area Lock identifier (semid) */
+INT	pm_sa_id;		/* Status Area identifier (shmid) */
+CHAR	*shm_ptr;		/* Pointer to the beginning of raw SHM */
+SHM	*sts_area;		/* Pointer to the beginning of Status Area */
+INT	process_id;		/* Process identifier (system wide) */
+
+INT	sts_area_index;		/* sts_area table : current row index */
+INT	sts_index;		/* sts_area table : current sts column index */
+
+CHAR	rw_buffer[RECORD_LENGTH];	/* scratch read/write buffer */
+
+struct	flock	flock_struc;
+struct	flock	*flock_ptr;
+
+IMPORT  int	shmdt();
+IMPORT 	int	shmget();
+
+EXPORT	struct	sembuf	PM_sembuf;
+EXPORT	struct	sembuf	*PM_sops;
+
+#define PM_PATH 	"/usr/taxi/run"
+#define PM_SA_KEY	50500
+#define PM_SAL_KEY	50500
+
+
+/* Subroutines */
+
+INT	check_accflag();
+INT	check_lockflag();
+INT	check_waitflag();
+INT	find_parset_id();
+INT	get_sa_ids();
+INT	get_pm_path();
+INT	opnset_add();
+INT	opnset_del();
+INT	sa_ent_add();
+INT	sa_ent_del();
+INT	sa_lock();
+INT	sa_unlock();
+INT	set_par_errno();
+INT	sa_attach();
+INT	sa_detach();
+
+
+/* CODE */
+
+
+/* >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>     parset_open     <<<<<<< */
+
+INT parset_open (parset_name_ptr, access_flg)
+
+CHAR	*parset_name_ptr;
+INT access_flg;
+{
+	CHAR	set_path[NOC_PATHNAME];		/* full Set name */
+	CHAR	*set_path_ptr = &set_path[0];
+	CHAR	*help_ptr;
+	INT	parset_id;	/* Parameter Set identifier */
+	INT	i;		/* loop index */
+	INT	ii;		/* loop index */
+	CHAR	*pm_path_ptr;
+
+/* Check syntax of the access_flg argument */
+	if (check_accflag(access_flg) == ERROR)
+	{
+		par_errno = PM_ERR_INVARG;
+		return(ERROR);
+	}
+
+/* Get PARMAN Sets directory path */
+	if (get_pm_path() == ERROR)
+	{
+		par_errno = PM_ERR_CONFIG;
+		return(ERROR);
+	}
+
+/* Open the file */
+	/*	File name will be full path name, so we have to define it
+		as pm_path + parset_name */
+	pm_path_ptr = pm_path;			/* Set PARMAN path pointer */
+	strcpy(set_path_ptr, pm_path_ptr);	/* copy path */
+	strcat(set_path_ptr, parset_name_ptr);	/* append file name */
+
+	if (access_flg == PM_FLG_UPDATE)
+		parset_id = open(set_path_ptr, O_RDWR);
+	else
+		parset_id = open(set_path_ptr, O_RDONLY);
+
+	if(parset_id == -1)
+	{
+		set_par_errno(errno, SR_SET_OPEN);   /* open failed */
+		return(ERROR);
+	}
+
+
+/* If this is first Set opened, initialize par_set table
+and attach to the Status Area */
+
+	if (open_set_cnt == 0)
+	{
+		/* Initialize par_set_table */
+		for(i = 0; i < MAX_SET_OPENED; i++)
+		{
+			par_set[i].set_name[0] = '\0';
+			par_set[i].id = FREE;
+			par_set[i].status_ptr = NULL;
+		}
+
+		/* Get Status Area & Status Area Lock IDs */
+		if (get_sa_ids() == ERROR)
+		{
+	   	/* unsuccessful */
+			close(parset_id);		/* close the file */
+			par_errno = PM_ERR_CONFIG;
+			return(ERROR);
+		}
+	
+		/* Attach to the Status Area */
+		if (sa_attach() == ERROR)
+		{
+	    	/* unsuccessful */
+			close(parset_id);		/* close the file */
+			par_errno = PM_ERR_STSACC;
+			return(ERROR);
+		}
+	}
+
+/* Update par_set table */
+	if (opnset_add(parset_id, parset_name_ptr) == ERROR)
+	{
+		close(parset_id);		/* close the file */
+		if (open_set_cnt == 0)
+			sa_detach();		/* detach from Status Area */
+		return(ERROR);
+	}
+
+
+/* Increment opened set counter and return SUCCESS */
+	open_set_cnt += 1;
+	return(parset_id);
+}
+
+
+/* >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>     parset_close    <<<<<<< */
+
+INT parset_close (parset_id)
+INT parset_id;
+{
+/* Check if opened */
+	if (find_parset_id(parset_id) == ERROR)
+	{
+		par_errno = PM_ERR_INVARG;
+		return(ERROR);
+	}
+
+/* Remove entry from the Status Area */
+	if (sa_ent_del(parset_id) == ERROR)
+		return(ERROR);
+
+/* Remove entry from par_set table */
+	if (opnset_del() == ERROR)
+		return(ERROR);
+
+/* Close the file */
+	if (close(parset_id) == -1)
+	{
+		set_par_errno(errno, SR_SET_CLOSE);
+		return(ERROR);
+	}
+
+/* Decrement opened set counter */
+	open_set_cnt -= 1;
+
+/* If this is only one Set opened, detach from the Status Area */
+	if (open_set_cnt < 0)
+	{
+		if (sa_detach() == ERROR)
+		{
+			par_errno = PM_ERR_STSACC;
+			return(ERROR);
+		}
+	}
+
+/* Return SUCCESS */
+	return(SUCCESS);
+}
+
+
+/* >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>     parset_lock     <<<<<< */
+
+INT parset_lock (parset_id, lock_flag, wait_flag)
+
+INT parset_id;
+INT lock_flag;
+INT wait_flag;
+{
+	INT	cmd;		/* command */
+
+/* Check if Set opened */
+	if (find_parset_id(parset_id) == ERROR)
+	{
+		par_errno = PM_ERR_NOTOPE;
+		return(ERROR);
+	}
+
+/* Check arguments syntax */
+	if ((check_lockflag(lock_flag) == ERROR) ||
+	    (check_waitflag(wait_flag) == ERROR))
+	{
+		par_errno = PM_ERR_INVARG;
+		return(ERROR);
+	}
+
+/* Check if the file is already locked */
+	if (lseek(parset_id, 0, OFF_BEG) == -1)
+		return(ERROR);
+
+	flock_ptr = &flock_struc;
+
+	flock_ptr->l_whence = 0;
+	flock_ptr->l_start = 0;
+	flock_ptr->l_len = 0;
+	if (lock_flag == PM_FLG_UPDATE)
+		flock_ptr->l_type = F_WRLCK;
+	else
+		flock_ptr->l_type = F_RDLCK;
+
+	if (wait_flag == PM_FLG_WAIT)
+		cmd = F_SETLKW;
+	else
+		cmd = F_SETLK;
+	if (fcntl(parset_id, cmd, flock_ptr) == -1)
+
+	{
+		par_errno = PM_ERR_LOCK;
+		return(ERROR);
+	}
+	else
+		return(SUCCESS);
+
+}
+
+
+/* >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>     parset_unlock   <<<<<<< */
+
+INT parset_unlock (parset_id)
+
+INT parset_id;
+{
+/* Check if Set opened */
+	if (find_parset_id(parset_id) == ERROR)
+	{
+		par_errno = PM_ERR_INVARG;
+		return(ERROR);
+	}
+
+	if (lseek(parset_id, 0, OFF_BEG) == -1)
+		return(ERROR);
+
+	flock_ptr = &flock_struc;
+
+	flock_ptr->l_whence = 0;
+	flock_ptr->l_start = 0;
+	flock_ptr->l_len = 0;
+	flock_ptr->l_type = F_UNLCK;
+
+	if (fcntl(parset_id, F_SETLK, flock_ptr) == -1)
+	{
+		par_errno = PM_ERR_UNLOCK;
+		return(ERROR);
+	}
+	else
+		return(SUCCESS);
+}
+
+
+/* >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>     parsts_check   <<<<<<< */
+
+INT parsts_check (parset_id)
+
+INT parset_id;
+{
+	/* define index of this id in par_set table */
+	if (find_parset_id(parset_id) == ERROR)
+	{
+		par_errno = PM_ERR_INVARG;
+		return(ERROR);
+	}
+	else
+	/* check status */
+		return(*par_set[parset_index].status_ptr);
+}
+
+
+/* >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>     parsts_reset   <<<<<<< */
+
+INT parsts_reset (parset_id)
+
+INT parset_id;
+{
+
+	/* define index of this id in par_set table */
+	if (find_parset_id(parset_id) == ERROR)
+	{
+		par_errno = PM_ERR_INVARG;
+		return(ERROR);
+	}
+
+	/* lock the Status Area */
+	if (sa_lock() == ERROR)
+	{
+		par_errno = PM_ERR_SALOCK;
+		return(ERROR);
+	}
+
+	/* reset the status */
+	*par_set[parset_index].status_ptr = PM_STAT_RESET;
+
+	/* unlock the Status Area */
+	if (sa_unlock() == ERROR)
+	{
+		par_errno = PM_ERR_SAULOCK;
+		return(ERROR);
+	}
+	else
+		return(SUCCESS);
+}
+
+
+/* >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>     parval_read     <<<<<<< */
+
+INT parval_read (parset_id, par_name_ptr, readstring_ptr, maxlen)
+
+INT parset_id;
+CHAR *par_name_ptr;
+CHAR *readstring_ptr;
+INT maxlen;
+{
+	CHAR	*search_ptr;
+	INT	i;			/* loop index */
+	CHAR	no_space;
+	INT	ii;			/* loop index */
+	INT	val_i;			/* loop index */
+	INT	ret;			/* # of chars (value string) > return */
+	INT	equ_cnt;		/* counter for # of matching chars */
+	INT	found = ERROR;
+	INT	end = ERROR;
+	INT	noc;			/* # of chars read */
+
+/* Check if the Set is opened */
+	if (find_parset_id(parset_id) == ERROR)
+	{
+		par_errno = PM_ERR_INVARG;
+		return(ERROR);
+	}
+
+
+	if (lseek(parset_id, 0, OFF_BEG) == -1)
+		return(ERROR);
+
+	while (end)
+	{
+		noc = read(parset_id, rw_buffer, RECORD_LENGTH);
+		if (noc <= 0)
+			end = SUCCESS;
+		else
+		{
+			if (noc == RECORD_LENGTH)
+			{
+			/* read successful, try to match Parameter name */
+				search_ptr = par_name_ptr;
+				equ_cnt = 0;
+				for (i = 0; i < strlen(par_name_ptr); i++)
+				{
+					if (*search_ptr++ == rw_buffer[i])
+						equ_cnt++;
+				}
+	
+				for (ii = i; ii < MAXLEN_P_NAME; ii++)
+				{
+					if (rw_buffer[ii] == '\040')
+						equ_cnt++;
+				}
+	
+				if (equ_cnt == MAXLEN_P_NAME)
+				{
+					found = SUCCESS;
+					end = SUCCESS;
+				}
+			}
+		}
+	}
+
+	if (found == ERROR)
+	{
+		par_errno = PM_ERR_UNKPAR;
+		return(ERROR);
+	}
+	else
+	{
+		search_ptr = readstring_ptr;
+		ret = 0;
+		for (i = 0; i < MAXLEN_P_VALUE; i++)
+		{
+			val_i = MAXLEN_P_NAME + i;
+			if ((rw_buffer[val_i] != '\000') &&	/* NULL? */
+			    (rw_buffer[val_i] != '\015'))	/* <CR>? */
+				*search_ptr++ = rw_buffer[val_i];
+
+			ret = i + 1;
+		}
+
+		search_ptr = readstring_ptr;
+		/* Define value string length by counting
+			  space chars from the end */
+		ret = MAXLEN_P_VALUE;
+		for (i = (MAXLEN_P_NAME + MAXLEN_P_VALUE -1);
+			    (no_space = rw_buffer[i]) == '\040'; i--)
+			ret -= 1;	/* decrement # of chars read */
+		if (ret <= 0)
+		{
+			*search_ptr = '\000';
+			return(0);
+		}
+		else
+		{
+		/* Stuff NULL at the end of value string */
+			for (i = 0; i < ret; i++)
+				search_ptr++;
+			*search_ptr = '\000';
+			if (ret <= maxlen)
+				return(ret);
+			else
+			{
+				par_errno = PM_ERR_TOOBIG;
+				return(ERROR);
+			}
+		}
+	}
+}
+
+
+/* >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>     check_accflag   <<<<<<< */
+
+INT check_accflag (acc_flag)
+
+INT acc_flag;
+{
+	if ((acc_flag == PM_FLG_READ) || (acc_flag == PM_FLG_UPDATE))
+		return(SUCCESS);
+	else
+		return(ERROR);
+}
+
+
+/* >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>     check_lockflag     <<<< */
+
+INT check_lockflag(lock_flag)
+
+INT lock_flag;
+{
+	if ((lock_flag == PM_FLG_READ) || (lock_flag == PM_FLG_UPDATE))
+		return(SUCCESS);
+	else
+		return(ERROR);
+}
+
+
+/* >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>    check_waitflag    <<<<<< */
+
+INT check_waitflag(wait_flag)
+
+INT wait_flag;
+{
+	if ((wait_flag == PM_FLG_WAIT) || (wait_flag == PM_FLG_NOWAIT))
+		return(SUCCESS);
+	else
+		return(ERROR);
+}
+
+
+/* >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>     find_parset_id     <<< */
+
+INT find_parset_id(parset_id)
+
+INT parset_id;
+{
+	int	i = 0;		/* loop index */
+
+	parset_index = ERROR;
+	while ((parset_index == ERROR) && (i < MAX_SET_OPENED))
+	{
+		if (par_set[i].id == parset_id)
+			parset_index = i;
+		i++;
+	}
+	return(parset_index);
+}
+
+
+/* >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>     get_sa_ids     <<<<<<< */
+
+INT get_sa_ids ()
+{
+	CHAR	*pm_sakey_ptr;
+	CHAR	*pm_salkey_ptr;
+	int	shmkey;
+	int	semkey;
+	struct	semid_ds semid_ds;
+	union	semun
+	{
+		int	val;
+		struct	semid_ds *buf;
+		ushort	*array;
+	} arg;
+		
+
+/* Obtain keys for Status Area SHM and Status Area Lock SEM from env. vars; */
+/* SHM & SEM will be created if not existant, and SEM value will be set to 
+							PM_CMD_SAULOCK */
+
+	shmkey = PM_SA_KEY;
+
+	if ((pm_sa_id = shmget(shmkey, PM_SA_SIZE, PM_SA_PERM)) == ERROR)
+	{
+		par_errno = PM_ERR_CONFIG;
+		return(ERROR);
+	}
+
+	semkey = PM_SAL_KEY;
+
+	if ((pm_sal_id = semget(semkey, 1, (IPC_CREAT | PM_SAL_PERM))) == -1)
+	{
+		par_errno = PM_ERR_CONFIG;
+		return(ERROR);
+	}
+
+	/* Set value of the semaphore to "unlocked" */
+	arg.buf = &semid_ds;
+	arg.val = PM_CMD_SAULOCK;
+
+	if (semctl(pm_sal_id, 0, SETVAL, arg.val) == -1)
+	{
+		par_errno = PM_ERR_CONFIG;
+		return(ERROR);
+	}
+	
+	return(SUCCESS);
+}
+
+
+/* >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>     get_pm_path     <<<<<<< */
+
+INT get_pm_path ()
+{
+	CHAR	t_pm_path[81];
+	CHAR	*ptr;
+	INT	i;
+
+	strcpy(t_pm_path, PM_PATH);
+
+	ptr = t_pm_path;
+	for (i = 0; i < strlen(t_pm_path); i++)
+		pm_path[i] = *ptr++;
+	pm_path[strlen(t_pm_path)] = '\057';
+	pm_path[strlen(t_pm_path)+1] = '\000';
+
+	return(SUCCESS);
+}
+
+
+/* >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>     opnset_add     <<<<<<< */
+
+INT opnset_add (parset_id, parset_name_ptr)
+
+INT	 parset_id;
+CHAR	*parset_name_ptr;
+{
+	CHAR *help_ptr;
+	INT  i;
+
+	if ((parset_index = find_parset_id(parset_id)) != ERROR)
+		/* Already opened, return existing ID */
+		return(par_set[parset_index].id);
+	else
+	{
+		if ((parset_index = find_parset_id(FREE)) == ERROR)
+		{
+			par_errno = PM_ERR_PLIMIT;
+			return(ERROR);
+		}
+	}
+
+	if (sa_ent_add(parset_name_ptr) == ERROR)
+		return(ERROR);
+	else
+	{
+		help_ptr = parset_name_ptr;
+		for (i = 0; i < strlen(parset_name_ptr); i++)
+			par_set[parset_index].set_name[i] = *help_ptr++;
+		par_set[parset_index].set_name[i] = '\0';
+		par_set[parset_index].id = parset_id;
+		return(SUCCESS);
+	}
+}
+
+
+/* >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>     opnset_del     <<<<<<< */
+/* Expects that parset_index is defined and
+   pointing to the entry to be deleted */
+
+INT opnset_del ()
+{
+	INT	i;	/* loop index */
+
+	for (i = 0; i < MAXLEN_PS_NAME; i++)
+		par_set[parset_index].set_name[i] = '\040';
+	par_set[parset_index].id = FREE;
+	par_set[parset_index].status_ptr = NULL;
+
+	return(SUCCESS);
+}
+
+
+/* >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>     sa_ent_add     <<<<<<< */
+
+INT sa_ent_add (parset_name_ptr)
+
+CHAR *parset_name_ptr;
+{
+	INT	i, j, k;
+        INT 	proc_id = getpid();
+	INT 	found_name = FALSE;
+	INT	found_null = FALSE;
+	INT	found_free = FALSE;
+
+	/* check if process identifier is valid */
+	if (proc_id == ERROR)
+	{
+		par_errno = PM_ERR_GETPID;
+		return(ERROR);
+	}
+
+ 	/* lock the Status Area while writing */
+	if (sa_lock() == ERROR)
+	{
+		par_errno = PM_ERR_SALOCK;
+		return(ERROR);
+	}
+
+	/* search for Parameter Set name (set sts_area_index) */
+	for (i = 0; (i < MAXNUM_PARSET) && (!found_name); i++) 
+	{
+		if ((sts_area->rec[i].set_name[0] == '\0') && (!found_null))
+		{
+			found_null = TRUE;
+			k = i;
+		}
+		if (strcmp(sts_area->rec[i].set_name, parset_name_ptr) == 0)
+			found_name = TRUE;
+	}
+	i--;
+
+	/* case 1 : name not found - Status Area full */
+	if (((i + 1) == MAXNUM_PARSET) && !found_null && !found_name)
+	{
+		if (sa_unlock() == ERROR)
+		{
+			par_errno = PM_ERR_SAULOCK;
+			return(ERROR);
+		}
+		par_errno = PM_ERR_PLIMIT;
+		return(ERROR);
+	}
+	/* case 2 : name not found - opens a new record */
+	else if (!found_name)
+	{
+		strcpy(sts_area->rec[k].set_name, parset_name_ptr);
+		sts_area->rec[i].proc_count = 0;
+		sts_area_index = k;
+		sts_index = 0;
+	}
+	/* case 3 : name found */
+	else if (found_name)
+	{
+		/* record full */
+		if (sts_area->rec[i].proc_count == MAXPROC_PERSET)
+		{
+			if (sa_unlock() == ERROR)
+			{
+				par_errno = PM_ERR_SAULOCK;
+				return(ERROR);
+			}
+			par_errno = PM_ERR_PLIMIT;
+			return(ERROR);
+		}
+
+		/* search for FREE space for entry (set sts_index) */
+		for (j = 0; !found_free; j++)
+			if (sts_area->rec[i].sts[j].status == FREE)
+			{
+				found_free = TRUE;
+				sts_area_index = i;
+				sts_index = j;
+			}
+	}
+
+	/* enter new data into the record */
+	sts_area->rec[sts_area_index].proc_count++;
+	sts_area->rec[sts_area_index].sts[sts_index].status = PM_STAT_RESET;
+	sts_area->rec[sts_area_index].sts[sts_index].process_id = proc_id;
+		
+	/* remove data entered if unable to unlock */
+	if (sa_unlock() == ERROR)
+	{
+		sts_area->rec[sts_area_index].sts[sts_index].process_id = FREE;
+		sts_area->rec[sts_area_index].sts[sts_index].status = FREE;
+		sts_area->rec[sts_area_index].proc_count--;
+		if (sts_area->rec[sts_area_index].proc_count == 0)
+			sts_area->rec[sts_area_index].set_name[0] = '\0';
+		par_errno = PM_ERR_SAULOCK;
+		return(ERROR);
+	}
+	else
+	{
+		par_set[parset_index].status_ptr = 
+		    &sts_area->rec[sts_area_index].sts[sts_index].status;
+		return(SUCCESS);
+	}
+}
+
+
+/* >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>     sa_ent_del     <<<<<<< */
+
+INT sa_ent_del (parset_id)
+
+INT parset_id;
+{
+	INT 	i, j;
+        INT 	proc_id = getpid();
+	INT	found = FALSE;
+
+        /* check if parset is opened */
+	if (find_parset_id(parset_id) == ERROR)
+	{
+		par_errno = PM_ERR_INVARG;
+		return(ERROR);
+	}
+
+ 	/* lock the Status Area while writing */
+	if (sa_lock() == ERROR)
+	{
+		par_errno = PM_ERR_SALOCK;
+		return(ERROR);
+	}
+
+	/* search for the corresponding entry in the Status Area */
+	for (i = 0; (i < MAXNUM_PARSET) && (!found); i++)
+		for (j = 0; (j < MAXPROC_PERSET) && (!found); j++)
+			if ((strcmp(sts_area->rec[i].set_name,
+				    par_set[parset_index].set_name) == 0) &&
+                            (sts_area->rec[i].sts[j].process_id == proc_id))
+				found = TRUE;
+	i--;
+	j--;
+
+	if (!found)
+	{
+		if (sa_unlock() == ERROR)
+		{
+			par_errno = PM_ERR_SAULOCK;
+			return(ERROR);
+		}
+		par_errno = PM_ERR_INVARG;
+		return(ERROR);
+	}
+	else
+	{
+		sts_area->rec[i].sts[j].process_id = FREE;
+		sts_area->rec[i].sts[j].status = FREE;
+		sts_area->rec[i].proc_count--;
+		if (sts_area->rec[i].proc_count == 0)
+			sts_area->rec[i].set_name[0] = '\0';
+		if (sa_unlock() == ERROR)
+		{
+			par_errno = PM_ERR_SAULOCK;
+			return(ERROR);
+		}
+		else
+			return(SUCCESS);
+	}
+}
+
+
+/* >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>     sa_attach     <<<<<<< */
+
+INT sa_attach ()
+{
+        UINT shmflag = 0;
+
+	shm_ptr = shmat(pm_sa_id, (char *) 0, (int) shmflag);
+	if ((int) shm_ptr == ERROR)
+		return(ERROR);
+ 	else
+	{
+		sts_area = (SHM *) shm_ptr;
+		return(SUCCESS);
+	}
+}
+
+
+/* >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>     sa_detach     <<<<<<< */
+
+INT sa_detach ()
+{
+    	if ((int) shmdt(shm_ptr) == ERROR)
+		return(ERROR);
+ 	else
+		return(SUCCESS);
+}
+
+
+/* >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>     sa_lock     <<<<<<< */
+
+INT sa_lock ()
+{
+	PM_sops = &PM_sembuf;
+	PM_sops->sem_num = 0;
+	PM_sops->sem_op = PM_CMD_SALOCK;
+	PM_sops->sem_flg = 0;
+
+	if (semop(pm_sal_id, PM_sops, 1) == -1)
+	{
+		set_par_errno(errno, SR_semop);
+		return(ERROR);
+	}
+	else
+		return(SUCCESS);
+}
+
+
+/* >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>     sa_unlock     <<<<<<< */
+
+INT sa_unlock ()
+{
+	PM_sops = &PM_sembuf;
+	PM_sops->sem_num = 0;
+	PM_sops->sem_op = PM_CMD_SAULOCK;
+	PM_sops->sem_flg = 0;
+
+	if (semop(pm_sal_id, PM_sops, 1) == -1)
+	{
+		set_par_errno(errno, SR_semop);
+		return(ERROR);
+	}
+	else
+		return(SUCCESS);
+}
+
+
+/* >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>     set_par_errno  <<<<<<< */
+
+INT set_par_errno (error, module)
+
+INT error;
+INT module;
+{
+	switch(module)
+	{
+	case SR_SET_OPEN:
+		switch(error)
+		{
+		case ENOENT:
+			par_errno = PM_ERR_UNKSET;
+			break;
+		case EISDIR:
+			par_errno = PM_ERR_UNKSET;
+			break;
+		case ENXIO:
+			par_errno = PM_ERR_UNKSET;
+			break;
+		case EFAULT:
+			par_errno = PM_ERR_BADPTR;
+			break;
+		case EACCES:
+			par_errno = PM_ERR_ACCESS;
+			break;
+		case EROFS:
+			par_errno = PM_ERR_ACCESS;
+			break;
+		case ETXTBSY:
+			par_errno = PM_ERR_BUSY;
+			break;
+		case EINTR:
+			par_errno = PM_ERR_INTRPT;
+			break;
+		case ENFILE:
+			/* fall through */
+		case EMFILE:
+			par_errno = PM_ERR_SLIMIT;
+			break;
+		default:
+			par_errno = PM_ERR_DEFAULT;
+			break;
+		}
+		break;
+
+	case SR_SET_CLOSE:
+		switch(error)
+		{
+		default:
+			par_errno = PM_ERR_INVARG;
+			break;
+		}
+		break;
+
+	case SR_SET_LOCK:
+		switch(error)
+		{
+		case ENFILE:
+			/* fall through */
+		case EBADF:
+			par_errno = PM_ERR_INVARG;
+			break;
+		case EACCES:
+			par_errno = PM_ERR_ACCESS;
+			break;
+		case EMFILE:
+			par_errno = PM_ERR_SLIMIT;
+			break;
+		case ENOSPC:
+			par_errno = PM_ERR_SLIMIT;
+			break;
+		case EDEADLK:
+			par_errno = PM_ERR_DEADLK;
+			break;
+		default:
+			par_errno = PM_ERR_DEFAULT;
+			break;
+		}
+		break;
+
+	case SR_SET_UNLOCK:
+		switch(error)
+		{
+		case ENFILE:
+			/* fall through */
+		case EBADF:
+			par_errno = PM_ERR_INVARG;
+			break;
+		case EACCES:
+			par_errno = PM_ERR_ACCESS;
+			break;
+		case EMFILE:
+			par_errno = PM_ERR_SLIMIT;
+			break;
+		case ENOSPC:
+			par_errno = PM_ERR_SLIMIT;
+			break;
+		case EDEADLK:
+			par_errno = PM_ERR_DEADLK;
+			break;
+		default:
+			par_errno = PM_ERR_DEFAULT;
+			break;
+		}
+		break;
+
+	case SR_STS_CHECK:
+		switch(error)
+		{
+		default:
+			par_errno = PM_ERR_DEFAULT;
+			break;
+		}
+		break;
+
+	case SR_STS_RESET:
+		switch(error)
+		{
+		default:
+			par_errno = PM_ERR_DEFAULT;
+			break;
+		}
+		break;
+
+	case SR_VAL_READ:
+		switch(error)
+		{
+		case EBADF:
+			par_errno = PM_ERR_UNKSET;
+			break;
+		case EFAULT:
+			par_errno = PM_ERR_BADPTR;
+			break;
+		case EINTR:
+			par_errno = PM_ERR_INTRPT;
+			break;
+		default:
+			par_errno = PM_ERR_DEFAULT;
+			break;
+		}
+		break;
+
+	case SR_SET_CREATE:
+		switch(error)
+		{
+		case EISDIR:
+			/* fall through */
+		case ENOENT:
+			/* fall through */
+		case ENOTDIR:
+			par_errno = PM_ERR_INVARG;
+			break;
+		case EFAULT:
+			par_errno = PM_ERR_BADPTR;
+			break;
+		case EROFS:
+			/* fall through */
+		case EACCES:
+			/* fall through */
+		case EPERM:
+			par_errno = PM_ERR_ACCESS;
+			break;
+		case EMFILE:
+			/* fall through */
+		case ENFILE:
+			par_errno = PM_ERR_SLIMIT;
+			break;
+		default:
+			par_errno = PM_ERR_DEFAULT;
+			break;
+		}
+		break;
+
+	case SR_SET_DELETE:
+		switch(error)
+		{
+		case ENOTDIR:
+			/* fall through */
+		case EROFS:
+			/* fall through */
+		case ENOENT:
+			par_errno = PM_ERR_UNKSET;
+			break;
+		case EFAULT:
+			par_errno = PM_ERR_BADPTR;
+			break;
+		case EPERM:
+			/* fall through */
+		case EACCES:
+			par_errno = PM_ERR_ACCESS;
+			break;
+		case ETXTBSY:
+			/* fall through */
+		case EBUSY:
+			par_errno = PM_ERR_BUSY;
+			break;
+		default:
+			par_errno = PM_ERR_DEFAULT;
+			break;
+		}
+		break;
+
+	case SR_STS_SET:
+		switch(error)
+		{
+		default:
+			par_errno = PM_ERR_DEFAULT;
+			break;
+		}
+		break;
+
+	case SR_VAL_CREATE:
+		switch(error)
+		{
+		default:
+			par_errno = PM_ERR_DEFAULT;
+			break;
+		}
+		break;
+
+	case SR_VAL_DELETE:
+		switch(error)
+		{
+		default:
+			par_errno = PM_ERR_DEFAULT;
+			break;
+		}
+		break;
+
+	case SR_VAL_WRITE:
+		switch(error)
+		{
+		case EBADF:
+			par_errno = PM_ERR_INVARG;
+			break;
+		case EFBIG:
+			par_errno = PM_ERR_SLIMIT;
+			break;
+		case EFAULT:
+			par_errno = PM_ERR_BADPTR;
+			break;
+		case EINTR:
+			par_errno = PM_ERR_INTRPT;
+			break;
+		default:
+			par_errno = PM_ERR_DEFAULT;
+			break;
+		}
+		break;
+
+	case SR_semop:
+		switch(error)
+		{
+		case	EFAULT:
+			/* fall through */
+		case	EACCES:
+			/* fall through */
+		case	EINVAL:
+			par_errno = PM_ERR_ACCESS;
+			break;
+		case	ERANGE:
+			par_errno = PM_ERR_SLIMIT;
+			break;
+		default:
+			par_errno = PM_ERR_DEFAULT;
+			break;
+		}
+		break;
+
+	default:
+		par_errno = PM_ERR_DEFAULT;
+		break;
+	}
+
+	return(par_errno);
+}

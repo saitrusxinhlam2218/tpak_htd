@@ -1,0 +1,20 @@
+database mads
+screen
+{
+						Gatunamnsfil visning
+
+Namn                              Förteckn.typ  Index
+[f000                ]  [a0 ]      [a]          [f001                ]
+}
+end
+tables
+strname
+attributes
+f000 = strname.sn_name,NOENTRY,NOUPDATE,UPSHIFT,COMMENTS="Gatunamn, förkortning, aliasnamn eller platsnamn";
+a0 = strname.sn_str_type,NOENTRY,NOUPDATE,UPSHIFT,COMMENTS="Fältet stöds inte";
+a = strname.sn_rec_type,NOENTRY,NOUPDATE,COMMENTS="Namnregistr.typ. Alternativ: 1. Huvudförteckn, 2. Förkortn, 3. Aliasnamn";
+f001 = strname.sn_index,NOENTRY,NOUPDATE,RIGHT,COMMENTS="Av systemet tilldelad unik identifierare för detta gatunamn";
+end
+instructions
+   delimiters "()";
+end

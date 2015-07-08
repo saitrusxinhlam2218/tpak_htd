@@ -1,0 +1,107 @@
+$ /****************************************************************************
+$ *                                                                           *
+$ *                           S C C S   I N F O                               *
+$ *                                                                           *
+$ * @(#)  up_maint.MSF.fin; Rel: 10.1.3.1; Get date: 5/18/95 at 10:20:22
+$ * @(#)  Last delta: 12/5/94 at 10:53:17
+$ * @(#)  SCCS File: /taxi/sccs/s.up_maint.MSF.fin
+$ *                                                                           *
+$ * Copyright (c) 1990 - MDI Seattle                                          *
+$ *                                                                           *
+$ *****************************************************************************/
+$ #ident "@(#) head:up_maint.MSF.fin/usr/users/brian/enh_src/src/msf/fin	10.1.3.1"
+
+$ /*
+$  * Message file for PROGRAM: up_maint
+$  * CATALOG:   up_maint.cat
+$  * MNEMONICS: up_m_strdefs.h
+$  */
+
+$quote "
+$set 1
+
+$ /*    NOTE TO THE TRANSLATOR                          */
+$ /*    Quoted text will be followed by a maximum string length if the  */
+$ /*    text length is different than the number of chars in the string.*/
+$ /*    If no string length is entered default to the current number of */
+$ /*    characters.  A comment about the string is also included where  */
+$ /*    necessary.                                                      */
+
+UP_MAINT_1	"On annettava arvo"				/* 40	*/
+UP_MAINT_2	"Tietuetta ei löydy, LISÄÄ ensin!"			/* 40	*/
+UP_MAINT_3	"Ei voi avata valikkotiedostoa"			/* 40   */
+UP_MAINT_4	"Ei voi sulkea valikkotiedostoa"			/* 40   */
+UP_MAINT_5	"Ei voi avata poikkeusryhmätiedostoa"		/* 40   */
+UP_MAINT_6	"Ei voi sulkea poikkeusryhmätiedostoa"		/* 40   */
+UP_MAINT_7	"Ei voi avata poikkeustyyppitiedostoa"		/* 40   */
+UP_MAINT_8	"Ei voi sulkea poikkeustyyppitiedostoa"		/* 40   */
+UP_MAINT_9	"Ei voi lukea"					/* 20, Ei voi lukea XXX -tiedostoa	*/
+UP_MAINT_10	"tiedosto"						/* 10, cannot read XXX file	*/
+UP_MAINT_11	"<CR> kun haluat jatkaa.."				/* 40   */
+UP_MAINT_12	"Paina ESC suorittaaksesi"				/* 40   */
+UP_MAINT_13	"Käyttäjäprofiilin lukuvirhe"			/* 40   */
+UP_MAINT_14	"Käyt TN"
+UP_MAINT_15	"Nimi"
+UP_MAINT_16	"Täysi nimi"					/* 15	*/
+UP_MAINT_17	"Tervehdysnimi"
+UP_MAINT_18	"Yhtiötied. hoitajat"				/* 20	*/
+UP_MAINT_19	"Valikkoluvat"
+UP_MAINT_20	"Oletus"
+UP_MAINT_21	"Yhtiö"
+UP_MAINT_22	"Näyttö"
+UP_MAINT_23	"Haku"
+UP_MAINT_24	"Toimi"
+UP_MAINT_25	"Til.tyyp"
+UP_MAINT_26	"Alue"
+UP_MAINT_27	"Suurin trk"
+UP_MAINT_28	"Voi ruuduttaa"
+UP_MAINT_29	"Logotied"
+UP_MAINT_30	"Superruudut:"
+UP_MAINT_31	"Poikk.ryhm:"
+UP_MAINT_32	"Poik"
+UP_MAINT_33	"tyyp"
+UP_MAINT_34	"On annettava arvo"				/* 40	*/
+UP_MAINT_35	"On annettava aluekoodi"				/* 40	*/
+UP_MAINT_36	"Käyttäjän TN, näkyy joka näytössä ja käytet. tapahtumakirjaukseen"
+UP_MAINT_37	"Käyttäjän koko nimi"				/* 40	*/
+UP_MAINT_38	"Tervehdysnimi joka näkyy tervehdysrivillä"
+UP_MAINT_39	"Merkintä sallii käyttäjän käsitellä yhtiötä 1"
+UP_MAINT_40	"Merkintä sallii käyttäjän käsitellä yhtiötä 2"
+UP_MAINT_41	"Merkintä sallii käyttäjän käsitellä yhtiötä 3"
+UP_MAINT_42	"Merkintä sallii käyttäjän käsitellä yhtiötä 4"
+UP_MAINT_43	"Merkintä sallii käyttäjän käsitellä yhtiötä 5"
+UP_MAINT_44	"Merkintä sallii käyttäjän käsitellä yhtiötä 6"
+UP_MAINT_45	"Merkintä sallii käyttäjän käsitellä yhtiötä 7"
+UP_MAINT_46	"Merkintä sallii käyttäjän käsitellä yhtiötä 8"
+UP_MAINT_47	"Merkintä sallii käyttäjän valita"
+UP_MAINT_48	"Yhtiön oletus-TN"				/* 40	*/
+UP_MAINT_49	"Oletusnäyttö tälle käyttäjälle hakumuodossa"
+UP_MAINT_50	"Oletusetsintä tälle käyttäjälle hakumuodossa"
+UP_MAINT_51	"Oletusnumero käyttäjän toimelle"			/* 40   */
+UP_MAINT_52	"Oletustilaustyyppi"				/* 40   */
+UP_MAINT_53	"Oletusaluekoodi"				/* 40   */
+UP_MAINT_54	"1 - 63. Suurin tärkeys jonka käyttäjä voi antaa tilaukselle"
+UP_MAINT_55	"K/E. Osoittaa käyttäjän saavan ruuduttaa tilauksia"	/* 40   */
+UP_MAINT_56	"Tiedoston nimi joka näkyy kun käyttäjä lopettaa"
+UP_MAINT_57	"Superruutu 1:n oletusosa"			/* 40   */
+UP_MAINT_58	"Superruutu 2:n oletusosa"			/* 40   */
+UP_MAINT_59	"Superruutu 3:n oletusosa"			/* 40   */
+UP_MAINT_60	"Superruutu 4:n oletusosa"			/* 40   */
+UP_MAINT_61	"Superruutu 5:n oletusosa"			/* 40   */
+UP_MAINT_62	"Superruutu 6:n oletusosa"                   /* 40   */
+UP_MAINT_63	"Superruutu 7:n oletusosa"                   /* 40   */
+UP_MAINT_64	"Superruutu 8:n oletusosa"                   /* 40   */
+UP_MAINT_65	"Superruutu 9:n oletusosa"                   /* 40   */
+UP_MAINT_66	"Superruutu 10:n oletusosa"                  /* 40   */
+UP_MAINT_67	"Superruutu 11:n oletusosa"                  /* 40   */
+UP_MAINT_68	"Superruutu 12:n oletusosa"                  /* 40   */
+UP_MAINT_69	"Superruutu 13:n oletusosa"                  /* 40   */
+UP_MAINT_70	"Superruutu 14:n oletusosa"                  /* 40   */
+UP_MAINT_71	"Superruutu 15:n oletusosa"                  /* 40   */
+UP_MAINT_72	"Superruutu 16:n oletusosa"                  /* 40   */
+UP_MAINT_73	"K/E. Onko poikkeusryhmä"			/* Whether excp. group XXX is included in ...	*/
+UP_MAINT_74	"K/E. Onko poikkeusryhmä"			/* Whether exc. type XXX is included in ...	*/
+UP_MAINT_75	"mukana tässä käyttäjän valinnassa"		/* Whether exc. type XXX is included in ...     */
+UP_MAINT_76	"("						/* translate to opening parenthesis (	*/
+UP_MAINT_77	")"						/* translate to closing parentesis )	*/
+UP_MAINT_78	"Väärä valinta - ole hyvä anna (L/U) lisätäksesi tai aloittaaksesi uuden"

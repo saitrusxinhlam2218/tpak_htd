@@ -1,0 +1,236 @@
+$ /****************************************************************************
+$ *                                                                           *
+$ *                           S C C S   I N F O                               *
+$ *                                                                           *
+$ * @(#)  fl_maint.MSF.fin; Rel: 10.1.3.2; Get date: 8/9/95 at 11:09:31
+$ * @(#)  Last delta: 8/9/95 at 11:09:21
+$ * @(#)  SCCS File: /taxi/sccs/s.fl_maint.MSF.fin
+$ *                                                                           *
+$ * Copyright (c) 1990 - MDI Seattle                                          *
+$ *                                                                           *
+$ *****************************************************************************/
+$ #ident "@(#) head:fl_maint.MSF.fin/usr/taxi/enh_src/src/msf/fin	10.1.3.2"
+
+$ /*
+$  * Message file for PROGRAM: fl_maint
+$  * CATALOG:   fl_maint
+$  * MNEMONICS: fl_m_strdefs.h
+$  */
+
+$quote "
+$delset 1
+$set 1
+
+$ /*    NOTE TO THE TRANSLATOR                          		*/
+$ /*    Quoted text will be followed by a maximum string length if the  */
+$ /*    text length is different than the number of chars in the string.*/
+$ /*    If no string length is entered default to the current number of */
+$ /*    characters.  A comment about the string is also included where  */
+$ /*    necessary.                                                      */
+$ /* 	------- Translate ALL `Ä` to '(' and ALL 'Å' to ')' ----------- */
+$ /* 	Examples, FL_MAINT_8 ... FL_MAINT_36				*/
+$ /*	Check constants being used for 'P'assenger, 'D'elivery,		*/
+$ /*	'W'akeup and 'X' type in FL_MAINT_20.._23			*/
+
+1	"On annettava arvo"					/* 60	*/
+2	"C-isam-virhe numero ="					/* 60   */
+3	"Unix-virhe numero ="					/* 60   */
+4	"Tietuetta ei löydy, LISÄÄ ensin !"				/* 60   */
+5	"Paina ESC suorittaaksesi"					/* 60   */
+6	"Yhtiötiedoston lukuvirhe"					/* 60	*/
+7	"TN   no.  Aktiivi   Nimi                                                  Tas1 Primary Tas2 Tas3 Tas4 Tas5 Tas6 Tas7 Tas8"
+8	"( )  ( )  ( )       (                    )               Hylkäyssakot     ( )  ( )     ( )  ( )  ( )  ( )  ( )  ( )  ( )"
+9	"Kommentit   (                                          ) Varausaika       (  ) (  )    (  ) (  ) (  ) (  ) (  ) (  ) (  )"
+10	"         Toistot         Tärkeys          Toiminto        Kesto            Rangaistus          Info                  Maksimi"
+11	"  RUUTUUN   (     )   JULLIK  ( )     JULLIK ( )    HYVKS   (     )   EIHYVKS ( )       Ajotarjous   ( )  HYLKMÄÄRÄ      (   )"
+12     "  ERUUTU    (     )   PERUUT  ( )     PERUUT ( )    TAUKO   (     )   EIHYVKS (     )                     Ajajan tunnist (  )"
+13     "  AJOTIEDUS (     )   Tavall  ( )     MRUUTU ( )    Lyhyt M (     )   NAK     ( )                         Auton ominais  (  )"
+14	"  Ruutitied (     )   Paikall ( )   M Action ( )    M Action(     )          Ennakko            Sallittu  Autot/Tilaukset(   ) "
+15	"  RJ        (     )   Tilap   (  )                  Paikall (     )      MRUUTU  (     )   MRUUTU    ( )  Enn.til. kirj. (  )"
+16	"  Ruututila (     )                              Tilaustäsm (     )   Ennakkotil (     )   Erik.pyynt( )  Tyyppiennakko  (     )"
+17	"  Ennakkotil(     )   Vastaus tarjousajoon   ( ) CNX to MOFF(     )   Myöh mitt  (     )                  Ennakkotil.aika(     )"
+18	"                                                Lyhyt Jullik  (   )   Herätys    (     )                  Time Call Intvl(  )"
+19	"              Piirteet                     Piirteet            Oletustärk..       Oletustärk.     Käsimittari  Taksalask."
+20	"  Lupatarkist   ( )     Asemakäsip.käsittely  ( )      Jatk.tilaus (  )     'M'atkustaja(  )        ( )           ( ) "
+21	"  Pidä linja    ( )     Ruutujen varataso     ( )      Jatk.tilaus (  )     'T'avara-ajo(  )        ( )           ( )"
+22	"  Tervehdysrivi ( )     Ajajaviestien hyväks  ( )      Ennakkotil  (  )     'X'-tyyppi  (  )        ( )"
+23	"  GPS active    ( )     Jatk.til.tarkistus    ( )                           'H'erätys   (  )"
+24	"                       Systeemitiedot                             Raportointitiheys      "
+25	" Avoim. enn. portti  (                    )      Enn.tilausraportti   (      )           "
+26	"                                                 Viestiraportti        (     )           "
+27	"              Oletukset                             Korkea alue Arvioteksti                                                  "
+28	"Kuntakoodi        (   )             1. arvio            (     )   (       )                                                  "
+29	"Suuntanumero      (   )             2. arvio            (     )   (       )                                                  "
+30	"Tilaustyyppi      ( )               3. arvio            (     )   (       )                                                  "
+31	"Historia          (     )           4. arvio            (     )   (       )                                                  "
+32	"Täsmäysalgoritmi  ( )               5. arvio            (     )   (       )                                                  "
+33	"GPS Max X         (          )      6. arvio            (     )   (       )                                                  "
+34	"GPS Min X         (          )      7. arvio            (     )   (       )                                                  "
+35	"GPS Max Y         (          )      8. arvio            (     )   (       )                                                   "
+36	"GPS Min Y         (          )      Oletus                        (       )                                                   "
+37     "Kuitt. aikaraja   (     )"
+38     "Kuitt. yrityksiä  (     )"
+39     "Väärä valinta - ole hyvä anna (L/U) lisåtåksesi tai alkaaksesi uuden"
+40	"  GPS tid     (   )     Auto Flag Time      (   )"
+41     "                                                FRI aika    (     )                                       Lead Supplement(  )"
+
+
+$ /*
+$  * Strings extracted from fl_scr_ary.h
+$  */
+
+$delset 2
+$set 2
+
+$	/* Note to the translator				*/
+$	/* The length on all of the following strings can be 	*/
+$	/* up to 70 characters					*/
+
+1	"Yhtiön TN"
+2	"Systeemin antama yhtiön numero (0-7), jota käytetään sisäisiin viittauksiin"
+3	"K-Yhtiö on käytössä, E-Yhtiö ei käytössä"
+4	"Yhtiön nimi"
+5	"Huomautus"
+6	"1-tason hylkäyssakko: 1 - ei sallittu; 2 - ei sakkoa ; 3 - jonon loppuun; 4 - Auto reject processing"
+7	"Perustason hylkäyssakko: 1 - ei sallittu; 2 - ei sakkoa ; 3 - jonon loppuun; 4 - Auto reject processing"
+8	"2-tason hylkäyssakko: 1 - ei sallittu; 2 - ei sakkoa ; 3 - jonon loppuun; 4 - Auto reject processing"
+9	"3-tason hylkäyssakko: 1 - ei sallittu; 2 - ei sakkoa ; 3 - jonon loppuun; 4 - Auto reject processing"
+10	"4-tason hylkäyssakko: 1 - ei sallittu; 2 - ei sakkoa ; 3 - jonon loppuun; 4 - Auto reject processing"
+11	"5-tason hylkäyssakko: 1 - ei sallittu; 2 - ei sakkoa ; 3 - jonon loppuun; 4 - Auto reject processing"
+12	"6-tason hylkäyssakko: 1 - ei sallittu; 2 - ei sakkoa ; 3 - jonon loppuun; 4 - Auto reject processing"
+13	"7-tason hylkäyssakko: 1 - ei sallittu; 2 - ei sakkoa ; 3 - jonon loppuun; 4 - Auto reject processing"
+14	"8-tason hylkäyssakko: 1 - ei sallittu; 2 - ei sakkoa ; 3 - jonon loppuun; 4 - Auto reject processing"
+15	"1-tason varoitusaika. (Minuuteissa)"
+16	"Perustason varoitusaika. (Minuuteissa)"
+17	"2-tason varoitusaika. (Minuuteissa)"
+18	"3-tason varoitusaika. (Minuuteissa)"
+19	"4-tason varoitusaika. (Minuuteissa)"
+20	"5-tason varoitusaika. (Minuuteissa)"
+21	"6-tason varoitusaika. (Minuuteissa)"
+22	"7-tason varoitusaika. (Minuuteissa)"
+23	"8-tason varoitusaika. (Minuuteissa)"
+24	"Kuinka usein ajaja saa painaa RUUTUUN-näppäintä.  (Sekunneissa)"
+25	"Kuinka usein ajaja saa painaa ERUUT-näppäintä.  (Sekunneissa)"
+26	"Kuinka usein ajaja saa painaa AJOTIED-näppäintä.  (Sekunneissa)"
+27	"Kuinka usein ruutu- ja tarjoustiedot lähetetään MDT:lle. (Sekunneissa)"
+28	"Kuinka usein ajaja saa painaa RJ-näppäintä.  (Sekunneissa)"
+29	"Kuinka usein ruuduntilanäyttö uusitaan.  (Sekunneissa)"
+30	"Kuinka usein systeemi tarkistaa onko ennakkotilausten määräaika.  (Minuuteissa)"
+31	"Etusija annettu JULLI-näppäintä painaneille ajajille. (1-suurin, 5-alin)"
+32	"Etusija annettu ajajille joiden ajo peruutettiin. (1-suurin, 5-alin)"
+33	"Etusija annettu vakinaisille ajajille. (1-suurin, 5-alin)"
+34	"Etusija annettu paikallisen ajon tehneille ajajille. (1-suurin, 5-alin)"
+35	"Suurin etusija-ajo jonka tilapäinen voi ajaa. (1-suurin, 63-alin)"
+36	"1-väl.hyväks.;2-kuin 1 & autom.per. & ruutuun; 4-autom.peruutus, näytä välitt."
+37	"1-välitt. hyväks. tarpeen;2-kuin 1 & autom.ruutuun;3-autom.per. & ruutuun"
+38	"Pitääkö systeemi tilaukset perustasolla, jos taksit ovat kohta-vapaa-ruudussa"
+39	"Number of M_ACTION retries"
+40	"1-viitattu HYVKS asema & perus;2-viitattu HYVKS;3-suora HYVKS"
+41	"Sekuntimäärä joka ajajalla on aikaa painaa HYVKS-näppäintä. (Sekunneissa)"
+42	"Suurin hyväksyttävä tauon pituus. (Minuuteissa)"
+43	"Lyhin sallittu mittari-pois/mittari-päälle -jakso. (Minuuteissa)"
+44	"Duration of M_ACTION timer (i sek.)"
+45	"Lyhin sallittu mittari-pois/mittari-päälle -jakso paik.ajoissa. (Minuuteissa)"
+46	"Systeemin saama aika tilauksen täsmäämiseen ennen AIKARAJAA.  (Minuuteissa)"
+47	"1-ei;2-jonon loppuun;3-pois ruudusta ja sakko ajajalle"
+48	"Aikaväli ei-saadun jälkeen jolloin ajaja ei enää pääse ruutuun.  (Minuuteissa)"
+49	"Suurin sallittu aika välillä KOHTA-VAPAA-RUUDUSSA ja RUUTUUN.  (Minuuteissa)"
+50	"Ilmoitusennakko tulevan ajon kirjaamiseksi. (Minuuteissa)"
+51	"Suurin sallittu aika välille HYVKS ja NOUTO/M-PÄÄLLÄ. (Minuuteissa)"
+52	"Aika ennen määräaikaa jolloin HERÄTYS-tilaus on poikkeus. (Minuuteissa)"
+53	"1-rtuinfo;2-rtuinfo, til.typpi ja karttalohko;3-rtu;4-koko nouto-os."
+54	"1-aina;2-jälkeen NOUTO/M-PÄÄLLÄ;3-jälkeen NOUTO/M-PÄÄLLÄ systemin väl. ajoissa"
+55	"Sallitaanko tyyppipyyntöjen kirjaaminen"
+56	"Montako kertaa ajo voidaan hylätä ennen kuin siitä tulee poikkeus"
+57	"Montako ajajan ominaisuutta tilauksen ottaja voi määritellä ajoa varten"
+58	"Montako auton ominaisuutta tilauksen ottaja voi määritellä ajoa varten"
+59	"Montako autoa voidaan määrätä yhdelle ajolle"
+60	"Montako päivää ennen til.ottaja saa kirjata ennakkotilauksen ilman hyväksyntää."
+61	"Aika ennenkuin erikoispyyntö annetaan välittäjälle. (Minuuteissa)"
+62	"Kuinka pitkälle eteenpäin valitaan ennakkotilauksia. (Minuuteissa)"
+63	"Poistetaanko lupien tarkistus"
+64	"Mahdollistetaanko linjalla odotus tälle yhtiölle"
+65	"Näytetäänkö tervehdysrivit tilauksenkirjausnäytöllä"
+66	"1-ei sallittu;2-välitt.hyvks;3-autom.hyvks ja tilauksen uusi välitys"
+67	"Montako ruututasoa käytetään tilausta täsmättäessä"
+68	"1-välittäjän hyväksyminen tarpeen;2-viesti lähetetään automaattisesti"
+69	"1-tarvitaan välittäjän hyväksyntä;2-ajot annetaan automaattisesti"
+70	"Oletustärkeys laskutusajoille"
+71	"Oletustärkeys jatk.tilauksille"
+72	"Oletustärkeys tuleville ajoille"
+73	"Oletustärkeys matkustaja-ajoille"
+74	"Oletustärkeys tavara-ajoille"
+75	"Oletustärkeys \'X\'-tyypin ajoille"
+76	"Oletustärkeys herätystilauksille"
+77	"Sallitaanko manuaalinen mittari päälle/pois matkustaja-ajoissa"
+78	"Sallitaanko manuaalinen mittari päälle/pois tavara-ajoissa"
+79	"Sallitaanko manuaalinen mittari päälle/pois x-tyypin ajoissa"
+80	"1-ei;2-manuaalinen;3-ruudusta ruutuun -taul.;4-postinumerosta toiseen -taul."
+81	"Mihin porttiin tämän yhtiön avoim. ennak. kirjoitin on liitetty"
+82	"Kuinka usein ennakkotilausraportti tulostetaan"
+83	"Kuinka usein viestiraportti tulostetaan"
+84	"Alueen oletuskoodi, jos tämän käyttäjän käyttäjätiedot eivät anna sitä"
+85	"Oletussuuntanumero jota käytetään, jos tämän käyttäjän käyttäjätiedot eivät anna sitä"
+86	"Tilauksen oletustyyppi, jos käyttäjän käyttäjätiedot eivät anna sitä"
+87	"Oletusarvo tilaushistorian etsinnälle. (Minuuteissa)"
+88	"3-tilap. ruutujärj.;4-Closest Taxi(GPS)/FIFO;5-Zone Queueing Primary/Closest Taxi(GPS) backups"
+89	"Ensimmäinen yläraja-alue. (Minuuteissa)"
+90	"Teksti joka vastaa ensimmäistä yläraja-aluetta (esim. 10-15)"
+91	"Toinen yläraja-alue. (Minuuteissa)"
+92	"Teksti joka vastaa toista yläraja-aluetta(esim. 10-15)"
+93	"Kolmas yläraja-alue. (Minuuteissa)"
+94	"Teksti joka vastaa kolmatta yläraja-aluetta(esim. 10-15)"
+95	"Neljäs yläraja-alue. (Minuuteissa)"
+96	"Teksti joka vastaa neljättä yläraja-aluetta(esim. 10-15)"
+97	"Viides yläraja-alue. (Minuuteissa)"
+98	"Teksti joka vastaa viidettä yläraja-aluetta(esim. 10-15)"
+99	"Kuudes yläraja-alue. (Minuuteissa)"
+100	"Teksti joka vastaa kuudetta yläraja-aluetta(esim. 10-15)"
+101	"Seitsemäs yläraja-alue. (Minuuteissa)"
+102	"Teksti joka vastaa seitsemättä yläraja-aluetta(esim. 10-15)"
+103	"Kahdeksas yläraja-alue. (Minuuteissa)"
+104	"Teksti joka vastaa kahdeksatta yläraja-aluetta(esim. 10-15)"
+105 "Oletusarvo tekstille, jos raja-alueita ei ole annettu"
+106 "Puuttuva kuittausaikarajajakso sekunneissa"
+107 "Puuttuva kuittauspyyntöjen uusintakertojen raja"
+108	"Kuinka usein tarkistetaan joutilaat autot (minuuteissa)"
+109	"Tuntimäärä jonka auto saa olla joutilaana ennen kuin se poistetaan systeemistä"
+110	"1-Ei tulomaksua; 2-Mittari päällä ennen noutoa"
+111	"Varmistustasojen määrä noutoajan laskemiseksi (1-8)"
+112	"Kuinka usein noutoaika-arviot lasketaan (minuuteissa)"
+113	"Miten systeemikutsut käsitellään: 1-Pakollinen systeemimääritysten hyväksyminen; 2-Ohita systeemimääritykset"
+114	"Aikaraja ei voimassa        (  )"
+115	"Tulomaksu                   ( )"
+116	"Arviotasojen määrä          ( )"
+117	"Arviotaajuus                (   )"
+118	"Systeemikutsut              ( )"
+119	"Joutentarkistus             (   )"
+120	"0-vain ruutu; 1-ruutu ja ruudun kuvaus; 2-kuten 1 plus kartta; 3- n/a; 4-täydellinen osoite"
+121	"Ajonvälitysmuoto: 0-Muoto 0; 1-Muoto 1"
+122	"Ajonväl      ( )"
+123 "Enin määrä puuttuvia kuittauksia, joita voi pyytää ITM:ltä. 0=ei yhtään."
+124 "1-ei;2-jonon loppuun;3-pois ruudusta ja sakko ajajalle"
+125 "Number of minutes past call due time to allow flag request."
+126 "Number of time call intervals to send on F35 requests."
+127 "Time call lead time supplement (minutes)"
+128 "Flat Rate Distance Filter   ( )"
+129 "F"
+130 "GPS active: K - active E - inactive"
+131 "GPS time: how old can a GPS position be?"
+132 "GPS distance limit used in matching algorithm (meters)"
+133 "Send Call Type              ( )"
+134 "Auto Reject Time            (   )"
+135 "Whether the call type will be sent in the trip offer (K/E)"
+136 "Allowed aging on a call for determination of auto-reject approval (secs)"
+137 "Maximum X coordinate allowed for GPS"
+138 "Minimum X coordinate allowed for GPS"
+139 "Maximum Y coordinate allowed for GPS"
+140 "Minimum Y coordinate allowed for GPS"
+141 "Coordinate system used for GPS: 1 - Latitude/Longitude ; 2 - UTM coordinates"
+142 "Should system automatically book taxis based on GPS position? (J/N)"
+143 "Minimum number of minutes required for no show request"
+144 "Aika minuuteissa, minka jalkeen tilaus siirtyy FRI tilaan"
+145 "Emergency Range             (     )"
+146 "Enroute Break               ( )"
+147 "Range for sending emergency broadcast message (meters)"
+148 "Should Enroute Breaks be allowed (Y/N)"

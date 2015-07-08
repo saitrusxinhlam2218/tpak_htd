@@ -1,0 +1,25 @@
+database mads
+screen
+{
+						Alaruututiedoston hoito
+
+Numero     Yhtiö A   Yhtiö B   Yhtiö C   Yhtiö D   Yhtiö E   Yhtiö F   Yhtiö G   Yhtiö H
+[f000 ]    [f01]     [f02]     [f03]     [f04]     [f05]     [f06]     [f07]     [f08]
+}
+end
+tables
+subzone
+attributes
+f000 = subzone.sz_nbr,UPSHIFT,REQUIRED,COMMENTS="Ei toistuva alaruudun numero (voi sisältää kirjaimia)";
+f01  = subzone.sz_zone_fleet1,RIGHT,COMMENTS="Vastaava ruudun numero yhtiölle 0";
+f02  = subzone.sz_zone_fleet2,RIGHT,COMMENTS="Vastaava ruudun numero yhtiölle 1";
+f03  = subzone.sz_zone_fleet3,RIGHT,COMMENTS="Vastaava ruudun numero yhtiölle 2";
+f04  = subzone.sz_zone_fleet4,RIGHT,COMMENTS="Vastaava ruudun numero yhtiölle 3";
+f05  = subzone.sz_zone_fleet5,RIGHT,COMMENTS="Vastaava ruudun numero yhtiölle 4";
+f06  = subzone.sz_zone_fleet6,RIGHT,COMMENTS="Vastaava ruudun numero yhtiölle 5";
+f07  = subzone.sz_zone_fleet7,RIGHT,COMMENTS="Vastaava ruudun numero yhtiölle 6";
+f08  = subzone.sz_zone_fleet8,RIGHT,COMMENTS="Vastaava ruudun numero yhtiölle 7";
+end
+instructions
+   delimiters "()";
+end

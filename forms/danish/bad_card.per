@@ -1,0 +1,43 @@
+{
+|***********************************************************************
+|                 RCS INFO
+|
+|  @(#)  $RCSfile: bad_card.per,v $
+|  @(#)  $Revision: 1.5 $
+|  @(#)  $Date: 1998/11/14 14:48:14 $
+|  @(#)  $Author: taxiadm $
+|  @(#)  $Source: /taxi-scan/taxi_proj/cvs/taxi-scan/src/forms/danish/bad_card.per,v $
+|
+|  Copyright (c) 1994 - MobileSoft Consulting, Inc. Woodinville WA
+|
+|**********************************************************************/
+|ident "@(#) head:$RCSfile: bad_card.per,v $	$Revision: 1.5 $"
+}
+
+
+database mads
+screen
+{
+
+						SPÆRRELISTE VEDLIGEHOLD
+
+Dato Begrænsning	Start dato	Slut dato	Kreditkort type
+[a]		        [f001    ]      [f002    ]      [f03 ]
+
+Kreditkort nummer
+[f004                                    ]
+
+}
+end
+tables
+bad_credit
+attributes
+a=bc_date_range;
+f001=bc_date_start;
+f002=bc_date_end;
+f03=bc_card_type;
+f004=bc_card_nbr;
+
+instructions
+	delimiters "()";
+end

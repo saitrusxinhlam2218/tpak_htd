@@ -1,0 +1,33 @@
+{
+|***********************************************************************
+|                 RCS INFO
+|
+|  @(#)  $RCSfile: seal.per,v $
+|  @(#)  $Revision: 1.4 $
+|  @(#)  $Date: 1998/01/08 19:35:54 $
+|  @(#)  $Author: taxiadm $
+|  @(#)  $Source: /taxi-scan/taxi_proj/cvs/taxi-scan/src/forms/danish/seal.per,v $
+|
+|  Copyright (c) 1994 - MobileSoft Consulting, Inc. Woodinville WA
+|
+|**********************************************************************/
+|ident "@(#) head:$RCSfile: seal.per,v $	$Revision: 1.4 $"
+}
+database mads
+screen
+{
+						VEDLIGEH. BEVILLINGS-FIL
+
+Nummer    Beskrivelse             Forkortelse
+[f0]      [f001                ]  [a0 ]
+}
+end
+tables
+seal
+attributes
+f0   = seal.sl_seal_nbr,include=(1 to 16),RIGHT,REQUIRED,COMMENTS="Bevillingsnummer (kun 1 til 16 er gyldige)";
+f001 = seal.sl_desc,UPSHIFT,COMMENTS="Bevillingsbeskrivelse";
+a0 = seal.sl_abbrev,UPSHIFT,COMMENTS="Forkortelse som skal bruges på skærmene som felt-betegnelse";
+instructions
+   delimiters "()";
+end

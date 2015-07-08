@@ -1,0 +1,26 @@
+database mads
+screen
+{
+						Valikkotiedoston hoito
+
+Numero        Komento   Viimeinen valinta Tyyppi  Kuvaus 
+[f000    ]    [abc]     [a]               [b]     [f002                             ]
+
+UNIX-komento                                Edellinen ruutu
+[f003                                    ]  [c]
+}
+end
+tables
+menu
+attributes
+f000 = menu.mf_nbr,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Järjestysnumero lupaviitteelle";
+abc = menu.mf_command,RIGHT,REQUIRED,NOUPDATE,COMMENTS="Komentojono kullekin valikkoriville";
+a = menu.mf_last_menu_item,include=(K,E),UPSHIFT,COMMENTS="K/E. Onko tämä valikkorivi valikon viimeinen";
+b = menu.mf_type,UPSHIFT,include=(U,V,S),COMMENTS="Valikkorivi voi olla 'V'alikko, 'U'lkoinen suor.kelp., 'S'isäinen suor.kelp.";
+f002 = menu.mf_desc,COMMENTS="Se merkkikuvaus joka näkyy valikossa";
+f003 = menu.mf_unix_string,COMMENTS="UNIX-komento joka suoritetaan, jos valikkorivi on ulkoinen suorituskelpoinen";
+c = menu.mf_prev_scr_flag,UPSHIFT,COMMENTS="Edellisen ruudun merkintä";
+end
+instructions
+   delimiters "()";
+end

@@ -1,0 +1,1256 @@
+/***********************************************************************
+*                 RCS INFO
+*
+*  @(#)  $RCSfile: Zone.c,v $
+*  @(#)  $Revision: 1.30 $
+*  @(#)  $Date: 2005/04/21 06:46:50 $
+*  @(#)  $Author: jwelch $
+*  @(#)  $Source: /taxi-scan/taxi_proj/cvs/taxi-scan/src/dispatch/Zone.c,v $
+*
+*  Copyright (c) 1994 - MobileSoft Consulting, Inc. Woodinville WA
+*
+***********************************************************************/
+
+static char rcsid[] = "$Id: Zone.c,v 1.30 2005/04/21 06:46:50 jwelch Exp $";
+
+#include <sys/types.h>
+#include <sys/time.h>
+#include <sys/ipc.h>
+
+#include "mad_error.h"
+#include "taxipak.h"
+#include "Object_types.h"
+#include "Object.h"
+#include "List_public.h"
+#include "Call_public.h"
+#include "Vehicle_public.h"
+#include "Vehicle_lists_public.h"
+#include "Zone_public.h"
+#include "Zone_private.h"
+#include "Zone_lists_public.h"
+#include "Zone_db.h"
+#include "Call_private.h"
+#include "TimeCalls_public.h"
+#include "Fleet_public.h"
+#include "Fleet_private.h"
+#include "Vehicle_public.h"
+#include "Vehicle_private.h"
+#include "Vehicle_db.h"
+#include "Exception_private.h"
+#include "mads_isam.h"
+#include "mad_ipc.h"
+#include "timers.h"
+#include "ui_ipc.h"
+#include "enhance.h"
+#include "switch_ext.h"
+#include "language.h"
+
+
+
+extern time_t mads_time;
+extern FLEET *fleet[ ];	/* temporary */
+extern struct offsets *offset;
+extern int dis_msgqid;
+extern int pi_msgqid;
+extern short time_ticks;
+
+int veh_http_break_notify(struct veh_driv *);
+
+#define ZONE_BACKUP_MAX			BCK_UP_MAX
+#define ZONE_LEVEL_MAX			LEVEL_MAX
+
+typedef short BACKUP_ZONE[ZONE_BACKUP_MAX+1];
+RET_STATUS Zone_get_backup_zone(ZONE_HNDL, short, short *);
+RET_STATUS Zone_get_backup_stand_zones(ZONE_HNDL, short, short *, int);
+/*****************************************************************/
+/* RET_STATUS Zone_create(zone_nbr, fleet_nbr, zone_ciasm_ptr)   */
+/* OP:  create an in memory  zone                                */
+/* PRE: zone exists                                              */
+/*      fleet exists                                             */
+/* POST:  Zone_calls_list created                                */
+/*        Zone_veh_list created                                  */
+/* ERROR: return HNDL_ERROR if                                   */
+/*          cant allocate memory for zone                        */
+/*          cant create zone lists                               */
+/*****************************************************************/
+
+ /* WAS Zone_rec_2_obj  & build_zones */
+
+ZONE_HNDL
+Zone_create(
+	    short zone_nbr,
+	    short fleet_nbr,
+	    ZONE_REC * zone_cisam_ptr)
+{
+  ZONE  *zone_tmp_ptr;
+  ZONE_HNDL zone_hndl;
+  char error_str[80];
+
+   if ((zone_tmp_ptr = (ZONE *) malloc(sizeof(struct zones))) == NULL)
+     {
+       ERROR(' ', "", "build_zones - could not allocate zone memory.");
+       cleanup();
+     }
+   memset((char *) zone_tmp_ptr, '\0', sizeof(ZONE));
+
+  if ( zone_cisam_ptr != NULL )
+    Zone_rec_2_obj(zone_tmp_ptr, zone_cisam_ptr);
+
+   zone_hndl = (ZONE_HNDL) zone_tmp_ptr;
+   Zone_set_value(zone_hndl, ZONE_NBR, (HNDL) zone_nbr);	/* TEMPOORARY ?? */
+   Zone_set_value(zone_hndl, ZONE_FLEET_NBR, (HNDL) fleet_nbr);	/* TEMPOORARY ?? */
+  
+   if (Zone_set_value(zone_hndl, ZONE_AVAIL_VEH_LIST, (HNDL) Zone_veh_list_create()) == FAIL)
+      return (HNDL_ERR);
+
+   if (Zone_set_value(zone_hndl, ZONE_AVAIL_CALLS_LIST, (HNDL) Zone_calls_list_create()) == FAIL)
+     return (HNDL_ERR);
+
+  if (Zone_set_value(zone_hndl, ZONE_TC_LIST, (HNDL) Zone_tc_list_create()) == FAIL)
+    return (HNDL_ERR);
+
+   return ((ZONE_HNDL) zone_tmp_ptr);
+}				/* end Zone_create */
+
+/*************************************************/
+/* RET_STATUS Zone_initialize(zone_hndl)         */
+/* OP: initialze a zone                          */
+/* PRE: zone exists                              */
+/* POST: no vehicles in Zone_veh_list            */
+/*       no calls in Zone_calls_list             */
+/*       Zone stats set to 0                     */
+/* ERROR: none                                   */
+/*************************************************/
+
+/* NOT PRESENTLY USED !!! */
+RET_STATUS
+Zone_initialize(zone_hndl)
+   ZONE_HNDL zone_hndl;
+{
+   RET_STATUS status;
+
+   /* TBD - initialize stats - destroy lists */
+   if (Zone_set_value(zone_hndl, ZONE_AVAIL_VEH_LIST, (HNDL) Zone_veh_list_create()) == FAIL)
+      return (FAIL);
+   if (Zone_set_value(zone_hndl, ZONE_AVAIL_CALLS_LIST, (HNDL) Zone_calls_list_create()) == FAIL)
+      return (FAIL);
+   return (SUCCESS);
+}				/* end Zone_initialize */
+
+
+/********************************************************/
+/* RET_STATUS Zone_get_status(zone_hndl, zone_resp_buf) */
+/* OP: return zone status                               */
+/* PRE: zone exists                                     */
+/* POST: zone status added to zone ptr                  */
+/* ERROR: none                                          */
+/********************************************************/
+
+RET_STATUS
+Zone_get_status(ZONE_HNDL zone_hndl, struct zone_resp *zone_resp_buf,
+		unsigned char *req_veh_attr, unsigned char *req_drv_attr)	
+{
+   struct calls *call_ptr;
+   char  fleet_id;
+   struct veh_driv *veh_ptr;
+   struct zones *zone_ptr;
+   struct zones *tmp_zone_ptr;
+   short jj, ii;
+   short cnt = 0;
+   short timeout;
+   short num_calls = 0;
+   ZONE_CALLS_LIST_HNDL calls_list_hndl;
+   ZONE_VEH_LIST_HNDL veh_list_hndl;
+   ZONE_HNDL          bck_up_zone_hndl;
+   ZONE_CALLS_LIST_HNDL bck_up_calls_list_hndl;
+   VEH_HNDL veh_hndl;
+   CALL_HNDL call_hndl;
+   TC_HNDL   tc_hndl;
+   FLEET_HNDL fleet_hndl;
+   short zone_nbr;
+   short fleet_nbr;
+   short levels_to_search = 0;
+   int   tc_slots = 0;
+
+   zone_ptr = (struct zones *) zone_hndl;
+   if (zone_ptr == NULL)
+      return (FAIL);
+
+   fleet_nbr = zone_ptr->fleet_nbr;
+   (void) Fleet_get_hndl(BY_NBR, fleet_nbr, &fleet_hndl);
+
+   fleet_id = (char) Fleet_get_value(fleet_hndl, FLEET_ID);
+   zone_resp_buf->fleet = fleet_id;
+   zone_resp_buf->zone_nbr = zone_ptr->zone_nbr;
+   zone_resp_buf->unassn_calls = zone_ptr->num_calls;
+
+   /**
+   **/
+   calls_list_hndl = (ZONE_CALLS_LIST_HNDL) Zone_get_value( zone_hndl, ZONE_AVAIL_CALLS_LIST );
+   num_calls = 0;
+   Zone_calls_list_each_get( calls_list_hndl, call_hndl )
+     {
+       if ( ( Call_get_state( (CALL_HNDL)call_hndl, CALL_AVAILABLE_STATE ) ) &&
+	    ( fleet_nbr == (short)Call_get_value( (CALL_HNDL)call_hndl, CALL_FLEET_NBR ) ) )
+	 ++num_calls;
+     } Zone_calls_list_each_end(calls_list_hndl)
+
+   zone_resp_buf->unassn_calls = num_calls;
+   
+   ii = 0;
+   veh_list_hndl = (ZONE_VEH_LIST_HNDL) Zone_get_value(zone_hndl, ZONE_AVAIL_VEH_LIST);
+   Zone_veh_list_each_get(veh_list_hndl, veh_hndl)
+   {
+      veh_ptr = (struct veh_driv *) veh_hndl;	/* TEMPORARY */
+
+      if ( ( Vehicle_match_attr( (unsigned char *)&veh_ptr->vehicle_attr, req_veh_attr ) ) &&
+	   ( Vehicle_match_attr( (unsigned char *)&veh_ptr->driver_attr, req_drv_attr ) ) &&
+	   ( !Veh_get_state( veh_hndl, VEH_ON_BREAK_STATE ) ) )
+	{
+	  if (veh_ptr->t_status.posted)
+	    {
+	      if ( ii < VEH_IN_ZN_RESP )		  
+		zone_resp_buf->post_veh_ids[ii] = veh_ptr->veh_nbr;
+	      zone_resp_buf->veh_posted++;
+	    }
+	  if (veh_ptr->t_status.e_posted)
+	    {
+	      if ( ii < VEH_IN_ZN_RESP )		  
+		zone_resp_buf->enr_veh_ids[ii] = veh_ptr->veh_nbr;
+	      zone_resp_buf->veh_enroute++;
+	    }
+	  ii++;
+	}
+   } Zone_veh_list_each_end(veh_list_hndl)
+
+     
+   if (zone_ptr->avl_call_q_time > 0)
+     timeout = zone_ptr->avl_call_q_time;
+   else
+     timeout = (short) Fleet_get_value(fleet_hndl, FLEET_UNASSIGNED_TIME);
+
+   calls_list_hndl = (ZONE_CALLS_LIST_HNDL) Zone_get_value(zone_hndl, ZONE_AVAIL_CALLS_LIST);
+   Zone_calls_list_each_get(calls_list_hndl, call_hndl)
+   {
+     if ( ( (mads_time - (time_t) Call_get_value(call_hndl, CALL_TIME_ENTERED)) >= timeout ) &&
+         ( (int)Call_get_value(call_hndl, CALL_NBR) > 0 ) &&
+         ( (int)Call_get_value(call_hndl, CALL_ACCEPT_TIME) == 0 ) )
+	 ++zone_resp_buf->timeout_calls;
+   } Zone_calls_list_each_end(calls_list_hndl)
+
+   if (0)
+       {
+	   // TSAB wants call takers to ALWAYS see at least 30 minutes of time calls on screen 32
+	   if ( ( tc_slots = (short)Fleet_get_value( fleet_hndl, FLEET_TC_LOOK_AHEAD ) ) < 6 )
+	       tc_slots = 6;
+       }
+   else
+     tc_slots = (short)Fleet_get_value( fleet_hndl, FLEET_TC_LOOK_AHEAD );
+
+   Zone_tc_list_each_get( Zone_get_value( zone_hndl, ZONE_TC_LIST ), tc_hndl )
+     {
+       if ( (mads_time + (tc_slots * 5 * 60) ) >
+	    (time_t)TC_get_value( tc_hndl, TC_LEAD_TIME ) )
+	 ++zone_resp_buf->time_calls;
+     } Zone_tc_list_each_end(Zone_get_value(zone_hndl, ZONE_TC_LIST))
+
+	 levels_to_search = fleet[zone_ptr->fleet_nbr]->zone_backup_level;
+   
+   for (ii = 0; ii <= levels_to_search && cnt < BCK_IN_ZN_RESP; ii++)
+   {
+      if (ii == 1)
+	 continue;		/* skip over primary */
+      for (jj = 0; jj < BCK_UP_MAX && cnt < BCK_IN_ZN_RESP; jj++)
+      {
+	 zone_nbr = zone_ptr->level_number[ii].bck_up_zone[jj];
+         if (zone_nbr != 0)
+         {
+	    (void) Zone_get_hndl(zone_nbr, fleet_nbr, &zone_hndl);
+	    tmp_zone_ptr = (struct zones *) zone_hndl;
+	    if (tmp_zone_ptr != NULL)
+	    {
+	      bck_up_calls_list_hndl = (ZONE_CALLS_LIST_HNDL) Zone_get_value( zone_hndl, ZONE_AVAIL_CALLS_LIST );
+	      zone_resp_buf->bkup_zones[cnt][1] = 0;
+	      Zone_calls_list_each_get( bck_up_calls_list_hndl, call_hndl )
+		{
+		  if ( ( Call_get_state( (CALL_HNDL)call_hndl, CALL_AVAILABLE_STATE ) ) &&
+		       ( fleet_nbr == (short)Call_get_value( (CALL_HNDL)call_hndl, CALL_FLEET_NBR ) ) )
+		    ++zone_resp_buf->bkup_zones[cnt][1];
+		} Zone_calls_list_each_end(bck_up_calls_list_hndl)
+
+	       zone_resp_buf->bkup_zones[cnt][0] = zone_nbr;
+
+	       veh_list_hndl = (ZONE_VEH_LIST_HNDL)Zone_get_value(zone_hndl, ZONE_AVAIL_VEH_LIST);
+	       Zone_veh_list_each_get(veh_list_hndl, veh_hndl)
+		 {
+		   veh_ptr = (struct veh_driv *)veh_hndl;
+		   if ( Vehicle_match_attr( (unsigned char *)&veh_ptr->vehicle_attr, req_veh_attr ) )
+		     {
+		       if ( Vehicle_match_attr( (unsigned char *)&veh_ptr->driver_attr, req_drv_attr ) )
+			 {
+			   if ( veh_ptr->t_status.posted )
+			     ++zone_resp_buf->bkup_zones[cnt][2];
+			   if ( veh_ptr->t_status.e_posted )
+			     ++zone_resp_buf->bkup_zones[cnt][3];
+			 }
+		     }
+		 } Zone_veh_list_each_end(veh_list_hndl)
+	       ++cnt;
+	    }
+         }
+      }
+   }
+   return (SUCCESS);
+}				/* end Zone_get_status */
+
+RET_STATUS
+Zone_pi_get_status(ZONE_HNDL zone_hndl, struct zone_resp *zone_resp_buf,
+		unsigned char *req_veh_attr, unsigned char *req_drv_attr)	
+{
+   struct calls *call_ptr;
+   char  fleet_id;
+   struct veh_driv *veh_ptr;
+   struct zones *zone_ptr;
+   struct zones *tmp_zone_ptr;
+   short jj, ii;
+   short cnt = 0;
+   short timeout;
+   short num_calls;
+   ZONE_CALLS_LIST_HNDL calls_list_hndl;
+   ZONE_CALLS_LIST_HNDL bck_up_calls_list_hndl;   
+   ZONE_VEH_LIST_HNDL veh_list_hndl;
+   VEH_HNDL veh_hndl;
+   CALL_HNDL call_hndl;
+   TC_HNDL   tc_hndl;
+   FLEET_HNDL fleet_hndl;
+   short zone_nbr;
+   short fleet_nbr;
+   FILE   *pi_tracefile;
+   char   *ctime(), *stime;
+   time_t tmtime;
+   char           DateBuff[16];   
+
+   zone_ptr = (struct zones *) zone_hndl;
+   if (zone_ptr == NULL)
+      return (FAIL);
+
+   if ((pi_tracefile = fopen("/usr/taxi/run/traces/pi_zonestat", "a")) == NULL )
+     fprintf( stderr, "Error opening trace file\n");
+   else
+     {
+       tmtime = time((time_t *) 0);
+       get_arg_date(tmtime, DateBuff);
+       stime = ctime(&tmtime);
+       fprintf(pi_tracefile, "%.2s", DateBuff);
+       fprintf(pi_tracefile, "%.2s", &DateBuff[3]);
+       fprintf(pi_tracefile, "%.2s ", &DateBuff[6]);
+       fprintf(pi_tracefile, "%.2s", &stime[11]);
+       fprintf(pi_tracefile, "%.2s", &stime[14]);
+       fprintf(pi_tracefile, "%.2s", &stime[17]);
+       fprintf(pi_tracefile, " ZONE_STATUS %.03d", zone_ptr->zone_nbr);
+     }
+   
+   fleet_nbr = zone_ptr->fleet_nbr;
+   (void) Fleet_get_hndl(BY_NBR, fleet_nbr, &fleet_hndl);
+
+   fleet_id = (char) Fleet_get_value(fleet_hndl, FLEET_ID);
+   zone_resp_buf->fleet = fleet_id;
+   zone_resp_buf->zone_nbr = zone_ptr->zone_nbr;
+   zone_resp_buf->unassn_calls = zone_ptr->num_calls;
+
+   /**
+   **/
+   calls_list_hndl = (ZONE_CALLS_LIST_HNDL) Zone_get_value( zone_hndl, ZONE_AVAIL_CALLS_LIST );
+   num_calls = 0;
+   if ( pi_tracefile != NULL )
+     fprintf(pi_tracefile, "\nCALLS:\t");
+   
+   Zone_calls_list_each_get( calls_list_hndl, call_hndl )
+     {
+       if ( ( Call_get_state( (CALL_HNDL)call_hndl, CALL_AVAILABLE_STATE ) ) &&
+	    ( fleet_nbr == (short)Call_get_value( (CALL_HNDL)call_hndl, CALL_FLEET_NBR ) ) )
+	 ++num_calls;
+
+       if ( pi_tracefile != NULL )
+	 fprintf(pi_tracefile, "%d ", (int)Call_get_value((CALL_HNDL)call_hndl, CALL_NBR) );
+
+     } Zone_calls_list_each_end(calls_list_hndl)
+
+   zone_resp_buf->unassn_calls = num_calls;
+   
+   ii = 0;
+   veh_list_hndl = (ZONE_VEH_LIST_HNDL) Zone_get_value(zone_hndl, ZONE_AVAIL_VEH_LIST);
+
+   if ( pi_tracefile != NULL )
+     fprintf(pi_tracefile, "\nZONE %03d VEHS ", zone_ptr->zone_nbr);
+   
+   Zone_veh_list_each_get(veh_list_hndl, veh_hndl)
+   {
+      veh_ptr = (struct veh_driv *) veh_hndl;	/* TEMPORARY */
+
+      if ( veh_ptr->t_status.on_break == 1 )
+	continue;
+
+      // check if vehicle list is actually correct....
+      if ( veh_ptr->zone_num != zone_ptr->zone_nbr )
+	continue;
+
+      if ( Vehicle_match_attr( (unsigned char *)&veh_ptr->vehicle_attr, req_veh_attr ) )
+	{
+	  if ( Vehicle_match_attr( (unsigned char *)&veh_ptr->driver_attr, req_drv_attr ) )
+	    {
+	      if (veh_ptr->t_status.posted)
+		{
+		  if ( ii < VEH_IN_ZN_RESP )
+		    zone_resp_buf->post_veh_ids[ii] = veh_ptr->veh_nbr;
+		  zone_resp_buf->veh_posted++;
+		  if ( pi_tracefile != NULL )
+		    fprintf(pi_tracefile, "%d ", veh_ptr->veh_nbr);
+		}
+	      if (veh_ptr->t_status.e_posted)
+		{
+		  if ( ii < VEH_IN_ZN_RESP )		  
+		    zone_resp_buf->enr_veh_ids[ii] = veh_ptr->veh_nbr;
+		  zone_resp_buf->veh_enroute++;
+		  if ( pi_tracefile != NULL )
+		    fprintf(pi_tracefile, "%d* ", veh_ptr->veh_nbr);		  
+		}
+	      ii++;
+	    }
+	}
+   } Zone_veh_list_each_end(veh_list_hndl)
+
+     
+   if (zone_ptr->avl_call_q_time > 0)
+     timeout = zone_ptr->avl_call_q_time;
+   else
+     timeout = (short) Fleet_get_value(fleet_hndl, FLEET_UNASSIGNED_TIME);
+
+   calls_list_hndl = (ZONE_CALLS_LIST_HNDL) Zone_get_value(zone_hndl, ZONE_AVAIL_CALLS_LIST);
+   Zone_calls_list_each_get(calls_list_hndl, call_hndl)
+   {
+      if ((mads_time - (time_t) Call_get_value(call_hndl, CALL_TIME_ENTERED)) >= timeout)
+	 ++zone_resp_buf->timeout_calls;
+   } Zone_calls_list_each_end(calls_list_hndl)
+
+   Zone_tc_list_each_get( Zone_get_value( zone_hndl, ZONE_TC_LIST ), tc_hndl )
+     {
+       if ( (mads_time + ((short)(Fleet_get_value( fleet_hndl, FLEET_TC_LOOK_AHEAD ))) * 5 * 60) >
+	    (time_t)TC_get_value( tc_hndl, TC_LEAD_TIME ) )
+	 ++zone_resp_buf->time_calls;
+     } Zone_tc_list_each_end(Zone_get_value(zone_hndl,ZONE_TC_LIST))
+
+       
+    for (ii = 0; ii < LEVEL_MAX && cnt < BCK_IN_ZN_RESP; ii++)
+    {
+      if (ii == 1)
+	 continue;		/* skip over primary */
+      for (jj = 0; jj <= fleet[fleet_nbr]->zone_backup_level && cnt < BCK_IN_ZN_RESP; jj++)
+      {
+	 zone_nbr = zone_ptr->level_number[ii].bck_up_zone[jj];
+         if (zone_nbr != 0)
+         {
+	   if ( pi_tracefile != NULL )
+	     fprintf(pi_tracefile, "\nZONE %03d VEHS ", zone_nbr);	   
+
+	    (void) Zone_get_hndl(zone_nbr, fleet_nbr, &zone_hndl);
+	    tmp_zone_ptr = (struct zones *) zone_hndl;
+	    if (tmp_zone_ptr != NULL)
+	    {
+	      bck_up_calls_list_hndl = (ZONE_CALLS_LIST_HNDL) Zone_get_value( zone_hndl, ZONE_AVAIL_CALLS_LIST );
+	      zone_resp_buf->bkup_zones[cnt][1] = 0;
+	      Zone_calls_list_each_get( bck_up_calls_list_hndl, call_hndl )
+		{
+		  if ( ( Call_get_state( (CALL_HNDL)call_hndl, CALL_AVAILABLE_STATE ) ) &&
+		       ( fleet_nbr == (short)Call_get_value( (CALL_HNDL)call_hndl, CALL_FLEET_NBR ) ) )
+		    ++zone_resp_buf->bkup_zones[cnt][1];
+		} Zone_calls_list_each_end(bck_up_calls_list_hndl)
+		    
+	       zone_resp_buf->bkup_zones[cnt][0] = zone_nbr;
+	       
+	       veh_list_hndl = (ZONE_VEH_LIST_HNDL)Zone_get_value(zone_hndl, ZONE_AVAIL_VEH_LIST);
+	       Zone_veh_list_each_get(veh_list_hndl, veh_hndl)
+		 {
+		   veh_ptr = (struct veh_driv *)veh_hndl;
+		   if ( veh_ptr->t_status.on_break == 1 )
+		     continue;
+		   if ( Vehicle_match_attr( (unsigned char *)&veh_ptr->vehicle_attr, req_veh_attr ) )
+		     {
+		       if ( Vehicle_match_attr( (unsigned char *)&veh_ptr->driver_attr, req_drv_attr ) )
+			 {
+			   if ( veh_ptr->t_status.posted )
+			     {
+			       ++zone_resp_buf->bkup_zones[cnt][2];
+			       if ( pi_tracefile != NULL )
+				 fprintf(pi_tracefile, "%d ", veh_ptr->veh_nbr);
+			     }
+			   if ( veh_ptr->t_status.e_posted )
+			     {
+			       ++zone_resp_buf->bkup_zones[cnt][3];
+			       if ( pi_tracefile != NULL )
+				 fprintf(pi_tracefile, "%d* ", veh_ptr->veh_nbr);
+			     }
+			 }
+		     }
+		 } Zone_veh_list_each_end(veh_list_hndl)
+	       ++cnt;
+	    }
+         }
+      }
+   }
+   
+   if ( pi_tracefile != NULL )
+     {
+       fprintf(pi_tracefile,"\n");
+       fclose(pi_tracefile);
+     }
+   
+   return (SUCCESS);
+}				/* end Zone_pi_get_status */
+
+/********************************************************/
+/* RET_STATUS Zone_send_status(req_ptr)                 */
+/* OP:  send zone status to ui                          */
+/* PRE: none                                            */
+/* POST:  zone status send to ui proc                   */
+/* ERROR: illegal zone                                  */
+/*        error in transmitting msg to ui               */
+/********************************************************/
+
+RET_STATUS
+Zone_send_status(to_msgqid, req_ptr)	/* WAS zone_status */
+     int to_msgqid;
+   struct zone_rqst *req_ptr;	/* pointer to the request buffer */
+{
+   struct zone_resp zone_resp_buf;
+   ZONE_HNDL zone_hndl;
+#ifdef DEBUG
+   if (offset->prattle >= LEVEL8)
+   {
+      sprintf(trace_str, "Zone_send_status :fleet = %c zone = %d\n", req_ptr->fleet, req_ptr->zone_nbr);
+      TRACE(trace_str);
+   }
+#endif
+
+   memset(&zone_resp_buf, NULL, sizeof(struct zone_resp));	/* clear out structure */
+   zone_resp_buf.rec_type = ZONE_REQ;
+   zone_resp_buf.u_prcs_id = req_ptr->u_prcs_id;
+   if (Zone_get_hndl(req_ptr->zone_nbr, Fleet_get_nbr(req_ptr->fleet), &zone_hndl) == FAIL)
+   {
+      if (msgsnd(to_msgqid, (struct msgbuf *) & zone_resp_buf, sizeof(struct zone_resp), IPC_NOWAIT) < 0)
+	ERROR(' ', "", "zone staus not sent");
+      return (FAIL);
+   }
+   if (Zone_get_status(zone_hndl, &zone_resp_buf, (unsigned char *)&req_ptr->veh_attr, (unsigned char *)&req_ptr->drv_attr) == FAIL)
+   {
+      ERROR(req_ptr->fleet, "", "zone_status - cant get zone_status");
+      zone_resp_buf.fleet = '\0';
+      if (msgsnd(to_msgqid, (struct msgbuf *) & zone_resp_buf, sizeof(struct zone_resp), IPC_NOWAIT) < 0)
+	 ERROR(' ', "", "zone staus not sent");
+      return (FAIL);
+
+   }
+   if (msgsnd(to_msgqid, (struct msgbuf *) & zone_resp_buf, sizeof(struct zone_resp), IPC_NOWAIT) < 0)
+   {
+      ERROR(' ', "", "zone staus not sent");
+      return (FAIL);
+   }
+   return (SUCCESS);
+}				/* end Zone_send_status */
+
+RET_STATUS
+Zone_stand_hold( to_msgqid, req_ptr )
+  int to_msgqid;
+struct zone_stand_hold *req_ptr;
+{
+  struct zone_stand_hold zone_hold_buf;
+  ZONE_HNDL zone_hndl;
+  ZONE_VEH_LIST_HNDL veh_list_hndl;
+  VEH_HNDL veh_hndl;
+  VEH      *veh_ptr;
+  VEH_REC  veh_rec;
+  HTTP_HNDL http_hndl;
+  char     query_id[32], *pQuery;
+  BOOLEAN found_it;
+  BACKUP_ZONE backup_zones;
+   ZONE_HNDL backup_zone;  
+  int     fleet_nbr = 0, zone_nbr, i;
+  short   level = 0;
+  
+  if (Zone_get_hndl(req_ptr->zone_nbr, Fleet_get_nbr(req_ptr->fleet), &zone_hndl) == FAIL)
+    {
+      if (msgsnd(to_msgqid, (struct msgbuf *) & zone_hold_buf, sizeof(struct zone_stand_hold), IPC_NOWAIT) < 0)
+	ERROR(' ', "", "zone staus not sent");
+      return (FAIL);
+    }
+
+  Zone_get_info(zone_hndl, ZONE_FLEET_NBR, (HNDL *)(&fleet_nbr));
+  for ( i = 0; i < ZONE_BACKUP_MAX; i++ )
+    backup_zones[i] = 0;
+
+  level = 2;
+  backup_zones[0] = req_ptr->zone_nbr;
+  Zone_get_backup_zone(zone_hndl, level, &backup_zones[1]);
+
+  strcpy( query_id, req_ptr->query_id );
+  memset( &zone_hold_buf, NULL, sizeof(struct zone_stand_hold) );  
+  for ( i = 0; i < ZONE_BACKUP_MAX; i++ )
+    {
+      if ( strlen( zone_hold_buf.veh_tele ) )
+	break;
+      
+      zone_nbr = backup_zones[i];
+      if ( zone_nbr <= 0 || zone_nbr > 999 || zone_nbr == 888 )
+	continue;
+
+      backup_zone = HNDL_ERR;
+      Zone_get_hndl(zone_nbr, fleet_nbr, (ZONE_HNDL *) & backup_zone);
+      if ( backup_zone == HNDL_ERR )
+	continue;
+
+//      	       ( veh_ptr->vehicle_attr.attr26 ) &&
+//	       ( veh_ptr->driver_attr.attr26 ) &&	      
+
+      Zone_get_info( backup_zone, ZONE_AVAIL_VEH_LIST, &veh_list_hndl );
+      Zone_veh_list_each_get( veh_list_hndl, veh_hndl )
+	{
+	  if ( ( veh_hndl != HNDL_NULL ) && ( !Veh_get_state( veh_hndl, VEH_ON_BREAK_STATE ) ) &&
+	       ( !Veh_get_state( veh_hndl, VEH_EPOSTED_STATE ) ) &&
+	       ( Vehicle_is_Valid_Shift2( veh_hndl ) ) &&
+	       ( !Veh_get_state( veh_hndl, VEH_METER_ON_STATE ) ) )
+	    {
+	      veh_ptr = ( VEH * ) veh_hndl;
+	      // First see if we've attempted this query on this vehicle
+	      found_it = FALSE;
+	      Veh_http_list_each_get( veh_ptr->http_list, http_hndl )
+		{
+		  if ( !strcmp( query_id, (char *)http_hndl ) )
+		    found_it = TRUE;
+		} Veh_http_list_each_end(veh_ptr->http_list)
+		    
+		    if ( found_it ) // we've already tried to match to this one
+		      continue;
+	      
+	      // Lookup mobile telephone for selected vehicle
+	      veh_rec.fleet = (char)Veh_get_value( veh_hndl, VEH_FLEET );
+	      veh_rec.nbr = (short)Veh_get_value( veh_hndl, VEH_NBR );
+	      if ( db_read_key( VEHICLE_FILE_ID, &veh_rec, &veh_key2, ISEQUAL ) != SUCCESS )
+		continue;  // no vehicle record found...keep looking
+	      else if ( !strlen( veh_rec.mdt_tele ) )
+		continue;  // vehicle doesn't have a telephone...keep looking
+	      else
+		{
+		  zone_hold_buf.veh_nbr = veh_rec.nbr;
+		  strcpy(zone_hold_buf.veh_tele, veh_rec.mdt_tele);
+		  break;              
+		}
+	    }
+	} Zone_veh_list_each_end(veh_list_hndl)
+
+
+
+    }
+
+  // Now do the same query but ignore the vehicle shift requirement
+  if ( veh_hndl == HNDL_NULL ) //no match yet
+    {
+
+        memset( &zone_hold_buf, NULL, sizeof(struct zone_stand_hold) );  
+	for ( i = 0; i < ZONE_BACKUP_MAX; i++ )
+	  {
+	    if ( strlen( zone_hold_buf.veh_tele ) )
+	      break;
+	    
+	    zone_nbr = backup_zones[i];
+	    if ( zone_nbr <= 0 || zone_nbr > 999 || zone_nbr == 888 )
+	      continue;
+	    
+	    backup_zone = HNDL_ERR;
+	    Zone_get_hndl(zone_nbr, fleet_nbr, (ZONE_HNDL *) & backup_zone);
+	    if ( backup_zone == HNDL_ERR )
+	      continue;
+	    
+
+//	     	     ( veh_ptr->vehicle_attr.attr26 ) &&
+//                     ( veh_ptr->driver_attr.attr26 ) &&
+	    
+	    Zone_get_info( backup_zone, ZONE_AVAIL_VEH_LIST, &veh_list_hndl );
+	    Zone_veh_list_each_get( veh_list_hndl, veh_hndl )
+	      {
+		if ( ( veh_hndl != HNDL_NULL ) && ( !Veh_get_state( veh_hndl, VEH_ON_BREAK_STATE ) ) &&
+		     ( !Veh_get_state( veh_hndl, VEH_EPOSTED_STATE ) ) &&
+		     ( !Veh_get_state( veh_hndl, VEH_METER_ON_STATE ) ) )
+		  {
+		    veh_ptr = ( VEH * ) veh_hndl;
+		    // First see if we've attempted this query on this vehicle
+		    found_it = FALSE;
+		    Veh_http_list_each_get( veh_ptr->http_list, http_hndl )
+		      {
+			if ( !strcmp( query_id, (char *)http_hndl ) )
+			  found_it = TRUE;
+		      } Veh_http_list_each_end(veh_ptr->http_list)
+			  
+			  if ( found_it ) // we've already tried to match to this one
+			    continue;
+		    
+		    // Lookup mobile telephone for selected vehicle
+		    veh_rec.fleet = (char)Veh_get_value( veh_hndl, VEH_FLEET );
+		    veh_rec.nbr = (short)Veh_get_value( veh_hndl, VEH_NBR );
+		    if ( db_read_key( VEHICLE_FILE_ID, &veh_rec, &veh_key2, ISEQUAL ) != SUCCESS )
+		      continue;  // no vehicle record found...keep looking
+		    else if ( !strlen( veh_rec.mdt_tele ) )
+		      continue;  // vehicle doesn't have a telephone...keep looking
+		    else
+		      {
+			zone_hold_buf.veh_nbr = veh_rec.nbr;
+			strcpy(zone_hold_buf.veh_tele, veh_rec.mdt_tele);
+			break;              
+		      }
+		  }
+	      } Zone_veh_list_each_end(veh_list_hndl)
+
+
+
+	  }
+    }
+
+         // Put IN-HTTP selected vehicle in a temporary hold state
+      if ( veh_hndl != HNDL_NULL )
+	{
+	  veh_ptr = ( VEH * )veh_hndl;
+	  
+	  if ( veh_ptr->http_list == HNDL_NULL )
+	    veh_ptr->http_list = (VEH_HTTP_LIST_HNDL)Veh_http_list_create();
+	  
+	  if ( ( pQuery = (char *)malloc( 32 ) ) == NULL )
+	    return( FAIL );  // can't allocate memory
+	  
+	  strcpy( pQuery, query_id );
+	  
+	  Veh_http_list_add( (VEH_HTTP_LIST_HNDL)veh_ptr->http_list, (HTTP_HNDL)pQuery );
+	  
+	  Veh_http_list_each_get( veh_ptr->http_list, http_hndl )
+	    {
+	      printf("Query ID: %s\n", (char *)http_hndl);
+	    } Veh_http_list_each_end(veh_ptr->http_list)
+		
+		}
+      else
+	{
+	  zone_hold_buf.veh_nbr = 0;
+	  strcpy( zone_hold_buf.veh_tele, "0" );
+	}
+      
+      zone_hold_buf.d_prcs_id = req_ptr->u_prcs_id;
+      zone_hold_buf.rec_type = ZONE_STAND_HOLD;
+      zone_hold_buf.u_prcs_id = req_ptr->d_prcs_id;
+      
+      if (msgsnd(to_msgqid, (struct msgbuf *) & zone_hold_buf, sizeof(struct zone_stand_hold), IPC_NOWAIT) < 0)
+	{
+	  ERROR(' ', "", "zone status not sent");
+	  return (FAIL);
+	}
+
+      return (SUCCESS);
+}
+
+RET_STATUS
+Zone_stand_holdV2( to_msgqid, req_ptr )
+  int to_msgqid;
+  struct zone_stand_hold *req_ptr;
+{
+  struct zone_stand_hold zone_hold_buf;
+  ZONE_HNDL zone_hndl;
+  ZONE_VEH_LIST_HNDL veh_list_hndl;
+  VEH_HNDL veh_hndl = HNDL_NULL;
+  VEH      *veh_ptr;
+  VEH_REC  veh_rec;
+  HTTP_HNDL http_hndl;
+  char     query_id[32], *pQuery;
+  BOOLEAN found_it;
+  BACKUP_ZONE backup_zones;
+   ZONE_HNDL backup_zone;  
+  int     fleet_nbr = 0, zone_nbr, i;
+  short   level = 0;
+  
+  if (Zone_get_hndl(req_ptr->zone_nbr, Fleet_get_nbr(req_ptr->fleet), &zone_hndl) == FAIL)
+    {
+      if (msgsnd(to_msgqid, (struct msgbuf *) & zone_hold_buf, sizeof(struct zone_stand_hold), IPC_NOWAIT) < 0)
+	ERROR(' ', "", "zone staus not sent");
+      return (FAIL);
+    }
+
+  Zone_get_info(zone_hndl, ZONE_FLEET_NBR, (HNDL *)(&fleet_nbr));
+  for ( i = 0; i < ZONE_BACKUP_MAX; i++ )
+    backup_zones[i] = 0;
+
+  level = 0;
+  Zone_get_backup_stand_zones(zone_hndl, level, &backup_zones[0], 0);
+  level = 1;
+  for ( i = 0; i < ZONE_BACKUP_MAX; i++ )
+    {
+      if ( backup_zones[i] == 0 )
+	break;
+    }
+  if ( i < ZONE_BACKUP_MAX )
+    Zone_get_backup_stand_zones( zone_hndl, level, &backup_zones[i], i);
+
+  level = 2;
+  for ( i = 0; i < ZONE_BACKUP_MAX; i++ )
+    {
+      if ( backup_zones[i] == 0 )
+	break;
+    }
+  if ( i < ZONE_BACKUP_MAX )
+    Zone_get_backup_stand_zones( zone_hndl, level, &backup_zones[i], i);
+  
+  strcpy( query_id, req_ptr->query_id );
+  memset( &zone_hold_buf, NULL, sizeof(struct zone_stand_hold) );  
+  for ( i = 0; i < ZONE_BACKUP_MAX; i++ )
+    {
+      if ( strlen( zone_hold_buf.veh_tele ) )
+	break;
+      
+      zone_nbr = backup_zones[i];
+      if ( zone_nbr <= 0 || zone_nbr > 999 || zone_nbr == 888 )
+	continue;
+
+      backup_zone = HNDL_ERR;
+      Zone_get_hndl(zone_nbr, fleet_nbr, (ZONE_HNDL *) & backup_zone);
+      if ( backup_zone == HNDL_ERR )
+	continue;
+      
+
+      Zone_get_info( backup_zone, ZONE_AVAIL_VEH_LIST, &veh_list_hndl );
+      Zone_veh_list_each_get( veh_list_hndl, veh_hndl )
+	{
+	  veh_ptr = (VEH *)veh_hndl;
+	  if ( ( veh_hndl != HNDL_NULL ) && ( !Veh_get_state( veh_hndl, VEH_ON_BREAK_STATE ) ) &&
+	       ( !Veh_get_state( veh_hndl, VEH_EPOSTED_STATE ) ) &&
+	       ( Vehicle_is_Valid_Shift2( veh_hndl ) ) &&
+	       ( veh_ptr->vehicle_attr.attr26 ) &&
+	       ( veh_ptr->driver_attr.attr26 ) &&
+	       ( !Veh_get_state( veh_hndl, VEH_METER_ON_STATE ) ) )
+	    {
+	      // First see if we've attempted this query on this vehicle
+	      found_it = FALSE;
+	      Veh_http_list_each_get( veh_ptr->http_list, http_hndl )
+		{
+		  if ( !strcmp( query_id, (char *)http_hndl ) )
+		    found_it = TRUE;
+		} Veh_http_list_each_end(veh_ptr->http_list)
+		    
+		    if ( found_it ) // we've already tried to match to this one
+		      continue;
+	      
+	      // Lookup mobile telephone for selected vehicle
+	      veh_rec.fleet = (char)Veh_get_value( veh_hndl, VEH_FLEET );
+	      veh_rec.nbr = (short)Veh_get_value( veh_hndl, VEH_NBR );
+	      if ( db_read_key( VEHICLE_FILE_ID, &veh_rec, &veh_key2, ISEQUAL ) != SUCCESS )
+		continue;  // no vehicle record found...keep looking
+	      else if ( !strlen( veh_rec.mdt_tele ) )
+		continue;  // vehicle doesn't have a telephone...keep looking
+	      else
+		{
+		  zone_hold_buf.veh_nbr = veh_rec.nbr;
+		  strcpy(zone_hold_buf.veh_tele, veh_rec.mdt_tele);
+		  break;              
+		}
+	    }
+	} Zone_veh_list_each_end(veh_list_hndl)
+
+
+
+    }
+
+  // Now do the same query but ignore the vehicle shift requirement
+  if ( veh_hndl == HNDL_NULL ) //no match yet
+    {
+
+        memset( &zone_hold_buf, NULL, sizeof(struct zone_stand_hold) );  
+	for ( i = 0; i < ZONE_BACKUP_MAX; i++ )
+	  {
+	    if ( strlen( zone_hold_buf.veh_tele ) )
+	      break;
+	    
+	    zone_nbr = backup_zones[i];
+	    if ( zone_nbr <= 0 || zone_nbr > 999 || zone_nbr == 888 )
+	      continue;
+	    
+	    backup_zone = HNDL_ERR;
+	    Zone_get_hndl(zone_nbr, fleet_nbr, (ZONE_HNDL *) & backup_zone);
+	    if ( backup_zone == HNDL_ERR )
+	      continue;
+	    
+	    
+	    Zone_get_info( backup_zone, ZONE_AVAIL_VEH_LIST, &veh_list_hndl );
+	    Zone_veh_list_each_get( veh_list_hndl, veh_hndl )
+	      {
+		if ( ( veh_hndl != HNDL_NULL ) && ( !Veh_get_state( veh_hndl, VEH_ON_BREAK_STATE ) ) &&
+                     ( veh_ptr->vehicle_attr.attr26 ) &&
+                     ( veh_ptr->driver_attr.attr26 ) &&
+		     ( !Veh_get_state( veh_hndl, VEH_EPOSTED_STATE ) ) &&
+		     ( !Veh_get_state( veh_hndl, VEH_METER_ON_STATE ) ) )
+		  {
+		    veh_ptr = ( VEH * ) veh_hndl;
+		    // First see if we've attempted this query on this vehicle
+		    found_it = FALSE;
+		    Veh_http_list_each_get( veh_ptr->http_list, http_hndl )
+		      {
+			if ( !strcmp( query_id, (char *)http_hndl ) )
+			  found_it = TRUE;
+		      } Veh_http_list_each_end(veh_ptr->http_list)
+			  
+			  if ( found_it ) // we've already tried to match to this one
+			    continue;
+		    
+		    // Lookup mobile telephone for selected vehicle
+		    veh_rec.fleet = (char)Veh_get_value( veh_hndl, VEH_FLEET );
+		    veh_rec.nbr = (short)Veh_get_value( veh_hndl, VEH_NBR );
+		    if ( db_read_key( VEHICLE_FILE_ID, &veh_rec, &veh_key2, ISEQUAL ) != SUCCESS )
+		      continue;  // no vehicle record found...keep looking
+		    else if ( !strlen( veh_rec.mdt_tele ) )
+		      continue;  // vehicle doesn't have a telephone...keep looking
+		    else
+		      {
+			zone_hold_buf.veh_nbr = veh_rec.nbr;
+			strcpy(zone_hold_buf.veh_tele, veh_rec.mdt_tele);
+			break;              
+		      }
+		  }
+	      } Zone_veh_list_each_end(veh_list_hndl)
+
+
+
+	  }
+    }
+
+         // Put IN-HTTP selected vehicle in a temporary hold state
+      if ( veh_hndl != HNDL_NULL )
+	{
+	  veh_ptr = ( VEH * )veh_hndl;
+	  
+	  if ( veh_ptr->http_list == HNDL_NULL )
+	    veh_ptr->http_list = (VEH_HTTP_LIST_HNDL)Veh_http_list_create();
+	  
+	  if ( ( pQuery = (char *)malloc( 32 ) ) == NULL )
+	    return( FAIL );  // can't allocate memory
+	  
+	  strcpy( pQuery, query_id );
+	  
+	  Veh_http_list_add( (VEH_HTTP_LIST_HNDL)veh_ptr->http_list, (HTTP_HNDL)pQuery );
+	  
+	  Veh_http_list_each_get( veh_ptr->http_list, http_hndl )
+	    {
+	      printf("Query ID: %s\n", (char *)http_hndl);
+	    } Veh_http_list_each_end(veh_ptr->http_list)
+		
+		}
+      else
+	{
+	  zone_hold_buf.veh_nbr = 0;
+	  strcpy( zone_hold_buf.veh_tele, "0" );
+	}
+      
+      zone_hold_buf.d_prcs_id = req_ptr->u_prcs_id;
+      zone_hold_buf.rec_type = ZONE_STAND_HOLDv2;
+      zone_hold_buf.u_prcs_id = req_ptr->d_prcs_id;
+      
+      if (msgsnd(to_msgqid, (struct msgbuf *) & zone_hold_buf, sizeof(struct zone_stand_hold), IPC_NOWAIT) < 0)
+	{
+	  ERROR(' ', "", "zone status not sent");
+	  return (FAIL);
+	}
+
+      return (SUCCESS);
+}
+  
+RET_STATUS
+Zone_send_pi_status(to_msgqid, req_ptr)
+     int to_msgqid;
+   struct zone_rqst *req_ptr;	/* pointer to the request buffer */
+   
+{
+   struct zone_resp zone_resp_buf;
+   ZONE_HNDL zone_hndl;
+
+   memset(&zone_resp_buf, NULL, sizeof(struct zone_resp));	/* clear out structure */
+   zone_resp_buf.rec_type = ZONE_REQ;
+   zone_resp_buf.u_prcs_id = req_ptr->u_prcs_id;
+   if (Zone_get_hndl(req_ptr->zone_nbr, Fleet_get_nbr(req_ptr->fleet), &zone_hndl) == FAIL)
+   {
+      if (msgsnd(to_msgqid, (struct msgbuf *) & zone_resp_buf, sizeof(struct zone_resp), IPC_NOWAIT) < 0)
+	ERROR(' ', "", "zone staus not sent");
+      return (FAIL);
+   }
+   if (Zone_pi_get_status(zone_hndl, &zone_resp_buf, (unsigned char *)&req_ptr->veh_attr, (unsigned char *)&req_ptr->drv_attr) == FAIL)
+   {
+      ERROR(req_ptr->fleet, "", "zone_status - cant get zone_status");
+      zone_resp_buf.fleet = '\0';
+      if (msgsnd(to_msgqid, (struct msgbuf *) & zone_resp_buf, sizeof(struct zone_resp), IPC_NOWAIT) < 0)
+	 ERROR(' ', "", "zone staus not sent");
+      return (FAIL);
+
+   }
+   if (msgsnd(to_msgqid, (struct msgbuf *) & zone_resp_buf, sizeof(struct zone_resp), IPC_NOWAIT) < 0)
+   {
+      ERROR(' ', "", "zone staus not sent");
+      return (FAIL);
+   }
+   return (SUCCESS);
+}				/* end Zone_send_pi_status */
+
+
+RET_STATUS
+Zone_check_epost_calls(zone_hndl, epost_veh_hndl)
+   ZONE_HNDL zone_hndl;
+   VEH_HNDL  epost_veh_hndl;
+{
+   short adjust;
+   struct zones *zone_ptr;
+   ZONE_CALLS_LIST_HNDL calls_list_hndl;
+   CALL_HNDL call_hndl;
+   VEH_HNDL  veh_hndl;
+   ZONE_VEH_LIST_HNDL veh_list_hndl;
+   int   calls_held_epost = 0, veh_epost = 0;
+
+   zone_ptr = (struct zones *) zone_hndl;
+   if ( fleet[zone_ptr->fleet_nbr]->e_post_action != YES )
+     return (SUCCESS);
+
+   if ( epost_veh_hndl != HNDL_NULL )
+     {
+       // First, clear any previously held call from the vehicle
+       if ( Veh_get_value( epost_veh_hndl, VEH_HELD_EPOST_CALL ) != HNDL_NULL )
+	 {
+	   Call_add_history((CALL_HNDL)Veh_get_value(epost_veh_hndl, VEH_HELD_EPOST_CALL), epost_veh_hndl, RELEASE_EPOST,
+			    0, 0L, 0);
+	   Call_reset_state((CALL_HNDL)Veh_get_value(epost_veh_hndl, VEH_HELD_EPOST_CALL), CALL_WAIT_EPOST_STATE, NULL);
+	   Veh_set_value( epost_veh_hndl, VEH_HELD_EPOST_CALL, HNDL_NULL );
+	   
+	 }
+       calls_list_hndl = (ZONE_CALLS_LIST_HNDL) Zone_get_value( zone_hndl, ZONE_AVAIL_CALLS_LIST );
+       Zone_calls_list_each_get( calls_list_hndl, call_hndl )
+	 {
+	   if ( !Call_get_state(call_hndl, CALL_OFFERED_STATE) )
+	     {
+	       if ( ( !Call_get_state(call_hndl, CALL_WAIT_EPOST_STATE) ) &&
+		    ( Dispatcher_epost_vehicle_call_compatible( call_hndl, epost_veh_hndl, zone_hndl ) ) )
+		 {
+		   Call_set_state(call_hndl, CALL_WAIT_EPOST_STATE, NULL);
+		   Veh_set_value( epost_veh_hndl, VEH_HELD_EPOST_CALL, (HNDL)call_hndl );
+		   Call_add_history((CALL_HNDL) call_hndl, epost_veh_hndl, HELD_EPOST, 0, 0L, 0);		   
+		   break;
+		 }
+	     }
+	 } Zone_calls_list_each_end(calls_list_hndl)
+     }
+   return(SUCCESS);
+}
+
+Zone_check_epost_vehs( zone_hndl, call_hndl )
+     ZONE_HNDL  zone_hndl;
+     CALL_HNDL  call_hndl;
+{
+   struct zones *zone_ptr;
+   VEH_HNDL  veh_hndl;
+   ZONE_VEH_LIST_HNDL veh_list_hndl;
+   
+   zone_ptr = (struct zones *) zone_hndl;
+   if ( fleet[zone_ptr->fleet_nbr]->e_post_action != YES )
+     return (SUCCESS);  
+
+   // want to look for EPOST vehicles to assign the call 
+
+   veh_list_hndl = (ZONE_VEH_LIST_HNDL) Zone_get_value( zone_hndl, ZONE_AVAIL_VEH_LIST );
+   Zone_veh_list_each_get( veh_list_hndl, veh_hndl )
+     {
+       if ( ( Veh_get_state( veh_hndl, VEH_EPOSTED_STATE ) ) &&
+	    ( Veh_get_value( veh_hndl, VEH_HELD_EPOST_CALL ) == HNDL_NULL ) &&
+	    ( Dispatcher_epost_vehicle_call_compatible( call_hndl, veh_hndl, zone_hndl ) ) )
+	 {
+	   Call_set_state(call_hndl, CALL_WAIT_EPOST_STATE, NULL);
+	   Veh_set_value( veh_hndl, VEH_HELD_EPOST_CALL, (HNDL) call_hndl );
+	   Call_add_history((CALL_HNDL) call_hndl, veh_hndl, HELD_EPOST, 0, 0L, 0);
+	   break;
+	 }
+     } Zone_veh_list_each_end(veh_list_hndl)
+ return(SUCCESS);	 
+}
+
+
+
+/*******************************************************/
+/* RET_STATUS Zone_release_epost(zone_hndl)            */
+/* OP: relase one of the calls in zone from epost wait */
+/* PRE: zone exists                                    */
+/* POST: if CALL_WAIT_WPOST_STATE set for call in list */
+/*          CALL_WAIT_EPOST_STATE reset                */
+/* ERROR:                                              */
+/*******************************************************/
+
+RET_STATUS
+Zone_release_epost(zone_hndl, epost_veh_hndl)
+   ZONE_HNDL zone_hndl;
+   VEH_HNDL  epost_veh_hndl;
+{
+   struct calls *call_ptr;
+   ZONE_CALLS_LIST_HNDL calls_list_hndl;
+   CALL_HNDL call_hndl;
+   ZONE         *zone_ptr;
+
+   if ( zone_hndl == HNDL_NULL )
+     return( FAIL );
+
+   if ( epost_veh_hndl == HNDL_NULL )
+     return( FAIL );
+
+   zone_ptr = (ZONE *)zone_hndl;
+
+   /* Do we hold calls for EPOST? */
+   if ( fleet[zone_ptr->fleet_nbr]->e_post_action != YES )
+     return (SUCCESS);
+   
+   calls_list_hndl = (ZONE_CALLS_LIST_HNDL) Zone_get_value(zone_hndl, ZONE_AVAIL_CALLS_LIST);
+   Zone_calls_list_each_get(calls_list_hndl, call_hndl)
+   {
+     if ( (Call_get_state(call_hndl, CALL_WAIT_EPOST_STATE)) &&
+	  (Veh_get_value(epost_veh_hndl, VEH_HELD_EPOST_CALL) == call_hndl ) )
+       {
+	 Call_reset_state(call_hndl, CALL_WAIT_EPOST_STATE, NULL);
+	 Veh_set_value(epost_veh_hndl, VEH_HELD_EPOST_CALL, HNDL_NULL);
+	 Call_add_history(call_hndl, epost_veh_hndl, RELEASE_EPOST,
+			  0, 0L, 0);
+	 break;
+      }
+   } Zone_calls_list_each_end(calls_list_hndl)
+      return (SUCCESS);
+}				/* end Zone_release_epost(zone_hndl) */
+
+/* DEBUG */
+
+/*******************************************************/
+/* RET_STATUS Zone_get_backup_zone(znhndl, lev, bzones)*/
+/* OP: get the backups zones for the given zone        */
+/* PRE: zone and backup level exists                   */
+/* POST: if CALL_WAIT_WPOST_STATE set for call in list */
+/* ERROR: bad level or backup pointer (ZONE_BAD_ARGS)  */
+/*******************************************************/
+
+RET_STATUS
+Zone_get_backup_zone(
+		     ZONE_HNDL zone_hndl,
+		     short  level,
+		     short  *backup_zones)
+{
+   ZONE *zone;
+
+   zone = (ZONE *) zone_hndl;
+
+   if ((level < 0) || (level >= LEVEL_MAX) || (backup_zones == NULL))
+      return (ZONE_BAD_ARGS);
+
+   memcpy((char *) backup_zones, (char *) zone->level_number[level].bck_up_zone,
+	  (sizeof(short) * BCK_UP_MAX));
+
+   return (SUCCESS);
+}				/* end Zone_get_backup_zone */
+
+RET_STATUS
+Zone_get_backup_stand_zones( ZONE_HNDL zone_hndl, short level, short *backup_zones, int zone_count )
+{
+  ZONE *zone;
+  zone = (ZONE *)zone_hndl;
+
+  if ( ( level < 0 ) || ( level >= LEVEL_MAX ) || ( backup_zones == NULL ) )
+    return (ZONE_BAD_ARGS);
+  
+   memcpy((char *) backup_zones, (char *) zone->level_number[level].bck_up_zone,
+	  (sizeof(short) * (BCK_UP_MAX-zone_count)));
+
+   return (SUCCESS);
+}				/* end Zone_get_backup_zone */
+  
+
+Zone_get_all_inverse_backup_zones(
+				  ZONE_HNDL zone_hndl,
+				  short level,
+				  short inverse_backup_zones[])
+{
+  int i,j,k = 0;
+   ZONE *zone;
+  
+  zone = (ZONE *) zone_hndl;
+
+  if ((level < 0) || (level >= LEVEL_MAX) || (inverse_backup_zones == NULL))
+    return (ZONE_BAD_ARGS);
+
+  k = 0;
+  for ( j = 0; j <= level; j++ )
+    {
+      for ( i = 0; i < INV_BCK_UP_MAX; i++ )
+	{
+	  if ( zone->level_number[j].inv_bck_up_zone[i] != 0 )
+	    {
+	      inverse_backup_zones[k] = zone->level_number[j].inv_bck_up_zone[i];
+	      k++;
+	    }
+	}
+    }
+  return;
+}
+
+RET_STATUS
+Zone_get_inverse_backup_zone(
+			     ZONE_HNDL zone_hndl,
+			     short level,
+			     short inverse_backup_zones[])
+{
+  int i = 0;
+   ZONE *zone;
+
+   zone = (ZONE *) zone_hndl;
+
+   if ((level < 0) || (level >= LEVEL_MAX) || (inverse_backup_zones == NULL))
+      return (ZONE_BAD_ARGS);
+
+   for ( i = 0; i < INV_BCK_UP_MAX; i++ )
+     {
+       if ( zone->level_number[level].inv_bck_up_zone[i] != 0 )
+	 inverse_backup_zones[i] = zone->level_number[level].inv_bck_up_zone[i];
+     }
+
+#ifdef FOO
+   memcpy((char *) inverse_backup_zones, (char *) zone->level_number[level].inv_bck_up_zone,
+	  (sizeof(short) * BCK_UP_MAX));
+#endif
+
+   return (SUCCESS);
+}				/* end Zone_get_inverse_backup_zone */
+
+
+#ifdef DEBUGx
+int
+Zone_dump_veh_list(zone_nbr, fleet_nbr)
+   short zone_nbr;
+   short fleet_nbr;
+{
+   VEH_HNDL veh_hndl;
+   struct veh_driv *veh_ptr;
+   ZONE_VEH_LIST_HNDL veh_list_hndl;
+   ZONE_HNDL zone_hndl;
+
+   (void) Zone_get_hndl(zone_nbr, fleet_nbr, &zone_hndl);
+   veh_list_hndl = (ZONE_VEH_LIST_HNDL) Zone_get_value(zone_hndl, ZONE_AVAIL_VEH_LIST);
+
+   printf("Zone %d:", zone_nbr);
+   Zone_veh_list_each_get(veh_list_hndl, veh_hndl)
+   {
+      veh_ptr = (struct veh_driv *) veh_hndl;
+      printf(" %d(%c)", veh_ptr->veh_nbr, veh_ptr->q_priority);
+   }
+   Zone_veh_list_each_end(veh_list_hndl)
+      printf("\n");
+   return (1);
+}				/* end Zone_dump_veh_list */
+#endif

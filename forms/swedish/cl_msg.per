@@ -1,0 +1,43 @@
+{
+|***********************************************************************
+|                 RCS INFO
+|
+|  @(#)  $RCSfile: cl_msg.per,v $
+|  @(#)  $Revision: 1.3 $
+|  @(#)  $Date: 1998/06/18 17:29:38 $
+|  @(#)  $Author: taxiadm $
+|  @(#)  $Source: /taxi-scan/taxi_proj/cvs/taxi-scan/src/forms/swedish/cl_msg.per,v $
+|
+|  Copyright (c) 1994 - MobileSoft Consulting, Inc. Woodinville WA
+|
+|**********************************************************************/
+|ident "@(#) head:$RCSfile: cl_msg.per,v $	$Revision: 1.3 $"
+}
+
+database mads
+
+screen
+{
+\gp---------------- Best{llningsmeddelande - Fri text ----------------------------q\g
+\g|\gDevice		[f01]	           					    \g|\g	
+\g|\gAck/Nak		[a]			        			    \g|\g
+\g|\g			[f02                                              ]         \g|\g
+\g|\g			[f02                                              ]         \g|\g
+\g|\g			[f02                                              ]         \g|\g
+\g|\g			[f02                                              ]         \g|\g
+\g|\g			[f02                                              ]         \g|\g
+\gb------------------------------------------------------------------------------d\g
+}
+
+tables
+call_hnd
+
+attributes
+f01 = call_hnd.cmsg_device;
+a = call_hnd.cmsg_ack;
+f02 = call_hnd.cmsg_msg;
+
+instructions
+	delimiters "  "
+	screen record sCallMsg ( cmsg_device, cmsg_ack, cmsg_msg )
+end

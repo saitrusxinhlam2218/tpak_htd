@@ -1,0 +1,172 @@
+$ /****************************************************************************
+$ *                                                                           *
+$ *                           S C C S   I N F O                               *
+$ *                                                                           *
+$ * @(#)  dr_maint.MSF.fin; Rel: 10.1.3.2; Get date: 8/9/95 at 11:08:03
+$ * @(#)  Last delta: 8/9/95 at 11:07:54
+$ * @(#)  SCCS File: /taxi/sccs/s.dr_maint.MSF.fin
+$ *                                                                           *
+$ * Copyright (c) 1990 - MDI Seattle                                          *
+$ *                                                                           *
+$ *****************************************************************************/
+$ #ident "@(#) head:dr_maint.MSF.fin/usr/taxi/enh_src/src/msf/fin	10.1.3.2"
+
+$ /*
+$  * Message file for PROGRAM: dr_maint
+$  * CATALOG:   dr_maint.cat
+$  * MNEMONICS: dr_m_strdefs.h
+$  */
+
+$quote "
+$delset 1
+$set 1
+ 
+$ /*    NOTE TO THE TRANSLATOR                          */ 
+$ /*    Quoted text will be followed by a maximum string length if the  */ 
+$ /*    text length is different than the number of chars in the string.*/ 
+$ /*    If no string length is entered default to the current number of */
+$ /*    characters.  A comment about the string is also included where  */
+$ /*    necessary.                                                      */ 
+1	"Väärä yhtiön TN"		/* 70		*/
+2	"On annettava arvo"		/* 70		*/
+3	"00.00.00"
+4	"00.00"
+5	"00.00 "
+6	" "				/* translate to a space because we are using 24 hour time       */	
+7	"On annettava arvo"		/* 70		*/
+8	"Yhtiön tunniste"
+9	"Ajajan TN (1-99999)"
+10	"Ajajan luokitus 1-Tavall, 2-Tilap"
+11	"Ajajan nimi"
+12	"Ajajan kotiosoite"
+13	"Ajajan kotipaikka"
+14	"Ajajan postinumero"
+15	"   "
+16	"Ajajan kotinumero"
+17	"Ajajan ajokortin tunnus"
+18	"Ajajan taksin rekisterinro"
+19	"Merkintä ajajan luvalle 1"
+20	"Merkintä ajajan luvalle 2"
+21	"Merkintä ajajan luvalle 3"
+22	"Merkintä ajajan luvalle 4"
+23	"Merkintä ajajan luvalle 5"
+24	"Merkintä ajajan luvalle 6"
+25	"Merkintä ajajan luvalle 7"
+26	"Merkintä ajajan luvalle 8"
+27	"Merkintä ajajan luvalle 9"
+28	"Merkintä ajajan luvalle 10"
+29	"Merkintä ajajan luvalle 11"
+30	"Merkintä ajajan luvalle 12"
+31	"Merkintä ajajan luvalle 13"
+32	"Merkintä ajajan luvalle 14"
+33	"Merkintä ajajan luvalle 15"
+34	"Merkintä ajajan luvalle 16"
+35	"Merkintä ajajan ominaisuudelle 1"
+36	"Merkintä ajajan ominaisuudelle 2"
+37	"Merkintä ajajan ominaisuudelle 3"
+38	"Merkintä ajajan ominaisuudelle 4"
+39	"Merkintä ajajan ominaisuudelle 5"
+40	"Merkintä ajajan ominaisuudelle 6"
+41	"Merkintä ajajan ominaisuudelle 7"
+42	"Merkintä ajajan ominaisuudelle 8"
+43	"Ajajan ajokiellon pvm"
+44	"Ajajan ajokiellon kellonaika"
+45	"Pvm jolloin ajaja palaa palvelukseen"
+46	"Aika jolloin ajaja palaa palvelukseen"
+47	"Syy ajajan ajokieltoon"
+48	"Onko tällä ajajalla este matkustaja-ajoihin"
+49	"Onko tällä ajajalla este tavara-ajoihin"
+50	"Onko tällä ajajalla este x-tyypin ajoihin"
+51	"Ajajalla lähetettävä kieltoviesti"
+52	"Muita ajajakommentteja"
+53	"Ajajan ajokortinuusintapvm"
+54	"Ajajan taksiluvan uusintapvm"
+55	"Edell. pvm jolloin ajaja teki hälytyksen"
+56	"Edell. aika jolloin ajaja teki hälytyksen"
+57	"Edell. pvm jolloin ajajan hätätila hoidettiin"
+58	"Edell. aika jolloin ajajan hätätila hoidettiin"
+59	"Edell. pvm jolloin ajaja alkoi"
+60	"Edell. aika jolloin ajaja alkoi"
+61	"Ed. pvm jolloin ajaja lopetti"
+62	"Ed. aika jolloin ajaja lopetti"
+63	"Edell. auto jota ajaja ajoi"
+64	"Edell. ajo jonka ajaja ajoi"
+65	"Ajajan ruutuun tulojen määrä edellisellä vuorolla"
+66	"Ajajan ehdollisten ruutuun tulojen määrä edellisellä vuorolla"
+67	"Ajajan ruutuun tulojen määrä matkalla edellisellä vuorolla"
+68	"Ajajan Eihyvks-ajojen määrä edellisellä vuorolla"
+69	"Ajajan antamien hylkäysten määrä edellisellä vuorolla"
+70	"Ajajan antamien kutsujen määrä edellisellä vuorolla"
+71	"Ajajan saamien Eihyvks määrä edellisellä vuorolla"
+72	"Ajajan saamien käsipystyjen määrä edellisellä vuorolla"
+73	"Ajajan antamien ajopyyntöjen määrä edellisellä vuorolla"
+74	"Ajajan antamien puhepyyntöjen määrä edellisellä vuorolla"
+75	"Ajajan välittäjälle lähettämien viestien määrä edellisellä vuorolla"
+76	"Ajajan ottamien taukojen määrä edellisellä vuorolla"
+77	"Tälle ajajalle käsivälitystilausten määrä edellisellä vuorolla"
+78	"Tälle ajajalle välitettyjen tilausten määrä edellisellä vuorolla"
+79	"Ajajan yrittämien lyhyiden mittarien määrä edellisellä vuorolla"
+80	"Myöhäisten mittarien määrä tämän ajajan edellisellä vuorolla"
+81	"Ajajan kyselyiden määrä edellisellä vuorolla"
+82	"Tietuetta ei löydy, LISÄÄ ensin!"		/* 70	*/
+83	"Yhtiötiedoston avausvirhe"			/* 70	*/
+84	"Yhtiötiedoston sulkemisvirhe"		/* 70	*/
+85	"On annettava arvo"			/* 70   */
+86	"Paina ESC suorittaaksesi"			/* 70   */
+87	"Ajajan TN on jo olemassa"		/* 70   */
+88	"Ajajatiedoston lukuvirhe"		/* 70   */
+89	"Yhtiö"
+90	"TN"					/* 5	*/
+91	"Luokk"
+92	"Nimi"					/* 20	*/
+93	"Katuosoite"				/* 20	*/
+94	"Postipaikka"					/* 15	*/
+95	"Postinumero"					/* 6	*/
+96	"            "
+97	"Puhelin kot."					/* 10	*/
+98	"Matkapuhelin"
+99	"Taksilupa"
+100	"Luvat"
+101	"Ominaisuud"
+102	"Kieltopvm"
+103	"Paluupvm"
+104	"Kiellon syy"
+105	"M"					/* use constant for `P`assenger from language.h	*/
+106	"T"					/* use constant for 'D'elivery from language.h  */
+107	"X"					/* use constant for Type 'X' from language.h	*/
+108	"Kieltosanoma"			/* 30	*/
+109	"Ajajakommentit"			/* 30	*/
+110	"Rek.uus."
+111	"Taksiluvan uus"
+112	"Edell. häl.pvm."
+113	"Hätätila hoidettu"
+114	"Aloitus"				/* 13	*/
+115	"Lopetus"				/* 13	*/
+116	"Auto"
+117	"Ajo hoidettu"
+118	"RUUT"
+119	"ERUUT"
+120	"MRUUT"
+121	"EIHYVKS"
+122	"HYLK"
+123	"KUTSU"
+124	"JULLI"
+125	"KPST"
+126	"TRJ"
+127	"PUHE"
+128	"VIES"
+129	"TAUKO"
+130	"Välitk"
+131	"Ajoja"
+132	"Lyhyt M"				/* Short Meter	*/
+133	"Myöh M"				/* Late meter	8/
+134	"Kysely"
+135	"00.00.00"
+136	"00.00"
+137	" "					/* translate to a space because we are using 24 hour time	*/
+138	" "					/* translate to a space because we are using 24 hour time       */
+139	"("					/* translate to an opening parenthesis '('		        */
+140	")"					/* translate to a closing parenthesis ')'		        */
+141    "Väärä valinta - ole hyvä anna (L/U) lisätäksesi tai aloittaaksesi uuden"
+142    "ID Serial Nbr"
+

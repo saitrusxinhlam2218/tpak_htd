@@ -1,0 +1,36 @@
+{
+|***********************************************************************
+|                 RCS INFO
+|
+|  @(#)  $RCSfile: localty.per,v $
+|  @(#)  $Revision: 1.4 $
+|  @(#)  $Date: 1998/01/08 19:35:42 $
+|  @(#)  $Author: taxiadm $
+|  @(#)  $Source: /taxi-scan/taxi_proj/cvs/taxi-scan/src/forms/danish/localty.per,v $
+|
+|  Copyright (c) 1994 - MobileSoft Consulting, Inc. Woodinville WA
+|
+|**********************************************************************/
+|ident "@(#) head:$RCSfile: localty.per,v $	$Revision: 1.4 $"
+}
+
+database mads
+screen
+{
+						VEDLIGEH. AF LOKALITETS-FIL
+					
+Forkort. Egentlig  Fulde navn                  Underdist   Postnr.
+[a0 ]    [a1 ]     [f000                     ]   [f001 ]   [f002    ]
+}
+end
+tables
+localty
+attributes
+a0 = localty.lo_code,UPSHIFT,REQUIRED,NOUPDATE,COMMENTS="Lokalitetskode eller forkortelse (f eks HI for HILLERØD)";
+a1 = localty.lo_act_city_code,UPSHIFT,REQUIRED,COMMENTS="Egentlige lokalitetskode (f eks HIL for HILLERØD)";
+f000 = localty.lo_full_name,UPSHIFT,COMMENTS="Lokalitets fulde navn";
+f001 = localty.lo_subzone,UPSHIFT,COMMENTS="Angiv underdist. hvis individ. adresser ikke noteres for denne lokalitet";
+f002 = localty.lo_zip,RIGHT,COMMENTS="Angiv postnr. hvis individ. adresser ikke noteres for denne lokalitet";
+instructions
+   delimiters "()";
+end

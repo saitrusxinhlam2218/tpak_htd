@@ -1,0 +1,164 @@
+$ /****************************************************************************
+$ *                                                                           *
+$ *                           S C C S   I N F O                               *
+$ *                                                                           *
+$ * @(#)  zn_maint.MSF.fin; Rel: 10.1.3.1; Get date: 5/18/95 at 10:20:33
+$ * @(#)  Last delta: 12/5/94 at 10:19:11
+$ * @(#)  SCCS File: /taxi/sccs/s.zn_maint.MSF.fin
+$ *                                                                           *
+$ * Copyright (c) 1990 - MDI Seattle                                          *
+$ *                                                                           *
+$ *****************************************************************************/
+$ #ident "@(#) head:zn_maint.MSF.fin/usr/users/brian/enh_src/src/msf/fin	10.1.3.1"
+$ /*
+$  * Message file for PROGRAM: zn_maint
+$  * CATALOG:   zn_maint.cat
+$  * MNEMONICS: zn_m_strdefs.h
+$  */
+
+$quote "
+$delset 1
+$set 1
+
+$ /*    NOTE TO THE TRANSLATOR                          */
+$ /*    Quoted text will be followed by a maximum string length if the  */
+$ /*    text length is different than the number of chars in the string.*/
+$ /*    If no string length is entered default to the current number of */
+$ /*    characters.  A comment about the string is also included where  */
+$ /*    necessary.                                                      */
+
+1	"Väärä yhtiön TN"				/* 60	*/
+2	"On annettava yhtiön TN"			/* 60   */
+3	"Väärä ruutunumero"				/* 60   */
+4	"Tietuetta ei löydy, LISÄÄ ensin"			/* 60   */
+5	"On annettava arvo"				/* 60   */
+6	"Paina ESC suorittaaksesi"				/* 60   */
+7	"Tietue lisätty"					/* 60   */
+8	"Löytyi sama hakemisto, syötä uudelleen! "	/* 60   */
+9	" Yhtiön tunniste"				/* 60   */
+10	" Tälle yhtiölle kuuluva ruudun numero (1 - 999, superruutu 0 - 32 000) "
+11	" Sanallinen kuvaus tälle ruudulle "		/* 60, translate to description for this zone   */
+12	" Ruututyyppi (1 = asema, 2 = ruutu, 3 = superruutu, 4 = erikoisvararuutu) "		/* 100   */
+13	" K- uusi kuvaus. E- tulosta sanallinen kuvaus "	/* 60, leave the word 'english' out of translation */
+14	" Superruudun numero (0 - 32 000) "		/* 60	*/
+15	" K/E "						/* 60, check constant we are using for Y and N   */
+16	" Minuuttimäärä jonka tilaus pidetään välittäjällä "	/* 60   */
+17	" Minuuttimäärä ennen ennakkotilausten määräaikaa "	/* 60   */
+18	" Aloitusaika. (24 tunnin muoto : 0 - 2359 ) "	/* 60   */
+19	" Lopetusaika. (24 tunnin muoto : 0 - 2359 ) "		/* 60   */
+20	" Sallitaanko matkalla kirjaukset tähän ruutuun.(K/E) "	/* 60, check constant we are using for Y and N   */
+21	" Vaaditaanko osoitetut luvat tälle ruudulle. (K/E) "		/* 60, check constant we are using for Y and N   */
+22	" 0 - Oletus on yhtiö. 1 - Tilap. ruututyyp. muk. 2 - Järj./ruutu, ajall/auto. 3 - Järj./ruutu, autojonojärj. "
+23	" Minuuttiluku määrittelee jakson "		/* 60   */	
+24	" Hylkäyssakko: 0 - Oletus on yhtiö. 1 - Ei sallittu. 2 - Ei sakkoa. 3 - jonon loppuun "
+25	" Ruudun varmistus yhtiön TN:sta ja ruudun numerosta "		/* 60   */
+26	"Yhtiö"
+27	"Ruutu"
+28	"Kuvaus"					/* 18	*/
+29	"Tyyp"						/* noun	*/
+30	"Superruutukohta"
+31	"Numero"
+32	"Tarjous hvks"
+33	"Ylin välitysaika"
+34	"Noudon ennakko"
+35	"Seisonta Alku"
+36	"Loppu"
+37	"MRUUTU hyvks"
+38	"Noutoluvat"
+39	"Taso"
+40	"Alg"
+41	"Varausaika"
+42	"Hylk sakko"
+43	"Ruutu1"
+44	"Ruutu2"
+45	"Ruutu3"
+46	"Ruutu4"
+47	"Ruutu5"
+48	"Ruutu6"
+49	"Ruutu7"
+50	"Ruutu8"
+51	"Perus"
+52	"Löytyi sama hakemisto, syötä uudelleen! "		/* 60   */
+53	"On annettava ruudun numero"				/* 60   */
+54	"Ruututiedoston hoidon viestihaku epäonnistui "			/* 60   */
+55	"Ruututiedoston hoidon viestiläh epäonnistui "			/* 60   */
+56	"KYSELY: ESC=suorita. CTRL-X=keskeytä. "		/* 40	*/
+57     "Query Next Previous Add Update Remove Output Exit"
+58	"RUUTUTIEDOSTON HOITO"
+59	"PÄIVITÄ: ESC=suorita, CTRL-X=keskeytä."		/* 40	*/
+60	"Anna tulostustiedosto (oletus zone_scr.out): "		/* do not translate filename zone_scr.out	*/
+61	"zone_scr.out"						/* do not translate	*/
+62	"Tulostustiedosto %s  Lisää/Uusi (oletus: U) ?"	/* do not translate %s.  A filename will be 	*/
+$				/* substituted for %s so position it appropriately	*/
+63      "("                                                     /* translate to opening parenthesis (   */
+64      ")"                                                     /* translate to closing parenthesis )   */
+65     " Ennakkotilausmäärä joka sallitaan yhdelle ajanjaksolle (0 on rajaton)" /* max 80 */
+66     "Ennakkotilauksia" 
+67 "Väärä valinta - ole hyvä anna (L/U) lisätäksesi tai aloittaaksesi uuden"
+68	" The MDT query screen the zone appears on. Ä1, 2, or 3Å"
+69	"MDT Screen"
+70     "MRUUTU Ennakko"
+71     " Suurin sallittu aika välillä KOHTA-VAPAA-RUUDUSSA ja RUUTUUN.  (Minuuteissa) "
+72	"Break"
+73	" Maximum allowable break time. (In Minutes)"
+74	"Sekuntimäärä joka ajajalla on aikaa painaa HYVKS-näppäintä. (Sekunneissa)"
+75	"HYVKS"
+76	"Check for available taxis in zone prior to call entry (Y/N) "
+77     "Check Taxis"
+78	"Y coordinate for zone center on map"
+79     "X coordinate for zone center on map"
+80     "Radius of circle representing zone on map"
+81     "Customer radius for algorithm calculations (meters)"
+82	"Time Call periods"
+83	"Förbest. Int"
+84     "Short NoTrip"
+85     " How far into the future should we go to select time calls.(number of 5 minute slots)"
+86     " Time interval required between time calls (when restricted)"
+87	" Minimum number of minutes required for no show request"
+88     "FRI aika"
+89     " Aika minuuteissa, minka jalkeen tilaus siirtyy FRI tilaan"
+
+$ /*
+$  * Strings from the file zn_msg.h
+$  */
+
+$delset 2
+$set 2
+
+$       /* NOTE TO TRANSLATOR -- The maximum length for all of the following strings is 40 characters.  */
+
+1	"Syöttö on lopetettava painamalla ESC"
+2	"Virhe kentässä"
+3	"Ensimmäisen tietueen lukuvirhe"
+4	"Yhtiötiedoston avausvirhe"
+5	"Lupatiedoston avausvirhe"
+6	"Ei rivejä jotka täyttävät ehdot"
+7	"Ruututiedoston lukuvirhe"
+8	"Ei rivejä nykyisessä listassa"
+9	"Menosuunnassa ei ole enää rivejä"
+10	"Seuraavan lukuvirhe"
+11	"Edellisen lukuvirhe"
+12	"Tietueen lisäysvirhe"
+13	"Tietueen lukitusvirhe"
+14	"Ruututiedoston päivitysvirhe"
+15	"Tietue päivitetty"
+16	"Nykyisen tietueen vapautusvirhe"
+17	"Ruututiedoston poistovirhe"
+18	"Tulostetiedoston avausvirhe"
+19	"Ruututiedoston hoidon viestihaku epäonnistui"
+20	"Ruututiedoston hoidon viestiläh epäonnistui"
+21	"KYSELY: ESC=suorita, CTRL-X=keskeytä."		/* Escape key, interrupt key	*/
+22	"LISÄÄ: ESC=suorita, CTRL-X=keskeytä. "			/* Escape key, interrupt key    */
+23       "Query Next Previous Add Update Remove Output Exit "    /* count chars. Number must remain the same or less       */
+24	"RUUTUTIEDOSTON HOITO"					/* count chars. Number must remain the same or less	*/
+25	"PÄIVITÄ: ESC=suorita, CTRL-X=keskeytä"		/* Escape key, interrupt key    */
+26	"Poista (K/E)? "					/* check constant for Y and N	*/
+27	"Anna tulostustied.(oletus zn_scr.out):"		/* do not translate filename zn_scr.out	*/
+28	"Tulostustied. %s Lisää/Uusi (oletus: U)? "		/* do not translate %s.  A filename will be 	*/
+$				/* substituted for %s so position accordingly	*/
+29	"Jäljitystiedoston avausvirhe"
+30	"Ruututiedoston avausvirhe"
+31	"Ruututiedoston sulkemisvirhe"
+32	"Jäljitystiedoston sulkemisvirhe"
+33	"Käyttäjän nimeä ei löydy"
+34	"Ei voi liittää jaettua muistia"

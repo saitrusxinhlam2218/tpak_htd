@@ -1,0 +1,29 @@
+$ /****************************************************************************
+$ *                                                                           *
+$ *                           S C C S   I N F O                               *
+$ *                                                                           *
+$ * @(#)  da_shift.MSF.fin; Rel: 10.1.3.1; Get date: 5/18/95 at 10:18:04
+$ * @(#)  Last delta: 12/5/94 at 11:02:40
+$ * @(#)  SCCS File: /taxi/sccs/s.da_shift.MSF.fin
+$ *                                                                           *
+$ * Copyright (c) 1990 - MDI Seattle                                          *
+$ *                                                                           *
+$ *****************************************************************************/
+$ #ident "@(#) head:da_shift.MSF.fin/usr/users/brian/enh_src/src/msf/fin	10.1.3.1"
+
+$quote "
+$delset 9
+$set 9
+
+1	"Tilaustiedoston AVAUSVIRHE"
+2	"Historiatiedoston AVAUSVIRHE"
+3	"Vuorotiedoston AVAUSVIRHE"
+4	"Vuorojen historian AVAUSVIRHE"
+5	"%sTietueita tallennetaan yhtiölle %c \n"
+6	"vuoro: kirjoittamisvirhe"
+7	"vuorohistoria: kirjoittamisvirhe"
+8	"Vuorotiedoston SULKEMISVIRHE"
+9	"Vuorojen historian SULKEMISVIRHE"
+10	"Tilaustiedoston SULKEMISVIRHE"
+11	"Tilausten historian SULKEMISVIRHE"
+12	"%sTILA: Tilaustietueiden kopiointi on valmis.\n"

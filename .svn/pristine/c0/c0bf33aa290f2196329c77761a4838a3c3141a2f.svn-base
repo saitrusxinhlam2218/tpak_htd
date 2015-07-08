@@ -1,0 +1,47 @@
+$ /****************************************************************************
+$ *                                                                           *
+$ *                           S C C S   I N F O                               *
+$ *                                                                           *
+$ * @(#)  da_zones.MSF.fin; Rel: 10.1.3.1; Get date: 5/18/95 at 10:18:15
+$ * @(#)  Last delta: 12/5/94 at 11:04:45
+$ * @(#)  SCCS File: /taxi/sccs/s.da_zones.MSF.fin
+$ *                                                                           *
+$ * Copyright (c) 1990 - MDI Seattle                                          *
+$ *                                                                           *
+$ *****************************************************************************/
+$ #ident "@(#) head:da_zones.MSF.fin/usr/users/brian/enh_src/src/msf/fin	10.1.3.1"
+
+$quote "
+$set 8
+
+1	"Tiedoston AVAUSVIRHE %d iserrno %d\n"
+2	"TILAUSJAKAUTUMA ruudun ja määräajan mukaan"
+3	"TILAUSJAKAUTUMA tilaustyypin ja ruudun mukaan"
+4	"KESKIM VÄLITYSAIKA ruudun ja ajan mukaan (minuutteja)"
+5	"KESKIM NOUTOAIKA ruudun ja ajan mukaan (minuutteja)"
+6	"KESKIM AJOAIKA ruudun ja ajan mukaan (minuutteja)"
+7	"    TILAUSJAK ruudun ja määräajan mukaan"
+8	"    TILAUSJAK tilaustyypin ja ruudun muk."
+9	"%5s YHT             KESKIYÖ                        AAMU                          KESKIP                       ILTAPÄIVÄ        \n"
+10	"RUUT  TILAUKS  10   11   12    1    2    3    4    5    6    7    8    9   10   11   12    1    2    3    4    5    6    7    8    9\n"
+11	"%5s                 KESKIYÖ                       AAMU                          KESKIP                       ILTAPÄIVÄ        \n"
+12	"RUUDUN KESKIM  10   11   12    1    2    3    4    5    6    7    8    9   10   11   12    1    2    3    4    5    6    7    8    9\n"
+13	"RUUTU   Matkus.+AB+ Tavara-ajo+Xtra+  Herät  ==> Tilauks yht  Pros. kaikista   <== Nyt tilauks+Ennakotilauk+Jatk.tilauks.\n"
+14	"Yht:  "
+15	"Prosent: 100"
+16	"Autot käytössä:"
+17	"Prosent:    "
+18	"Yht:  "
+19	"Prosent:"
+20	"Yht:   %4.1f"
+21	"Yht:    0,0"
+22	"SUPER"
+23	"Superruudun muunnostaulukko:\n"
+24	"Superruutu     ................................ Tämän superruudun ruudut ...........................\n"
+25	"\n\nTulostuslaskurit:\n"
+26	"Ruutu %3d: tunnit 0..23 ja yht.\n"
+27	"\n\nTulostuslaskurit:\n"
+28	"\n\nLaajenn. tyypin tietojen tulostus:\n"
+29	"Ruutu %3d: kohta 0..4 ja yht.\n"
+30	"\n\nTulostus ruud:superkrt:\n"
+31	"\n\nSuperruud. tulostuslajit.\n"

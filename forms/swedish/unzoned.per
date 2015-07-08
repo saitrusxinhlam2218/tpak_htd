@@ -1,0 +1,40 @@
+database mads
+screen
+{
+						Fil för ej zonade adresser underhåll
+
+Best.nr            Best.datum    Best.tid   Inskr. av   Zon nr   Zonad av   Best.typ  Kokortsnr
+[f000         ]    [f001     ]   [f002  ]   [f003]      [f04]    [f005]     [a]       [f007              ]
+
+Gatunr                      Namn                                    Kommun
+       [f006  ]   [a6]      [f008                ] [a0 ]    [a1]    [a5 ]
+
+Korsning                    Namn                                   
+                  [a2]      [f010                ] [a3 ]    [a4]   
+}
+end
+tables
+unzoned
+attributes
+f000 = unzoned.uz_call_nbr,RIGHT,REQUIRED,NOUPDATE,COMMENTS="Beställningsnummer som denna adress associeras med";
+f001 = unzoned.uz_call_date,COMMENTS="Datum då beställningen gjordes";
+f002 = unzoned.uz_call_time,RIGHT,COMMENTS="Klockslag beställningen gjordes";
+f003 = unzoned.uz_entered_by,RIGHT,COMMENTS="Användar ID för den best.mottagare som skrev in betällningen";
+f04  = unzoned.uz_zoned_as,RIGHT,COMMENTS="Zonnummer som tilldelats denna adress";
+f005 = unzoned.uz_zoned_by,RIGHT,COMMENTS="Användar ID för den person som zonade denna best";
+a = unzoned.uz_type_of_service,UPSHIFT,COMMENTS="Beställningstyp (t ex 'P'assagerare)";
+f007 = unzoned.uz_charge_nbr,COMMENTS="Kontokortsnummer";
+f006 = unzoned.uz_street_nbr,RIGHT,COMMENTS="Gatunummer";
+a6 = unzoned.uz_pre_dir1,UPSHIFT,COMMENTS="Fältet stöds inte";
+f008 = unzoned.uz_str_place_name1,UPSHIFT,REQUIRED,COMMENTS="Gatunamn, platsnamn, alias osv.";
+a0 = unzoned.uz_str_type1,UPSHIFT,REQUIRED,COMMENTS="Fältet stöds inte";
+a1 = unzoned.uz_post_dir1,UPSHIFT,COMMENTS="Fältet stöds inte" ;
+a5 = unzoned.uz_city,UPSHIFT,COMMENTS="Kommunnamn";
+a2 = unzoned.uz_pre_dir2,UPSHIFT,COMMENTS="Fältet stöds inte";
+f010 = unzoned.uz_str_place_name2,UPSHIFT,COMMENTS="Korsning gatunamn";
+a3 = unzoned.uz_str_type2,UPSHIFT,COMMENTS="Fältet stöds inte";
+a4 = unzoned.uz_post_dir2,UPSHIFT,COMMENTS="Fältet stöds inte";
+end
+instructions
+   delimiters "()";
+end

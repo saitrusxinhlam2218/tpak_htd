@@ -1,0 +1,84 @@
+{
+|***********************************************************************
+|                 RCS INFO
+|
+|  @(#)  $RCSfile: stats.per,v $
+|  @(#)  $Revision: 1.2 $
+|  @(#)  $Date: 1999/03/19 21:26:55 $
+|  @(#)  $Author: taxiadm $
+|  @(#)  $Source: /taxi-scan/taxi_proj/cvs/taxi-scan/src/forms/english/stats.per,v $
+|
+|  Copyright (c) 1994 - MobileSoft Consulting, Inc. Woodinville WA
+|
+|**********************************************************************/
+|ident "@(#) head:$RCSfile: stats.per,v $	$Revision: 1.2 $"
+}
+database mads
+screen
+{
+						STATISTICS FILE DISPLAY
+Fleet      Date        Sort Date                        Day Start        Day End
+[a]        [f000    ]  [f001                ]           [f002]           [f003]  
+
+                                     USER STATISTICS CALLS
+Passenger     Delivery      Type"X"      Wake-up       Killed        Frequency     Callbacks     
+[f004]        [f005]        [f006]       [f007]        [f008]        [f009  ]       [f010]
+Unzoned       Cancelled     Messages     Assigns       Overrides     Exceptions    Hours-worked    
+[f011]        [f012]        [f013]       [f014]        [f015]        [f016 ]       [f017  ]
+
+
+				     DRIVER STATISTICS 
+Call Acpt       Books       Cbooks          Ebooks         Flags                Bids           No-acpt        Rejects               
+[f018]          [f019 ]     [f020 ]         [f021]         [f022]               [f023]         [f024]         [f025]
+Short M         Late M      Callbacks       Callbacks M    Callbacks No-trip    Callouts       No-trip        Breaks     
+[f026]          [f027]      [f028]          [f029]         [f030]               [f031]         [f032]         [f033]
+Talks           Messages    Emergencies     Sign-in        Sign-out             Hours-Worked   Ave-Cabs
+[f034]          [f035]      [f036]          [f037]         [f038]               [f039  ]       [f040  ]
+}
+end
+tables
+stats
+attributes
+a = stats.sa_fleet,NOUPDATE,UPSHIFT,REQUIRED,COMMENTS="Fleet ID";
+f000 = stats.sa_date,NOUPDATE,REQUIRED,COMMENTS="The date these statistics apply to. In MM/DD/YY Format";
+f001 = stats.sa_sort_date,RIGHT,COMMENTS="C version of the above date for sort purposes";
+f002 = stats.sa_day_start,RIGHT,COMMENTS="Beginning of the day in 24 hour format";
+f003 = stats.sa_day_end,RIGHT,COMMENTS="End of the day in 24 hour format";
+f004 = stats.sa_u_pass_calls,RIGHT,COMMENTS="Number of passenger calls entered into the system by users";
+f005 = stats.sa_u_del_calls,RIGHT,COMMENTS="Number of delivery calls entered into the system by users";
+f006 = stats.sa_u_typex_calls,RIGHT,COMMENTS="Number of type X calls entered into the system by user";
+f007 = stats.sa_u_wakeup_calls,RIGHT,COMMENTS="Number of wakeup calls entered into the system by users";
+f008 = stats.sa_u_killed_calls,RIGHT,COMMENTS="Number of calls killed by the users";
+f009 = stats.sa_u_call_rate,RIGHT,COMMENTS="Number of calls per hour entering the system";
+f010 = stats.sa_u_callbacks,RIGHT,COMMENTS="Number of callbacks processed by the users";
+f011 = stats.sa_u_unzoned,RIGHT,COMMENTS="Number of unzoned calls entered into the system";
+f012 = stats.sa_u_cancelled,RIGHT,COMMENTS="Number of calls cancelled by the users";
+f013 = stats.sa_u_messages,RIGHT,COMMENTS="Number of messages sent by users to other users or drivers";
+f014 = stats.sa_u_assigns,RIGHT,COMMENTS="Number of calls that were unassigned and were assigned by dispatcher to cab";
+f015 = stats.sa_u_overrides,RIGHT,COMMENTS="Number of calls that were dispatched to a specific cab by system";
+f016 = stats.sa_u_exceptions,RIGHT,COMMENTS="Total number of exceptions handled";
+f017 = stats.sa_u_hours_worked,RIGHT,COMMENTS="Total hours the system was in use by all the users";
+f018 = stats.sa_d_calls,RIGHT,COMMENTS="Number of calls ACPTed by driver";
+f019 = stats.sa_d_posts,RIGHT,COMMENTS="Number of book requests processed by the system";
+f020 = stats.sa_d_cposts,RIGHT,COMMENTS="Number of conditional book requests processed by the system";
+f021 = stats.sa_d_eposts,RIGHT,COMMENTS="Number of enroute book requests processed by the system";
+f022 = stats.sa_d_flags,RIGHT,COMMENTS="Number of flags requests processed by the system";
+f023 = stats.sa_d_bids,RIGHT,COMMENTS="Number of bid responses processed by the system";
+f024 = stats.sa_d_no_accepts,RIGHT,COMMENTS="Number of no_accepts processed by the system";
+f025 = stats.sa_d_rejects,RIGHT,COMMENTS="Number of reject requests processed by the system";
+f026 = stats.sa_d_short_meters,RIGHT,COMMENTS="Number of short meters caused by the drivers";
+f027 = stats.sa_d_late_meters,RIGHT,COMMENTS="Number of late meter caused by the driver";
+f028 = stats.sa_d_callbacks,RIGHT,COMMENTS="Number of callbacks caused by the drivers";
+f029 = stats.sa_d_callb_mon,RIGHT,COMMENTS="Number of callbacks caused by drivers who turn on their meter";
+f030 = stats.sa_d_callb_noshow,RIGHT,COMMENTS="Number of callbacks caused by drivers who claimed a NOSHOW";
+f031 = stats.sa_d_callouts,RIGHT,COMMENTS="Number of callout requests processed by the system";
+f032 = stats.sa_d_noshows,RIGHT,COMMENTS="Number of no show requests processed by the system";
+f033 = stats.sa_d_breaks,RIGHT,COMMENTS="Number of break requests processed by the system";
+f034 = stats.sa_d_talks,RIGHT,COMMENTS="Number of request to talk requests processed by the system";
+f035 = stats.sa_d_messages,RIGHT,COMMENTS="Number of messages sent by drivers to dispatchers";
+f036 = stats.sa_d_emergencies,RIGHT,COMMENTS="Number of emergency requests processed by the system";
+f037 = stats.sa_d_sign_ins,RIGHT,COMMENTS="Number of sign in requests processed by the system";
+f038 = stats.sa_d_sign_outs,RIGHT,COMMENTS="Number of sign out requests processed by the system";
+f039 = stats.sa_d_hours_worked,RIGHT,COMMENTS="Number of hours worked by all the drivers";
+f040 = stats.sa_d_avg_act_cabs,RIGHT,COMMENTS="Average number of vehicle  during an hour";
+end

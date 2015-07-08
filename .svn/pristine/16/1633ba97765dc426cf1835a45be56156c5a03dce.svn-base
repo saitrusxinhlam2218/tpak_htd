@@ -1,0 +1,18 @@
+$ /****************************************************************************
+$ *                                                                           *
+$ *                           S C C S   I N F O                               *
+$ *                                                                           *
+$ * @(#)  au_message.MSF.fin; Rel: 10.1.3.1; Get date: 5/18/95 at 10:17:05
+$ * @(#)  Last delta: 12/5/94 at 11:00:03
+$ * @(#)  SCCS File: /taxi/sccs/s.au_message.MSF.fin
+$ *                                                                           *
+$ * Copyright (c) 1990 - MDI Seattle                                          *
+$ *                                                                           *
+$ *****************************************************************************/
+$ #ident "@(#) head:au_message.MSF.f/usr/users/brian/enh_src/src/msf/fin	10.1.3.1"
+
+$quote "
+$set 1
+
+1	"Tiedoston AVAUSVIRHE %s iserrno %d\n"
+2	"Tiedoston SULKEMISVIRHE %d iserrno %d\n"

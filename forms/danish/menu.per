@@ -1,0 +1,40 @@
+{
+|***********************************************************************
+|                 RCS INFO
+|
+|  @(#)  $RCSfile: menu.per,v $
+|  @(#)  $Revision: 1.4 $
+|  @(#)  $Date: 1998/01/08 19:35:45 $
+|  @(#)  $Author: taxiadm $
+|  @(#)  $Source: /taxi-scan/taxi_proj/cvs/taxi-scan/src/forms/danish/menu.per,v $
+|
+|  Copyright (c) 1994 - MobileSoft Consulting, Inc. Woodinville WA
+|
+|**********************************************************************/
+|ident "@(#) head:$RCSfile: menu.per,v $	$Revision: 1.4 $"
+}
+database mads
+screen
+{
+						VEDLIGEHOLD. AF MENU-FIL
+
+Nummer        Kommando  Sidste menupkt.  Type    Beskrivelse
+[f000    ]    [abc]     [a]               [b]     [f002                             ]
+
+UNIX kommando                               Foreg. skærm
+[f003                                    ]  [c]
+}
+end
+tables
+menu
+attributes
+f000 = menu.mf_nbr,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Sekventielt nummer tildelt for ret til krydshenvisning";
+abc = menu.mf_command,RIGHT,REQUIRED,NOUPDATE,COMMENTS="En kommandostreng tildelt hvert menupunkt";
+a = menu.mf_last_menu_item,include=(J,N),UPSHIFT,COMMENTS="J/N. Om dette menupunkt er det sidste på menuen eller ej";
+b = menu.mf_type,UPSHIFT,include=(E,M,I),COMMENTS="Et menupunkt ka være en 'M'enu, 'S'kærm,'K'ommando";
+f002 = menu.mf_desc,COMMENTS="Den egentlige tegnbeskrivelse som vil blive vist på menuen";
+f003 = menu.mf_unix_string,COMMENTS="UNIX kommando som skal eksekveres hvis menupunkt er external executable (K)";
+c = menu.mf_prev_scr_flag,UPSHIFT,COMMENTS="Foregående skærm flag";
+instructions
+   delimiters "()";
+end

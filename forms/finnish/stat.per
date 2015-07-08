@@ -1,0 +1,36 @@
+database mads
+screen
+{
+Yhtiˆ     Tunnus      K‰ytt‰j‰tiedot/alku       K‰ytt‰j‰tiedot/loppu
+[a]       [f000]      [f001    ]                [f002    ]  
+
+Tilaukset  Matkustaja   Tavara-ajot  "X"-tyypit   Her‰tykset   Lopetukset Kyselyt     
+           [f007]       [f008]       [f009]       [f010]       [f011]     [f012]
+
+Tilaukset  Ruuduttamat  Peruutukset  Viestit      K‰sinv‰lit    Muutokset     Poikkeukset
+           [f013]       [f014]       [f015]       [f016]        [f018]        [f019]
+}
+end
+tables
+statusr
+attributes
+a = statusr.su_fleet,REQUIRED,UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="Yhtiˆn tunnusnumero";
+f000 = statusr.su_user_id,REQUIRED,RIGHT,NOENTRY,NOUPDATE,COMMENTS="K‰ytt‰j‰n tunnusnumero";
+f001 = statusr.su_from_dt_tm,NOENTRY,NOUPDATE,RIGHT,COMMENTS="Aikajakson alku"; 
+f002 = statusr.su_to_dt_tm,NOENTRY,NOUPDATE,RIGHT,COMMENTS="Aikajakson loppu"; 
+f007 = statusr.su_pass_calls,NOENTRY,NOUPDATE,RIGHT,COMMENTS="Matkustaja-ajojen m‰‰r‰";
+f008 = statusr.su_del_calls,NOENTRY,NOUPDATE,RIGHT,COMMENTS="Tavara-ajojen m‰‰r‰";
+f009 = statusr.su_typex_calls,NOENTRY,NOUPDATE,RIGHT,COMMENTS="'X'-ajojen m‰‰r‰";
+f010 = statusr.su_wkup_calls,NOENTRY,NOUPDATE,RIGHT,COMMENTS="Her‰tystilausten m‰‰r‰";
+f011 = statusr.su_killed,NOENTRY,NOUPDATE,RIGHT,COMMENTS="K‰ytt‰j‰n lopettamien tilausten m‰‰r‰ t‰ll‰ aikav‰lill‰";
+f012 = statusr.su_callbacks,NOENTRY,NOUPDATE,RIGHT,COMMENTS="K‰ytt‰j‰n k‰sittelemien kyselyjen m‰‰r‰ t‰ll‰ aikav‰lill‰";
+f013 = statusr.su_unzoned,NOENTRY,NOUPDATE,RIGHT,COMMENTS="K‰ytt‰j‰n kirjaamien ruuduttamattomien tilausten m‰‰r‰ t‰ll‰ aikav‰lill‰";
+f014 = statusr.su_cancelled,NOENTRY,NOUPDATE,RIGHT,COMMENTS="K‰ytt‰j‰n peruuttamien tilausten m‰‰r‰ t‰ll‰ ajanjaksolla";
+f015 = statusr.su_messages,NOENTRY,NOUPDATE,RIGHT,COMMENTS="K‰ytt‰j‰n l‰hett‰mien viestien m‰‰r‰ t‰ll‰ ajanjaksolla";
+f016 = statusr.su_man_assigns,NOENTRY,NOUPDATE,RIGHT,COMMENTS="K‰ytt‰j‰n k‰siv‰litysajojen m‰‰r‰ t‰ll‰ ajanjaksolla";
+f018 = statusr.su_overrides,NOENTRY,NOUPDATE,RIGHT,COMMENTS="Keskuksen pakolla v‰litt‰mien ajojen m‰‰r‰";
+f019 = statusr.su_exceptions,NOENTRY,NOUPDATE,RIGHT,COMMENTS="Keskuksen k‰sittelemien poikkeusten m‰‰r‰";
+end
+instructions
+   delimiters "()";
+end

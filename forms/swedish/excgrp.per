@@ -1,0 +1,18 @@
+database mads
+screen
+{
+						Fil för undantagsgrupp underhåll
+
+Nummer    Namn
+[f0]      [f001   ]
+}
+end
+tables
+excgrp
+attributes
+f0   = excgrp.eg_nbr,RIGHT,include=(1 to 11),REQUIRED,NOENTRY,NOUPDATE,COMMENTS="Ett permanent nummer (1-11)";
+f001 = excgrp.eg_name,UPSHIFT,COMMENTS="Namn på undantagsgrupp";
+end
+instructions
+   delimiters "()";
+end

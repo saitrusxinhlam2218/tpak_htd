@@ -1,0 +1,127 @@
+[Uppercase]
+BOOL=TRUE
+
+[RemoveSpaces]
+BOOL=FALSE
+
+[Characters]
+BOOL=FALSE
+list={
+        'É'
+        'E'
+}
+list={
+        'Ü'
+        'U'
+}
+
+[Begins]
+BOOL=TRUE
+list={
+	"GAMLA "
+        "GL "
+}
+list={
+	"LILLA "
+        "L "
+}
+list={
+	"NORRA "
+        "N "
+}
+list={
+	"SÖDRA "
+        "S "
+}
+list={
+	"SANKT "
+        "S-T"
+}
+list={
+	"STORA "
+        "ST"
+}
+list={
+	"VÄSTRA "
+        "V"
+}
+list={
+	"ÖSTRA "
+        "Ö"
+}
+
+[Ends]
+BOOL=TRUE
+list={
+	"GATAN"
+        "G"
+}
+list={
+        "VÄGEN"
+        "V"
+}
+list={
+	"GRÄND"
+        "GR"
+}
+list={
+	"GATA"
+        "G"
+}
+list={
+	"VÄG"
+        "V"
+}
+[Contains]
+BOOL=TRUE
+list={
+	" STORA "
+        " ST "
+}
+list={
+	" LILLA "
+        " L "
+}
+list={
+	" NORRA "
+        " N "
+}
+list={
+	" SÖDRA "
+        " S "
+}
+list={
+	" VÄSTRA "
+        " V "
+}
+list={
+	" ÖSTRA "
+        " Ö "
+}
+list={
+	" GAMLA "
+        " G "
+}
+list={
+	" SANKT "
+        " S-T "
+}
+
+[Translations]
+BOOL=FALSE
+list={
+	"ADOLF FREDRIKS KYRKOGATA"
+        "ADOLF FREDR KYRKOG"
+}
+list={
+	"ALSELLVÄGEN"
+        "AHLSELLVÄGEN"
+}
+
+[Commune]
+BOOL=FALSE
+list={
+	"ADILSVÄGEN"
+        "JÄR"
+        "ÖÅK"
+}

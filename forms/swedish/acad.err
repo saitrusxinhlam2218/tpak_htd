@@ -1,0 +1,51 @@
+{
+|***********************************************************************
+|                 RCS INFO
+|
+|  @(#)  $RCSfile: acad.per,v $
+|  @(#)  $Revision: 1.2 $
+|  @(#)  $Date: 1998/06/18 17:29:25 $
+|  @(#)  $Author: taxiadm $
+|  @(#)  $Source: /taxi-scan/taxi_proj/cvs/taxi-scan/src/forms/swedish/acad.per,v $
+|
+|  Copyright (c) 1994 - MobileSoft Consulting, Inc. Woodinville WA
+|
+|**********************************************************************/
+|ident "@(#) head:$RCSfile: acad.per,v $	$Revision: 1.2 $"
+}
+database mads
+screen
+{
+Konto
+    Bilpark Kontonr		 Account Address Nbr
+    [a]     [f000              ] [ b]
+Hämtningsadress
+    Gatunr                 Gatunamn                               Uppgång  Kommun        Postnummer         
+    [f002  ]               [f003                ]                 [f004 ]  [a3 ]         [f005 ]
+Kontakt
+    Telefonnummer 
+    [f007              ]
+}
+end
+tables
+acad
+fleet
+account
+attributes
+a = acad.acad_fleet,REQUIRED, UPSHIFT, COMMENTS="Bilpark ID", LOOKUP JOINING * fleet.fl_id;
+f000 = acad.acad_account,REQUIRED,UPSHIFT,COMMENTS="Ett konto eller kreditkortsnummer", PICTURE="##################", LOOKUP JOINING * account.ac_nbr;
+b = acad.acad_index,REQUIRED, COMMENTS="Number assigned to this Account Address";
+f002 = acad.acad_st_nbr,RIGHT,COMMENTS="Kundens gatunummer";
+f003 = acad.acad_st_name,UPSHIFT,COMMENTS="Gatunamn";
+f004 = acad.acad_apartment, UPSHIFT, COMMENTS="Uppgång";
+a3 = acad.acad_city_name,UPSHIFT,COMMENTS="Kommun";
+f005 = acad.acad_zip_code,COMMENTS="Postnummer";
+f007 = acad.acad_phone_nbr, UPSHIFT, COMMENTS="Telefonnummer";
+end
+instructions
+	delimiters "()";
+end
+#
+#      The column "ac_nbr" is a dominant column but it is not indexed.
+# Performance will be much improved by creating an index on the column.
+# See error number -2920. 

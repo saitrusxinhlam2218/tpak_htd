@@ -1,0 +1,25 @@
+database mads
+screen
+{
+						Subzonfil underhåll
+
+Nummer      Bilpark A   Bilpark B   Bilpark C   Bilpark D   Bilpark E   Bilpark F   Bilpark G   Bilpark H
+[f000 ]     [f01]       [f02]       [f03]       [f04]       [f05]       [f06]       [f07]       [f08]
+}
+end
+tables
+subzone
+attributes
+f000 = subzone.sz_nbr,UPSHIFT,REQUIRED,COMMENTS="Ett unikt subzonsnummer (kan innefatta bokstäver)";
+f01  = subzone.sz_zone_fleet1,RIGHT,COMMENTS="Motsvarande zonnummer för bilpark 0";
+f02  = subzone.sz_zone_fleet2,RIGHT,COMMENTS="Motsvarande zonnummer för bilpark 1";
+f03  = subzone.sz_zone_fleet3,RIGHT,COMMENTS="Motsvarande zonnummer för bilpark 2";
+f04  = subzone.sz_zone_fleet4,RIGHT,COMMENTS="Motsvarande zonnummer för bilpark 3";
+f05  = subzone.sz_zone_fleet5,RIGHT,COMMENTS="Motsvarande zonnummer för bilpark 4";
+f06  = subzone.sz_zone_fleet6,RIGHT,COMMENTS="Motsvarande zonnummer för bilpark 5";
+f07  = subzone.sz_zone_fleet7,RIGHT,COMMENTS="Motsvarande zonnummer för bilpark 6";
+f08  = subzone.sz_zone_fleet8,RIGHT,COMMENTS="Motsvarande zonnummer för bilpark 7";
+end
+instructions
+   delimiters "()";
+end

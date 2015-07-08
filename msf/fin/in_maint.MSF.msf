@@ -1,0 +1,134 @@
+$ /****************************************************************************
+$ *                                                                           *
+$ *                           S C C S   I N F O                               *
+$ *                                                                           *
+$ * @(#)  in_maint.MSF.fin; Rel: 10.1.3.1; Get date: 5/18/95 at 10:19:28
+$ * @(#)  Last delta: 12/5/94 at 10:30:16
+$ * @(#)  SCCS File: /taxi/sccs/s.in_maint.MSF.fin
+$ *                                                                           *
+$ * Copyright (c) 1990 - MDI Seattle                                          *
+$ *                                                                           *
+$ *****************************************************************************/
+$ #ident "@(#) head:in_maint.MSF.fin/usr/users/brian/enh_src/src/msf/fin	10.1.3.1"
+
+$ /*
+$  * Message file for PROGRAM: in_maint
+$  * CATALOG:   in_maint.cat
+$  * MNEMONICS: in_m_strdefs.h
+$  */
+
+$quote "
+$delset 1
+$set 1
+
+$ /*    NOTE TO THE TRANSLATOR                          */
+$ /*    Quoted text will be followed by a maximum string length if the  */
+$ /*    text length is different than the number of chars in the string.*/
+$ /*    If no string length is entered default to the current number of */
+$ /*    characters.  A comment about the string is also included where  */
+$ /*    necessary.                                                      */
+1	"On annettava arvo"				/* 50	*/
+2	"Virhe kentässä"				/* 50   */
+3	"Tietuetta ei löydy, LISÄÄ ensin!"			/* 50   */
+4	"Risteystiedoston lukuvirhe"			/* 50   */
+5	"Katu 1 hakem"
+6	"              "
+7	"Nimi"						/* 15	*/
+8	"Tyyppi"
+9	"              "
+10	"Katu 2 hakem"
+11	"Postinro"
+12	"Alaruutu"
+13	"Kunta"
+14	"X-koord"
+15	"Y-koord"
+16	"Krtsivuviite"
+17	"Krtviitelohko"
+18	"Huomautuksia"					/* 20	*/
+19	"W"						/* do not translate	*/
+20	"E"						/* do not translate     */
+21	"N"						/* do not translate     */
+22	"S"                                             /* do not translate     */
+23	"NW"                                            /* do not translate     */
+24	"NE"                                            /* do not translate     */
+25	"SW"                                            /* do not translate     */
+26	"SE"                                            /* do not translate     */
+27	" Hakemisto1 kadunnimitiedostosta"			/* 40	*/
+28	"              "			/* 40   */
+29	"Risteyksen katunimi"			/* 40   */
+30	"Risteyksen katutyyppi"			/* 40   */
+31	"              "			/* 40   */
+32	"Risteyksen postinumero"				/* 40   */
+33	"Risteyksen alaruutu"				/* 40   */
+34	"Risteyksen alue"				/* 40   */
+35	"Risteyksen X-koordinaatti"		/* 40   */
+36	"Risteyksen Y-koordinaatti"		/* 40   */
+37	"Karttasivun viitenumero"			/* 40   */
+38	"Karttalohkon kuvaus"				/* 40   */
+39	"Risteyspaikan selitys"		/* 40   */
+40	"C-isam-virhe numero ="				/* C - Indexed structure access method	*/
+41	"Unix-virhe numero ="
+42	"("						/* translate to open parenthesis (	*/
+43	")"						/* translate to close parenthesis )	*/
+44 "Väärä valinta - ole hyvä anna (L/U) lisätäksesi tai aloittaaksesi uuden"
+45	"Street name is not in database"
+46	"Street type is not in database"
+47	"Subzone is not in database"
+48	"City is not in database"
+49	"Must enter a number"
+50	"Must enter a number for index"
+51	"Street name 1 not in database"
+52	"Street name 2 not in database"
+53	"Previous and Next not allowed when querying by two indexes or street names"
+54	"Record added"
+55	"Can search only by indexes OR by street names"
+56	"No matching index for given street name and type"
+
+
+$ /*
+$  * Strings extracted from in_msg.h
+$  */
+
+$delset 2
+$set 2
+
+$ 	/* NOTE TO TRANSLATOR -- The maximum length for all of the following strings is 40 characters.	*/
+1	"Syöttö on lopetettava painamalla ESC"
+2	"Virhe kentässä"
+3	"Ei voi lukea rist.tied. ensim. tietuetta"
+4	"Ei rivejä jotka täyttävät ehdot"
+5	"Ei voi lukea risteystiedostoa"
+6	"Nykyisessä listassa ei ole rivejä"
+7	"Menosuunnassa ei ole enää rivejä"
+8	"Ei voi lukea seur. rist.tied. tietuetta"
+9	"Ei voi lukea ed. risteystied. tietuetta"
+10	"Ei voi lisätä uutta tiet. rist.tdstoon"
+11	"Ei voi lukita nykyistä tietuetta"
+12	"Ei voi päivittää tiet. rist.tiedostossa"
+13	"Tietue on päivitetty"
+14	"Ei voi päästää nykyistä tietuetta"
+15	"Ei voi poistaa tietuetta rist.tiedststa"
+16	"Ei voi avata tulostustiedostoa"
+17	"Rist.tiedoston hoidon viestihaku epäonnistui"
+18	"Rist.tiedoston hoidon viestiläh epäonnistui"
+19	"KYSELY: ESC=suorita, CTRL-X=keskeytä."		/* ESCAPE key, INTERRUPT key	*/
+20	"LISÄÄ: ESC=suorita, CTRL-X=keskeytä. "			/* ESCAPE key, INTERRUPT key    */
+21       "Query Next Previous Add Update Remove Output Exit "    /* count chars. # must remain the same or less */
+22	"RISTEYSTIEDOSTON HOITO"			/* count chars. # must remain the same or less */
+23	"PÄIVITÄ: ESC=suorita, CTRL-X=keskeytä. "		/* ESCAPE key, INTERRUPT key    */
+24	"Poista (K/E)? "				/* use constant for Y and N	*/
+25	"Anna tulostustied.(oletus in_scr.out): "	/* do not translate filename in_scr.out	*/
+26	"Tulostustied. %s Lisää/Uusi(oletus : U)? "	/* Do not translate %s.  A filename will be substituted	*/
+$			/* for the %s.  Place the %s wherever it makes the most sense					*/
+27	"Ei voi avata jäljitystiedostoa"
+28	"Ei voi avata risteystiedostoa"
+29	"Ei voi sulkea risteystiedostoa"
+30	"Ei voi sulkea jäljitystiedostoa"
+31	"On annettava arvot"
+32	"Kadunnimitiedoston lukuvirhe"
+33	"Alaruututiedoston lukuvirhe"
+34	"Paikkatiedoston lukuvirhe"
+35	"Kadunnimitiedoston avausvirhe"
+36	"Alaruututiedoston avausvirhe"
+37	"Paikkatiedoston avausvirhe"
+38	"Ei voi liittää jaettua muistia"

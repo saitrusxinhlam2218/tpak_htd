@@ -1,0 +1,972 @@
+$ /****************************************************************************
+$ *                                                                           *
+$ *                           S C C S   I N F O                               *
+$ *                                                                           *
+$ * @(#)  ui.MSF.fin; Rel: 10.1.3.3; Get date: 8/9/95 at 11:10:32
+$ * @(#)  Last delta: 8/9/95 at 11:10:20
+$ * @(#)  SCCS File: /taxi/sccs/s.ui.MSF.fin
+$ *                                                                           *
+$ * Copyright (c) 1990 - MDI Seattle                                          *
+$ *                                                                           *
+$ *****************************************************************************/
+$ #ident "@(#) head:ui.MSF.fin	10.1.3.3"
+$ /*
+$  * Message file for PROGRAM: ui.new
+$  * CATALOG:   ui.cat
+$  * MNEMONICS: ui_strdefs.h
+$  */
+
+$quote "
+$delset 1
+$set 1
+
+$ /* 	NOTES TO THE TRANSLATOR ...							*/
+$ /*    Most phrases are followed by a comment containing a number that specifies the   */
+$ /*    maximium length the phrase can be and in some cases an explanation of the       */
+$ /*    phrase.                                                                         */
+$ /*	ALL LENGTHS FOR PHRASES ARE 38 UNLESS NOTED OTHERWISE.				*/
+$ /*	Any phrases containing "<" and ">" need to keep these symbols after translation.*/
+$ /* 	They are considered part of the phrase.	The phrases containing "<" and ">"	*/
+$ /*	are the second half of an error message. Where necessary, the first half of 	*/
+$ /*	the error message is listed at the end of the line.  The first half of		*/
+$ /*	the error message is followed by ...					 	*/
+$ /*	Any phrases followed by "()" refer to a function name.  The function name 	*/
+$ /*	does not need to be transalated.  An example of this is :			*/
+$ /*	UI_CHECK_FLD_16 "<check_st_no() called>". check_st_no is the function name.	*/
+1	"MC"				/* 2,	Mastercard 	*/
+2	"VI"				/* 2, 	VISA		*/
+3	"DS"				/* 2, 	Discover	*/
+4	"AE"				/* 2,	American Express*/
+5	"DC"				/* 2, 	Diner's Club	*/
+6	"CB"				/* 2,	Carte Blanche	*/
+7	"<yhtiön tn>"			/* 38, fleet identification 	*/
+8	"<väärä oletusyhtiö>"		/* 38			*/
+9	"yhtiö"				/* 36			*/
+10	"<yhtiö>"			/* 38			*/
+11	"Päivää!"			/* 10			*/
+12	"täällä"			/* 10			*/
+13	"Voinko auttaa?"		/* 20			*/
+14	"<tilaustyyppi>"			/* 38			*/
+15	"<tilaustyyppi1>"                  /* 38                   */
+16	"<check_st_no() kutsu>"	/* 38			*/
+17	"<katunumero>"		/* 38			*/
+18	"<check_pre_dir kutsu>"	/* 38			*/	
+19	"<katuohje>"		/* 38			*/
+20	"<check_str_name kutsu>"	/* 38			*/
+21	"<noutokadun nimi>"		/* 38			*/
+22	"<check_str_type kutsu>"	/* 38			*/
+23	"<kadun tyyppi>"			/* 38			*/
+24	"<check_apt_no() kutsu>"	/* 38			*/
+25	"<check_city() kutsu>"		/* 38			*/
+26	"<kunta>"			/* 38			*/
+27	"<check_zone() kutsu>"		/* 38			*/
+28	"<ruudutettavat tilaukset>"		/* 38			*/
+29	"<ruutu no.>"			/* 38			*/
+30	"<check_passenger()kutsu>"	/* 38			*/
+31	"<check_phone()kutsu>"		/* 38 			*/
+32	"<puhelinnumero>"			/* 38 			*/
+33	"<    >" /*	38 */
+34	"<check_date() kutsu>"		/* 38			*/
+35	"<pvm>"			/* 38			*/
+36	"<pvm-kenttä>"			/* 38			*/
+37	"NYT"				/* 3			*/
+38	"<annettu pvm on vanha>"	/* 38			*/
+39	"<annettu pvm liian kaukana edessä>"	/* 38	*/
+40	"<check_time() kutsu>"		/* 38			*/
+41	"<aikakenttä>"			/* 38			*/
+42	"<pvm/aika on vanha>"	/* 38			*/
+43	"<ajajan ominaisuuksia ei sallita>"	/* 38		*/
+44	"<käytetty oletusarvo = EI>"	/* 38			*/
+45	"liian monta ajajan ominaisuutta"	/* 38			*/
+46	"liian monta auton ominaisuutta"	/* 38			*/
+47	"<1. merkin pitää olla 'U'>"	/* 38 			*/
+48	"<pitää olla numero>"		/* 38			*/
+49	"<vain numeroita>"			/* 38			*/
+50	"<oletusarvo EI on käytetty>"	/* 38			*/
+51	"<check_subs_time() kutsu>"	/* 38			*/
+52	"<check_subs_begin_date() kutsu>"	/* 38		*/
+53	"<aloituspvm>"			/* 38			*/
+54	"<check_subs_end_date() kutsu>"	/* 38		*/
+55	"<saakka pvm>"			/* 38, ending date	*/
+56	"<Erik.pyyntöjen syöttö ei sallittu>"	/* 38	*/
+57	"<vain kirjaimia>"			/* 38			*/
+58	"autonroa ei ole "		/* 22			*/
+59	"<väärä syöttö;käytetty oletusta 'J'>"	/* 38 change 'I' to C_PERSONAL_IF constant in language.h	*/
+60	"<laskutus>"			/* 38			*/
+61	"<check_podtime() kutsu>"	/* 38			*/
+62	"<tarvitaan oikea tilaustärkeys>"	/* 38			*/
+63	"tärkeys täytyy olla välillä"	/* 20			*/
+64	"ja 63"			/* 8			*/
+65	"Selvyyden vuoksi älä kirjoita KESKIYÖ vaan 23:59"
+66	"<menosuunnassa>"	/* 38, no more rows ...	*/
+67	"<ei mitään merkittyä tilausta>"		/* 38			*/
+68	"<ruuduttaa tilauksia>"		/* 38, not allowed to...*/
+69	"<käsin välittää autoja>"	/* 38, not allowed to...*/
+70	"<väärä tilausnro merkitty>"  /* 38			*/
+71	"TILA=KÄS_RUUD"			/* 13 			*/
+72	"TILA=KÄS_AUT"			/* 13 			*/
+73	"<vain numeroita>"			/* 38			*/
+74	"ruutu"				/* 6			*/
+75	"auto"				/* 6, vehicle		*/
+76	"väärä"			/* 10, invalid veh # entered	*/
+77	"nro syötetty"			/* 13, invalid veh # entered	*/
+78	"<ruutu nro"			/* 38, zone number	*/
+79	"<superruutuja ei sallita>"	/* 38			*/
+80	"<auto nro>"			/* 38			*/
+81	"<syötetty väärä rivinumero>"	/* 38			*/
+82	"<merkitty väärä tilausnumero>"	/* 38			*/
+83	"<ensin on poistuttava KÄS_AUT tai KÄS_RUUD -tilasta>"	/* 38, manual vehicle, manual zone mode 	*/
+84	"<kutsuu tiedostoa; ei LUK tilausta>"	/* 38, unable to read from...	*/
+85	"<virhe jatk.til.tiet.päivit..PAHA VIRHE>"	/* 38	*/
+86	"<jatk.til.tiet. lukon vapautt.virhe>"	/* 38	*/
+87	"<poikk.tietue FIFO:on>"		/* 38, unable to write exception record to FIFO	*/
+88	"<jatk.tilaustied .... PAHA VIRHE>"	/* 38, unable to read from...	*/
+89	"<erikoisvararuutuja ei sallita>"
+90	"SYÖTETTY VÄÄRÄ RIVINUMERO"	/* 79			*/
+91	"<menosuunnassa"	/* 38		*/
+92	"JATKUVIEN TILAUSTEN TIETUETTA EI LÖYDY"		/* 79			*/
+93	"EI LÖYDY TIETUETTA JOLLA ON SAMA AVAIN KUIN  SIVUN ALAREUNASSA"	/* 79	*/
+94	"SIVUN ALAREUNASTA EI LÖYDY TIETUETTA"	/* 79	*/
+95	"LEVYLTÄ EI SAA ENEMPÄÄ TIETUEITA"	/* 79	*/
+96	"EI ENEMPÄÄ TILAUSTIETUEITA"	/* 79			*/
+97	"tilaustietueita ei löydy"		/* 38			*/
+98	"Yhtiö:"			/* 6			*/
+99	"Aloituspvm:"		/* 14 			*/
+100	"Aloitusaika:"		/* 14 			*/
+101	"Noutokadun nimi:"		/* 19 			*/
+102	"Matkust. nimi:"		/* 15 			*/
+103	"Laskutusnro:"		/* 14 			*/
+104	"Puh.nro:         "		/* 19, modify for appropriate language	*/
+105	"Tilausnumero:"			/* 12 			*/
+106	"<yhtiö tn>"			/* 38			*/
+107	"<yhtiö>"			/* 38			*/
+108	"<muoto on pp.kk.vv>"		/* 38, modify for appropriate language	*/
+109	"<muoto on TT:MM>"		/* 38			*/
+110	"Yhtiö:"			/* 6 			*/
+111	"Aloituspvm:"		/* 14 			*/
+112	"Aloitusaika"			/* 14			*/
+113	"<yhtiö tn>"			/* 38			*/
+114	"<yhtiö>"			/* 38			*/
+115	"<muoto on pp.kk.vv>"		/* 38, modify for appropriate language 		*/
+116	"<muoto on TT:MM>"		/* 38 			*/
+117	"Yhtiö:"			/* 6, 			*/
+118	"Ajajan TN:"			/* 10, 			*/
+119	"Ajajan nimi:"			/* 12, 		 	*/
+120	"<yhtiö tn>"			/* 38			*/
+121	"<yhtiö>"			/* 38                   */
+122	"Yhtiö:"			/* 6, 			*/			
+123	"Noutokadun nimi:"		/* 19, 			*/
+124	"Matkust. nimi:"		/* 15, 			*/
+125	"Laskutusnro:"		/* 14, 			*/
+126	"Puh.nro:      "		/* 19, modify for appropriate language 		*/
+127	"Tilausnro:"			/* 12,	 		*/
+128	"<yhtiö tn>"			/* 38                   */
+129	"<yhtiö>"			/* 38                   */
+130	"<yhtiö tn>"			/* 38                   */
+131	"<yhtiö>"			/* 38                   */
+132	"<muoto on pp.kk.vv>"		/* 38, modify for appropriate language		*/
+133	"<muoto on tt:mm>"		/* 38			*/
+134	"Käytt TN:"			/* 8 			*/
+135	"Yhtiö:"			/* 6 			*/
+136	"Auto nro:"			/* 10 			*/
+137	"<yhtiö tn>"			/* 38                   */
+138	"<yhtiö>"			/* 38                   */
+139	"Yhtiö:"			/* 6		          */
+140	"Aloituspvm:"		/* 14			*/
+141	"Aloitusaika:"		/* 14			*/
+142	"Auto nro:"			/* 10			*/
+143	"Ajajan TN:"			/* 10			*/
+144	"<yhtiö tn>"			/* 38                   */
+145	"<yhtiö>"			/* 38                   */
+146	"<muoto on pp.kk.vv>"		/* 38, modify for appropriate language 		*/
+147	"<muoto on tt:mm>"		/* 38, */
+148	"<tilaustiedosto>"			/* 38, unable to read...*/
+149	"<tilaustiedoston vapautt.virhe>"	/* 38			*/
+150	"<poikk.tied. FIFO:on>"		/* 38, unable to write exception record to FIFO */
+151	"                                                          DETALJI                                                                   "
+$						/* 131, The phrase for DETAIL should be centered in 131 spaces	*/
+152	"                                                          PÄIVITÄ                                                                   "
+$                                                /* 131, The phrase for UPDATE should be centered in 131 spaces  */
+153	"Yhtiö"				/* 12			*/
+154	"Tyyp"				/* 4			*/
+155	"Laskutusnro"			/* 12, charger number	*/
+156	"Yritys"			/* 8, company name	*/
+157	"Ajaja"		/* 12			*/
+158	"Osoite"		/* 12                   */
+159	"As./Huon"		/* 12			*/
+160	"Kunta"			/* 12                   */
+161	"Ruut"			/* 4			*/
+162	"Matkustaja"		/* 12                   */
+163	"Pyytäjä"		/* 12                   */
+164	"Puh."			/* 12                   */
+165	"           /vaihde"	/* modify for appropriate language - telephone extension*/
+166	"Noutopv/aika"		/* 12                   */
+167	"Huomautus"		/* 12                   */
+168	"Tilaus"		/* 6, call number	*/
+169	"Tyyppi"		/* 12                   */
+170	"Autovaatim"		/* 12                   */
+171	"Ajajavaatim"		/* 12                   */
+172	"autoja"		/* 12                   */
+173	"Kohdeosoite"		/* 12                   */
+174	"Yht.henkilö"			/* 12, person to see    */
+175	"KUITTAUS?"		/* 12, Proof of delivery*/
+176	"Tärkeys"		/* 12                   */
+177	"Taksa"			/* 12                   */
+178	"Pidä"		/* 9			*/
+179	"Paikl"			/* 5, pickup and dest. addresses in same zone*/
+180    "Ilmoita saapum"   /* 14 */	
+181	" Aika Lähet  Auto Nouto  Sulj   Tärk  Pvm      Omin  "
+$						/* Count chars.  Lengths must be the equal to or less than but */
+$						/* phrases must start at same position in string	*/
+182	"    Yht Tila      Aika  Tyyp  Auto Ruu Kunta           Nouto-osoite                      Matkustaja       Paikka/Osoite Huomaut     \0"
+$                                                /* Count chars.  Lengths must be the equal to or less than but */ 
+$                                                /* phrases must start at same position in string       */ 
+
+183	" Rivi:    "			/* 6, keep leading space*/
+184	"    KÄYTT         KÄYTT NIMI        TERVEHDYSNIMI  .....YHTIÖT....                                                                  "
+$                                                /* Count chars.  Lengths must be the equal to or less than but */ 
+$                                                /* phrases must start at same position in string       */ 
+185	" Rivi:    "			/* 6, keep leading space	*/
+186	" ..............OLETUKSET............................ "	/* 51, center phrase in 51 spaces*/
+187	" ..................VALINNAT JOTKA KÄYTTÄJÄLLE SALLITAAN.................... "
+$						/* 70, center phrases in 70 spaces	*/
+188	" Näyttö "			/* 8, keep leading and trailing space	*/
+189	" Ruud. til "			/* 11, keep leading and trailing space	*/
+190	" Yhtiö "			/* 7, keep leading and trailing space  */
+191	" Kunta "			/* 6, keep leading and trailing space  */
+192	" Etsintä "			/* 8, keep leading and trailing space  */
+193	" Suurin tärk "		/* 13, keep leading and trailing space  */
+194	" Tilaustyyp "		/* 11, keep leading and trailing space  */
+195	"LASK\0"			/* 6, include \0			*/
+196	"KÄT\0"			/* 6, include \0			*/
+197	"eri:"				/* 4			*/
+198	"auto:"				/* 5, number of vehicles	*/
+199	"mks:"				/* 4			*/
+200	"lsk:"				/* 4			*/
+201	"L"				/* 1, modify for appropriate language	*/
+202	"opr:"				/* 4, operator		*/
+203	" JAKO:"			/* 6, keep leading space*/
+204	"opastied: virhe ="		/* 20			*/
+205	"<väärä yhtiö/auto -yhdistelmä"	
+206	"väär yhtiö/auto -yhdistelmä"
+207	"Autonro,Tilikoodi,Ruutunro,Tärk täytä kaikki kentät"	/* 62, unable to write to file...*/.
+208	"Autonro,Tilikoodi,Ruutunro täytä kaikki kentät"	/* 54	*/
+209	"Autonro,Tilikoodi,Ajajatn täytä kaikki kentät"	/* 55	*/
+210	"Autonro,Tilikoodi täytä molemmat kentät"	/* 47	*/
+211	"RUUT"				/* 4, to book or post	*/
+212	"ERUUT"				/* 5, conditional book	*/
+213	"KVILM"				/* 5, enroute book	*/
+214	"ALOITUS"		/* 7			*/
+215	"LOPETUS"		/* 8			*/
+216	"ASETA MDT"		/* 9, mdt = mobile data terminal*/
+217	"MDT LATAA"		/* 12			*/
+218	" Tiedostonavausvirhe"	/* 50			*/
+219	"Auton numero:"	/* 15			*/
+220	"Toimin:"		/* 7			*/
+221	"Ruutunumero:"		/* 12			*/
+222	"Tärkeys autojonossa:"	/* 20			*/
+223	"Ajajan TN"		/* 9			*/
+224	"Virhe tietueen lisäämisessä   tiedostoon"	/* 50		*/
+225	"Tiedoston sulkemisvirhe"	/* 50			*/
+226        "HYVÄKSY AJO"   /* 12 */
+227        "HYLKÄÄ AJO"   /* 12 */
+228        "MITT PÄÄLLÄ"           /*  12 */
+229        "MITT POIS"             /* 12 */
+230        "JULLIKKA"              /* 12 */
+231        "KÄSIPYSTY"             /* 12 */
+232	"MDT EMULOINTI-IKKUNA"		/* 50			*/
+233	"Yhtiön TN: "			/* 10, keep trailing space	*/
+234	"Auton numero: "		/* 16, keep trailing space      */
+235	"Toim.koodi: "			/* 13, keep trailing space      */
+236	"Ruutunumero: "			/* 13, keep trailing space      */
+237	"Ajajan   TN: "			/* 13, keep trailing space      */
+238	"Tärkeys autojonossa: "		/* 21, keep trailing space      */
+239	"TOIMINTOKOOD: 1=RUUT 2=ERUUT 3=KVILM 4=ALOI 5=LOPET 6=RUUDSTA 7=MDT OIKEUTUS 8=AJO HYVKS 9=AJO HYLÄTTY 10=MITT PÄÄL 11=MITT POIS"              /* 131 chars */
+240	"Tiedoston avausvirhe"		/* 50			*/
+241	"Virhe tietueen lisäämisessä tiedostoon"	/* 50			*/
+242	"Tiedoston sulkemisvirhe"		/* 50			*/
+243	"Väärä toistokenttä"		/* 45			*/
+244	"Käyttäjiä ei löydy"		/* 50			*/
+245	"Virhe postilaatikkotietueen lisäämisessä"	/* 50                   */
+246	"Virhe toisiokomennon kirjoittamisessa"		/* 50                   */
+247	"yhtiö ei löydy"		/* 45			*/
+248	"välittäjää ei löydy"		/* 40			*/
+249	"tilauksen ottajaa ei löydy"	/* 40			*/
+250	"systeeminhoitajaa ei löydy"	/* 40			*/
+251	"Yritys lähettää viesti kaik. takseille valintakentän avulla, yritä Yhtiö=* Tyyp=T Valinta= "
+$						/* count chars */
+252	"taksi ei löydy"	/* 40			*/
+253	"Viestin lähetys * ajajille valintakentän avulla, yritä Yhtiö=* Tyyp=A Valinta= "
+$                                               /* count chars        */ 
+254	"ajajaa ei löydy"	/* 40			*/
+255	"ruutua ei löydy"	/* 40			*/
+256	"käyttäjää ei löydy"	/* 40			*/
+257	"Virhe toistoviestitiedoston avaamisessa"	/* 50	*/
+258	"Virhe postilaatikkotiedoston avaamisessa"	/* 50 		*/
+259	"Postilaatikkotietueen tila ei kelpaa"	/* 50	*/
+260	"Virhe edellisen toistotietueen poistamisessa"	/* 50	*/
+261	"Virhe edellisen tietueen poistamisessa"	/* 50	*/
+262	"Virhe lukitun tiet. uudelleen lukemisessa"	/* 50	*/
+263	"Saman avaintietueen vapautt.virhe"	/* 50	*/
+264	"Ei seuraavaa tietuetta joka vastaa avainta -virhe"	/* 50	*/
+265	"Virhe vanhan viestin tietueen päivittämisessä"	/* 50	*/
+266	"Sama tietue ei enää löydy -virhe"	/* 50	*/
+267	"Viimeksi luetun tietueen vapautt.virhe"	/* 50	*/
+268	"Virhe toistoviestitiedoston sulkemisessa"	/* 50	*/
+269	"Virhe postilaatikkotiedoston sulkemisessa"		/* 50	*/
+270	"Virhe säästetyn tiet. poistamisessa, ei nyk. tiet."	/* 50	*/
+271	"Virhe tietueen säästämisessä, ei nyk. tietuetta"	/* 50	*/
+272	"Virhe tiet. lukemisessa annetusta sanoman nrosta"	/* 50	*/
+273	"Tietueen päivitysvirhe"			/* 50	*/
+274	"Tietueen vapautt.virhe"		/* 50	*/
+275	"Virhe, ei voi päivittää tietuetta, ei ent. tiet."	/* 50	*/
+276	"Virhe lukitun tiet. uud.lukemisessa"	/* 50	*/
+277	"Virhe, tietue eri kuin aiemmin luettu"	/* 50	*/
+278	"<laskin fifo>"			/* 38, Unable to write to file... */
+279	"<tilausta ei merkitty"
+280	"<jakotilausten välitys>"
+281	"<on jo jakotilaus>"
+282	"<tyyppipyynnön liittäm>"
+283	"<tilaustiet>"
+284	"Ei voi lukea"		/*	50		*/
+285	"Ei voi päivittää"		/*      50              */
+286	"<lukitun tilaustiet. vapautt.virhe>"	
+287	"Eri yhtiö"
+288	"FIFO"				/* 50, log error to disk...	*/
+289	"<historiatietue>"
+290	"Päätetyypin kuvausta ei löydy"	/* 45	*/
+291	"  "				/* 10		*/
+292	"<autolle>"
+293	"<ajajan tn:lle>"
+294	"<muoto on PP.KK.VV>"		/* modify for appropriate language	*/
+295	"<muoto on TT:MM>"		/* modify for appropriate language	*/
+296	"31.12.99"			/* modify for appropriate language      */
+297	"MIDN"				/* 4, modify for appropriate language	*/
+298	"PALAUTETTU"			/* 20			*/
+299	"Yhtiö"				/* 9			*/
+300	"Autonro"			/* 9			*/
+301	"Ajajan TN"			/* 9                    */
+302	"Peruuta poistam (K/E)"	/* 22, check language.h for Yes and No constants*/
+303	"Poistojakso"		/* 17			*/
+304	"Alkupvm"			/* 9			*/
+305	"Kellonaik"			/* 9			*/
+306	"Loppupv"			/* 7			*/
+307	"Aikaan"			/* 7			*/
+308	"Anna ajokielto matkustaja-ajoihin (K/E)"	/* 46, check language.h for Yes and No constants*/
+309	"Anna ajokielto tavara-ajoihin     (K/E)" /* 46, check language.h for Yes and No constants */
+310	"Anna ajokielto X-tyypin ajoihin   (K/E)" /* 46,  check language.h for Yes and No constants*/
+311	"Työpäällikön syy ajokieltoon (ei näy ajajalle)"	/* 53	*/
+312	"Ajajalle läh. viesti"	/* 22	*/
+313   "M"     /* 1    */
+314   "T"     /* 1    */
+315   "X"     /* 1    */
+316	"31.12.19"			/* 8, modify for appropriate language      */
+317	"23:59"			/* 5, modify for appropriate language, should be 24 hr time      */
+318	"<vaihtoehdoille>"
+319	"Vaihtoehtoinen os.tietue ei löydy"
+320	"<vaihtoeht. os.avain tältä näytöltä>"
+321	"Päivää!"			/* 10			*/
+322	"täällä"			/* 10			*/
+323	"Voinko auttaa?"		/* 20			*/
+324	"anna tilaustyyppi"
+325	"<tilitiedosto>"
+326	"<historiatietue>"
+327	"TUNTEMAT"			/* 8			*/
+328	"<ei voi vapauttaa historiatiedost lukkoa>"
+329	" MDI Tietokoneohjattu taksivälitys "	/* 36 		*/
+330	"Käytä valintaan välilyöntiä, nuolia tai kirjoita numero"	/* 79	*/
+331	"Anna 'e' palataksesi edelliseen ruutuun tai poistu."	/* 79	*/
+332	"Paina syöttönäppäintä valinnan suorittamiseksi:  " /* 43	*/
+333	"Päivää!"			/* 10		*/
+334	"täällä"			/* 10		*/
+335	"Voinko auttaa?"		/* 20		*/
+336	"Yhtiö"				/* 9		*/
+337	"Tyyp"				/* 4		*/
+338	"Osoite"			/* 12		*/
+339	"As/Huon."			/* 12           */
+340	"Kunta"				/* 12           */
+341	"Ruut"				/* 4		*/
+342	"Matkust"			/* 12           */
+343	"Puhelin"				/* 12           */
+344	"          /vaihde"		/* modify for appropriate language	*/
+345	"Noutopv/aika"			/* 12           */
+346	"Syöttöpvm"			/* 12           */
+347	"Kirjaaja"			/* 10		*/
+348	"Pääm.osoite"			/* 12		*/
+349	"Tyyppipyyntö"			/* 12           */
+350	"Ominaisuudet"			/* 12           */
+351	"Ajajavaatim"			/* 12           */
+352	"Autoja"			/* 12           */
+353	"Tärkeys"			/* 12           */
+354	"Taksa"				/* 12           */
+355	"Pidä"			/* 9		*/
+356	"Paikl"				/* 5, pickup and dest addr. in same zone*/
+357	"Huomaut"			/* 7		*/
+358	"Päivä"				/* 15		*/
+359	"Ma"				/* 3, Monday	*/
+360	"Ti"				/* 3, Tuesday	*/
+361	"Ke"				/* 3		*/
+362	"To"                           /* 3            */
+363	"Pe"                           /* 3            */
+364	"La"                           /* 3            */
+365	"Su"                           /* 3            */
+366	"Aika"				/* 15		*/
+367	"Aloit.aika"		/* 14		*/
+368	"Yksi muutos"		/* 15		*/
+369	"Loppupvm"			/* 14		*/
+370	"Päivää!"			/* 10		*/
+371	"Nimi"				/* 9		*/
+372	"Pvm/Aika"			/* 9		*/
+373	"Laskutusnro"			/* 12		*/
+374	"Yritys"			/* 7, Company name	*/
+375	"Ajaja"			/* 8		*/
+376	"Pyytäjä"			/* 12, Requested by	*/
+377	"Yhteyshenk."				/* 12, person to see	*/
+378	"KUITT?"			/* 12, proof of delivery*/
+379	"Ilmoita saapum" /* 14 */
+380	"Ei voi avata tiedostoa"
+381	"Ei voi saada viestijonon tunnusta"
+382	"Ei voi saada jaetun muistin tunnusta"
+383	"Ei voi liittää jaettua muistia"
+384	"Ei voi saada semafoorin tunnusta"
+385	"Ei voi saada käyttäjän kirjausnumeroa"
+386	"Ei voi saada tty-numeroa"
+387	"Ei voi lukea cisam-tietuetta levyltä"
+388	"Ei voi näyttää ruutua"
+389	"Ei voi suorittaa"
+390	"Väärä valikkohakemisto"
+391	"Määrittelemätön kohta"
+392	"Annettu väärä numero"
+393	"Annettu väärä tty-numero"
+394	"Ei voi saada semafoorin tunnusta"
+395	"Sbrk epäonnistui"
+396	"Ei voi sulkea tiedostoa"
+397	"Ei voi suorittaa"
+398	"Väärä viestiosoite"
+399	"Annettu väärä yhtiötunnus"
+400	"Väärä syöttö kenttään"
+401	"Vaadittua kenttää ei syötetty"
+402	"Ei voi päivittää tietuetta levylle"
+403	"Tapahtunut paha virhe"
+404	"Ei voi ruuduttaa tätä tilausta"
+405	"Ei voi kirjoittaa tiedostoon"
+406	"Ei voi löytää poikkeuksia"
+407	"Ei löydy lisää tietueita"
+408	"Detaljirivin numeroa ei saatavana"
+409	"Syötetty väärä numero"
+410	"Syötetty väärä pvm tai aika"
+411	"On annettava arvo"
+412	"Tämä poikkeus on jo hoidettu"
+413	"Tietue on päivitetty"
+414	"Annettu taksimäärä on suurempi kuin suurin sallittu"
+415	"Annettu yhtiö ei ole aktiivinen"
+416	"Tässä poikkeuksessa ei ole detaljia"
+417	"Aikaisempaa riviä ei ole saatavana"
+418	"Opastusriviä ei ole saatavana"
+419	"Väärä toimintonäppäin"
+420	"Tilaus siirretty välitykseen"
+421	"Näyttö lähetetty kirjoittimelle, jatka"
+422	"Tämä ei ole enn.tilaus"
+423	"Annettu väärä pvm"
+424	"Annettu väärä aika"
+425	"Historiaa ei ole saatavana"
+426	"Tilaus siirretty välittäjän hyväksyttäväksi"
+427	"TILAUS KESKEYTETTY"
+428	"Kyselytoiminto suoritettu"
+429	"Tilaus välitetty"
+430	"Tilaus peruutettu"
+431	"Tilaus välitetty"
+432	"Tilaus liitetty"
+433	"Til.liitt. peruutettu"
+434	"Autotiedoston hoidon viestiläh epäonnistui"
+435	"Ajajatiedoston hoidon viestiläh epäonnistui"
+436	"SYSTEEMI KAATUNUT"
+437     "Vehicle not idle or signed on"
+438     "Felaktig beställningstyp!"
+439     "FASTPRIS:"
+440	"<täyttää valintakrit.>"
+441	" Rivi:   "			/* 8, keep leading space*/
+442	" Aika Lähet  Auto Nouto  Sulj   Tärk   Pvm      Tunn "	/* count chars. */
+$			/* Phrases must start in same positions as current words 	*/
+443	"Yh"				/* 2, Fleet		*/
+444	"Tila"			/* 6			*/
+445	"Nouto"				/* 6			*/
+446	"Tyyp"				/* 4			*/
+447	"Auto"				/* 4, vehicle number	*/
+448	"Ruu"				/* 3, zone		*/
+449	"Kta"			/* 3, city		*/
+450	"Nouto-osoite"	/* 14			*/
+451	"Matkustaja"		/* 14			*/
+452	"Paikka/Osoite huomautus"	/* 21			*/
+453	"MINUUTIT"		/* 15			*/
+454	"<vain numer>"
+455	"<syötetty väär rivinro>"
+456	"<mitään poikkeusta ei valittu >"
+457	"<ei valintaa vastaavia poikkeuksia>"
+458	"<mitään poikkeusta ei valittu >"
+459	"<historia sallittu vain tilaukseen liittyville poikkeuksille>"	/* count chars	*/
+460	"<ruuduttaa tilauksia>"
+461	"<HYVKS ei sall. ruuduttamattomille poikkeuksille>"	/* count chars	*/
+462	"DEBUG MSG: tätä poikk. ei vielä koodattu!!!" /* count chars	*/
+463	"<HYLK ei sallittu ruuduttamattomille poikk.>" /* count chars	*/
+464	"<pito sallittu vain tilaukseen liittyville poikkeuksille>"	/* count chars	*/
+465	"pitp ei sall. tilauksille joissa"	/* 30	*/
+466	"tila"		/* 10			*/
+467	"<pito ei sallittu jakotil>"
+468	"<kysely sallittu vain tilaukseen liittyville poikkeuksille>"	/* count chars	*/
+469	"<uud.väl. sallittu vain tilaukseen liittyville poikkeuksille>"	/* count chars  */
+470	"<välitys sallittu vain tilaukseen liittyville poikkeuksille>"	/* count chars  */
+471	"<välitys ei sallittu jakotil.>"
+472	"<peruutus sallittu vain tilaukseen liittyville poikkeuksille>"	/* count chars  */
+473	"<detalji sallittu vain tilaukseen liittyville poikkeuksille>"	/* count chars  */
+474	"<JAKO vain jakotilauksille>"		/* invalid field entered..KYSPITOV = call taker hold.	*/
+475	"TILA=KÄS_RUUD"				/* 13, mode = manual zone	*/
+476	"TILA=KÄS_AUT"				/* 12, mode = manual vehicle	*/
+477	"ruut"					/* 6			*/
+478	"aut"					/* 6			*/
+479	"<käsinruud/auto poikkeuksille jotka eivät liity tilaukseen>"	/* count chars	*/
+480	"väärä"				/* 15, invalid zone # entered	*/
+481	"nro syötetty"				/* 15, invalid zone # entered	*/
+482	"<ruutnr>"
+483	"<superruut. ei sallita>"
+484	"<autonro>"
+485	"<poistu ensin KÄS_AUT tai KÄS_RUUD -tilasta>"
+486	"<HYVKS/HYLK ei sallittu käsinruudutus/autonjako -tilassa>"	/* count chars	*/
+487	"poikk.rivi ="				/* 30, exception line = */
+488	"<tilaustiet.>"
+489	"FIFO"
+490	"<tilaustied..... PAHA VIRHE>"
+491	"<poikk.tiet. FIFO:on>"
+492	"<Jakotilaus>"
+493	"<virhe tilauks.päivityks. PAHA VIRHE>"
+494	"<lukitt. tilaustietueiden vapauttamisvirhe>"
+495	"<jatka>"
+496	"<tilaustietueitt. päiv.virhe.... PAHA VIRHE>"
+497	"<tilaustietueen lukon vapauttamisvirhe>"
+498	"<autotietueen päivitysvirhe.... poikkeus hoidettu>"
+499	"<väärä auton numero>"
+500	"<autotietueen päivitysvirhe>"
+501	"<autotietueen lukon vapautt.virhe>"
+502	"<pulmia MSGLOG tiedostossa>"
+503	"Lähtien"				/* 7, From 10/29/90 at 1:00 to 10/31/90 */
+504	"  "				/* 7, From 10/29/90 at 1:00 to 10/31/90 */
+505	"Saakka:"				/* 7, From 10/29/90 at 1:00 to 10/31/90 */
+506	"<poikk.kriteeriot muutumattomia>"
+507	"Ei voi hyväksyä jakotilauksena" /* 80 */
+508        "<erikoisvararuutuja ei sallita>"
+509	"tilaustiedosto"				/* 20, name/type of file	*/
+510	"tilaustiedosto"				/* 20, name/type of file     */
+511	"historiatiedosto"			/* 20, name/type of file     */
+512	"alaruututiedosto"				/* 20, name/type of file     */
+513	"kadunnimitiedosto"				/* 20, name/type of file     */
+514	"katutyyppitiedosto"				/* 20, name/type of file     */
+515	"risteystiedosto"			/* 20, name/type of file     */
+516	"ruututiedosto"				/* 20, name/type of file     */
+517	"autotiedosto"				/* 20, name/type of file     */
+518	"ajajatiedosto"				/* 20, name/type of file     */
+519	"tilarivi"				/* 20, name/type of file - user status	*/
+520	"<väärä toimintonäppäin>"
+521	" Komento: "				/* 10, keep beg and trailing spaces */
+522	"(tulee loppua  <SEND> tai <CR> )"
+523	"<vain numer>"
+524	"<pvm/aika on vanha; tarkista ja syötä uudelleen>"	/* count chars	*/
+525	"<noutokadun nimi>"
+526	"<tilaus>"				/* unable to zone call <call>	*/
+527	"<läh/läh_uud -näppäin tästä näytöstä>"
+528	"<kutsu send()>"
+529	"<lp:n 'pipe' ei avaudu>"		/* 'pipe' and 'ep' are technical terms for unix.	*/
+530	"kirjoittimella"				/* 20, printing on printer xyz	*/
+531	"<aikaisempaa näyttöä ei säästetty>"
+532	"<katkaisunäppäintä ei tästä näytöstä>"
+533	"<autojen käsinvälitys>"
+534	"<välitys ei sallittu jakotilaukselle>"
+535	"<tilaustietue>"				/* Unable to read record from disk ... 	*/
+536	"<ei voi vapauttaa tilaustietueen lukkoa>"
+537	"<poikk.tiet. to FIFO:on>"
+538	"<pito-näpp. tästä näytöstä>"		/* Invalid field entered ... 	*/
+539	"<pito-näpp>"				/* Not allowed to execute ...	*/
+540	"pito ei sallittu tilauksille joilla"	/* 31, hold not allowed for calls with assigned status */
+541	"tila"				/* 10, hold not allowed for calls with assigned status */
+542	"<pito ei sallittu jakotilauksille>"
+543	"<kyselynäpp. tästä näytöstä>"	/* Not allowed to execute ...	*/
+544	"<tilausta ei merkitty>"
+545	"<jatka>"				/* Call sent for dispatcher approval	*/
+546	"<peruutusnäpp. tästä näytöstä>"		/* Not allowed to execute ...	*/
+547	"<lähetä keskuks. -näpp. tästä näytöstä>"	/* Not allowed to execute ...	*/
+548 "Ingen bil finns tillgänglig för närvarande. OK?"
+549 "Beställningen måste zonas"
+550	"Ei voi saada tty-numeroa\n"		/* 79, tty = terminal		*/
+551	"VIRHETIEDOSTO"				/* 30, Unable to open file ...	*/
+552	"KÄYTTÄJÄTIEDOSTO"				/* 30, Unable to open file ...  */
+553	"TILAUSTIEDOSTO"				/* 30, Unable to open file ...  */
+554	"TILAUSLISTATIEDOSTO"				/* 30, Unable to open file ...  */
+555	"OSOITETIEDOSTO"				/* 30, Unable to open file ...  */
+556	"ALARUUTUTIEDOSTO"				/* 30, Unable to open file ...  */
+557	"KADUNNIMITIEDOSTO"				/* 30, Unable to open file street name file  */
+558	"KATUTYYPPITIEDOSTO"				/* 30, Unable to open file street type file  */
+559	"PAIKKATIEDOSTO"				/* 30, Unable to open file ...  */
+560	"PAIKANNIMITIEDOSTO"				/* 30, Unable to open file place/name file  */
+561	"RISTEYSTIEDOSTO"				/* 30, Unable to open file intersection file  */
+562	"RUUTUTIEDOSTO"				/* 30, Unable to open file ...  */
+563	"AUTOTIEDOSTO"				/* 30, Unable to open file ...  */
+564	"AJAJATIEDOSTO"				/* 30, Unable to open file ...  */
+565	"TILARIVITIEDOSTO"				/* 30, Unable to open file user status file  */
+566	"VALMISSANOMATIEDOSTO"				/* 30, Unable to open file canned message  */
+567	"Valmissanoman nro ei sovi"
+568	"LUPATIEDOSTO"				/* 30, Unable to open file ...  */
+569	"<laskin-fifo>"			/* Unable to write to file ... */
+570	"Kuvauksessa annettu väärä oletusyhtiö"
+571	"Ota yhteys systeeminhoitajaan pulman selvittämiseksi."
+572	"Antamasi oletusyhtiö ei ole käytössä."
+573	"Sinulla ei ole lupaa käyttää oletusyhtiötä."
+574	"VIRHE: Käyttömuistissa ristiriita. Aloita uudelleen."
+575	"Sinulla on käyttäjätiedostossa väärä oletusnäyttö."
+576	"Sinulla on käyttäjätiedostossa väärä oletusetsintänäyttö."
+577	"<toistoviestejä voi lähettää vain keskus>"	/* count chars	*/
+578	"<viesti lähetetty>"			/* Record updated ... 	*/
+579	"Toista (K/E)"				/* See language.h for Y/N conversion */
+580	"Yhtiö"					/* count chars		*/
+581	"Kelle"					/* count chars          */
+582	"Valm.san."				/* count chars          */
+583	"Taajuus"				/* count chars          */
+584	"Voim"					/* count chars          */
+585	"Pvm"					/* count chars          */
+586	"Aika"					/* count chars          */
+587	"Viestiteksti"				/* count chars          */
+588	"<muoto on pp.kk.vv>"			/* modify for approp. language	*/
+589	"<muoto on TT:MM>"			/* modify for approp. language	*/
+590	"Toista"				/* 20, Invalid field entered, Repeat key stroke */
+591	"Valmissanoma nro"				/* 20				*/
+592	"Ei voi lukea valmissanomaa nro"		/* 30				*/
+593	" <Usein>"				/* Invalid field entered ...	*/
+594	"Läht"					/* 10, From Monday at 10:00 12/31/90 	*/
+595	"   "					/* 10, From Monday at 10:00 12/31/90    */
+596	"Ei enempää postiviestejä"
+597	"Aikaisemp. postiviest. ei säästetty"
+598	"<viesti säästetty>"
+599	"<viesti poistettu>"
+600	"Ei postiviestejä"			/* 30			*/
+601	"<toistoviestitiedosto>"			/* Unable to update record on file ... 	*/
+602	"Ei lisää toistoviestejä"
+603	"<muokkaa_toistoviest -näytöstä>"
+604	"Ei toistoviestejä"
+605	"Saajat: *=kaikki, V=välitt, O=ottaja, J=ohj., K=Käyttäjä, T=taksi, A=ajaja, R=ruud. olevat ajajat"
+606	"'Saaja'-kenttä"
+607	"On annettava numero tai '*'"
+608	"VIESTIT ="				/* 10			*/
+609	"Väärä TTY-numero:"			/* 30, TTY = terminal	*/
+610	"MINUUTIT"				/* 7			*/
+611	"<ei tarpeeksi ennakkoa ennakkotilaukselle>"
+612	"<annettu aika on liian kaukana edessä>"
+613	"väärä syöttö jaetussa muistissa taksan laskemiseen"	/* 32	*/
+614	"<taksatied.>"				/* Unable to open file ...	*/
+615	"<TILITIEDOSTO>"			/* Unable to open file ...      */
+616	"<laskutusnro>"				/* Invalid field entered charge number	*/
+617	"<tilitiedosto>"			/* Unable to open file ...      */
+618	"<kunta>"				/* Invalid field entered...	*/
+619	"KOMMENTTI:"
+620	"<väärä oletusyhtiö>"
+621	"L"					/* 1, Char for Cars. See new constant in language.h	*/
+622	"MINUUTIT"				/* 7				*/
+623	"KAIKK. TIL. ETS."			/* count chars			*/
+624	"RUUTUTILAUSKOMENTO"			/* count chars                  */
+625	"HYVKS/HYLK POIKKEUS"		/* count chars                  */
+626	"TIL.KIRJAUS"				/* count chars                  */
+627	" EI MITÄÄN"				/* count chars                  */
+628	"response time stat will not be reported"	/* count chars                  */
+629	"KÄYT TN"				/* count chars                  */
+630	"ALOITUSPVM"				/* count chars                  */
+631	"ALOIT.AIKA"				/* count chars                  */
+632	"LOP.PVM"				/* count chars                  */
+633	"LOP.AIKA"				/* count chars                  */
+634	"KOMENNON NIMI"			/* count chars                  */
+635	"KOMENTOMÄÄRÄ"			/* count chars                  */
+636	"KESKIM. VASTAUSAIKA"			/* count chars                  */
+637	"PISIN VASTAUSAIKA"			/* count chars                  */
+638	"PISIN VASTAUKSEN KESTO"		/* count chars                  */
+639	" Yhtiö  "				/* 8, keep leading and trailing space	*/
+640	"   Autonro "				/* 13, keep leading and trailing space  */
+641	"  Ajajan TN "				/* 11, keep leading and trailing space  */
+642	" Lyhyt Mitt "				/* 13, keep leading and trailing space  */
+643	" Puhepyyntö "				/* 13, keep leading and trailing space  */
+644	" MID "	  				/* 7, keep leading and trailing space, radio frequency id */
+645	" Ajajan nimi "				/* 13, keep leading and trailing space  */
+646	" Nykyinen tila "			/* 16, keep leading and trailing space  */
+647	" Myöh mitt  "				/* 13, keep leading and trailing space  */
+648	" Viestit    "				/* 13, keep leading and trailing space  */
+649	" Auton ominais. "			/* 16, keep leading and trailing space  */
+650	" Aloitus aika "				/* 11, keep leading and trailing space  */
+651	" Tilauks "				/* 7, keep leading and trailing space  */
+652	" Ruutuun krt    "				/* 12, keep leading and trailing space */
+653	" Ei-hyvks  "				/* 13, keep leading and trailing space  */
+654	" Kyselyitä   "				/* 13, keep leading and trailing space  */
+655	" Ajajaominais "			/* 15, keep leading and trailing space  */
+656	" Lop. aika "				/* 11, keep leading and trailing space  */
+657	" Käsip "				/* 7, keep leading and trailing space  */
+658	" Ehd.ruutuun "				/* 12, keep leading and trailing space */
+659	" Hylkäyks    "				/* 13, keep leading and trailing space  */
+660	" Kutsut    "				/* 13, keep leading and trailing space  */
+661	" Hätätila "			/* 14, keep leading and trailing space  */
+662	" Pois "					/* 5, keep leading and trailing space  */
+663	" Välitks   "				/* 11, keep leading and trailing space  */
+664	" Tarj  "				/* 7, keep leading and trailing space  */
+665	" KV ilmoit. "				/* 12, keep leading and trailing space */
+666	" Taukoja     "				/* 13, keep leading and trailing space  */
+667	" Jullikat   "				/* 13, keep leading and trailing space  */
+668	"-----------------------------------------Y H T I Ö N K A T T A V A  Y H T E E N V E T O---------------------------------------------"
+$					/* 131 chars, center text	*/
+669	"              Nyt   Tänään                   Nyt   Tänään                                                                    "
+$					/* 131 chars, phrases must line up with current columns	*/	
+670	"Hätätilat"		/* 11, See attached sheet for descriptions of the following.*/
+671	"Aloitus"		/* 11           */
+672	"Lopetus"		/* 11           */
+673	"Käsipysty"		/* 11           */
+674	"Tarj til"		/* 11           */
+675	"Ruudussa"		/* 11           */
+676	"Ehd ruutuun"		/* 11           */
+677	"KV ilmoitus"		/* 11           */
+678	"Lyhyt mitt"		/* 11 		*/
+679	"Myöh mitt"		/* 11		*/
+680	"Herätyksiä"		/* 11		*/
+681	"Eihyvks"		/* 11		*/
+682	"Hylkäyks"		/* 11		*/
+683	"Taukoja"		/* 11           */
+684	"Puhepyyntö"		/* 11           */
+685	"Viestejä"		/* 11           */
+686	"Kyselyjä"		/* 11           */
+687	"Kutsuja"		/* 11           */
+688	"Jullikat"		/* 11           */
+689	"Jouten"			/* 11           */
+690	"Kiellossa"		/* 11           */
+691	"Tilauksia"			/* 11           */
+692	"Käyt YHT"		/* 10, ipc = interprocess communication	*/
+693	"Virhe viestin lähettämisessä KESKUKS"	/* 60, ipc = interprocess communication	*/
+694	"Virhe viestin lukemisessa KESKUKS"	/* 60, ipc = interprocess communication	*/
+695	"VIKA/ "		/* 6		*/
+696	"RUUTU  "		/* count chars	*/
+697	"KVILM   "		/* count chars  */
+698	"TAUKO/"		/* count chars  */
+699	"NOUTO/ "		/* count chars  */
+700	"HYVKS/ "		/* count chars  */
+701	"AJOTR/"		/* count chars  */
+702	"JOUT/"			/* count chars  */
+703	"<Ajaja ei löydy >"
+704	"LOPET"			/* 5, signed out*/
+705	"<yhtiö tn>"
+706	"yhtiö"
+707	"<yhtiö>"
+708	"<Yhtiötä ei vielä valittu>"
+709	"Autoa ei löydy"
+710	"Ajajaa ei löydy"
+711	"<Ajajatietuetta ei löydy"
+712	"Keskukselta tulevan sanoman lukuvirhe (msgrcv)."
+713  " Meter Status"    /* Can not be longer than 17 chars and must start with a space */
+714	"ON "
+715	"OFF"
+716	" Taksamittari"
+717  "-------- B I L A T T R I B U T       ------------------------------------ F ö R A R E  A T T R I B U T     -------------"
+718  "              Nu    Idag                     Nu    Idag  "
+719	"tilarivitiedosto"		/* 25, unable to write to file ... ( user status file )	*/
+720	"tilaajatiedosto"	/* 25, unable to write to file ...	*/
+721	"<tilaajatiedosto>"	/* unable to write to file ...	*/
+722	"<läh/läh_toistonäp tästä näytöstä>"		/* Not allowed to execute ...	*/
+723	"<kutsu send()>"
+724	"<noutokadun nimi>"
+725	"<tilaus>"		/* Unable to zone call ...	*/
+726	"<noutoaikaa ei annettu>"
+727	"jatk.til.tied."		/* 25, unable to write to file ...  */
+728	"jatk.til.tied."	/* Unable to read record from disk...	*/
+729	"ei voi vapauttaa jatk.til.tied. lukkoa"
+730   "Jatkuva tilaus on päivitetty.  Odottava tilaus %d täytyy mahdollisesti päivittää."
+731   "Jatkuva tilaus on päivitetty.  Odottava tilaus %d ja %d täytyy mahdollisesti päivittää."
+732     "COMM LINK TO ACC"      /* do not translate */
+733     "ACC-KISS INTERFACE"    /* do not translate */
+734     "NAK ON CALL ASSIGN"/* do not translate */
+735     "VEHICLE REG/DEREG"/* do not translate */
+736     "BID LIST IS FULL"/* do not translate */
+737     "ACC ALARM"             /* do not translate */
+738     "INACTIVE ACC ALARM"    /* do not translate */
+739	"ruuduttam. osoitetied"	/* Unable to open ...	*/
+740	"---------------------------------------------- Käyttäjäoletukset ------------------------------------------------------------------"
+$					/* Center text in 131 spaces	*/
+741	"Yhtiö:"		/* count chars			*/
+742	"Til.tyyp:"		/* count chars                  */
+743	"Kunta:"			/* count chars                  */
+744	"Näyttö:"		/* count chars                  */
+745	"Etsi:"		/* count chars                  */
+746	"-------------------------------------------- Poikkeuks./etsintäkriteerit -----------------------------------------------"
+$					/* 131, center text in 131 chars	*/
+747	"Yhtiö(t):"		/* count chars                  */
+748	"Ruud./Superruud:"	/* count chars                  */
+749	"Oletusennakkoaika %:"	/* count chars                  */
+750	"Muutoks. aika-arv:"	/* count chars                  */
+751	"..Poikk.ryhmät..     .................................................Poikkeustyypit........................................."
+$					/* 131, center text in 131 chars	*/
+752	"Kaikk ryhm"		/* count chars                  */
+753	"<uud_ck_fleet() kutsu>"
+754	"<kunta>"		/* invalid field entered...     */
+755	"<til.tyyp>"		/* invalid field entered...	*/
+756	"<vain numer>"		/* invalid field entered...     */
+757	"<näytön nimi>"		/* invalid field entered...     */
+758	"<ets.nimi>"		/* invalid field entered...     */
+759	"<käyt. oletusarvo '1' >"	/* invalid field entered... */
+760	"<ruutu/sup.rt nro>"	/* invalid field entered...     */
+761	"<uud_ck_group() kutsu>"
+762	"<ennakkoprosentti>"	/* invalid field entered...     */
+763	"<ajan arvio käsin>"	/* invalid field entered...     */
+764	"<oletusyhtiö muuttumaton>"	/* invalid field entered...     */
+765	"yhtiö"
+766	"<käytetty oletusta EI>"	/* modify for new value for NO	*/
+767	"<poikk.ryhmätiedosto>"	/* Unable to open file ...	*/
+768	" Yhtiö  "			/* count chars			*/
+769	" Vararuudut:    ruut ti au kv ruut ti au kv ruut ti au kv ruut ti au kv "
+$		/* count chars. Positions must line up with current positions	*/
+$		/* cl = call, vh = vehicle, en = enroute			*/
+770	" Avoimet tilauks. "		/* count chars	*/
+771	" Aikarajatil. "		/* count chars  */
+772	" Kirjat. aut.: "		/* count chars  */
+773	" KV autoja: "		/* count chars  */
+774	"   Ruutu"			/* count chars, Keep leading and trailing spaces  */
+775 " ruut ti au kv et"
+$				/* Positions must remain constant. cl = call, vh = vehicle, en = enroute	*/
+776	"<Ei lisäsivuja siinä suunnassa>"
+777	"ruutudetaljia ei löydy"
+778	"<yhtiö tn>"
+779	"yhtiö"				/* 30		*/
+780	"<yhtiö>"
+781	"<ruutu ei RUUTU-tiedostossa>"
+782	"ruutu"
+783	" Ennakkotilaus "
+784	"käyttäjätiedosto"
+785	"<menosuunnassa>"
+786	" Aloitus  "			/* count chars, keep leading and trailing space	*/
+787	" Lopetus "			/* count chars, keep leading and trailing space */
+788	" Hätätila  "			/* count chars, keep leading and trailing space */
+789	" Hätä pois "			/* count chars, keep leading and trailing space */
+790	" Poistopvm "		/* count chars, keep leading and trailing space */
+791	" Paluupvm   "		/* count chars, keep leading and trailing space */
+792	" Poiston syy "		/* count chars, keep leading and trailing space */
+793	" Matk "			/* count chars, keep leading and trailing space, passenger */
+794	" Toi "				/* count chars, keep leading and trailing space, delivery  */
+795	"X-tyyp"			/* count chars, keep leading and trailing space */
+796	" Rivi:    "			/* count chars, keep leading and trailing space */
+797	"    Yh AUTO  AJAJ  MID    REKIST NRO    MERKKI     MALLI     VÄRI      PUHELIN    MDT MITT ......OMINAISUUDET.....                  "
+$				/* Text positions must remain constant.	*/
+798	"    Yh AJAJ  AUTO         AJAJAN NIMI            REKIST. NRO     UUSINT   TAKSILUP    UUSINT   ......OMINAISUUDET.....  TILAP       "
+$				/* Text positions must remain constant. */
+799	" Rivi:    "			/* count chars		*/
+800	"(NOUTO:"			/* 7          */
+801	"(PÄÄM:"			/* 7          */
+
+802	"Pyydetty noutoaika ei ole vapaana.  Valitse toinen:"		/* max 65 */
+803	"Aika"					/* max 6 */
+804	"Vapaana"				/* max 10 */
+805	"Valitse ajanjakso jossa on vapaita tilauksia"						/* max 80 */
+806	"Valitse vapaa ajanjakso Ä1..6Å"								/* max 80 */
+807	"Virhe:  Ei tarpeeksi tilaustietoja"										/* max 80 */
+808	"Ennakkotilauksille on oltava yhtiö"												/* max 80 */
+809	"Ennakkotilaukset on ruudutettava"													/* max 80 */
+810	"Vaihtoehtoisia aikoja ei ole vapaana 6:n ajanjakson sisällä.  Valitse toinen pvm/aika."	/* max 80 */
+811	"Pyydetty ajanjakso ei ole vapaana.  Muuta ennenkuin lähetät tilauksen"	/* max 80 */
+812 "Inga förbeställningtider tillgängliga i denna zon"
+813	"Missing Information for Flat Rate Calculation"
+814	"Problem with Time Periods Search"
+815	"Unable to open Tranpsport Category Table"
+816	"Unable to find Transport Category"
+817	"Unable to open RATE database"
+818	"Unable to find Base Rate Data ( time period, trans cat )"
+819	"Databas i City Navigator ej synkroniserad! Meddela dataenheten!"
+820	"Stämmer hämt-adressen:"
+821	"Unable to open RATE database (RELATIONS)"
+822	"Unable to open RATE database (RELATION DATA)"
+823	"Unable to open RATE database (HOLIDAY)"
+824	"Unable to open RATE database (TIME PERIODS)"
+825	"Unable to open RATE database (SEASONS)"
+826	"City Navigator Out of Service"
+827 "För sent att uppdatera fastpris!"
+828	"Call Message Entry Screen       "
+829	"Skrivare"
+830	"Taxameter"
+831     "Medellande"
+832     "<blank line>"
+$ Place new text here. Don't worry about file name. Placing new text
+$ at end (instead of in the middle) prevents the text pointers from
+$ getting out of sync.
+833	"Ei voi aloittaa. Dispatch joko ei ole toiminnassa tai on vielä aloittamassa."
+834	"Yritä hetken kuluttua uudelleen"
+835	"Välityskatko"		/* 80 */
+836   "Ruutu ei ole ruututiedostossa"      /* 80 */
+837   "Ajajan TN ei ole ajajatiedostossa"   /* 80 */
+838   "Auton TN ei ole autotiedostossa" /* 80 */
+839	"Ei voi välittää ennakkotilauksia. Valitse ensin NYT." /* 80 */
+840	"Suurin arvo on 9999,99" /* 80; insert appropriate monetary separator */
+841	"Oletko varma, että haluat poistaa tämän jatkuvan tilauksen (K/E)?"
+842	"Ei voi poistaa jatkuvan tilauksen tietuetta"
+843	"Jatkuvan tilauksen tietue poistettu"
+844	"Jatk.til.nro"
+845	"Toistoviestejä  ei sallita valitulle vastaanottajalle" /* 80 */
+846	"Viesti poistettu" /* 80 */
+847	"H Ä T Ä H Ä L Y T Y S !" /* 80, Maintain spaces between characters */
+848	"Ajaja on painanut auton hätäpaininta." /* 80 */
+849	"Uudista poikkeusnäyttö nähdäksesi hätätilan." /* 80 */
+850	"Siirry poikkeusnäyttöön nähdäksesi hätätilanteen." /* 80 */
+851	"Paina <RETURN> jatkaaksesi" /* 80 */
+852	"Toinen välittäjä on hyväksynyt hätätilanteen." /* 80 */
+853	"Anna huomautus HÄTÄTILAN hyväksymisen oheen (paina RETURN kun olet valmis):" /* 80 */
+854	"Jos lähetät yksittäiselle ajajalle tai taksille, sinun täytyy käyttää yksittäistä yhtiötä"
+855	"On määriteltävä yksittäinen ruutu"
+856	"Anna '*', jos til. menee välittäjille, til.ottajille tai systeeminhoitajille"
+857	"On annettava ruutunumero"
+858	"UUSI"
+859	"VANHA"
+860	"Ei enempää viestejä"
+861	"Ei seuraavaa postilaatikkoviestiä"
+862	"Ei edellistä postilaatikkoviestiä"
+863	"Annettua käyttäjätyyppiä ei ole"
+864	"On annettava ajoneuvon numero ensin"
+865	"Tilauspuhelulla on jo PITO"
+866	"LEVY ON MELKEIN TÄYNNÄ"
+867      "PÄÄTE YHT. EI TOIMI"
+868      "CM:1 NAK MDT"
+869      "CM:1 NAK PRINT"
+870      "CM:1 NAK TXM"
+871      "CM:2 NAK MDT"
+872      "CM:2 NAK PRINT"
+873      "CM:2 NAK TXM"
+874      "CM:3 NAK MDT"
+875      "CM:3 NAK PRINT"
+876      "CM:3 NAK TXM"
+877      "API-KLIENT AVBROTT"
+878      "API-KLIENT STARTAD"
+879      "SKRIVARE"
+880      "TAXAMETER"
+881      "MDT"
+882      "To       :"
+883      "Message  :"
+884      "ACK"
+885      "Call Messages"
+886      "Call Msgs :"
+887      "Paina <RETURN> jatkaaksesi"
+888      "Moms"
+889      "Via-adress"
+890      "Faktura ref"
+891      "       BIL ATTRIBUT             "
+892      "       FÖR ATTRIBUT            "
+893	" ruudussa "
+894	"ketjussa"
+895      "Customer record has changed. Would you like to save these changes (Y/N)?"
+896      "Attribute Filters only valid for Broadcast Messages"
+897      "Attr. Filters:"
+898      "Driver Attribute Filters only valid for Driver Messages"
+899      "Vehicle Attribute Filters only valid for Vehicle Messages"
+900      "Käytt Nimi:"
+901      "Kontant"
+902	"New Account"
+903	"Repeat Customer"
+904	"A-Number Unavailable"
+905	"ODOTTAA TAKSIN VAHVISTUSTA %s"
+906	"KUTSUN ON HYVÄKSYNYT AUTO %d             "
+907	"PAINA <RETURN> JATKAAKSESI     "
+908	"HALUATKO LOPETTA HAUN (K/E)"
+909	"KUTSUN VAHVISTUS"
+

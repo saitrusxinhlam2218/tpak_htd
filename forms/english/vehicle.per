@@ -1,0 +1,88 @@
+{
+|***********************************************************************
+|                 RCS INFO
+|
+|  @(#)  $RCSfile: vehicle.per,v $
+|  @(#)  $Revision: 1.2 $
+|  @(#)  $Date: 1999/03/19 21:27:07 $
+|  @(#)  $Author: taxiadm $
+|  @(#)  $Source: /taxi-scan/taxi_proj/cvs/taxi-scan/src/forms/english/vehicle.per,v $
+|
+|  Copyright (c) 1994 - MobileSoft Consulting, Inc. Woodinville WA
+|
+|**********************************************************************/
+|ident "@(#) head:$RCSfile: vehicle.per,v $	$Revision: 1.2 $"
+}
+database mads
+screen
+{
+						VEHICLE FILE DISPLAY
+Fleet #     Veh #   MID      License #     Make          Model         MDT OK  Meter OK  Schedule
+[a]   [g]   [f000]  [f001 ]  [f002      ]  [f003      ]  [f004      ]  [b]     [f]       [ss]
+
+Seals               Attributes    Suspended From         Suspended To           Suspension Reason       "P"  "D"  "X"
+[f005            ]  [f013    ]    [f006              ]   [f007              ]   [f008                ]  [c]  [d]  [e]
+
+Suspension Message
+[f009                            ][f010                            ][f011                            ]
+
+Driver Comments                                                                     
+[f038                                    ][f039                                    ]
+
+Last Emergency On     Emergency Resolved       Signed On             Signed Off            Driver   Call Serviced
+[f014              ]  [f015              ]     [f016              ]  [f017              ]  [f018 ]  [f019              ]
+
+BOOK   CBOOK  EBOOK  no ACPT REJCT  ADVARR NTRIP  FLAG   BID    TALK   MSG    BREAK  Assigns Trips  Short M Late M Callback
+[f024] [f025] [f026] [f029]  [f030] [f035] [f036] [f022] [f023] [f032] [f033] [f031] [f020]  [f021] [f027]  [f028] [f034]
+}
+end
+tables
+vehicle
+attributes
+a = vehicle.vh_fleet,UPSHIFT,COMMENTS="Fleet indicator";
+g = vehicle.vh_fleet_nbr,RIGHT,COMMENTS="Fleet number corresponding this vehicles fleet";
+f000 = vehicle.vh_nbr,RIGHT,COMMENTS="Vehicle number";
+f001 = vehicle.vh_mobile_rf_id,include=(1 to 3839), UPSHIFT,COMMENTS="MID of the MDT terminal in this vehicle";
+f002 = vehicle.vh_license_nbr,COMMENTS="Vehicle license plate number";
+f003 = vehicle.vh_make,UPSHIFT,COMMENTS="Vehicle make";
+f004 = vehicle.vh_model,UPSHIFT,COMMENTS="Vehicle model";
+b = vehicle.vh_kdt_working,UPSHIFT,COMMENTS="Y/N. whether the MDT terminal is functional in this vehicle";
+f = vehicle.vh_meter_working,UPSHIFT,COMMENTS="Y/N. whether this vehicles meter is functional or not";
+ss = vehicle.vh_schedule_num,RIGHT,COMMENTS="Schedule number (1..25) that this vehicle is assigned to";
+f005 = vehicle.vh_seals,UPSHIFT,COMMENTS="Defines which seals this vehicle has";
+f013 = vehicle.vh_attr,UPSHIFT,COMMENTS="8 flags.define any unique attributes of this vehicle";
+f006 = vehicle.vh_susp_from_dt_tm,RIGHT,COMMENTS="Date & time this vehicle was last suspended";
+f007 = vehicle.vh_susp_to_dt_tm,RIGHT,COMMENTS="Date & time this vehicle was last restored to service";
+f008 = vehicle.vh_susp_reason,UPSHIFT,COMMENTS="Reason for vehicles suspension(internal)";
+c = vehicle.vh_susp_pass_call,UPSHIFT,COMMENTS="Y/N. whether the vehicle is restricted form servicing passenger calls";
+d = vehicle.vh_susp_del_call,UPSHIFT,COMMENTS="Y/N. whether the vehicle is restricted from servicing delivery calls";
+e = vehicle.vh_susp_typex_call,UPSHIFT,COMMENTS="Y/N. whether the vehicle is restricted from servicing type calls";
+f009 = vehicle.vh_susp_message[1,32],UPSHIFT,COMMENTS="Suspension message to be sent to the vehicle";
+f010 = vehicle.vh_susp_message[33,64],UPSHIFT,COMMENTS="Suspension message to be sent to the vehicle";
+f011 = vehicle.vh_susp_message[65,96],UPSHIFT,COMMENTS="Suspension message to be sent to the vehicle";
+f038 = vehicle.vh_comments[1,40],UPSHIFT,COMMENTS="Any comments relating to this vehicle";
+f039 = vehicle.vh_comments[41,80],UPSHIFT,COMMENTS="Any comments relating to this vehicle";
+f014 = vehicle.vh_last_emerg_on,RIGHT,COMMENTS="Last date  & time this vehicle invoked emergency";
+f015 = vehicle.vh_last_emerg_off,RIGHT,COMMENTS="Date & time the last emergency was taken care of";
+f016 = vehicle.vh_last_signed_on,RIGHT,COMMENTS="Last date & time this vehicle was on the street";
+f017 = vehicle.vh_last_signed_off,RIGHT,COMMENTS="Last date & time this vehicle became idle";
+f018 = vehicle.vh_last_driver,RIGHT,COMMENTS="Last driver that drove this vehicle";
+f019 = vehicle.vh_last_call,RIGHT,COMMENTS="Last trip handled in this vehicle";
+f024 = vehicle.vh_posts,RIGHT,COMMENTS="Number of times this vehicle booked";
+f025 = vehicle.vh_cond_posts,RIGHT,COMMENTS="Number of times this vehicle conditionally booked";
+f026 = vehicle.vh_enroute_posts,RIGHT,COMMENTS="Numbere of times this vehicle enroute booked";
+f029 = vehicle.vh_no_accepts,RIGHT,COMMENTS="Number of no_accepts";
+f030 = vehicle.vh_rejects,RIGHT,COMMENTS="Number of rejects";
+f035 = vehicle.vh_callouts,RIGHT,COMMENTS="Number of callouts";
+f036 = vehicle.vh_no_shows,RIGHT,COMMENTS="NUmber of no trips";
+f022 = vehicle.vh_flags,RIGHT,COMMENTS="Number of flags picked up on the street";
+f023 = vehicle.vh_bids,RIGHT,COMMENTS="Number of bids awarded to this vehicle";
+f032 = vehicle.vh_req_to_talk,RIGHT,COMMENTS="Number of times this vehicle requested to talk";
+f033 = vehicle.vh_messages,RIGHT,COMMENTS="Number of messages sent to supervisors";
+f031 = vehicle.vh_breaks,RIGHT,COMMENTS="Number of breaks taken";
+f020 = vehicle.vh_assigns,RIGHT,COMMENTS="Number of calls manually assigned to this vehicle on its last shift";
+f021 = vehicle.vh_calls,RIGHT,COMMENTS="Number of dispatched trips";
+f027 = vehicle.vh_short_meters,RIGHT,COMMENTS="Number of short meters";
+f028 = vehicle.vh_late_meters,RIGHT,COMMENTS="Number of late meters";
+f034 = vehicle.vh_callbacks,RIGHT,COMMENTS="Number of callbacks";
+end

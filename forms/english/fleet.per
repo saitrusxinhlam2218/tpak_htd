@@ -1,0 +1,169 @@
+{
+|***********************************************************************
+|                 RCS INFO
+|
+|  @(#)  $RCSfile: fleet.per,v $
+|  @(#)  $Revision: 1.2 $
+|  @(#)  $Date: 1999/03/19 21:26:35 $
+|  @(#)  $Author: taxiadm $
+|  @(#)  $Source: /taxi-scan/taxi_proj/cvs/taxi-scan/src/forms/english/fleet.per,v $
+|
+|  Copyright (c) 1994 - MobileSoft Consulting, Inc. Woodinville WA
+|
+|**********************************************************************/
+|ident "@(#) head:$RCSfile: fleet.per,v $	$Revision: 1.2 $"
+}
+database mads
+screen
+{
+                                                 FLEET FILE DISPLAY
+ID   #    Name                                                           Lev1 Primary Lev2 Lev3 Lev4 Lev5 Lev6 Lev7 Lev8
+[a] [b]   [f001                ]                         Reject Penalties [a1] [a2]    [a3] [a4] [a5] [a6] [a7] [a8] [a9]
+Comments  [f002                                    ]     Exclusive Time   [b1] [b2]    [b3] [b4] [b5] [b6] [b7] [b8] [b9]
+
+         Frequency       Priority         Action          Duration         Penalty             Info                  Maximum
+BOOK      [f003 ]   NTRIP   [c1]    NTRIP  [c]    ACPT    [f011 ]     No ACPT [h]    Call Assign  [k]     REJCT Count    [d1]
+CBOOK     [f004 ]   CANCEL  [c2]    CANCEL [d]    BREAK   [f012 ]     No ACPT [f017 ]                     Driver Attr    [d2]
+ZONE QRY  [f006 ]   Regular [c4]    EBOOK  [e]    Short M [f013 ]     NAK Ofr [f049]                      Vehicle Attr   [d3]
+TRIP QRY  [f007 ]   Local   [c5]    BID    [f]    BID     [f014 ]            Lead Time          Allowed   Vehs/Call      [d4]    
+QP        [f008 ]   Rookie  [c6]                  Local   [f015 ]     EBOOK   [f018 ]   EBOOK     [l]     Fut Call Entry [f021 ]
+Zone Stat [f009 ]                              Call Match [f016 ]  Time Calls [f020 ]   Personals [m]     Pers. Lead Time[f022 ]
+Time Call [f010 ]   Response to Call Offer [g]                     Late Meter [f019 ]                     Time Call Proc [f023] 
+								   Wakeup     [f025 ]
+
+            Features                     Features            Default Pri.       Default Pri.    Man Meter    Rate Calc.
+Check Seals   [n]     Stand Flag Processing [o]      Charge Call [e5]     "P"assenger [e1]        [u]           [x] 
+Hold Line     [p]     Zone Backup Level     [q]      Subsc. Call [e6]     "D"elivery  [e2]        [v]           [y]
+Greeting Line [t]     Driver Msg Approval   [r]      Time Call   [e7]     "X"type     [e3]        [w]
+                      Subsc. Call Review    [s]                           "W"ake-up   [e4]
+}
+screen
+{
+
+
+          System Information                         Report Freq.
+Audit Trail Port  [f024                ]         Time Calls Report  [f29]
+                                                 Messages Report    [f30]
+
+              Defaults                              High Range  Est. Text
+City Code       [f1 ]               1st Estimate      [f032 ]   [f033   ]
+Area Code       [f2 ]               2nd Estimate      [f034 ]   [f035   ]
+Call Type       [f3]                3rd Estimate      [f036 ]   [f037   ]
+Hist. Search    [f4   ] 	    4th Estimate      [f038 ]   [f039   ]
+Match Algorithm [z] 		    5th Estimate      [f040 ]   [f041   ]
+                                    6th Estimate      [f042 ]   [f043   ]
+                                    7th Estimate      [f044 ]   [f045   ]
+                                    8th Estimate      [f046 ]   [f047   ]
+                                    Default                     [f048   ]
+}
+end
+tables
+fleet
+attributes
+a    = fl_id,UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="Fleet ID";
+b    = fl_nbr,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Fleet number (0-7) assigned by the system, used for internal cross-reference";
+f001 = fl_name,UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="Fleet name";
+f002 = fl_comments,UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="General comment";
+a1   = fl_lev1_rej_penalt,UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="Level 1 reject penalty: 1 - not allowed; 2 - no penalty; 3 - bottom of queue"; 
+a2   = fl_main_rej_penalt,UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="Primary reject penalty: 1 - not allowed; 2 - no penalty; 3 - bottom of queue";
+a3   = fl_lev2_rej_penalt,UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="Level 2 reject penalty: 1 - not allowed; 2 - no penalty; 3 - bottom of queue";
+a4   = fl_lev3_rej_penalt,UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="Level 3 reject penalty: 1 - not allowed; 2 - no penalty; 3 - bottom of queue";
+a5   = fl_lev4_rej_penalt,UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="Level 4 reject penalty: 1 - not allowed; 2 - no penalty; 3 - bottom of queue";
+a6   = fl_lev5_rej_penalt,UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="Level 5 reject penalty: 1 - not allowed; 2 - no penalty; 3 - bottom of queue";
+a7   = fl_lev6_rej_penalt,UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="Level 6 reject penalty: 1 - not allowed; 2 - no penalty; 3 - bottom of queue";
+a8   = fl_lev7_rej_penalt,UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="Level 7 reject penalty: 1 - not allowed; 2 - no penalty; 3 - bottom of queue";
+a9   = fl_lev8_rej_penalt,UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="Level 8 reject penalty: 1 - not allowed; 2 - no penalty; 3 - bottom of queue";
+b1   = fl_lev1_excl_time,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Level 1 Exclusive Time (In Minutes)";
+b2   = fl_main_excl_time,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Primary Exclusive Time (In Minutes)";
+b3   = fl_lev2_excl_time,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Level 2 Exclusive Time (In Minutes)";
+b4   = fl_lev3_excl_time,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Level 3 Exclusive Time (In Minutes)";
+b5   = fl_lev4_excl_time,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Level 4 Exclusive Time (In Minutes)";
+b6   = fl_lev5_excl_time,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Level 5 Exclusive Time (In Minutes)";
+b7   = fl_lev6_excl_time,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Level 6 Exclusive Time (In Minutes)";
+b8   = fl_lev7_excl_time,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Level 7 Exclusive Time (In Minutes)";
+b9   = fl_lev8_excl_time,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Level 8 Exclusive Time (In Minutes)";
+f003 = fl_post_freq,RIGHT,NOENTRY,NOUPDATE,COMMENTS="How often a driver may press the BOOK-IN key. (In Seconds)";
+f004 = fl_cond_post_freq,RIGHT,NOENTRY,NOUPDATE,COMMENTS="How often a driver may press the Cond. BOOK key.  (In Seconds)";
+f006 = fl_veh_inqry_freq,RIGHT,NOENTRY,NOUPDATE,COMMENTS="How often the driver may press the INQRY key.  (In Seconds)";
+f007 = fl_zone_info_freq,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Frequency of search report geration by the system.  (In Seconds)";
+f008 = fl_zone_inqry_freq,RIGHT,NOENTRY,NOUPDATE,COMMENTS="How often a driver may press the INFO key.  (In Seconds)";
+f009 = fl_zone_stat_freq,RIGHT,NOENTRY,NOUPDATE,COMMENTS="How often the zone status display screen is refreshed. (In Seconds)";
+f010 = fl_time_call_freq,RIGHT,NOENTRY,NOUPDATE,COMMENTS="How often the system checks if any time calls are due.  (In Minutes)";
+c1   = fl_drv_no_show_pri,include=(1 to 5),NOENTRY,NOUPDATE,COMMENTS="Priority assigned to drivers who pressed the NTRIP key. (1-highest, 5-lowest)";
+c2   = fl_drv_cancel_pri,include=(1 to 5),NOENTRY,NOUPDATE,COMMENTS="Priority assigned to drivers whose call was cancelled. (1-highest, 5-lowest)";
+c4   = fl_drv_regular_pri,include=(1 to 5),NOENTRY,NOUPDATE,COMMENTS="Priority assigned to regular drivers. (1-highest, 5-lowest)";
+c5   = fl_drv_local_pri,include=(1 to 5),NOENTRY,NOUPDATE,COMMENTS="Priority assigned to drivers who completed a local call. (1-highest, 5-lowest)";
+c6   = fl_high_rookie_pri,include=(1 to 63),NOENTRY,NOUPDATE,COMMENTS="Highest priority call that a rookie may handle. (1-highest, 63-lowest)";
+c    = fl_no_show_action,include=(1 to 4),NOENTRY,NOUPDATE,COMMENTS="1-disp. appr;2-as 1 & auto book;3-auto cancel & book;4-auto cancel, show disp.";
+d    = fl_cancel_action,include=(1 to 3),NOENTRY,NOUPDATE,COMMENTS="1-dispatcher approval needed;2-as 1 & auto book;3-auto cancel & book";
+e    = fl_enr_post_action,include=("Y", "N"),default="N",UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="Should system hold calls on primary level if cabs are enroute booked into zone";
+f    = fl_bid_action,include=(1 to 2),NOENTRY,NOUPDATE,COMMENTS="1-dispatcher approves; 2-no dispatcher involvement";
+g    = fl_call_offer_proc,include=(1 to 3),NOENTRY,NOUPDATE,COMMENTS="1-implied ACPT on stand & primary;2-implied ACPT;3-explicit ACPT";
+f011 = fl_call_accept_per,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Number of seconds given a driver to press the ACPT key. (In Seconds)";
+f012 = fl_break_duration,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Maximum length of a valid break period. (In Minutes)";
+f013 = fl_short_meter_dur,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Shortest allowable meter-on/meter-off interval. (In Minutes)";
+f014 = fl_bid_duration,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Number of seconds given all drivers to press the BID key";
+f015 = fl_local_calls_dur,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Shortest allowable meter-on/meter-off interval for local calls. (In Minutes)";
+f016 = fl_avl_call_q_time,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Time the system is given to match a call before a TIMEOUT. (In Minutes)";
+h    = fl_no_acpt_penalt,include=(1 to 3),NOENTRY,NOUPDATE,COMMENTS="1-none;2-bottom of queue;3-book-off and penalize the driver";
+f017 = fl_no_acpt_penalty,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Amount of time (minutes) after no-accept the driver is not allowed to book";
+f018 = fl_enr_post_lead,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Maximum allowable time between EBOOK and actual BOOK. (In Minutes)";
+f020 = fl_future_call_min,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Amount of notice required for entry of a future call. (In Minutes)";
+f019 = fl_late_meter,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Maximum allowable time between ACPT and PCKUP/M-ON. (In Minutes)";
+k    = fl_cal_assign_info,include=(1 to 5),NOENTRY,NOUPDATE,COMMENTS="1-none;2-zone info;3-zone info,type,map page;4-zone and 100 block;5-address";
+l    = fl_when_enr_post,include=(1 to 3),NOENTRY,NOUPDATE,COMMENTS="1-always;2-after PCKUP/M-ON;3-after PCKUP/M-ON on system assigned call";
+m    = fl_no_personal,include=("Y", "N"),default="N",UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="Whether or not to allow entry of personal cab requests";
+d1   = fl_max_rej_count,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Maximum number of times a call may be rejected before it becomes an exception";
+d2   = fl_max_nbr_drv_atr,include=(1 to 8),NOENTRY,NOUPDATE,COMMENTS="Maximum number of driver attributes a call taker may specify for a call";
+d3   = fl_max_nbr_veh_atr,include=(1 to 8),NOENTRY,NOUPDATE,COMMENTS="Maximum number of vehicle attributes a call taker may specify for a call";
+d4   = fl_max_vehs_call,include=(1 to 9),RIGHT,NOENTRY,NOUPDATE,COMMENTS="Maximum number of vehicles that may be specified to service one call";
+f021 = fl_future_call_max,RIGHT,NOENTRY,NOUPDATE,COMMENTS="How many days in advance, without approval, a calltaker may enter a future call";
+f022 = fl_pers_lead_tm,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Personal call lead time. (In Minutes)";
+f023 = fl_time_call_max,RIGHT,NOENTRY,NOUPDATE,COMMENTS="How far into the future should we go to select time calls. (In Minutes)";
+n    = fl_no_seals,include=("Y", "N"),UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="Whether or not to suppress seals checking";
+p    = fl_hold_line_flag,include=("Y", "N"),UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="Whether the hold line feature is enabled for this fleet";
+t    = fl_greeting_line,include=("Y", "N"),UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="Whether or not the greeting lines are to be displayed on the call entry screens";
+o    = fl_auto_stand_flag,NOENTRY,NOUPDATE,COMMENTS="1-not allowed;2-disp. appr;3-auto approval and call reassignment";
+q    = fl_zone_backup_lev,include=(1 to 8),NOENTRY,NOUPDATE,COMMENTS="How many levels of zones are to be considered when matching a call";
+r    = fl_drv_msg_approve,include=(1 to 2),NOENTRY,NOUPDATE,COMMENTS="1-dispatcher approval required;2-message automatically sent";
+s    = fl_subsc_review,include=(1 to 2),NOENTRY,NOUPDATE,COMMENTS="1-dispatcher approval required;2-calls automatically submitted";
+e5   = fl_charge_pri_def,include=(6 to 63),RIGHT,NOENTRY,NOUPDATE,COMMENTS="Default priority for charge calls";
+e6   = fl_subsc_pri_def,include=(6 to 63),RIGHT,NOENTRY,NOUPDATE,COMMENTS="Default priority for subscription calls";
+e7   = fl_calls_pri_def,include=(6 to 63),RIGHT,NOENTRY,NOUPDATE,COMMENTS="Default priority for future calls";
+e1   = fl_pass_pri_def,include=(6 to 63),RIGHT,NOENTRY,NOUPDATE,COMMENTS="Default priority for passenger calls";
+e2   = fl_del_pri_def,include=(6 to 63),RIGHT,NOENTRY,NOUPDATE,COMMENTS="Default priority for delivery calls";
+e3   = fl_typex_pri_def,include=(6 to 63),RIGHT,NOENTRY,NOUPDATE,COMMENTS="Default priority for type 'X' calls";
+e4   = fl_wake_up_pri_def,include=(6 to 63),RIGHT,NOENTRY,NOUPDATE,COMMENTS="Default priority for wakeup calls";
+u    = fl_met_pass_call,include=("Y", "N"),UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="Whether a manual meter on/off is allowed on passenger calls";
+v    = fl_met_del_call,include=("Y", "N"),UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="Whether a manual meter on/off is allowed on delivery calls";
+w    = fl_met_typex_call,include=("Y", "N"),UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="Whether a manual meter on/off is allowed on typex calls";
+x    = fl_pass_rate_calc,include=(1 to 4),NOENTRY,NOUPDATE,COMMENTS="1-none;2-manual;3-zone to zone table;4-zip to zip table";
+y    = fl_dlv_rate_calc,include=(1 to 4),NOENTRY,NOUPDATE,COMMENTS="1-none;2-manual;3-zone to zone table;4-zip to zip table";
+f024 = fl_audt_trail_port,NOENTRY,NOUPDATE,COMMENTS="Which port the audit trail printer is connected to for this fleet";
+f025 = fl_wakeup_lead_tm,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Wakeup lead time (In Minutes).";
+f29 = fl_time_calls_freq,RIGHT,NOENTRY,NOUPDATE,COMMENTS="How often the time calls report will be printed (in hours)";
+f30 = fl_msg_rpt_freq,RIGHT,NOENTRY,NOUPDATE,COMMENTS="How often the message report will be printed (in hours)";
+f1   = fl_city_default,UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="Default city code to be used if the user profile of this user does not have one";
+f2   = fl_phone_area_def,NOENTRY,NOUPDATE,COMMENTS="Default phone area code to be used if this user's profile does not have one";
+f3   = fl_call_type_def,default="P ",UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="Default call type to be used if the user's profile does not have one";
+f4   = fl_hist_search_def,default=30,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Default for historical call searches. (In Minutes)";
+z    = fl_match_algorithm,include=(1 to 3),NOENTRY,NOUPDATE,COMMENTS="1-seq. by zone,temp by cab;2-seq. by zone,cab queue order;3-temp by zone type";
+f032 = fl_range_limit1,NOENTRY,NOUPDATE,COMMENTS="First upper limit range. (In Minutes)";
+f033 = fl_estimate_text1,NOENTRY,NOUPDATE,UPSHIFT,COMMENTS="Text corresponding to first upper limit range(e.g. 10-15)";
+f034 = fl_range_limit2,NOENTRY,NOUPDATE,COMMENTS="Second upper limit range. (In Minutes)";
+f035 = fl_estimate_text2,NOENTRY,NOUPDATE,UPSHIFT,COMMENTS="Text corresponding to second upper limit range(e.g. 10-15)";
+f036 = fl_range_limit3,NOENTRY,NOUPDATE,COMMENTS="Third upper limit range. (In Minutes)";
+f037 = fl_estimate_text3,NOENTRY,NOUPDATE,UPSHIFT,COMMENTS="Text corresponding to third upper limit range(e.g. 10-15)";
+f038 = fl_range_limit4,NOENTRY,NOUPDATE,COMMENTS="Fourth upper limit range. (In Minutes)";
+f039 = fl_estimate_text4,NOENTRY,NOUPDATE,UPSHIFT,COMMENTS="Text corresponding to fourth upper limit range(e.g. 10-15)";
+f040 = fl_range_limit5,NOENTRY,NOUPDATE,COMMENTS="Fifth upper limit range. (In Minutes)";
+f041 = fl_estimate_text5,NOENTRY,NOUPDATE,UPSHIFT,COMMENTS="Text corresponding to fifth upper limit range(e.g. 10-15)";
+f042 = fl_range_limit6,NOENTRY,NOUPDATE,COMMENTS="Sixth upper limit range. (In Minutes)";
+f043 = fl_estimate_text6,NOENTRY,NOUPDATE,UPSHIFT,COMMENTS="Text corresponding to sixth upper limit range(e.g. 10-15)";
+f044 = fl_range_limit7,NOENTRY,NOUPDATE,COMMENTS="Seventh upper limit range. (In Minutes)";
+f045 = fl_estimate_text7,NOENTRY,NOUPDATE,UPSHIFT,COMMENTS="Text corresponding to seventh upper limit range(e.g. 10-15)";
+f046 = fl_range_limit8,NOENTRY,NOUPDATE,COMMENTS="Eighth upper limit range. (In Minutes)";
+f047 = fl_estimate_text8,NOENTRY,NOUPDATE,UPSHIFT,COMMENTS="Text corresponding to eighth upper limit range(e.g. 10-15)";
+f048 = fl_def_est_text,NOENTRY,NOUPDATE,UPSHIFT,COMMENTS="Default estimate text, if no ranges entered";
+f049 = fl_nak_offer_penal,include=(1 to 3),NOENTRY,COMMENTS="1-none;2-bottom of queue;3-book-off";
+end

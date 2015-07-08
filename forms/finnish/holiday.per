@@ -1,0 +1,19 @@
+database mads
+screen
+{
+                                            Pyhäpäivätiedoston hoito
+Pyhäpäivän pvm      Pyhäpäivän nimi
+[f1]/[f2]/[f3]      [f001                ]
+}
+end
+tables
+holiday
+attributes
+f1   = holiday.hl_mon,right,include=(1 to 12),REQUIRED,AUTONEXT,COMMENTS="Pyhäpäivän kuukausi";
+f2   = holiday.hl_day,right,include=(1 to 31),REQUIRED,AUTONEXT,COMMENTS="Pyhäpäivän päivä";
+f3   = holiday.hl_year,right,include=(0 to 99),REQUIRED,AUTONEXT,COMMENTS="Pyhäpäivän vuosi";
+f001 = holiday.hl_desc,UPSHIFT,COMMENTS="Pyhäpäivän kuvaus";
+end
+instructions
+   delimiters "()";
+end

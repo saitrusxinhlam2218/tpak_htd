@@ -1,0 +1,76 @@
+database mads
+screen
+{
+						Systeeminhoitotiedoston hoito
+                                                                             1. Tilaukset tilauskohtaisesti määräajan mukaan
+    Päivä alkaa     Päivä loppuu  Tuotosajon aloitusaika                     2. Vanhat tilaukset autokohtaisesti määräajan mukaan
+    [f000]            [f001]               [f002]                            3. Käyttäjätoimet käyttäjän tyypin ja TN:n mukaan
+                                                                             4. Ajajatoimet ajajan TN:n mukaan
+Yhtiö                Tuotettavat raportit           Tulostettavat raportit   5. Autotoimet auton TN:n mukaan 
+                     11111111112222222222             11111111112222222222   6. Ajojakautuma ruutukohtaisesti määräajan mukaan 
+            12345678901234567890123456789    12345678901234567890123456789   7. Ajojakautuma autokohtaisesti määräajan mukaan 
+ [i]  [a]  [f003                         ]  [f004                         ]  8. Ajojakautuma tilauskohtaisesti ruudun mukaan 
+ [j]  [b]  [f005                         ]  [f006                         ]  9. Ruuduttamattomat ajot noutokadun mukaan  
+ [k]  [c]  [f007                         ]  [f008                         ] 10. Ajajaviestit ajajakohtaisesti ajan mukaan   
+ [l]  [d]  [f009                         ]  [f010                         ] 11. Hälytykset kellonajan mukaan 
+ [m]  [e]  [f011                         ]  [f012                         ] 12. Käsivälitysajot välittäjäkohtaisesti määräajan muk.
+ [n]  [f]  [f013                         ]  [f014                         ] 13. Systeemivirheet kellonajan mukaan 
+ [o]  [g]  [f015                         ]  [f016                         ] 14. Ajajat kiellossa ajajan nimen mukaan
+ [p]  [h]  [f017                         ]  [f018                         ] 15. Laskutustoimet tilinumeron mukaan 	 
+                                                                            16. Kyselyraportti ajajan TN:n mukaan 		 
+                                                                            17. Keskim lähetysaika ruutukohtaisesti ajan mukaan 
+ Send Mail  System Mgr  Customer Aging 20. Luottokortin tilitapahtuma       18. Keskim noutoaika ruutukohtaisesti ajan mukaan 
+  [q]       [f019     ] [f20]          21. Automaattinen tilausten          19. Keskim ajoaika ruutukohtaisesti ajan mukaan 
+}
+end
+tables
+syscntl
+fleet
+attributes
+f000 = syscntl.ss_day_start,include=(0to 59,100 to 159,200 to 259,300 to 359,400 to 459, 500 to 559,600 to 659,700 to 759,
+800 to 859,900 to 959,1000 to 1059,1100 to 1159,1200 to 1259,1300 to 1359,1400 to 1459,1500 to 1559,1600 to 1659,1700 to 1759,
+1800 to 1859,1900 to 1959,2000 to 2059,2100 to 2159,2200 to 2259,2300 to 2359),RIGHT,COMMENTS="Täyden työpäivän aloitusajankohta";
+f001 = syscntl.ss_day_end,include=(0to 59,100 to 159,200 to 259,300 to 359,400 to 459, 500 to 559,600 to 659,700 to 759,
+800 to 859,900 to 959,1000 to 1059,1100 to 1159,1200 to 1259,1300 to 1359,1400 to 1459,1500 to 1559,1600 to 1659,1700 to 1759,
+1800 to 1859,1900 to 1959,2000 to 2059,2100 to 2159,2200 to 2259,2300 to 2359),RIGHT,COMMENTS="Täyden työpäivän lopetusajankohta";
+f002 = syscntl.ss_prod_start_tm,include=(0to 59,100 to 159,200 to 259,300 to 359,400 to 459, 500 to 559,600 to 659,700 to 759,
+800 to 859,900 to 959,1000 to 1059,1100 to 1159,1200 to 1259,1300 to 1359,1400 to 1459,1500 to 1559,1600 to 1659,1700 to 1759,
+1800 to 1859,1900 to 1959,2000 to 2059,2100 to 2159,2200 to 2259,2300 to 2359),RIGHT,COMMENTS="Ajankohta jolloin aletaan päivän tuotosajo";
+a    = syscntl.ss_0index,UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="Yhtiön tunnusnumero",lookup i = fleet.fl_id joining *fleet.fl_nbr;
+f003 = syscntl.ss_gen_rpt0_n,UPSHIFT,COMMENTS="K/E-merkki joka raportille";
+f004 = syscntl.ss_print_rpt0_n,UPSHIFT,COMMENTS="K/E-merkki joka raportille";
+b    = ss_index1,UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="Yhtiön tunnusnumero",DEFAULT = 1,lookup j = fleet.fl_id joining fleet.fl_nbr;
+f005 = syscntl.ss_gen_rpt1_n,UPSHIFT,COMMENTS="K/E-merkki joka raportille";
+f006 = syscntl.ss_print_rpt1_n,UPSHIFT,COMMENTS="K/E-merkki joka raportille"; c    = ss_index2,UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="Yhtiön tunnusnumero",DEFAULT = 2,lookup k = fleet.fl_id joining fleet.fl_nbr; f007 = syscntl.ss_gen_rpt2_n,UPSHIFT,COMMENTS="K/E-merkki joka raportille";
+f008 = syscntl.ss_print_rpt2_n,UPSHIFT,COMMENTS="K/E-merkki joka raportille";
+d    = ss_index3,UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="Yhtiön tunnusnumero",DEFAULT = 3,lookup l = fleet.fl_id joining fleet.fl_nbr;
+f009 = syscntl.ss_gen_rpt3_n,UPSHIFT,COMMENTS="K/E-merkki joka raportille";
+f010 = syscntl.ss_print_rpt3_n,UPSHIFT,COMMENTS="K/E-merkki joka raportille";
+e    = ss_index4,UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="Yhtiön tunnusnumero",DEFAULT = 4,lookup m = fleet.fl_id joining fleet.fl_nbr;
+f011 = syscntl.ss_gen_rpt4_n,UPSHIFT,COMMENTS="K/E-merkki joka raportille";
+f012 = syscntl.ss_print_rpt4_n,UPSHIFT,COMMENTS="K/E-merkki joka raportille";
+f    = ss_index5,UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="Yhtiön tunnusnumero",DEFAULT = 5,lookup n = fleet.fl_id joining fleet.fl_nbr;
+f013 = syscntl.ss_gen_rpt5_n,UPSHIFT,COMMENTS="K/E-merkki joka raportille";
+f014 = syscntl.ss_print_rpt5_n,UPSHIFT,COMMENTS="K/E-merkki joka raportille";
+g    = ss_index6,UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="Yhtiön tunnusnumero",DEFAULT = 6,lookup o = fleet.fl_id joining fleet.fl_nbr;
+f015 = syscntl.ss_gen_rpt6_n,UPSHIFT,COMMENTS="K/E-merkki joka raportille";
+f016 = syscntl.ss_print_rpt6_n,UPSHIFT,COMMENTS="K/E-merkki joka raportille";
+h    = ss_index7,UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="Yhtiön tunnusnumero",DEFAULT = 7,lookup p = fleet.fl_id joining fleet.fl_nbr;
+f017 = syscntl.ss_gen_rpt7_n,UPSHIFT,COMMENTS="K/E-merkki joka raportille";
+f018 = syscntl.ss_print_rpt7_n,UPSHIFT,COMMENTS="K/E-merkki joka raportille";
+q    = syscntl.ss_send_mail,UPSHIFT,COMMENTS="Send purge report to system manager";
+f019 = syscntl.ss_system_mgr,COMMENTS="Login Name of System Manager";
+f20  = syscntl.ss_keep_cust_days, COMMENTS="Number of days to keep idle customer record";
+
+instructions
+   delimiters "()";
+after display of syscntl
+let a = 0
+let b = 1
+let c = 2
+let d = 3
+let e = 4
+let f = 5
+let g = 6
+let h = 7
+end

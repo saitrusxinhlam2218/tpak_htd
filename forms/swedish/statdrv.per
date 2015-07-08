@@ -1,0 +1,45 @@
+database mads
+screen
+{
+Bilpark   ID       Bilnr    Förarstatistik från      Förarstatistik till
+[a]       [ f000]  [f001]   [f002      ]       	
+[f003      ]
+
+Meddelande sänt     Nödlägen      Inloggad          Utloggad    Beg. tal
+[f020]              [f024]        [f025]            [f026]      [f019]
+
+Bokn     SL        Vbokn    Ej acpt    Avslag   Utrop    Bom     Lift     F.val     Best     Rast    Kort m   Sen m    Retursamt
+[f011]   [f013]    [f012]   [f016]     [f017]   [f022]   [f023]  [f009]   [f010]    [f008]   [f018]  [f014]   [f015]   [f021]
+}
+end
+tables
+statdrv
+attributes
+a = statdrv.sd_fleet,REQUIRED,UPSHIFT,NOUPDATE,COMMENTS="Bilpark ID";
+f000 = statdrv.sd_drv_id,REQUIRED,NOUPDATE,RIGHT,COMMENTS="Förare ID";
+f001 = statdrv.sd_veh_nbr,REQUIRED,NOUPDATE,RIGHT,COMMENTS="Bilnummer";
+f002 = statdrv.sd_from_dt_tm,RIGHT,COMMENTS="Tidsperiodens början (UNIX-datum.tid i sekunder)";
+f003 = statdrv.sd_to_dt_tm,RIGHT,COMMENTS="Tidsperiodens slut (UNIX-datum.tid i sekunder)";
+f020 = statdrv.sd_messages,RIGHT,COMMENTS="Antal skickade meddelanden";
+f024 = statdrv.sd_emergencies,RIGHT,COMMENTS="Antal nödlägen";
+f025 = statdrv.sd_sign_ins,RIGHT,COMMENTS="Antal inloggningar";
+f026 = statdrv.sd_sign_offs,RIGHT,COMMENTS="Antal utloggningar";
+f019 = statdrv.sd_req_to_talk,RIGHT,COMMENTS="Antal gånger denne förare begärde tal";
+f011 = statdrv.sd_posts,RIGHT,COMMENTS="Antal gånger denne förare bokade";
+f013 = statdrv.sd_enroute_posts,RIGHT,COMMENTS="Antal gånger föraren bokade på väg";
+f012 = statdrv.sd_cond_posts,RIGHT,COMMENTS="Antal gånger förare gjorde villkorliga bokningar";
+f016 = statdrv.sd_no_accepts,RIGHT,COMMENTS="Antal ej accepterade";
+f017 = statdrv.sd_rejects,RIGHT,COMMENTS="Antal avslag";
+f022 = statdrv.sd_callouts,RIGHT,COMMENTS="Antal utrop";
+f023 = statdrv.sd_no_shows,RIGHT,COMMENTS="Antal bomkörningar";
+f009 = statdrv.sd_flags,RIGHT,COMMENTS="Antal liftkunder";
+f010 = statdrv.sd_bids,RIGHT,COMMENTS="Antal fria val";
+f008 = statdrv.sd_calls,RIGHT,COMMENTS="Antal best. tilldelade förare via systemet eller trafikledare";
+f018 = statdrv.sd_breaks,RIGHT,COMMENTS="Antal tagna raster";
+f014 = statdrv.sd_short_meters,RIGHT,COMMENTS="Antal kort meter";
+f015 = statdrv.sd_late_meters,RIGHT,COMMENTS="Antal sen meter";
+f021 = statdrv.sd_callbacks,RIGHT,COMMENTS="Antal retursamtal";
+end
+instructions
+   delimiters "()";
+end

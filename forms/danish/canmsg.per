@@ -1,0 +1,30 @@
+{
+|***********************************************************************
+|                 RCS INFO
+|
+|  @(#)  $RCSfile: canmsg.per,v $
+|  @(#)  $Revision: 1.6 $
+|  @(#)  $Date: 1998/11/09 09:34:40 $
+|  @(#)  $Author: taxiadm $
+|  @(#)  $Source: /taxi-scan/taxi_proj/cvs/taxi-scan/src/forms/danish/canmsg.per,v $
+|
+|  Copyright (c) 1994 - MobileSoft Consulting, Inc. Woodinville WA
+|
+|**********************************************************************/
+|ident "@(#) head:$RCSfile: canmsg.per,v $	$Revision: 1.6 $"
+}
+database mads
+screen
+{
+Beskednr	Indl. beskedstekst
+[a1 ]		[f000                                    ]
+}
+end
+tables
+canmsg
+attributes
+a1 = canmsg.cm_nbr,include = (0 to 999),REQUIRED,NOUPDATE,RIGHT,COMMENTS="Den indlagte beskeds nummer (0 - 999)";
+f000 = canmsg.cm_text,UPSHIFT,COMMENTS="Den indlagte beskeds tekst";
+instructions
+   delimiters "()";
+end

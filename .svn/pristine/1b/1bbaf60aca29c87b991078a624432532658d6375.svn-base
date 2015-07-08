@@ -1,0 +1,198 @@
+$ /****************************************************************************
+$ *                                                                           *
+$ *                           S C C S   I N F O                               *
+$ *                                                                           *
+$ * @(#)  vh_maint.MSF.fin; Rel: 10.1.3.2; Get date: 8/9/95 at 11:11:39
+$ * @(#)  Last delta: 8/9/95 at 11:11:31
+$ * @(#)  SCCS File: /taxi/sccs/s.vh_maint.MSF.fin
+$ *                                                                           *
+$ * Copyright (c) 1990 - MDI Seattle                                          *
+$ *                                                                           *
+$ *****************************************************************************/
+$ #ident "@(#) head:vh_maint.MSF.fin/usr/taxi/enh_src/src/msf/fin	10.1.3.2"
+
+$ /*
+$  * Message file for PROGRAM: vh_maint
+$  * CATALOG:   vh_maint.cat
+$  * MNEMONICS: vh_m_strdefs.h
+$  */
+
+$quote "
+$set 1
+
+$ /*    NOTE TO THE TRANSLATOR                          */
+$ /*    Quoted text will be followed by a maximum string length if the  */
+$ /*    text length is different than the number of chars in the string.*/
+$ /*    If no string length is entered default to the current number of */
+$ /*    characters.  A comment about the string is also included where  */
+$ /*    necessary.                                                      */
+
+VH_MAINT_1	"12:00" 					
+VH_MAINT_2	"24:00" 				
+VH_MAINT_3	"Väärä yhtiön TN"				/* 50	*/
+VH_MAINT_4	"On annettava arvo"				/* 50   */
+VH_MAINT_5	"00.00.00"			
+VH_MAINT_6	"00:00 "		
+VH_MAINT_7	"On annettava arvo"				/* 50   */
+VH_MAINT_8	"On annettava arvo (1 - 9999)"		/* 50, replace ÄÅ with ()   */
+VH_MAINT_9	"On annettava arvo (1 - 3839)"		/* 50 , replace ÄÅ with ()  */
+VH_MAINT_10	"Yhtiön tunniste"				/* 50   */
+VH_MAINT_11	"Yhtiön numero joka vastaa tämän auton yhtiötä"
+VH_MAINT_12	"Auton numero"				/* 50   */
+VH_MAINT_13	"Tämän auton MDT-terminaalin MID"	/* 50   */
+VH_MAINT_14	"Auton rekisterinumero"			/* 50   */
+VH_MAINT_15	"Auton merkki"					/* 50   */
+VH_MAINT_16	"Auton malli"					/* 50   */
+VH_MAINT_17	"K/E. Toimiiko MDT-terminaali tässä autossa"	/* Check constant for Y/N	*/
+VH_MAINT_18	"K/E. Toimiiko tämän auton mittari vai ei"		/* Check constant for Y/N	*/
+VH_MAINT_19	"Osoittaa että tässä autossa on lupa 1"	/* 50	*/
+VH_MAINT_20	"Osoittaa että tässä autossa on lupa 2"	/* 50   */
+VH_MAINT_21	"Osoittaa että tässä autossa on lupa 3"	/* 50   */
+VH_MAINT_22	"Osoittaa että tässä autossa on lupa 4"	/* 50   */
+VH_MAINT_23	"Osoittaa että tässä autossa on lupa 5"	/* 50   */
+VH_MAINT_24	"Osoittaa että tässä autossa on lupa 6"	/* 50   */
+VH_MAINT_25	"Osoittaa että tässä autossa on lupa 7"	/* 50   */
+VH_MAINT_26	"Osoittaa että tässä autossa on lupa 8"	/* 50   */
+VH_MAINT_27	"Osoittaa että tässä autossa on lupa 9"	/* 50   */
+VH_MAINT_28	"Osoittaa että tässä autossa on lupa 10"	/* 50   */
+VH_MAINT_29	"Osoittaa että tässä autossa on lupa 11"	/* 50   */
+VH_MAINT_30	"Osoittaa että tässä autossa on lupa 12"	/* 50   */
+VH_MAINT_31	"Osoittaa että tässä autossa on lupa 13"	/* 50   */
+VH_MAINT_32	"Osoittaa että tässä autossa on lupa 14"	/* 50   */
+VH_MAINT_33	"Osoittaa että tässä autossa on lupa 15"	/* 50   */
+VH_MAINT_34	"Osoittaa että tässä autossa on lupa 16"	/* 50   */
+VH_MAINT_35	"Osoittaa että tällä autolla on merkintä 1"	/* 50   */
+VH_MAINT_36	"Osoittaa että tällä autolla on merkintä 2"	/* 50   */
+VH_MAINT_37	"Osoittaa että tällä autolla on merkintä 3"	/* 50   */
+VH_MAINT_38	"Osoittaa että tällä autolla on merkintä 4"	/* 50   */
+VH_MAINT_39	"Osoittaa että tällä autolla on merkintä 5"	/* 50   */
+VH_MAINT_40	"Osoittaa että tällä autolla on merkintä 6"	/* 50   */
+VH_MAINT_41	"Osoittaa että tällä autolla on merkintä 7"	/* 50   */
+VH_MAINT_42	"Osoittaa että tällä autolla on merkintä 8"	/* 50   */
+VH_MAINT_43	"Auton edellinen ajokieltopvm (PP.KK.VV)"	/* put date in proper format	*/
+VH_MAINT_44	"Auton edellinen ajokieltoaika (tt:mm)"	/* do not translate Äa/pÅ	*/
+VH_MAINT_45	"Pvm jolloin auto viimeksi palasi palvelukseen (PP.KK.VV)"	/* put date in proper format    */
+VH_MAINT_46	"Aika jolloin auto viimeksi palasi palvelukseen (tt:mm)"	/* do not translate Äa/pÅ       */
+VH_MAINT_47	"Syy auton poistamiseen(sisäinen)"	/* 50   */
+VH_MAINT_48	"E ei ajokieltoa, K ajokielto  matkustaja-ajoille"	/* check constants for Y/N 	*/
+VH_MAINT_49	"E ei ajokieltoa, K ajokielto tavara-ajoille"		/* check constants for Y/N      */
+VH_MAINT_50	"E ei ajokieltoa, K ajokielto X-tyypin ajoille"		/* check constants for Y/N      */
+VH_MAINT_51	"Poistoviesti joka lähetetään autolle"	/* 50   */
+VH_MAINT_52	"Tätä autoa koskevat huomautukset"		/* 50   */
+VH_MAINT_53	"Edellinen pvm kun auto ilmoitti hätätilan (PP.KK.VV)"	/* put date in proper format    */
+VH_MAINT_54	"Edellinen aika kun auto ilmoitti hätätilan (tt:mm)"	/* do not translate Äa/pÅ       */
+VH_MAINT_55	"Pvm jolloin edellinen hätätila selvitettiin (PP.KK.VV)"		/* put date in proper format    */
+VH_MAINT_56	"Aika jolloin edellinen hätätila selvitettiin (tt:mm)"	/* do not translate Äa/pÅ       */
+VH_MAINT_57	"Edellinen pvm jona auto aloitti (PP.KK.VV)"			/* put date in proper format    */
+VH_MAINT_58	"Edell aika jona auto aloitti (tt:mm)"			/* do not translate Äa/pÅ       */
+VH_MAINT_59	"Edellinen pvm jona auto lopetti (PP.KK.VV)"			/* put date in proper format    */
+VH_MAINT_60	"Edellinen aika jona auto lopetti (tt:mm)"		/* do not translate Äa/pÅ       */
+VH_MAINT_61	"Tämän auton edellinen ajaja"			/* 50   */
+VH_MAINT_62	"Tämän auton viimeksi hoitama ajo"		/* 50   */
+VH_MAINT_63	"Montako kertaa tämä auto on kirjattu viime vuoron aikana"
+VH_MAINT_64	"Montako kertaa autolle annettiin ehdollisia kirjauksia ed. vuoron aikana"
+VH_MAINT_65	"Montako kertaa autolle annettiin matkalla kirjauksia ed. vuoron aikana"
+VH_MAINT_66	"Montako kertaa autolle annettiin ei-hyvks edellisen vuoron aikana"
+VH_MAINT_67	"Montako kertaa auto antoi hylkäyksiä edellisen vuoron aikana"
+VH_MAINT_68	"Montako kutsua tällä autolla oli edellisen vuoron aikana"
+VH_MAINT_69	"Montako ei-ajoa autolla oli edellisen vuoron aikana"
+VH_MAINT_70	"Montako käsipystyä autolla oli edellisen vuoron aikana"
+VH_MAINT_71	"Montako tarj.pyyntöä autolta edellisen vuoron aikana"
+VH_MAINT_72	"Montako puhepyyntöä auto antoi edellisen vuoron aikana"
+VH_MAINT_73	"Montako viestiä auto lähetti välittäjälle edellisen vuoron aikana"
+VH_MAINT_74	"Montako taukoa auto otti edellisen vuoron aikana"
+VH_MAINT_75	"Montako ajoa autolle ohjattiin käsin edellisen vuoron aikana"
+VH_MAINT_76	"Montako ajoa autolle jaettiin edellisen vuoron aikana"
+VH_MAINT_77	"Montako lyhyttä mittaria auto yritti edellisen vuoron aikana"
+VH_MAINT_78	"Montako myöhäistä mittaria sattui auton edellisen vuoron aikana"
+VH_MAINT_79	"Montako kyselyä autolta tuli edellisen vuoron aikana"
+VH_MAINT_80	"Tietuetta ei löydy, LISÄÄ ensin!"			/* 50   */
+VH_MAINT_81	"Yhtiötiedoston avausvirhe"				/* 50   */
+VH_MAINT_82	"Yhtiötiedoston sulkemisvirhe"			/* 50   */
+VH_MAINT_83	"On annettava arvo"				/* 50   */
+VH_MAINT_84	"Paina ESC suorittaaksesi"				/* 50   */
+VH_MAINT_85	"Auto on jo olemassa"			/* 50   */
+VH_MAINT_86	"MID on jo olemassa"				/* 50   */
+VH_MAINT_87	"Autotiedoston lukuvirhe"			/* 50   */
+VH_MAINT_88	"Yhtiö"
+VH_MAINT_89	"Auto"
+VH_MAINT_90	"MID"
+VH_MAINT_91	"Rek.no."
+VH_MAINT_92	"Merk"
+VH_MAINT_93	"Malli"						/* 12	*/
+VH_MAINT_94	"MDT OK"
+VH_MAINT_95	"Mitt OK"
+VH_MAINT_96	"Luvat"
+VH_MAINT_97	"Merkinnät"
+VH_MAINT_98	"Kieltopvm"
+VH_MAINT_99	"Paluupvm"
+VH_MAINT_100	"Kiellon syy"
+VH_MAINT_101	"M"						/* Use constant for 'P' passenger	*/
+VH_MAINT_102	"T"						/* Use constant for 'D' delivery	*/
+VH_MAINT_103	"X"						/* Use constant for 'X' Type X		*/
+VH_MAINT_104	"Kieltoviesti"				/* 30	*/
+VH_MAINT_105	"Ajajaa koskevat huomautukset"				/* 30	*/
+VH_MAINT_106	"Edellinen hälytys"
+VH_MAINT_107	"Hälytys selvitetty"
+VH_MAINT_108	"Aloitus"					/* 15	*/
+VH_MAINT_109	"Lopetus"					/* 15	*/
+VH_MAINT_110	"Ajaja"
+VH_MAINT_111	"Hoidettu ajo"
+VH_MAINT_112	"RUUT"
+VH_MAINT_113	"ERUUT"
+VH_MAINT_114	"MRUUT"
+VH_MAINT_115	"EIHYVKS"
+VH_MAINT_116	"HYLK"
+VH_MAINT_117	"KUTSU"
+VH_MAINT_118	"JULLI"
+VH_MAINT_119	"KÄSP"
+VH_MAINT_120	"TRJ"
+VH_MAINT_121	"PUHE"
+VH_MAINT_122	"VIES"
+VH_MAINT_123	"TAUKO"
+VH_MAINT_124	"Välitks"
+VH_MAINT_125	"Ajoja"
+VH_MAINT_126	"Lyhyt M"					/* short meter	*/
+VH_MAINT_127	"Myöh M"					/* late meter	*/
+VH_MAINT_128	"Kysely"
+VH_MAINT_129	"00.00.00"					/* do not translate	*/
+VH_MAINT_130	"00:00"						/* do not translate	*/
+VH_MAINT_131	"vh_scr.out"					/* do not translate     */
+VH_MAINT_132	"Aikataulu"
+VH_MAINT_133    "Aikataulun numero (1..25) johon tämä auto liittyy, tai (0), jos ei aikataulua."
+VH_MAINT_134    "("  /* change to '(' for languages containing 'Ä' in the character set */
+VH_MAINT_135    ")"  /* change to ')' for languages containing 'Å' in the character set */
+VH_MAINT_136    "Väärä syöttö, anna K tai E"		/* max 80 */
+VH_MAINT_137    "1-MDT sekä ITM 2-MDT V03 mutta ei ITM 3-MDT V02 4-MDT420 5-MDT420 sekä TaxiMat 6-MDT420 sekä ITM 7-MDT V03 sekä TaxiMat"/* 70 char max */
+VH_MAINT_138    "Puuttuvien kuittien lukumäärä"    /* up to 70 characters */
+VH_MAINT_139    "Termin.tyyppi"         /* maximum of 13 characters */
+VH_MAINT_140    "Kuitteja puuttuu"      /* max of 16 characters */
+VH_MAINT_141	"Invalid choice - Please enter (A/C) to append or create"
+VH_MAINT_142	"Väri"
+VH_MAINT_143	"Puhelin"
+VH_MAINT_144	"Väri"
+VH_MAINT_145	"Puhelin"
+VH_MAINT_146     "Osoittaa että tällä autolla on merkintä 13"    /* 50   */
+VH_MAINT_147     "Osoittaa että tällä autolla on merkintä 14"    /* 50   */
+VH_MAINT_148     "Osoittaa että tällä autolla on merkintä 15"    /* 50   */
+VH_MAINT_149     "Osoittaa että tällä autolla on merkintä 16"    /* 50   */
+VH_MAINT_150     "Osoittaa että tällä autolla on merkintä 17"    /* 50   */
+VH_MAINT_151     "Osoittaa että tällä autolla on merkintä 18"    /* 50   */
+VH_MAINT_152     "Osoittaa että tällä autolla on merkintä 19"    /* 50   */
+VH_MAINT_153     "Osoittaa että tällä autolla on merkintä 20"    /* 50   */
+VH_MAINT_154     "Osoittaa että tällä autolla on merkintä 21"    /* 50   */
+VH_MAINT_155     "Osoittaa että tällä autolla on merkintä 22"    /* 50   */
+VH_MAINT_156     "Osoittaa että tällä autolla on merkintä 23"    /* 50   */
+VH_MAINT_157     "Osoittaa että tällä autolla on merkintä 24"    /* 50   */
+VH_MAINT_158     "Osoittaa että tällä autolla on merkintä 25"    /* 50   */
+VH_MAINT_159     "Osoittaa että tällä autolla on merkintä 26"    /* 50   */
+VH_MAINT_160     "Osoittaa että tällä autolla on merkintä 27"    /* 50   */
+VH_MAINT_161     "Osoittaa että tällä autolla on merkintä 28"    /* 50   */
+VH_MAINT_162     "Osoittaa että tällä autolla on merkintä 29"    /* 50   */
+VH_MAINT_163     "Osoittaa että tällä autolla on merkintä 30"    /* 50   */
+VH_MAINT_164     "Osoittaa että tällä autolla on merkintä 31"    /* 50   */
+VH_MAINT_165     "Osoittaa että tällä autolla on merkintä 32"    /* 50   */
+VH_MAINT_166	"Väri"
+VH_MAINT_167	"Puhelin"
+VH_MAINT_168	"Väri"
+VH_MAINT_169	"Puhelin"

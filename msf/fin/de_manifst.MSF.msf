@@ -1,0 +1,28 @@
+$ /****************************************************************************
+$ *                                                                           *
+$ *                           S C C S   I N F O                               *
+$ *                                                                           *
+$ * @(#)  de_manifst.MSF.fin; Rel: 10.1.3.1; Get date: 5/18/95 at 10:18:35
+$ * @(#)  Last delta: 12/5/94 at 11:03:29
+$ * @(#)  SCCS File: /taxi/sccs/s.de_manifst.MSF.fin
+$ *                                                                           *
+$ * Copyright (c) 1990 - MDI Seattle                                          *
+$ *                                                                           *
+$ *****************************************************************************/
+$ #ident "@(#) head:de_manifst.MSF.f/usr/users/brian/enh_src/src/msf/fin	10.1.3.1"
+
+$quote "
+$delset 1
+$set 1
+
+1	"AJAJATIEDOSTON AVAUSVIRHE %d iserrno %d\n"
+2	"TILAUSTIEDOSTON AVAUSVIRHE %d iserrno %d\n"
+3	"YHTEENSÄ                                                                                  %6.2fmk  %6.2fmk\n"
+4	"\nTILAUKS YHT - %d\n"
+5	"               AJOLUETTELO"
+6	"Ajajan nimi - %s    Ajajan TN - %d    Edell. auto - %d\n\n"
+7	"                                                   AJALTA"
+8	"TYYPPI........KATUOSOITE................... AL RUUTU RUUTU..AIKA  VÄLIT.  NOUTO.  SULK.. .KIINT..  ..TAKSA."
+9 	"Raportti päiville: %8s - %8s                 %20s                  Sivu: %3d   Tulostuspvm:  %s\n"
+10	"Raportti kattaa: %8s - %8s       %-55s       Tulostusaika: %s\n\n"
+11	"CALLH -tied. AVAUSVIRHE %d iserrno %d\n"

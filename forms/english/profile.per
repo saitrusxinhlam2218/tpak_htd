@@ -1,0 +1,116 @@
+{
+|***********************************************************************
+|                 RCS INFO
+|
+|  @(#)  $RCSfile: profile.per,v $
+|  @(#)  $Revision: 1.2 $
+|  @(#)  $Date: 1999/03/19 21:26:47 $
+|  @(#)  $Author: taxiadm $
+|  @(#)  $Source: /taxi-scan/taxi_proj/cvs/taxi-scan/src/forms/english/profile.per,v $
+|
+|  Copyright (c) 1994 - MobileSoft Consulting, Inc. Woodinville WA
+|
+|**********************************************************************/
+|ident "@(#) head:$RCSfile: profile.per,v $	$Revision: 1.2 $"
+}
+database mads
+screen
+{
+					USER PROFILE FILE DISPLAY
+User ID       Name       Greeting Name           Full Name           Fleet Permissions 
+     [f000]   [f001     ]  [f002        ]  [G001                  ]   [f004    ]
+
+Default    Fleet  Screen Search             Call Type  City   Highest Pri  Can Zone Calls   Logo File
+	   [a]    [a01]  [a02]              [b]        [a0 ]  [a1]         [c]              [f025                ]
+Superzones :
+    1       2       3       4       5       6       7       8       9       10      11      12      13      14      15      16
+    [f009 ] [f010 ] [f011 ] [f012 ] [f013 ] [f014 ] [f015 ] [f016 ] [f017 ] [f018 ] [f019 ] [f020 ] [f021 ] [f022 ] [f023 ] [f024 ]
+
+Exc Groups: 1   2   3   4   5   6   7   8   9   10  11  12      Menu Permissions
+            [d] [e] [f] [g] [h] [i] [j] [k] [l] [m] [n] [o]      [f003                                                    ]
+
+Exc  1    2    3    4    5    6    7    8    9    10   11   12   13   14   15   16   
+Type [f1] [a2] [a3] [a4] [a5] [a6] [a7] [a8] [a9] [b1] [b2] [b3] [b4] [b5] [b6] [b7]
+
+Exc  17   18   19   20   21   22   23   24   25   26   27   28   29   30   31   32 
+Type [b8] [b9] [c1] [c2] [c3] [c4] [c5] [c6] [c7] [c8] [c9] [d1] [d2] [d3] [d4] [d5]
+}
+end
+tables
+profile
+attributes
+f000 = profile.up_user_id,RIGHT,COMMENTS="User ID. displayed on all screens and used for transaction logging";
+f001 = profile.up_user_name,COMMENTS="Full user name";
+f002 = profile.up_greeting_name,UPSHIFT,COMMENTS="Greeting name to be displayed on the greeting line";
+G001 = profile.up_fullname,UPSHIFT,COMMENTS="Users full name";
+f004 = profile.up_fleet_perms,UPSHIFT,COMMENTS="Flag for each fleetthat this user may work on";
+a = profile.up_default_fleet,UPSHIFT,COMMENTS="Default fleet id";
+a01 = profile.up_default_screen,RIGHT,COMMENTS="Default screen for this user in navigation format";
+a02 = profile.up_default_search,RIGHT,COMMENTS="Default search for this user in navigation format";
+b = profile.up_default_call_tp,UPSHIFT,COMMENTS="Default call type";
+a0 = profile.up_default_city,UPSHIFT,COMMENTS="Default city code";
+a1 = profile.up_high_call_pri,RIGHT,COMMENTS="1-62. The highest priority this user may assign to a call";
+c = profile.up_can_zone_calls,UPSHIFT,COMMENTS="Y/N. can this user zone calls";
+f025 = profile.up_logo_file,UPSHIFT,COMMENTS="A pathname of an ascii file to be exits the MADS system";
+f009 = profile.up_superzone_1,RIGHT,COMMENTS="Superzone 1 default section";
+f010 = profile.up_superzone_2,RIGHT,COMMENTS="Superzone 2 default section";
+f011 = profile.up_superzone_3,RIGHT,COMMENTS="Superzone 3 default section";
+f012 = profile.up_superzone_4,RIGHT,COMMENTS="Superzone 4 default section";
+f013 = profile.up_superzone_5,RIGHT,COMMENTS="Superzone 5 default section";
+f014 = profile.up_superzone_6,RIGHT,COMMENTS="Superzone 6 default section";
+f015 = profile.up_superzone_7,RIGHT,COMMENTS="Superzone 7 default section";
+f016 = profile.up_superzone_8,RIGHT,COMMENTS="Superzone 8 default section";
+f017 = profile.up_superzone_9,RIGHT,COMMENTS="Superzone 9 default section";
+f018 = profile.up_superzone_10,RIGHT,COMMENTS="Superzone 10 default section";
+f019 = profile.up_superzone_11,RIGHT,COMMENTS="Superzone 11 default section";
+f020 = profile.up_superzone_12,RIGHT,COMMENTS="Superzone 12 default section";
+f021 = profile.up_superzone_13,RIGHT,COMMENTS="Superzone 13 default section";
+f022 = profile.up_superzone_14,RIGHT,COMMENTS="Superzone 14 default section";
+f023 = profile.up_superzone_15,RIGHT,COMMENTS="Superzone 15 default section";
+f024 = profile.up_superzone_16,RIGHT,COMMENTS="Superzone 16 default section";
+d = profile.up_group_1,UPSHIFT,COMMENTS="Y/N. whether exception group 1 is include in this users selection";
+e = profile.up_group_2,UPSHIFT,COMMENTS="Y/N. whether exception group 2 is include in this users selection";
+f = profile.up_group_3,UPSHIFT,COMMENTS="Y/N. whether exception group 3 is include in this users selection";
+g = profile.up_group_4,UPSHIFT,COMMENTS="Y/N. whether exception group 4 is include in this users selection";
+h = profile.up_group_5,UPSHIFT,COMMENTS="Y/N. whether exception group 5 is include in this users selection";
+i = profile.up_group_6,UPSHIFT,COMMENTS="Y/N. whether exception group 6 is include in this users selection";
+j = profile.up_group_7,UPSHIFT,COMMENTS="Y/N. whether exception group 7 is include in this users selection";
+k = profile.up_group_8,UPSHIFT,COMMENTS="Y/N. whether exception group 8 is include in this users selection";
+l = profile.up_group_9,UPSHIFT,COMMENTS="Y/N. whether exception group 9 is include in this users selection";
+m = profile.up_group_10,UPSHIFT,COMMENTS="Y/N. whether exception group 10 is include in this users selection";
+n = profile.up_group_11,UPSHIFT,COMMENTS="Y/N. whether exception group 11 is include in this users selection";
+o = profile.up_group_12,UPSHIFT,COMMENTS="Y/N. whether exception group 12 is include in this users selection";
+f003 = profile.up_menu_perms,UPSHIFT,COMMENTS="A flag for each menu selectable item ";
+f1 = profile.up_type_1,UPSHIFT,COMMENTS="Y/N. whether exception type1 is include in this users selection";
+a2 = profile.up_type_2,UPSHIFT,COMMENTS="Y/N. whether exception type 2 is include in this users selection";
+a3 = profile.up_type_3,UPSHIFT,COMMENTS="Y/N. whether exception type 3 is include in this users selection";
+a4 = profile.up_type_4,UPSHIFT,COMMENTS="Y/N. whether exception type 4 is include in this users selection";
+a5 = profile.up_type_5,UPSHIFT,COMMENTS="Y/N. whether exception type 5 is include in this users selection";
+a6 = profile.up_type_6,UPSHIFT,COMMENTS="Y/N. whether exception type 6 is include in this users selection";
+a7 = profile.up_type_7,UPSHIFT,COMMENTS="Y/N. whether exception type 7 is include in this users selection";
+a8 = profile.up_type_8,UPSHIFT,COMMENTS="Y/N. whether exception type 8 is include in this users selection";
+a9 = profile.up_type_9,UPSHIFT,COMMENTS="Y/N. whether exception type 9 is include in this users selection";
+b1 = profile.up_type_10,UPSHIFT,COMMENTS="Y/N. whether exception type 10 is include in this users selection";
+b2 = profile.up_type_11,UPSHIFT,COMMENTS="Y/N. whether exception type 11 is include in this users selection";
+b3 = profile.up_type_12,UPSHIFT,COMMENTS="Y/N. whether exception type 12 is include in this users selection";
+b4= profile.up_type_13,UPSHIFT,COMMENTS="Y/N. whether exception type 13 is include in this users selection";
+b5 = profile.up_type_14,UPSHIFT,COMMENTS="Y/N. whether exception type 14 is include in this users selection";
+b6 = profile.up_type_15,UPSHIFT,COMMENTS="Y/N. whether exception type 15 is include in this users selection";
+b7 = profile.up_type_16,UPSHIFT,COMMENTS="Y/N. whether exception type 16 is include in this users selection";
+b8 = profile.up_type_17,UPSHIFT,COMMENTS="Y/N. whether exception type 17 is include in this users selection";
+b9 = profile.up_type_18,UPSHIFT,COMMENTS="Y/N. whether exception type 18 is include in this users selection";
+c1 = profile.up_type_19,UPSHIFT,COMMENTS="Y/N. whether exception type 19 is include in this users selection";
+c2 = profile.up_type_20,UPSHIFT,COMMENTS="Y/N. whether exception type 20 is include in this users selection";
+c3 = profile.up_type_21,UPSHIFT,COMMENTS="Y/N. whether exception type 21 is include in this users selection";
+c4 = profile.up_type_22,UPSHIFT,COMMENTS="Y/N. whether exception type 22 is include in this users selection";
+c5 = profile.up_type_23,UPSHIFT,COMMENTS="Y/N. whether exception type 23 is include in this users selection";
+c6 = profile.up_type_24,UPSHIFT,COMMENTS="Y/N. whether exception type 24 is include in this users selection";
+c7 = profile.up_type_25,UPSHIFT,COMMENTS="Y/N. whether exception type 25 is include in this users selection";
+c8 = profile.up_type_26,UPSHIFT,COMMENTS="Y/N. whether exception type 26 is include in this users selection";
+c9 = profile.up_type_27,UPSHIFT,COMMENTS="Y/N. whether exception type 27 is include in this users selection";
+d1 = profile.up_type_28,UPSHIFT,COMMENTS="Y/N. whether exception type 28 is include in this users selection";
+d2 = profile.up_type_29,UPSHIFT,COMMENTS="Y/N. whether exception type 29 is include in this users selection";
+d3 = profile.up_type_30,UPSHIFT,COMMENTS="Y/N. whether exception type 30 is include in this users selection";
+d4 = profile.up_type_31,UPSHIFT,COMMENTS="Y/N. whether exception type 31 is include in this users selection";
+d5 = profile.up_type_32,UPSHIFT,COMMENTS="Y/N. whether exception type 32 is include in this users selection";
+end

@@ -1,0 +1,39 @@
+database mads
+screen
+{
+Bilpark     ID nr       Användarstatistik från     Användarstatistik till
+[a]         [f000]      [f001    ]               
+[f002    ]  
+
+Best   Passagerare    Leverans     Typ "X"     Väckning      Borttagna     Retursamtal       
+       [f007]         [f008]       [f009]      [f010]        [f011]        [f012]
+
+Best   Ej zonade      Avbeställda    Meddelanden     
+Man. tilld     Åsidosatta     Undantag
+       [f013]         [f014]         [f015]      
+ [f016]        [f018]         [f019]
+}
+end
+tables
+statusr
+attributes
+a = statusr.su_fleet,REQUIRED,UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="Bilpark ID";
+f000 = statusr.su_user_id,REQUIRED,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Användar ID" ;
+f001 = statusr.su_from_dt_tm,NOENTRY,NOUPDATE,RIGHT,COMMENTS="Tidsperiodens början"; 
+f002 = statusr.su_to_dt_tm,NOENTRY,NOUPDATE,RIGHT,COMMENTS="Tidsperiodens slut"; 
+f007 = statusr.su_pass_calls,NOENTRY,NOUPDATE,RIGHT,COMMENTS="Antal passagerarbest";
+f008 = statusr.su_del_calls,NOENTRY,NOUPDATE,RIGHT,COMMENTS="Antal leveransbest";
+f009 = statusr.su_typex_calls,NOENTRY,NOUPDATE,RIGHT,COMMENTS="Antal best av typ 'X'" ;
+f010 = statusr.su_wkup_calls,NOENTRY,NOUPDATE,RIGHT,COMMENTS="Antal väckningsbest";
+f011 = statusr.su_killed,NOENTRY,NOUPDATE,RIGHT,COMMENTS="Antal best som tagits bort av användaren under tidsperioden";
+f012 = statusr.su_callbacks,NOENTRY,NOUPDATE,RIGHT,COMMENTS="Antal retursamtal behandlade av användaren under tidsperioden";
+f013 = statusr.su_unzoned,NOENTRY,NOUPDATE,RIGHT,COMMENTS="Antal ej zonade best inskrivna av användaren under tidsperioden";
+f014 = statusr.su_cancelled,NOENTRY,NOUPDATE,RIGHT,COMMENTS="Antal best avbeställda av användaren under tidsperioden";
+f015 = statusr.su_messages,NOENTRY,NOUPDATE,RIGHT,COMMENTS="Antal meddelanden som skickats av använd under tidsperioden";
+f016 = statusr.su_man_assigns,NOENTRY,NOUPDATE,RIGHT,COMMENTS="Antal best. manuellt tilldelade av användaren under tidsp";
+f018 = statusr.su_overrides,NOENTRY,NOUPDATE,RIGHT,COMMENTS="Antal best.r som tvångstilldelats av en trafikledare";
+f019 = statusr.su_exceptions,NOENTRY,NOUPDATE,RIGHT,COMMENTS="Antal undantag som behandlats av en trafikledare";
+end
+instructions
+   delimiters "()";
+end

@@ -1,0 +1,32 @@
+{
+|***********************************************************************
+|                 RCS INFO
+|
+|  @(#)  $RCSfile: exctype.per,v $
+|  @(#)  $Revision: 1.2 $
+|  @(#)  $Date: 1999/03/19 21:26:33 $
+|  @(#)  $Author: taxiadm $
+|  @(#)  $Source: /taxi-scan/taxi_proj/cvs/taxi-scan/src/forms/english/exctype.per,v $
+|
+|  Copyright (c) 1994 - MobileSoft Consulting, Inc. Woodinville WA
+|
+|**********************************************************************/
+|ident "@(#) head:$RCSfile: exctype.per,v $	$Revision: 1.2 $"
+}
+database mads
+screen
+{
+						EXCEPTION TYPE FILE MAINTENANCE
+
+Number    Group      Description                       Short Desc
+[f0]      [a ]       [f002                          ]  [f003    ] 
+}
+end
+tables
+exctype
+attributes
+f0   = exctype.et_nbr,RIGHT,REQUIRED,NOENTRY,NOUPDATE,COMMENTS="A permanent # identifying this exception";
+a    = exctype.et_group_nbr,include=(1 to 12),RIGHT,UPSHIFT,COMMENTS="Exception summary group this exception belongs to (1-12)";
+f002 = exctype.et_desc,UPSHIFT,COMMENTS="Description of this exception";
+f003 = exctype.et_short_desc,UPSHIFT,REQUIRED,COMMENTS="Short description of this exception";
+end

@@ -1,0 +1,187 @@
+/***********************************************************************
+*                 RCS INFO
+*
+*  @(#)  $RCSfile: fill_subch.c,v $
+*  @(#)  $Revision: 1.3 $
+*  @(#)  $Date: 2003/01/28 16:30:04 $
+*  @(#)  $Author: jwelch $
+*  @(#)  $Source: /taxi-scan/taxi_proj/cvs/taxi-scan/src/fill/fill_subch.c,v $
+*
+*  Copyright (c) 1994 - MobileSoft Consulting, Inc. Woodinville WA
+*
+***********************************************************************/
+#ident "@(#) head:$RCSfile: fill_subch.c,v $	$Revision: 1.3 $"
+
+static char rcsid[] = "$Id: fill_subch.c,v 1.3 2003/01/28 16:30:04 jwelch Exp $";
+
+
+#define KEY_SRC
+
+#include "Subcall_hist_db.h"
+#include "taxi_db.h"
+
+#define CONST	12
+
+void
+fill_subch_key( req_buf, buf )
+     char *req_buf;
+     char *buf;
+{
+  struct cisam_subch *ch;
+  register int  offset = 0;
+
+  ch = (struct cisam_subch*)req_buf;
+
+  stlong(ch->record_nbr,&buf[offset]);
+  offset += LONGSIZE;
+  
+  stlong(ch->call_nbr,&buf[offset]);
+  offset += LONGSIZE;
+ 
+  stint(ch->exception_nbr,&buf[offset]);
+  offset = CONST;
+
+stlong(ch->status_dt_tm,&buf[offset]);
+}
+
+void
+fill_subch(req_buf, buf, action)
+     char *req_buf;
+     char *buf;
+     int  action;
+{
+  struct cisam_subch *ch;
+  register int  offset = 0;
+  long serial_nbr = 0;
+  ch = (struct cisam_subch*)req_buf;
+  
+
+if (action == ADD_REC)
+  {
+    isuniqueid(Db_files[SUBCALLH_FILE_ID].fd,&serial_nbr);
+    ch->record_nbr = (int)serial_nbr;
+  }
+stlong(ch->record_nbr,&buf[offset]);
+offset += LONGSIZE;
+
+stlong(ch->call_nbr,&buf[offset]);
+offset += LONGSIZE;
+
+stint(ch->exception_nbr,&buf[offset]);
+offset += INTSIZE;
+
+stchar(&ch->fleet,&buf[offset],sizeof(ch->fleet));
+offset += sizeof(ch->fleet); 
+
+stchar(&ch->event_type,&buf[offset],sizeof(ch->event_type));
+offset += sizeof(ch->event_type); 
+
+stlong(ch->status_dt_tm,&buf[offset]);
+offset += LONGSIZE;
+
+stchar(ch->status_date,&buf[offset],(sizeof(ch->status_date))-1);
+offset += sizeof(ch->status_date)-1; 
+
+stchar(ch->status_time,&buf[offset],(sizeof(ch->status_time))-1);
+offset += sizeof(ch->status_time)-1; 
+
+stchar(ch->event_desc,&buf[offset],(sizeof(ch->event_desc))-1);
+offset += sizeof(ch->event_desc)-1; 
+
+stint(ch->veh_nbr,&buf[offset]);
+offset += INTSIZE;
+
+stlong(ch->drv_id,&buf[offset]);
+offset += LONGSIZE;
+
+stint(ch->user_id,&buf[offset]);
+offset += INTSIZE;
+
+stchar(ch->action_taken,&buf[offset],(sizeof(ch->action_taken))-1);
+offset += sizeof(ch->action_taken)-1;
+ 
+stchar(ch->action_date,&buf[offset],(sizeof(ch->action_date))-1);
+offset += sizeof(ch->action_date)-1;
+
+stchar(ch->action_time,&buf[offset],(sizeof(ch->action_time))-1);
+offset += sizeof(ch->action_time)-1;
+
+stlong(ch->action_dt_tm,&buf[offset]);
+offset += LONGSIZE;
+
+stint(ch->action_veh_nbr,&buf[offset]);
+offset += INTSIZE;
+
+stlong(ch->action_drv_id,&buf[offset]);
+offset += LONGSIZE;
+
+stint(ch->action_user_id,&buf[offset]);  
+
+}
+
+void
+unfill_subch( req_buf, buf )
+     char *req_buf;
+     char *buf;
+{
+  struct cisam_subch *ch;
+  register int  offset = 0;
+
+  ch = (struct cisam_subch*)req_buf;
+
+ch->record_nbr = ldlong(&buf[offset]);
+offset += LONGSIZE;
+
+ch->call_nbr = ldlong(&buf[offset]);
+offset += LONGSIZE;
+
+ch->exception_nbr = ldint(&buf[offset]);
+offset += INTSIZE;
+
+ch->fleet = buf[offset];
+offset += sizeof(ch->fleet); 
+
+ch->event_type = buf[offset];
+offset += sizeof(ch->event_type); 
+
+ch->status_dt_tm = ldlong(&buf[offset]);
+offset += LONGSIZE;
+
+ldchar(&buf[offset],sizeof(ch->status_date)-1,ch->status_date);
+offset += sizeof(ch->status_date)-1; 
+
+ldchar(&buf[offset],sizeof(ch->status_time)-1,ch->status_time);
+offset += sizeof(ch->status_time)-1; 
+
+ldchar(&buf[offset],sizeof(ch->event_desc)-1,ch->event_desc);
+offset += sizeof(ch->event_desc)-1; 
+
+ch->veh_nbr = ldint(&buf[offset]);
+offset += INTSIZE;
+
+ch->drv_id = ldlong(&buf[offset]);
+offset += LONGSIZE;
+
+ch->user_id = ldint(&buf[offset]);
+offset += INTSIZE;
+
+ldchar(&buf[offset],sizeof(ch->action_taken)-1,ch->action_taken);
+offset += sizeof(ch->action_taken)-1;
+ 
+ldchar(&buf[offset],sizeof(ch->action_date)-1,ch->action_date);
+offset += sizeof(ch->action_date)-1;
+
+ldchar(&buf[offset],sizeof(ch->action_time)-1,ch->action_time);
+offset += sizeof(ch->action_time)-1;
+
+ch->action_dt_tm = ldlong(&buf[offset]);
+offset += LONGSIZE;
+
+ch->action_veh_nbr = ldint(&buf[offset]);
+offset += INTSIZE;
+
+ch->action_drv_id = ldlong(&buf[offset]);
+offset += LONGSIZE;
+ 
+ch->action_user_id = ldint(&buf[offset]);
+}

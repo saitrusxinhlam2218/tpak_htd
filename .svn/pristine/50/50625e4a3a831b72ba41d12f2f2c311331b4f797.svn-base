@@ -1,0 +1,84 @@
+$ /****************************************************************************
+$ *                                                                           *
+$ *                           S C C S   I N F O                               *
+$ *                                                                           *
+$ * @(#)  menu_maint.MSF.fin; Rel: 10.1.3.1; Get date: 5/18/95 at 10:19:44
+$ * @(#)  Last delta: 12/5/94 at 11:01:37
+$ * @(#)  SCCS File: /taxi/sccs/s.menu_maint.MSF.fin
+$ *                                                                           *
+$ * Copyright (c) 1990 - MDI Seattle                                          *
+$ *                                                                           *
+$ *****************************************************************************/
+$ #ident "@(#) head:menu_maint.MSF.f/usr/users/brian/enh_src/src/msf/fin	10.1.3.1"
+
+$ /*
+$  * Message file for PROGRAM: mf_maint
+$  * CATALOG:   mf_maint.cat
+$  * MNEMONICS: menu_m_strdefs.h
+$  */
+
+$quote "
+$set 1
+
+$ /*    NOTE TO THE TRANSLATOR                          */
+$ /*    Quoted text will be followed by a maximum string length if the  */
+$ /*    text length is different than the number of chars in the string.*/
+$ /*    If no string length is entered default to the current number of */
+$ /*    characters.  A comment about the string is also included where  */
+$ /*    necessary.                                                      */
+MEN_MAINT_1	"Virhe kentässä"					/* 40	*/
+MEN_MAINT_2	"On annettava arvo"					/* 40	*/
+MEN_MAINT_3	"Tietuetta ei löydy, LISÄÄ ensin!"				/* 40   */
+MEN_MAINT_4	"Paina ESC suorittaaksesi"					/* 40   */
+MEN_MAINT_5	"Ei rivejä jotka täyttävät ehdot"
+MEN_MAINT_6	"Ei voi luke valikkotiedostoa"				/* 40   */
+MEN_MAINT_7	"Nykyisessä listassa ei ole rivejä"			/* 40   */
+MEN_MAINT_8	"Menosuunnassa ei ole enää rivejä"
+MEN_MAINT_9	"Ei voi lukea seur. vlkk.tied. tietuetta"			/* 40   */
+MEN_MAINT_10	"Ei voi lukea ed. valikkotied. tietuetta"
+MEN_MAINT_11	"Ei voi luka ed. valikkotied. tietuetta"
+MEN_MAINT_12	"Valikkotiedoston lukuvirhe"					/* 40   */
+MEN_MAINT_13	"Ei voi lukita nykyistä tietuetta"				/* 40   */
+MEN_MAINT_14	"Ei voi päiv. uutta tiet. val.tiedostoon"		/* 40   */
+MEN_MAINT_15	"Tietue päivitetty"					/* 40   */
+MEN_MAINT_16	"Ei voi päästää nykyistä tietuetta"			/* 40   */
+MEN_MAINT_17	"Ei voi avata tulostustiedostoa \n"				/* 40, keep \n in string    */
+MEN_MAINT_18	"Ei voi avata tulostustiedostoa"				/* 40   */
+MEN_MAINT_19	"Numero"
+MEN_MAINT_20	"Komento"
+MEN_MAINT_21	"Edell. valinta"
+MEN_MAINT_22	"Tyyp"							/* noun */
+MEN_MAINT_23	"Kuvaus"						/* 20	*/
+MEN_MAINT_24	"UNIX-komento"						/* 20	*/
+MEN_MAINT_25	"Edell. näyttö"
+MEN_MAINT_26	"Valikkotiedstn hoidon viestihaku epäonnistui"			/* 40	*/
+MEN_MAINT_27	"Valikkotiedstn hoidon viestihaku epäonnistui"				/* 40   */
+MEN_MAINT_28	"Valikkotiedstn hoidon viestiläh epäonnistui"			/* 40   */
+MEN_MAINT_29	"Valikkotiedstn hoidon viestiläh epäonnistui"				/* 40   */
+MEN_MAINT_30	"KYSELY: Anna komento suorittaaksesi, CTRL-X=kesk. "	/* INTERRUPT key	*/
+MEN_MAINT_31    "Query Next Previous Update Output Exit"
+MEN_MAINT_32	"VALIKKOTIEDOSTON HOITO"
+MEN_MAINT_33	"PÄIVITÄ: ESC=suorita, CTRL-X=keskeytä."		/* 40, ESCAPE key, INTERRUPT key   */
+MEN_MAINT_34	"Anna tulostustiedosto (oletus menu_scr.out): "		/* Do not translate filename menu_scr.out	*/
+MEN_MAINT_35	"Tulostustiedosto"						/* 20, Output file XXXX Append or Create	*/
+MEN_MAINT_36	"Lisää tai Uusi (oletus : U) ?"			/* 40, Output file XXXX Append or Create	*/
+MEN_MAINT_37	"C-isam-virhe numero ="					/* c- Indexed sequential access method	*/
+MEN_MAINT_38	"Unix-virhe numero ="
+MEN_MAINT_39	"Ei voi avata jäljitystiedostoa "				/* 40   */
+MEN_MAINT_40	"Ei voi avata jäljitystiedostoa "				/* 40   */
+MEN_MAINT_41	"Ei voi liittää jaettua muistia"			/* 40   */
+MEN_MAINT_42	"Ei voi avata valikkotiedostoa"				/* 40   */
+MEN_MAINT_43	"Ei voi sulkea valikkotiedostoa"				/* 40   */
+MEN_MAINT_44	"Ei voi sulkea valikkotiedostoa"				/* 40   */
+MEN_MAINT_45	"Ei voi sulkea jäljitystiedostoa"				/* 40   */
+MEN_MAINT_46	"Järjestysnumero lupaviitteelle"
+MEN_MAINT_47	"Komentomerkkijono annettu valinnalle"
+MEN_MAINT_48	"K/E.  Onko valinta valikon viimeinen vai ei"
+MEN_MAINT_49	"Valinta voi olla \'V\'alikko, \'U\'ulkoinen suor.kelp., \'S\'isäinen suor.kelp."
+$			/* check constants for appropriate language for `M`, `E`, `I`	*/
+MEN_MAINT_50	"Valikossa näkyvä varsinainen kirjainyhdistelmä"
+MEN_MAINT_51	"UNIX-komento joka suoritetaan jos valinta on ulkoinen suor.kelp"
+MEN_MAINT_52	"Edellisen näytön merkintä"					/* 40   */
+MEN_MAINT_53	"("					/* translate to opening parenthesis (   */
+MEN_MAINT_54	")"					/* translate to closing parenthesis )   */
+MEN_MAINT_55	"Väärä valinta - ole hyvä anna (L/U) lisätäksesi tai aloittaaksesi uuden"

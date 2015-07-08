@@ -1,0 +1,228 @@
+/***********************************************************************
+*                 RCS INFO
+*
+*  @(#)  $RCSfile: language.h.dan,v $
+*  @(#)  $Revision: 1.6 $
+*  @(#)  $Date: 2002/03/25 18:35:22 $
+*  @(#)  $Author: jwelch $
+*  @(#)  $Source: /taxi-scan/taxi_proj/cvs/taxi-scan/src/include/language.h.dan,v $
+*
+*  Copyright (c) 1994 - MobileSoft Consulting, Inc. Woodinville WA
+*
+***********************************************************************/
+#ident "@(#) head:$RCSfile: language.h.dan,v $	$Revision: 1.6 $"
+
+/* Based on R3 version 5.4 */
+
+/*
+ ** This include file defines the language specific character constants.
+ ** There are groups of related constants. In each group the characters
+ ** defined must be unique. Across different groups, there can repeated
+ ** characters.
+ **
+ ** This is the ENGLISH language.h (stored as language.h
+ ** into language.h)
+ */
+
+#ifndef _LANGUAGE_H
+#define _LANGUAGE_H
+
+/* 
+ * Language in use
+ */
+#define LANGUAGE        "Danish"
+#ifdef __alpha
+#define TPAK_LOCALE     "da_DK.ISO8859-1"
+#else
+#define TPAK_LOCALE     "da_DK.8859"
+#endif
+#define TPAK_NLS        "/usr/taxi/catalogs/danish/%N.cat"
+#define TPAK_NLS_PATH   "/usr/taxi/catalogs/danish/"
+
+/*
+ * YES/NO group
+ */
+#ifdef YES
+#undef YES
+#define YES	'J'
+#else 
+#define YES		'J'
+#endif
+
+#ifdef SUSP_ON
+#undef SUSP_ON
+#define SUSP_ON		'K'
+#else 
+#define SUSP_ON		'K'
+#endif
+
+#ifdef NO
+#undef NO
+#define NO		'N'
+#else 
+#define NO		'N'
+#endif
+
+/*
+ * Zone/Vehicle/Driver group
+ */
+#define C_ZONE		'D'
+#define C_VEHICLE	'V'
+#define C_DRIVER	'C'
+
+/*
+ * Call type group
+ */
+#define PASS		'P'		/* passenger */
+#define PASS2	        'K'
+#define DELIV		'B'		/* delivery */
+#define TYPEX		'X'		/* type "x" */
+#define WAKEUP		'V'		/* wake-up call */
+#define TIMEC		'F'		/* time call, scheduled for future */
+#define SUBS		'A'		/* subscription call, scheduled on regular basis */
+#define CHARGE		'K'		/* pay by charge account, substitute 'K' with letter for 'C'harge */
+#define MULT_CALL	'M'		/* multiple passenger pick-ups on one call */
+#define AUTOBOOK_CALL	'D'		/* call requested using automated phone booking device */
+#define INVOICE_CALL    ' '
+#define NON_INVOICE_CALL '3'
+
+/*
+ * Personal request type ('O'nly if vehicle is available, 'I'f is available)
+ */
+#define C_PERSONAL_ONLY	'K'
+#define C_PERSONAL_IF	'H'
+
+/*
+ * Menu type group as defined for struct cisam_mf.type. Values are for
+ * 'M'enu, 'I'nternal executable (part of UI), 'E'xternal excutable (unix
+ * command).
+ *
+ * Must be matched to Informix screen.
+ */
+#define UI_MENU	'M'		/* another menu selected from menu */
+#define UI_SCREEN	'S'		/* screen selected from menu */
+#define UI_EXTERNAL	'K'		/* execute a command selected from menu */
+
+/*
+ * Call history event type. 'R'egular system event, or 'E'mulating a MDT terminal event.
+ *
+ * See struct cisam_ch.event_type
+ *
+ * Must be matched to Informix screen.
+ */
+#define REGULAR_EVENT	'R'
+#define EMULATE_EVENT	'E'
+
+/*
+ * Message log to type. '*' All users, 'F' one or more fleets, 'S' Supervisor
+ * position, 'C' Call taker position, 'M' Manager position, 'T' specific
+ * vehicle, 'D' specific Driver, 'Z' all vehicles in a Zone, 'U' specific user.
+ *
+ * See struct cisam_ml.to_type
+ *
+ * Must be matched to Informix screen.
+ */
+#define MSG_FLEET	'P'
+#define MSG_SUPERVISOR	'L'
+#define MSG_CALL_TAKER	'T'
+#define MSG_MANAGER	'S'
+#define MSG_VEHICLE	'V'
+#define MSG_DRIVER	'C'
+#define MSG_ZONE	'D'
+#define MSG_USER    'B'
+
+/*
+ * Message log supervisor_saw. Request status: 'A'pproved, 'D'enied, 
+ *                            'I'n progress, 'S'aw (has received attention)
+ *
+ * See struct cisam_ml.supervisor_saw
+ *
+ * Must be matched to Informix screen.
+ */
+#define SUPER_APPROVED		'G'
+#define SUPER_DENIED 		'A'
+#define SUPER_IN_PROGRESS	'U'
+#define SUPER_SAW			'S'
+
+/*
+ * Odd/even/both for addresses.
+ *
+ * See struct cisam_ad.odd_even (Note ' ' is not used for both odd & even)
+ *
+ * Must be matched to Informix screen.
+ */
+#define ADDRESS_ODD		'U'
+#define ADDRESS_EVEN	'L'
+#define ADDRESS_BOTH	'B'
+
+/*
+ * The last upper case letter of the alphabet is used for searching.
+ */
+#define LAST_UPCASE_LETTER_OF_ALPHABET		']'
+
+/*
+ * These are used in the menus for the fake Informix screens
+ * and the exit in the UI menus.
+ */
+#define M_QUERY		'Q'		/* DO NOT TRANSLATE */
+#define M_NEXT		'N'		/*        "         */
+#define M_PREVIOUS	'P'		/*        "         */
+#define M_ADD		'A'		/*        "         */
+#define M_UPDATE	'U'		/*        "         */
+#define M_REMOVE	'R'		/*        "         */
+#define M_OUTPUT	'O'		/*        "         */
+#define M_SCREEN	'S'		/*        "         */
+#define M_EXIT		'E'		/*        "         */
+
+
+#define M_APPEND	'T'
+#define M_CREATE	'O'
+
+/*
+ * The character used to seperate day, month, year in dates.
+ */
+#define DATE_SEPERATOR	'.'
+
+/*
+ * set the DATE_FORMAT to the appropriate value for the country
+ */
+#define DAY_FIRST_IN_DATE	1
+#define MONTH_FIRST_IN_DATE	2
+#define YEAR_FIRST_IN_DATE	3
+
+#define DATE_FORMAT	DAY_FIRST_IN_DATE
+
+/*
+ *
+ * the following defines were taken from dispatch.h
+ *
+ */
+#define ONLY_PERS_REQ	'K' 		/* only */
+#define IF_PERS_REQ		'H' 		/* if */
+#define APPR_ONLY		'G'		/* approved */
+
+/* in dispatch - unknown account type indicator in transaction file */
+#define UNKNOWN_ACCT_TYPE '?'
+
+/*
+ * Exception Group and Type designators used in Exceptions Screen
+ */
+#define EXC_GRP_SEL     'S'
+#define EXC_TYPE_SEL    'I'
+
+
+#ifndef NOW
+#define NOW             "NU"
+#endif
+
+#ifndef _ERR_CAT_OPEN
+#define _ERR_CAT_OPEN   "FEJL: Kan ikke }bne katalog( %s )\n"
+#endif
+
+#define BIT_CHAR_LEFT_BRACKET  'Æ'
+#define BIT_CHAR_RIGHT_BRACKET 'Å' 
+#define BIT_CHAR_BACKSLASH     'Ø'
+#define BIT_CHAR_CARET         '^'
+
+
+#endif

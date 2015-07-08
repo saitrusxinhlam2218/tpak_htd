@@ -1,0 +1,52 @@
+{
+|***********************************************************************
+|                 RCS INFO
+|
+|  @(#)  $RCSfile: cust.per,v $
+|  @(#)  $Revision: 1.3 $
+|  @(#)  $Date: 1998/06/18 17:31:21 $
+|  @(#)  $Author: taxiadm $
+|  @(#)  $Source: /taxi-scan/taxi_proj/cvs/taxi-scan/src/forms/finnish/cust.per,v $
+|
+|  Copyright (c) 1994 - MobileSoft Consulting, Inc. Woodinville WA
+|
+|**********************************************************************/
+|ident "@(#) head:$RCSfile: cust.per,v $	$Revision: 1.3 $"
+}
+
+
+database mads
+screen
+{
+
+						CUSTOMER PROFILE MAINTENANCE
+
+Puhelin
+[f001    ]
+
+Osoite                         As/Huon.  Kunta   Ruutu 
+[f008                ] [f007 ] [f011 ]   [a6 ]  [m  ]
+
+Matkust
+[f013               ]
+
+Number of Calls
+[f014    ]
+}
+end
+tables
+customer
+attributes
+f001 = customer.cust_phone_nbr, PICTURE = "XXX-XXXX",COMMENTS = "Customer's Local Phone Number";
+f008 = customer.cust_pckup_strname,UPSHIFT,COMMENTS="Pickup street name";
+f007 = customer.cust_pckup_str_nbr,RIGHT,COMMENTS="Pickup street number";
+f011 = customer.cust_pckup_apt,UPSHIFT,COMMENTS="Pickup apartment or room number";
+a6 = customer.cust_pckup_city,UPSHIFT,COMMENTS="Abbreviation of the pickup city";
+m = customer.cust_pckup_zone,include=(0 to 999),COMMENTS="User entered or computer generated pickup zone number (1-999)";
+f013 = customer.cust_pass_name,UPSHIFT,COMMENTS="Name of passenger";
+f014 = customer.cust_made_calls, COMMENTS="Number of calls made by this customer";
+
+end
+instructions
+delimiters "()";
+end

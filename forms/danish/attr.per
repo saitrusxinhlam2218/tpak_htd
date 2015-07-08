@@ -1,0 +1,37 @@
+{
+|***********************************************************************
+|                 RCS INFO
+|
+|  @(#)  $RCSfile: attr.per,v $
+|  @(#)  $Revision: 1.6 $
+|  @(#)  $Date: 1998/01/08 19:35:19 $
+|  @(#)  $Author: taxiadm $
+|  @(#)  $Source: /taxi-scan/taxi_proj/cvs/taxi-scan/src/forms/danish/attr.per,v $
+|
+|  Copyright (c) 1994 - MobileSoft Consulting, Inc. Woodinville WA
+|
+|**********************************************************************/
+|ident "@(#) head:$RCSfile: attr.per,v $	$Revision: 1.6 $"
+}
+database mads
+screen
+{
+						VEDLIGEH. AF ATTRIBUT-FIL
+
+Vgnpk  Type  Nummer  Beskrivelse             Forkortelse	
+[a]    [b]   [c ]    [f000                ]  [a0]		[f001	]	[f002	]
+}
+end
+tables
+attr
+attributes
+a = attr.at_fleet,REQUIRED,UPSHIFT,COMMENTS="Vognpark-ID";
+b = attr.at_type,include=(V,C),REQUIRED,UPSHIFT,COMMENTS="Enten 'V'ogn- eller 'C'haufførattribut";
+c = attr.at_nbr,include=(1 to 32),REQUIRED,COMMENTS="Attribut nummer (kun 1 til 32 er gyldige)";
+f000 = attr.at_desc,UPSHIFT,COMMENTS="Attributbeskrivelse";
+a0 = attr.at_abbrev,REQUIRED,UPSHIFT,COMMENTS="Attributforkortelse som den vil blive set på bestillingsskærmene";
+f001 = attr.at_factor_val,NOENTRY,NOUPDATE,default=0.0,UPSHIFT,COMMENTS="Flat Rate Factor Value for Attribute";
+f002 = attr.at_extra_val, NOENTRY,NOUPDATE, UPSHIFT,default=0, COMMENTS="Flat Rate Extra Value for Attribute";
+instructions
+   delimiters "()";
+end

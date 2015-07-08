@@ -1,0 +1,80 @@
+database mads
+screen
+{
+						Ajajatiedoston näyttö
+Yhtiö  TN      Luokka  Nimi                         Osoite                       Kunta                   Postinumero   
+[a]    [f000]  [b]     [f001                     ]  [f002                     ]  [f003                ]  [f004 ]        
+
+Puhelin         Ajokortin nro      Taksilupa          Luvat  
+[f006        ]  [f007           ]  [f008    ]         [f009            ]
+
+Ominaisuudet            Ajokieltopvm           Paluupvm               Kiellon syy             "M"  "T"  "X"
+	   [f010    ]   [f011              ]   [f012              ]   [f013                ]  [c]  [d]  [e]
+
+Kieltoviesti
+[f014                            ][f015                            ][f016                            ]
+
+Ajajan huomautukset                                                                 Kortin uusim Luvan uusim   
+[f018                                    ][f019                                    ][f020     ]  [f021     ]
+Edellinen hätätila         Hätätila hoidettu        Aloitus               Lopetus               Auto TN Ajo hoidettu
+     [f022              ]  [f023              ]     [f024              ]  [f025              ]  [f026]  [f027              ]
+
+RUUTU ERUUTU MRUUTU EIHYVKS HYLK   KUTSU  JULLI  KPYSTY TARJ   PUHE   VIESTI TAUKO  Välitks Tilaukset Lyhyt M Myöh M Kyselyt
+[f032] [f033] [f034] [f037]  [f038] [f043] [f044] [f030] [f031] [f040] [f041] [f039] [f029]  [f028] [f035]  [f036] [f042]
+}
+end
+tables
+driver
+attributes
+a = driver.dr_fleet,UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="Yhtiön merkintä";
+f000 = driver.dr_id,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Ajajan TN (1-99999)";
+b = driver.dr_class,UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="Ajajan luokitus 1-Täysaika, 2-Osa-aika";
+f001 = driver.dr_name,UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="Ajajan nimi";
+f002 = driver.dr_address,UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="Ajajan kotiosoite";
+f003 = driver.dr_city,UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="Ajajan kotipaikka";
+f004 = driver.dr_zip,NOENTRY,NOUPDATE,COMMENTS="Ajajan postinumero";
+f006 = driver.dr_phone,NOENTRY,NOUPDATE,COMMENTS="Ajajan kotipuhelin";
+f007 = driver.dr_license_nbr,UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="Ajajan ajokortin numero";
+f008 = driver.dr_taxi_license,UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="Ajajan taksiluvan numero";
+f009 = driver.dr_seals,UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="Kuusitoista merkintää luville";
+f010 = driver.dr_attributes,UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="Kahdeksan merkintää ajajalle";
+f011 = driver.dr_susp_from_dt_tm,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Pvm ja aika ajaja kieltoon";
+f012 = driver.dr_susp_to_dt_tm,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Pvm ja aika ajaja palannut palvelukseen";
+f013 = driver.dr_susp_reason,UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="Syy ajajan ajokieltoon";
+c = driver.dr_susp_pass_call,UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="Saako ajaja hoitaa matkustaja-ajoja";
+d = driver.dr_susp_del_call,UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="Saako ajaja hoitaa tavara-ajoja";
+e = driver.dr_susp_typex_call,UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="Saako ajaja hoitaa X-tyypin ajoja";
+f014 = driver.dr_susp_message[1,32],UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="Ajajalle lähetettävä kieltoviesti";
+f015 = driver.dr_susp_message[33,64],UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="Ajajalle lähetettävä kieltoviesti";
+f016 = driver.dr_susp_message[65,96],UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="Kieltoviesti lähetetään ajajalle";
+f018 = driver.dr_comments[1,40],UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="Alue ajajan muille huomautuksille";
+f019 = driver.dr_comments[41,80],UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="Alue ajajan muille huomautuksille";
+f020 = driver.dr_lic_renew,NOENTRY,NOUPDATE,COMMENTS="Ajajan ajokortin uusintapvm";
+f021 = driver.dr_taxi_lic_renew,NOENTRY,NOUPDATE,COMMENTS="Ajajan taksiluvan uusintapvm";
+f022 = driver.dr_emerg_on_dt_tm,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Edellinen pvm ja aika kun ajaja suoritti hälytyksen";
+f023 = driver.dr_emerg_of_dt_tm,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Edellinen pvm ja aika kun ajajan hälytys selvitettiin";
+f024 = driver.dr_signed_on_dt_tm,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Edellinen pvm ja aika kun ajaja on otettu ajoon";
+f025 = driver.dr_signed_of_dt_tm,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Edellinen pvm ja aika kun ajaja jäi ajosta";
+f026 = driver.dr_last_veh_nbr,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Edellinen tämän ajajan ajama auto";
+f027 = driver.dr_last_call,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Edellinen tämän ajajan ajo";
+f032 = driver.dr_posts,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Montako kertaa tämä ajaja kirjasi ruutuun edellisellä vuorolla";
+f033 = driver.dr_cond_posts,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Montako kertaa tämä ajaja kirjasi ehdollisesti ruutuun edellisellä vuorolla";
+f034 = driver.dr_enroute_posts,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Montako kertaa tämä ajaja kirjasi ruutuun matkan aikana edellisellä vuorolla";
+f037 = driver.dr_no_accepts,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Montako kertaa tämä ajaja sai EIHYVKS -viestejä edellisellä vuorolla";
+f038 = driver.dr_rejects,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Montako kertaa tämä ajaja antoi EI-KIITOS -viestejä edellisellä vuorolla";
+f043 = driver.dr_callouts,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Montako kertaa tämä ajaja sai ajoja edellisellä vuorolla";
+f044 = driver.dr_no_shows,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Montako kertaa tällä ajajalla oli JULLIKKA edellisellä vuorolla";
+f030 = driver.dr_flags,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Montako kertaa tällä ajajalla oli käsipystyjä edellisellä vuorolla";
+f031 = driver.dr_bids,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Montako kertaa tällä ajajalla oli tarjouksia edellisellä vuorolla";
+f040 = driver.dr_req_to_talk,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Montako kertaa tällä ajajalla oli puhepyyntöjä edellisellä vuorolla";
+f041 = driver.dr_messages,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Montako kertaa tämä ajaja lähetti viestejä keskukselle edellisellä vuorolla";
+f039 = driver.dr_breaks,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Montako kertaa tämä ajaja piti taukoja edellisellä vuorolla";
+f029 = driver.dr_assigns,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Montako kertaa ajajalle jaettiin ajoja käsivälityksenä edellisellä vuorolla";
+f028 = driver.dr_calls,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Montako kertaa tälle ajajalle jaettiin ajoja edellisellä vuorolla";
+f035 = driver.dr_short_meters,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Montako kertaa lyhyitä mittareita tämän ajajan edellisellä vuorolla";
+f036 = driver.dr_late_meters,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Montako kertaa myöhäisiä mittareita tämän ajajan edellisellä vuorolla";
+f042 = driver.dr_callbacks,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Montako kertaa kyselyitä tältä ajajalta edellisellä vuorolla";
+end
+instructions
+   delimiters "()";
+end

@@ -1,0 +1,72 @@
+database mads
+screen
+{
+						Statistikfil visning
+Bilpark      Datum        Sort.datum                        Startdag          Slutdag
+[a]          [f000    ]   [f001                ]            [f002]            [f003]  
+
+                                     Anv{ndarstatistik best
+Passagerare     Leverans      Typ"X"      V{ckning       Borttagn        Frekvens      Retursamt     
+[f004]          [f005]        [f006]      [f007]         [f008]          [f009  ]      [f010]
+Ej zonade       Avbest        Meddelanden Tilldeln       ]sidosatta      Undantag      Arb.timmar    
+[f011]          [f012]        [f013]      [f014]         [f015]          [f016 ]       [f017  ]
+
+
+				     F|rarstatistik 
+Acpt best       Bokn        Vbokn           SL             Lifter          F.val       Ej acpt         Avslag               
+[f018]          [f019 ]     [f020 ]         [f021]         [f022]          [f023]      [f024]          [f025]
+Kort m          Sen m       Retursamt       Retursamt m    Retursamt bom   Utrop       Bomk|rn         Raster     
+[f026]          [f027]      [f028]          [f029]         [f030]          [f031]      [f032]          [f033]
+Tal             Meddelanden N|dl{gen        Inloggn        Utloggn         Arb.timmar  Medeltal bilar
+[f034]          [f035]      [f036]          [f037]         [f038]          [f039  ]    [f040  ]
+}
+end
+tables
+stats
+attributes
+a = stats.sa_fleet,NOUPDATE,UPSHIFT,REQUIRED,COMMENTS="Bilpark ID";
+f000 = stats.sa_date,NOUPDATE,REQUIRED,COMMENTS="Datum denna statistik g{ller. I formatet ]]-MM-DD";
+f001 = stats.sa_sort_date,RIGHT,COMMENTS="UNIX-datum.tid i sekunder";
+f002 = stats.sa_day_start,RIGHT,COMMENTS="Dagens b|rjan i 24-timmarsformat";
+f003 = stats.sa_day_end,RIGHT,COMMENTS="Dagens slut i 24-timmarsformat";
+f004 = stats.sa_u_pass_calls,RIGHT,COMMENTS="Antal passagerarbest. som skrivits in i systemet av anv{ndare";
+f005 = stats.sa_u_del_calls,RIGHT,COMMENTS="Antal leveransbest. som skrivits in i systemet av anv{ndare";
+f006 = stats.sa_u_typex_calls,RIGHT,COMMENTS="Antal typ X best. som skrivits in i systemet av anv{ndare";
+f007 = stats.sa_u_wakeup_calls,RIGHT,COMMENTS="Antal v{ckningsbest. som skrivits in i systemet av anv{ndare";
+f008 = stats.sa_u_killed_calls,RIGHT,COMMENTS="Antal best{llningar som tagits bort av anv{ndare";
+f009 = stats.sa_u_call_rate,RIGHT,COMMENTS="Antal best{llningar per timme som inkommit till systemet";
+f010 = stats.sa_u_callbacks,RIGHT,COMMENTS="Antal retursamtal som bearbetats av anv{ndarna";
+f011 = stats.sa_u_unzoned,RIGHT,COMMENTS="Antal ej zonade best. som skrivits in i systemet";
+f012 = stats.sa_u_cancelled,RIGHT,COMMENTS="Antal best. som avbest{llts av anv{ndarna";
+f013 = stats.sa_u_messages,RIGHT,COMMENTS="Antal meddel. som skickats av anv. till andra anv. eller f|rare";
+f014 = stats.sa_u_assigns,RIGHT,COMMENTS="Antal otilldelade best. som tilldelades av trafikled till bil";
+f015 = stats.sa_u_overrides,RIGHT,COMMENTS="Antal best. som skickades till en speciell bil av systemet";
+f016 = stats.sa_u_exceptions,RIGHT,COMMENTS="Totalt antal behandlade undantag";
+f017 = stats.sa_u_hours_worked,RIGHT,COMMENTS="Totala timantalet systemet anv{ndes av alla anv{ndare";
+f018 = stats.sa_d_calls,RIGHT,COMMENTS="Antal best. accepterade av f|raren";
+f019 = stats.sa_d_posts,RIGHT,COMMENTS="Antal bokningar som bearbetats av systemet";
+f020 = stats.sa_d_cposts,RIGHT,COMMENTS="Antal villkorliga bokningar som bearbetats av systemet";
+f021 = stats.sa_d_eposts,RIGHT,COMMENTS="Antal bokningar p} v{g som bearbetats av systemet";
+f022 = stats.sa_d_flags,RIGHT,COMMENTS="Antal liftf|rfr}gningar som bearbetats av systemet";
+f023 = stats.sa_d_bids,RIGHT,COMMENTS="Antal svar p} fritt val som bearbetats av syst.";
+f024 = stats.sa_d_no_accepts,RIGHT,COMMENTS="Antal ej accept. som bearbetats av systemet";
+f025 = stats.sa_d_rejects,RIGHT,COMMENTS="Antal avslagna f|rfr}gn. som bearbetats av systemet";
+f026 = stats.sa_d_short_meters,RIGHT,COMMENTS="Antal kort meter som f|rorsakats av f|rare.";
+f027 = stats.sa_d_late_meters,RIGHT,COMMENTS="Antal sen meter som f|rorsakats av f|rare.";
+f028 = stats.sa_d_callbacks,RIGHT,COMMENTS="Antal retursamtal som f|rorsakats av f|rare.";
+f029 = stats.sa_d_callb_mon,RIGHT,COMMENTS="Antal retursamtal som f|rorsakats av f|rare som sl}r p} metern";
+f030 = stats.sa_d_callb_noshow,RIGHT,COMMENTS="Antal retursamtal som f|rorsakats av f|rare som h{vdar bomk|rning";
+f031 = stats.sa_d_callouts,RIGHT,COMMENTS="Antal utrop som bearbetats av systemet";
+f032 = stats.sa_d_noshows,RIGHT,COMMENTS="Antal bomk|rningar som bearbetats av systemet";
+f033 = stats.sa_d_breaks,RIGHT,COMMENTS="Antal raster som bearbetats av systemet";
+f034 = stats.sa_d_talks,RIGHT,COMMENTS="Antal talf|rfr}gningar som bearbetats av systemet";
+f035 = stats.sa_d_messages,RIGHT,COMMENTS="Antal meddel. som skickats av f|rare till trafikledare";
+f036 = stats.sa_d_emergencies,RIGHT,COMMENTS="Antal n|dfall som bearbetats av systemet";
+f037 = stats.sa_d_sign_ins,RIGHT,COMMENTS="Antal inloggningar som bearbetats av systemet";
+f038 = stats.sa_d_sign_outs,RIGHT,COMMENTS="Antal utloggningar som bearbetats av systemet";
+f039 = stats.sa_d_hours_worked,RIGHT,COMMENTS="Antal abrbetstimmar f|r alla f|rare";
+f040 = stats.sa_d_avg_act_cabs,RIGHT,COMMENTS="Medeltal bilar under en timme";
+end
+instructions
+   delimiters "()";
+end

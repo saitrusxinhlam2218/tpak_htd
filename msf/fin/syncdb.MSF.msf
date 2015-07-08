@@ -1,0 +1,24 @@
+$ /****************************************************************************
+$ *                                                                           *
+$ *                           S C C S   I N F O                               *
+$ *                                                                           *
+$ * @(#)  syncdb.MSF.fin; Rel: 10.1.3.1; Get date: 5/18/95 at 10:20:04
+$ * @(#)  Last delta: 12/5/94 at 10:42:47
+$ * @(#)  SCCS File: /taxi/sccs/s.syncdb.MSF.fin
+$ *                                                                           *
+$ * Copyright (c) 1990 - MDI Seattle                                          *
+$ *                                                                           *
+$ *****************************************************************************/
+$ #ident "@(#) head:syncdb.MSF.fin	10.1.3.1"
+
+$quote "
+$delset 1
+$set 1
+
+1	"SYNCDB on lopetettu; EI-ensiökone/Varmistus EI toiminnassa!!"
+2	"Synkronointi menossa"
+3	"Odota hetki...."
+4	"Tiedostot synkronoitu"
+5	"Väärä tiedst"
+6	"käytäntö: syncdb Ä-aÅ Ä-n tiedostoÅ Ä-f tiedostoÅ\n"
+7	"       käytä vain yhtä valintaa\n"

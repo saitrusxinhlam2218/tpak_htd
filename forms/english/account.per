@@ -1,0 +1,100 @@
+{
+|***********************************************************************
+|                 RCS INFO
+|
+|  @(#)  $RCSfile: account.per,v $
+|  @(#)  $Revision: 1.3 $
+|  @(#)  $Date: 2002/03/25 14:53:10 $
+|  @(#)  $Author: jwelch $
+|  @(#)  $Source: /taxi-scan/taxi_proj/cvs/taxi-scan/src/forms/english/account.per,v $
+|
+|  Copyright (c) 1994 - MobileSoft Consulting, Inc. Woodinville WA
+|
+|**********************************************************************/
+|ident "@(#) head:$RCSfile: account.per,v $	$Revision: 1.3 $"
+}
+database mads
+screen
+{
+						ACCOUNT FILE MAINTENANCE
+Account
+    Fleet  Account Number        Name                         Priority  Autobook Enabled  Charging Enabled  Factor Val
+     [a]   [f000              ]  [f001                     ]    [a6]          [d]               [e]         [f019 ]
+
+Pick Up Address
+    Street Number  Suf  Pre-dir  Street Name             Type  Post-dir  Apt/Room  City  State  Zip Code  Suffix  Show Address
+      [f002  ]     [b]   [a0]    [f003                ]  [a1 ]   [a2]     [f004 ]  [a3 ]  [a4]   [f005 ]  [f006]      [c] 
+Contact
+    Phone Contact Name      Account Contact Name    Comment                                     Phone Area    Number     Ext.
+    [f009                ]  [f010                ]  [f011                                    ]        [a5 ]  [f007   ]  [f008]
+
+Vehicle/Driver     1-3      4-6      7-9     10-12    13-15   16-18   19-21   22-24   25-27   28-30   31-32
+    Vehicle Attr  [j1 ]    [j2 ]    [j3 ]    [j4 ]    [j5 ]   [j6 ]   [j7 ]   [j8 ]   [j9 ]   [j10]   [l1]   
+    Driver Attr   [k1 ]    [k2 ]    [k3 ]    [k4 ]    [k5 ]   [k6 ]   [k7 ]   [k8 ]   [k9 ]   [k10]   [l2]
+Messages
+    Header 1                          Header 2                          Header 3           Header 4
+    [f012                          ]  [f014                          ]  [f016           ]  [f017           ]
+    Driver Message                        
+    [f018                               ]
+}
+end
+tables
+account
+fleet
+attributes
+a = account.ac_fleet,REQUIRED,UPSHIFT,COMMENTS="Fleet ID", LOOKUP JOINING * fleet.fl_id;
+f000 = account.ac_nbr,REQUIRED,UPSHIFT,COMMENTS="An account or credit card number", PICTURE="##################";
+f001 = account.ac_name,COMMENTS="Name of company or individual holding this account";
+a6 = account.ac_priority,include=(1 to 63),REQUIRED,RIGHT,COMMENTS="Default priority assigned to all calls for this account";
+d = account.ac_autobook_enable,include=(Y,N),default="N",UPSHIFT,COMMENTS="Allow this account to use Auto-Booking (Y/N)?";
+e = account.ac_acc_chrg_enable,include=(Y,N),default="Y",UPSHIFT,COMMENTS="Allow this account to charge (Y/N)?";
+f019 = account.ac_factor_val,noentry, default=0.0;
+f002 = account.ac_str_nbr,RIGHT,COMMENTS="Street Number of client's location";
+b = account.ac_str_suf,UPSHIFT,COMMENTS="Street Number Suffix";
+a0 = account.ac_pre_dir,UPSHIFT,COMMENTS="Street pre-direction";
+f003 = account.ac_str_name,UPSHIFT,COMMENTS="Street name";
+a1 = account.ac_str_type,UPSHIFT,COMMENTS="Street type";
+a2 = account.ac_post_dir,UPSHIFT,COMMENTS="Street post-direction";
+f004 = account.ac_apt_room, UPSHIFT, COMMENTS="Suite or room number";
+a3 = account.ac_city,UPSHIFT,COMMENTS="City";
+a4 = account.ac_state,UPSHIFT,COMMENTS="State code";
+f005 = account.ac_zip,COMMENTS="Zip code";
+f006 = account.ac_zip_suf,COMMENTS="Zip code suffix";
+c = account.ac_show_pckup_adr,include=(Y,N),default="Y",UPSHIFT,COMMENTS="Automatically place account pickup address into the pickup fields (Y/N)?";
+f009 = account.ac_phone_contact,COMMENTS="Phone contact name";
+f010 = account.ac_attention,COMMENTS="Account contact name";
+f011 = account.ac_comment,COMMENTS="Comment";
+a5 = account.ac_phone_area, UPSHIFT, COMMENTS="Phone area code";
+f007 = account.ac_phone, UPSHIFT, COMMENTS="Phone number";
+f008 = account.ac_phone_ext, UPSHIFT, COMMENTS="Phone number extension";
+j1 = account.ac_veh_attr[1, 3], UPSHIFT, COMMENTS="Required vehicle attributes (Y/N)", DEFAULT = "NNN";
+j2 = account.ac_veh_attr[4, 6], UPSHIFT, COMMENTS="Required vehicle attributes (Y/N)", DEFAULT = "NNN";
+j3 = account.ac_veh_attr[7, 9], UPSHIFT, COMMENTS="Required vehicle attributes (Y/N)", DEFAULT = "NNN";
+j4 = account.ac_veh_attr[10, 12], UPSHIFT, COMMENTS="Required vehicle attributes (Y/N)", DEFAULT = "NNN";
+j5 = account.ac_veh_attr[13, 15], UPSHIFT, COMMENTS="Required vehicle attributes (Y/N)", DEFAULT = "NNN";
+j6 = account.ac_veh_attr[16, 18], UPSHIFT, COMMENTS="Required vehicle attributes (Y/N)", DEFAULT = "NNN";
+j7 = account.ac_veh_attr[19, 21 ], UPSHIFT, COMMENTS="Required vehicle attributes (Y/N)", DEFAULT = "NNN";
+j8 = account.ac_veh_attr[22, 24], UPSHIFT, COMMENTS="Required vehicle attributes (Y/N)", DEFAULT = "NNN";
+j9  = account.ac_veh_attr[25, 27], UPSHIFT, COMMENTS="Required vehicle attributes (Y/N)", DEFAULT = "NNN";
+j10  = account.ac_veh_attr[28, 30], UPSHIFT, COMMENTS="Required vehicle attributes (Y/N)", DEFAULT = "NNN";
+l1  = account.ac_veh_attr[31, 32], UPSHIFT, COMMENTS="Required vehicle attributes (Y/N)", DEFAULT = "NNN";
+
+k1 = account.ac_drv_attr[1, 3], UPSHIFT, COMMENTS="Required driver attributes (Y/N)", DEFAULT = "NNN";
+k2 = account.ac_drv_attr[4, 6], UPSHIFT, COMMENTS="Required driver attributes (Y/N)", DEFAULT = "NNN";
+k3 = account.ac_drv_attr[7, 9], UPSHIFT, COMMENTS="Required driver attributes (Y/N)", DEFAULT = "NNN";
+k4 = account.ac_drv_attr[10, 12], UPSHIFT, COMMENTS="Required driver attributes (Y/N)", DEFAULT = "NNN";
+k5 = account.ac_drv_attr[13, 15], UPSHIFT, COMMENTS="Required driver attributes (Y/N)", DEFAULT = "NNN";
+k6 = account.ac_drv_attr[16, 18], UPSHIFT, COMMENTS="Required driver attributes (Y/N)", DEFAULT = "NNN";
+k7 = account.ac_drv_attr[19, 21], UPSHIFT, COMMENTS="Required driver attributes (Y/N)", DEFAULT = "NNN";
+k8 = account.ac_drv_attr[22, 24], UPSHIFT, COMMENTS="Required driver attributes (Y/N)", DEFAULT = "NNN";
+k9 = account.ac_drv_attr[25, 27], UPSHIFT, COMMENTS="Required driver attributes (Y/N)", DEFAULT = "NNN";
+k10 = account.ac_drv_attr[28, 30], UPSHIFT, COMMENTS="Required driver attributes (Y/N)", DEFAULT = "NNN";
+l2 = account.ac_drv_attr[31, 32], UPSHIFT, COMMENTS="Required driver attributes (Y/N)", DEFAULT = "NNN";
+
+f012 = account.ac_header_1,COMMENTS="Field header of the first display field to appear on call entry screen";
+f014 = account.ac_header_2,COMMENTS="Field header of the second display field to appear on call entry screen";
+f016 = account.ac_header_3,COMMENTS="Prompt for the first entry field";
+f017 = account.ac_header_4,COMMENTS="Prompt for the second entry field";
+f018 = account.ac_driver_msg,UPSHIFT,COMMENTS="A message to be relayed to the driver";
+
+end

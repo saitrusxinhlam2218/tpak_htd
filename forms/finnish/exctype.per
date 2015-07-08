@@ -1,0 +1,20 @@
+database mads
+screen
+{
+						Poikkeustyyppitiedoston hoito 
+
+Numero    Ryhmä      Kuvaus                            Lyhyt kuvaus
+[f0]      [a ]       [f002                          ]  [f003    ] 
+}
+end
+tables
+exctype
+attributes
+f0   = exctype.et_nbr,RIGHT,REQUIRED,NOENTRY,NOUPDATE,COMMENTS="Pysyvä nro josta poikkeus merkintätaan";
+a    = exctype.et_group_nbr,include=(1 to 12),RIGHT,UPSHIFT,COMMENTS="Poikkeusten yhteenvetoryhmä johon poikkeus kuuluu (1-12)";
+f002 = exctype.et_desc,UPSHIFT,COMMENTS="Tämän poikkeuksen kuvaus";
+f003 = exctype.et_short_desc,UPSHIFT,REQUIRED,COMMENTS="Tämän poikkeuksen lyhyt kuvaus";
+end
+instructions
+   delimiters "()";
+end

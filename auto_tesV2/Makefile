@@ -1,0 +1,48 @@
+#***********************************************************************
+#                 RCS INFO
+#
+#  @(#)  $RCSfile: Makefile,v $
+#  @(#)  $Revision: 1.3 $
+#  @(#)  $Date: 2002/03/25 17:49:34 $
+#  @(#)  $Author: jwelch $
+#  @(#)  $Source: /taxi-scan/taxi_proj/cvs/taxi-scan/src/auto_tes/Makefile,v $
+#
+#  Copyright (c) 2000 - MobileSoft Consulting, Inc. Dublin OH
+#
+#**********************************************************************/
+#ident "@(#) head:$RCSfile: Makefile,v $	$Revision: 1.3 $"
+#
+#static char rcsid[] = "$Id: Makefile,v 1.3 2002/03/25 17:49:34 jwelch Exp $";
+
+include ../Makefile.inc
+
+INC =	../include
+LIB =	../lib
+DEST =	../../../usr/taxi/bin
+ENH=../enhance_lib
+#CFLAGS=	-g -non_shared -I$(INC) -DINTERNATIONAL -DDECLARING -DTESTING $(REL_FLAGS)
+LIBFLAGS =	
+
+SRCS =	ac_main.c ac_generic_rqst.c ac_g7_rqst.c ac_g7_replies.c ac_generic_replies.c \
+	ac_zone_addr.c ac_trace.c
+
+OBJS =	ac_main.o ac_generic_rqst.o ac_g7_rqst.o ac_g7_replies.o ac_generic_replies.o \
+	ac_zone_addr.o ac_trace.o
+
+PGM =	auto_tes
+
+LIBFLAGS = -L../lib -L$(ENH) -lTES -lacad -lindv \
+	-lm -ldb -lbsd -lfill -lcommon -lm $(CISAMDB_LIBS)
+
+SHLIBS = -ldbisam -lCall -lfill -lrate -lcommon -lm -lots -lbsd
+
+.c.o:
+	xlc $(CFLAGS) -DTESTING -c $<
+
+all:	$(PGM)
+
+clean:
+	rm -f $(PGM) $(OBJS)
+
+auto_tes:	$(OBJS)
+	xlc $(CFLAGS) $(OBJS) $(LIBFLAGS) -o auto_tes

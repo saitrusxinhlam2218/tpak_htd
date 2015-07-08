@@ -1,0 +1,37 @@
+
+database mads
+screen
+{
+						Nödfallsjournal underhåll 
+
+Bilpark Nödfallsnr        Undantagsnr            Beställningsnummer     Bilnr   Förare ID  Zon nr
+[a]     [f000           ] [f001                ] [f002                ] [f008]  [f009 ]    [f01]
+ 
+Händelsedatum  Tid        Uppklarad datum  Tid          Uppklarad av
+[f004     ]    [f005  ]   [f006     ]      [f007  ]     [f012]
+
+Kommentar
+[comment                                                                       ]
+}
+end
+tables
+emerg
+attributes
+a = emerg.em_fleet,UPSHIFT,REQUIRED,COMMENTS="Bilpark ID";
+f000 = emerg.em_nbr,REQUIRED,NOENTRY,NOUPDATE,RIGHT,COMMENTS="Ett ID för nödfall tilldelat av systemet";
+f001 = emerg.em_exc_nbr,RIGHT,COMMENTS="Undantagsnummer för motsvarande undantag";
+f002 = emerg.em_call_nbr,RIGHT,COMMENTS="Beställningsnummer";
+f008 = emerg.em_veh_nbr,RIGHT,COMMENTS="Bilnummer som förorsakade detta nödfall";
+f009 = emerg.em_drv_id,RIGHT,COMMENTS="ID för förare som orsakade detta nödfall";
+f01 = emerg.em_zone_nbr,RIGHT,COMMENTS="Zonnummer för den zon där föraren bokats eller hämtningszon";
+f004 = emerg.em_event_date,NOENTRY,NOUPDATE,COMMENTS="Datum för händelse";
+f005 = emerg.em_event_time,NOENTRY,NOUPDATE,COMMENTS="Klockslag för händelse";
+f006 = emerg.em_resolved_date,NOENTRY,NOUPDATE,COMMENTS="Datum detta nödfall klarades upp";
+f007 = emerg.em_resolved_time,NOENTRY,NOUPDATE,COMMENTS="Klockslag detta nödfall klarades upp";
+f012 = emerg.em_resolved_by,RIGHT,COMMENTS="ID för den användare som klarade upp detta nödfall";
+comment = emerg.em_comment, NOENTRY, NOUPDATE, COMMENTS="Kommentar till ett nödl[ge när det omhändertas";
+end
+
+instructions
+   delimiters "()";
+end

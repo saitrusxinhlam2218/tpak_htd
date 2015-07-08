@@ -1,0 +1,132 @@
+$ /****************************************************************************
+$ *                                                                           *
+$ *                           S C C S   I N F O                               *
+$ *                                                                           *
+$ * @(#)  in_maint.MSF.fin; Rel: 10.1.3.1; Get date: 5/18/95 at 10:19:28
+$ * @(#)  Last delta: 12/5/94 at 10:30:16
+$ * @(#)  SCCS File: /taxi/sccs/s.in_maint.MSF.fin
+$ *                                                                           *
+$ * Copyright (c) 1990 - MDI Seattle                                          *
+$ *                                                                           *
+$ *****************************************************************************/
+$ #ident "@(#) head:in_maint.MSF.fin/usr/users/brian/enh_src/src/msf/fin	10.1.3.1"
+
+$ /*
+$  * Message file for PROGRAM: in_maint
+$  * CATALOG:   in_maint.cat
+$  * MNEMONICS: in_m_strdefs.h
+$  */
+
+$quote "
+$set 1
+
+$ /*    NOTE TO THE TRANSLATOR                          */
+$ /*    Quoted text will be followed by a maximum string length if the  */
+$ /*    text length is different than the number of chars in the string.*/
+$ /*    If no string length is entered default to the current number of */
+$ /*    characters.  A comment about the string is also included where  */
+$ /*    necessary.                                                      */
+IN_MAINT_1	"On annettava arvo"				/* 50	*/
+IN_MAINT_2	"Virhe kentässä"				/* 50   */
+IN_MAINT_3	"Tietuetta ei löydy, LISÄÄ ensin!"			/* 50   */
+IN_MAINT_4	"Risteystiedoston lukuvirhe"			/* 50   */
+IN_MAINT_5	"Katu 1 hakem"
+IN_MAINT_6	"              "
+IN_MAINT_7	"Nimi"						/* 15	*/
+IN_MAINT_8	"Tyyppi"
+IN_MAINT_9	"              "
+IN_MAINT_10	"Katu 2 hakem"
+IN_MAINT_11	"Postinro"
+IN_MAINT_12	"Alaruutu"
+IN_MAINT_13	"Kunta"
+IN_MAINT_14	"X-koord"
+IN_MAINT_15	"Y-koord"
+IN_MAINT_16	"Krtsivuviite"
+IN_MAINT_17	"Krtviitelohko"
+IN_MAINT_18	"Huomautuksia"					/* 20	*/
+IN_MAINT_19	"W"						/* do not translate	*/
+IN_MAINT_20	"E"						/* do not translate     */
+IN_MAINT_21	"N"						/* do not translate     */
+IN_MAINT_22	"S"                                             /* do not translate     */
+IN_MAINT_23	"NW"                                            /* do not translate     */
+IN_MAINT_24	"NE"                                            /* do not translate     */
+IN_MAINT_25	"SW"                                            /* do not translate     */
+IN_MAINT_26	"SE"                                            /* do not translate     */
+IN_MAINT_27	" Hakemisto1 kadunnimitiedostosta"			/* 40	*/
+IN_MAINT_28	"              "			/* 40   */
+IN_MAINT_29	"Risteyksen katunimi"			/* 40   */
+IN_MAINT_30	"Risteyksen katutyyppi"			/* 40   */
+IN_MAINT_31	"              "			/* 40   */
+IN_MAINT_32	"Risteyksen postinumero"				/* 40   */
+IN_MAINT_33	"Risteyksen alaruutu"				/* 40   */
+IN_MAINT_34	"Risteyksen alue"				/* 40   */
+IN_MAINT_35	"Risteyksen X-koordinaatti"		/* 40   */
+IN_MAINT_36	"Risteyksen Y-koordinaatti"		/* 40   */
+IN_MAINT_37	"Karttasivun viitenumero"			/* 40   */
+IN_MAINT_38	"Karttalohkon kuvaus"				/* 40   */
+IN_MAINT_39	"Risteyspaikan selitys"		/* 40   */
+IN_MAINT_40	"C-isam-virhe numero ="				/* C - Indexed structure access method	*/
+IN_MAINT_41	"Unix-virhe numero ="
+IN_MAINT_42	"("						/* translate to open parenthesis (	*/
+IN_MAINT_43	")"						/* translate to close parenthesis )	*/
+IN_MAINT_44 "Väärä valinta - ole hyvä anna (L/U) lisätäksesi tai aloittaaksesi uuden"
+IN_MAINT_45	"Street name is not in database"
+IN_MAINT_46	"Street type is not in database"
+IN_MAINT_47	"Subzone is not in database"
+IN_MAINT_48	"City is not in database"
+IN_MAINT_49	"Must enter a number"
+IN_MAINT_50	"Must enter a number for index"
+IN_MAINT_51	"Street name 1 not in database"
+IN_MAINT_52	"Street name 2 not in database"
+IN_MAINT_53	"Previous and Next not allowed when querying by two indexes or street names"
+IN_MAINT_54	"Record added"
+IN_MAINT_55	"Can search only by indexes OR by street names"
+IN_MAINT_56	"No matching index for given street name and type"
+
+
+$ /*
+$  * Strings extracted from in_msg.h
+$  */
+
+$set 2
+
+$ 	/* NOTE TO TRANSLATOR -- The maximum length for all of the following strings is 40 characters.	*/
+IN_MSG_1	"Syöttö on lopetettava painamalla ESC"
+IN_MSG_2	"Virhe kentässä"
+IN_MSG_3	"Ei voi lukea rist.tied. ensim. tietuetta"
+IN_MSG_4	"Ei rivejä jotka täyttävät ehdot"
+IN_MSG_5	"Ei voi lukea risteystiedostoa"
+IN_MSG_6	"Nykyisessä listassa ei ole rivejä"
+IN_MSG_7	"Menosuunnassa ei ole enää rivejä"
+IN_MSG_8	"Ei voi lukea seur. rist.tied. tietuetta"
+IN_MSG_9	"Ei voi lukea ed. risteystied. tietuetta"
+IN_MSG_10	"Ei voi lisätä uutta tiet. rist.tdstoon"
+IN_MSG_11	"Ei voi lukita nykyistä tietuetta"
+IN_MSG_12	"Ei voi päivittää tiet. rist.tiedostossa"
+IN_MSG_13	"Tietue on päivitetty"
+IN_MSG_14	"Ei voi päästää nykyistä tietuetta"
+IN_MSG_15	"Ei voi poistaa tietuetta rist.tiedststa"
+IN_MSG_16	"Ei voi avata tulostustiedostoa"
+IN_MSG_17	"Rist.tiedoston hoidon viestihaku epäonnistui"
+IN_MSG_18	"Rist.tiedoston hoidon viestiläh epäonnistui"
+IN_MSG_19	"KYSELY: ESC=suorita, CTRL-X=keskeytä."		/* ESCAPE key, INTERRUPT key	*/
+IN_MSG_20	"LISÄÄ: ESC=suorita, CTRL-X=keskeytä. "			/* ESCAPE key, INTERRUPT key    */
+IN_MSG_21       "Query Next Previous Add Update Remove Output Exit "    /* count chars. # must remain the same or less */
+IN_MSG_22	"RISTEYSTIEDOSTON HOITO"			/* count chars. # must remain the same or less */
+IN_MSG_23	"PÄIVITÄ: ESC=suorita, CTRL-X=keskeytä. "		/* ESCAPE key, INTERRUPT key    */
+IN_MSG_24	"Poista (K/E)? "				/* use constant for Y and N	*/
+IN_MSG_25	"Anna tulostustied.(oletus in_scr.out): "	/* do not translate filename in_scr.out	*/
+IN_MSG_26	"Tulostustied. %s Lisää/Uusi(oletus : U)? "	/* Do not translate %s.  A filename will be substituted	*/
+$			/* for the %s.  Place the %s wherever it makes the most sense					*/
+IN_MSG_27	"Ei voi avata jäljitystiedostoa"
+IN_MSG_28	"Ei voi avata risteystiedostoa"
+IN_MSG_29	"Ei voi sulkea risteystiedostoa"
+IN_MSG_30	"Ei voi sulkea jäljitystiedostoa"
+IN_MSG_31	"On annettava arvot"
+IN_MSG_32	"Kadunnimitiedoston lukuvirhe"
+IN_MSG_33	"Alaruututiedoston lukuvirhe"
+IN_MSG_34	"Paikkatiedoston lukuvirhe"
+IN_MSG_35	"Kadunnimitiedoston avausvirhe"
+IN_MSG_36	"Alaruututiedoston avausvirhe"
+IN_MSG_37	"Paikkatiedoston avausvirhe"
+IN_MSG_38	"Ei voi liittää jaettua muistia"

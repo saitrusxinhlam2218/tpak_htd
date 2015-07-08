@@ -1,0 +1,34 @@
+{
+|***********************************************************************
+|                 RCS INFO
+|
+|  @(#)  $RCSfile: line_mgr.per,v $
+|  @(#)  $Revision: 1.2 $
+|  @(#)  $Date: 2001/10/03 17:52:05 $
+|  @(#)  $Author: taxiadm $
+|  @(#)  $Source: /taxi-scan/taxi_proj/cvs/taxi-scan/src/forms/danish/line_mgr.per,v $
+|
+|  Copyright (c) 1994 - MobileSoft Consulting, Inc. Woodinville WA
+|
+|**********************************************************************/
+|ident "@(#) head:$RCSfile: line_mgr.per,v $	$Revision: 1.2 $"
+}
+database mads
+screen
+{
+
+						LINE MANAGER FILE MAINTENANCE
+
+LINE	TERMINAL SERVER
+NBR	DESIGNATOR			   ASSIGNED             DDS DESCRIPTION
+[a ]	[f01                             ] [f02   ]		[f03                             ]
+}
+end
+tables
+line_mgr
+attributes
+a = line_mgr.dds_index, REQUIRED, COMMENTS="LINE DESIGNATOR";
+f01 = line_mgr.dds_server, REQUIRED, COMMENTS="TERMINAL SERVER/PORT FOR VDT";
+f02 = line_mgr.dds_name,REQUIRED, COMMENTS="DDS ASSIGNED TO STATION";
+f03 = line_mgr.dds_descript, COMMENTS="DESCRIPTION OF LOCATION";
+end

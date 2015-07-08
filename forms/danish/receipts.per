@@ -1,0 +1,72 @@
+{
+|***********************************************************************
+|                 RCS INFO
+|
+|  @(#)  $RCSfile: receipts.per,v $
+|  @(#)  $Revision: 1.5 $
+|  @(#)  $Date: 1998/11/14 15:00:01 $
+|  @(#)  $Author: taxiadm $
+|  @(#)  $Source: /taxi-scan/taxi_proj/cvs/taxi-scan/src/forms/danish/receipts.per,v $
+|
+|  Copyright (c) 1994 - MobileSoft Consulting, Inc. Woodinville WA
+|
+|**********************************************************************/
+|ident "@(#) head:$RCSfile: receipts.per,v $	$Revision: 1.5 $"
+}
+
+database mads
+screen
+{
+
+						KVITTERINGSDATA VEDLIGEHOLD
+
+Nummer		Dato-stempel	Dato	   Tid		Vogn		Nota Nummer
+[f000    ]	[f001     ]	[f009    ] [f010    ]	[f002  ]	[f003     ]
+
+Tur nummer	Behandlet	Beløb	   Ekstra	Distance	Start tid	Slut tid
+[f004     ]	[a]		[f011 ]	   [f012]	[f013 ]		[f014]		[f015]
+
+Chf. nummer	Vogn nummer	Forretningsnummer	Tur type		
+[f016  ]	[f017    ]	[f018   ]	        [b ]			
+
+Kreditkort nummer
+[f019                                     ]
+
+ITM tekst
+[f005                                                            ]
+[f006                                                            ]
+[f007                                                            ]
+[f008                                                            ]
+
+}
+end
+tables
+receipts
+attributes
+f000=receipts.rd_serial_num,REQUIRED;
+f001=receipts.rd_trans_dt_tm;
+f009=receipts.rd_date;
+f010=receipts.rd_time;
+f002=receipts.rd_veh_nbr;
+f003=receipts.rd_itm_trans_nbr;
+f004=receipts.rd_call_nbr;
+a=receipts.rd_processed;
+f011=receipts.rd_amount;
+f012=receipts.rd_extras;
+f013=receipts.rd_distance;
+f014=receipts.rd_start;
+f015=receipts.rd_end;
+f016=receipts.rd_driver_nbr;
+f017=receipts.rd_car_nbr;
+f018=receipts.rd_biz_nbr;
+b=receipts.rd_trip_type;
+f019=receipts.rd_credit_card;
+f005=receipts.rd_itm_text[1,64];
+f006=receipts.rd_itm_text[65,128];
+f007=receipts.rd_itm_text[129,192];
+f008=receipts.rd_itm_text[193,256];
+
+
+instructions
+	delimiters "()";
+end

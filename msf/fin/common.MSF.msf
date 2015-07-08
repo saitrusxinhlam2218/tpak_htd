@@ -1,0 +1,33 @@
+$ /****************************************************************************
+$ *                                                                           *
+$ *                           S C C S   I N F O                               *
+$ *                                                                           *
+$ * @(#)  common.MSF.fin; Rel: 10.1.3.1; Get date: 5/18/95 at 10:17:24
+$ * @(#)  Last delta: 12/5/94 at 11:01:51
+$ * @(#)  SCCS File: /taxi/sccs/s.common.MSF.fin
+$ *                                                                           *
+$ * Copyright (c) 1990 - MDI Seattle                                          *
+$ *                                                                           *
+$ *****************************************************************************/
+$ #ident "@(#) head:common.MSF.fin	10.1.3.1"
+$ /*
+$  * Message file for PROGRAM: common routines
+$  * CATALOG:   common.cat
+$  * MNEMONICS: comm_strdefs.h
+$  */
+
+$quote "
+$delset 1
+$set 1
+
+$ /*    NOTE TO THE TRANSLATOR                          */
+$ /*    Quoted text will be followed by a maximum string length if the  */
+$ /*    text length is different than the number of chars in the string.*/
+$ /*    If no string length is entered default to the current number of */
+$ /*    characters.  A comment about the string is also included where  */
+$ /*    necessary.                                                      */
+
+1	"Ei voi avata tiedostoa ( %s ).\n"	/* 40, %s will be replaced with file name */
+2	"VIRHE: ei voi avata hakemistoa( %s )\n"	/* 40, %s will be replaced with catalog name */
+3	"CATOPEN"				/* don't translate */
+4	"NYT"					/* String indicating current time */

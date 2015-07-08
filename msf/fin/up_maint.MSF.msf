@@ -1,0 +1,108 @@
+$ /****************************************************************************
+$ *                                                                           *
+$ *                           S C C S   I N F O                               *
+$ *                                                                           *
+$ * @(#)  up_maint.MSF.fin; Rel: 10.1.3.1; Get date: 5/18/95 at 10:20:22
+$ * @(#)  Last delta: 12/5/94 at 10:53:17
+$ * @(#)  SCCS File: /taxi/sccs/s.up_maint.MSF.fin
+$ *                                                                           *
+$ * Copyright (c) 1990 - MDI Seattle                                          *
+$ *                                                                           *
+$ *****************************************************************************/
+$ #ident "@(#) head:up_maint.MSF.fin/usr/users/brian/enh_src/src/msf/fin	10.1.3.1"
+
+$ /*
+$  * Message file for PROGRAM: up_maint
+$  * CATALOG:   up_maint.cat
+$  * MNEMONICS: up_m_strdefs.h
+$  */
+
+$quote "
+$delset 1
+$set 1
+
+$ /*    NOTE TO THE TRANSLATOR                          */
+$ /*    Quoted text will be followed by a maximum string length if the  */
+$ /*    text length is different than the number of chars in the string.*/
+$ /*    If no string length is entered default to the current number of */
+$ /*    characters.  A comment about the string is also included where  */
+$ /*    necessary.                                                      */
+
+1	"On annettava arvo"				/* 40	*/
+2	"Tietuetta ei löydy, LISÄÄ ensin!"			/* 40	*/
+3	"Ei voi avata valikkotiedostoa"			/* 40   */
+4	"Ei voi sulkea valikkotiedostoa"			/* 40   */
+5	"Ei voi avata poikkeusryhmätiedostoa"		/* 40   */
+6	"Ei voi sulkea poikkeusryhmätiedostoa"		/* 40   */
+7	"Ei voi avata poikkeustyyppitiedostoa"		/* 40   */
+8	"Ei voi sulkea poikkeustyyppitiedostoa"		/* 40   */
+9	"Ei voi lukea"					/* 20, Ei voi lukea XXX -tiedostoa	*/
+10	"tiedosto"						/* 10, cannot read XXX file	*/
+11	"<CR> kun haluat jatkaa.."				/* 40   */
+12	"Paina ESC suorittaaksesi"				/* 40   */
+13	"Käyttäjäprofiilin lukuvirhe"			/* 40   */
+14	"Käyt TN"
+15	"Nimi"
+16	"Täysi nimi"					/* 15	*/
+17	"Tervehdysnimi"
+18	"Yhtiötied. hoitajat"				/* 20	*/
+19	"Valikkoluvat"
+20	"Oletus"
+21	"Yhtiö"
+22	"Näyttö"
+23	"Haku"
+24	"Toimi"
+25	"Til.tyyp"
+26	"Alue"
+27	"Suurin trk"
+28	"Voi ruuduttaa"
+29	"Logotied"
+30	"Superruudut:"
+31	"Poikk.ryhm:"
+32	"Poik"
+33	"tyyp"
+34	"On annettava arvo"				/* 40	*/
+35	"On annettava aluekoodi"				/* 40	*/
+36	"Käyttäjän TN, näkyy joka näytössä ja käytet. tapahtumakirjaukseen"
+37	"Käyttäjän koko nimi"				/* 40	*/
+38	"Tervehdysnimi joka näkyy tervehdysrivillä"
+39	"Merkintä sallii käyttäjän käsitellä yhtiötä 1"
+40	"Merkintä sallii käyttäjän käsitellä yhtiötä 2"
+41	"Merkintä sallii käyttäjän käsitellä yhtiötä 3"
+42	"Merkintä sallii käyttäjän käsitellä yhtiötä 4"
+43	"Merkintä sallii käyttäjän käsitellä yhtiötä 5"
+44	"Merkintä sallii käyttäjän käsitellä yhtiötä 6"
+45	"Merkintä sallii käyttäjän käsitellä yhtiötä 7"
+46	"Merkintä sallii käyttäjän käsitellä yhtiötä 8"
+47	"Merkintä sallii käyttäjän valita"
+48	"Yhtiön oletus-TN"				/* 40	*/
+49	"Oletusnäyttö tälle käyttäjälle hakumuodossa"
+50	"Oletusetsintä tälle käyttäjälle hakumuodossa"
+51	"Oletusnumero käyttäjän toimelle"			/* 40   */
+52	"Oletustilaustyyppi"				/* 40   */
+53	"Oletusaluekoodi"				/* 40   */
+54	"1 - 63. Suurin tärkeys jonka käyttäjä voi antaa tilaukselle"
+55	"K/E. Osoittaa käyttäjän saavan ruuduttaa tilauksia"	/* 40   */
+56	"Tiedoston nimi joka näkyy kun käyttäjä lopettaa"
+57	"Superruutu 1:n oletusosa"			/* 40   */
+58	"Superruutu 2:n oletusosa"			/* 40   */
+59	"Superruutu 3:n oletusosa"			/* 40   */
+60	"Superruutu 4:n oletusosa"			/* 40   */
+61	"Superruutu 5:n oletusosa"			/* 40   */
+62	"Superruutu 6:n oletusosa"                   /* 40   */
+63	"Superruutu 7:n oletusosa"                   /* 40   */
+64	"Superruutu 8:n oletusosa"                   /* 40   */
+65	"Superruutu 9:n oletusosa"                   /* 40   */
+66	"Superruutu 10:n oletusosa"                  /* 40   */
+67	"Superruutu 11:n oletusosa"                  /* 40   */
+68	"Superruutu 12:n oletusosa"                  /* 40   */
+69	"Superruutu 13:n oletusosa"                  /* 40   */
+70	"Superruutu 14:n oletusosa"                  /* 40   */
+71	"Superruutu 15:n oletusosa"                  /* 40   */
+72	"Superruutu 16:n oletusosa"                  /* 40   */
+73	"K/E. Onko poikkeusryhmä"			/* Whether excp. group XXX is included in ...	*/
+74	"K/E. Onko poikkeusryhmä"			/* Whether exc. type XXX is included in ...	*/
+75	"mukana tässä käyttäjän valinnassa"		/* Whether exc. type XXX is included in ...     */
+76	"("						/* translate to opening parenthesis (	*/
+77	")"						/* translate to closing parentesis )	*/
+78	"Väärä valinta - ole hyvä anna (L/U) lisätäksesi tai aloittaaksesi uuden"

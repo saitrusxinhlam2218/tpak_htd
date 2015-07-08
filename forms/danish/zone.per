@@ -1,0 +1,158 @@
+{
+|***********************************************************************
+|                 RCS INFO
+|
+|  @(#)  $RCSfile: zone.per,v $
+|  @(#)  $Revision: 1.4 $
+|  @(#)  $Date: 1998/01/08 19:36:14 $
+|  @(#)  $Author: taxiadm $
+|  @(#)  $Source: /taxi-scan/taxi_proj/cvs/taxi-scan/src/forms/danish/zone.per,v $
+|
+|  Copyright (c) 1994 - MobileSoft Consulting, Inc. Woodinville WA
+|
+|**********************************************************************/
+|ident "@(#) head:$RCSfile: zone.per,v $	$Revision: 1.4 $"
+}
+database mads
+screen
+{
+						VISNING AF DISTRIKTS-FIL
+Vognpk  Distnr   Beskrivelse            Type   Superdist.detalje Nummer     MDT skærm   Antal forudbestillinger
+[a]     [abc  ]  [f002                ] [c]              [b]     [f001 ]    [z]           [def]
+
+Max afsend.tid     Afhent.forudtid     Holdepl.tid fra    Til         SL tilladt       SL Forudtid 
+[f007 ]             [f004 ]                        [f005 ]  [f006 ]     [e]            [f008 ]
+
+Afhent.bevill.            PAUSE        Ik ACPT
+[f003            ]        [f009 ]      [f010 ]
+
+Niveau    Alg   Interval    Afvisn.straf  Dist 1 Dist 2 Dist 3 Dist 4 Dist 5 Dist 6 Dist 7 Dist 8
+  1       [f]   [f016 ]     [g]           [a01]  [a02]  [a03]  [a04]  [a05]  [a06]  [a07]  [a08]
+Primær          [f017 ]     [h]
+  2       [i]   [f018 ]     [j]           [b01]  [b02]  [b03]  [b04]  [b05]  [b06]  [b07]  [b08]
+  3       [k]   [f027 ]     [l]           [c01]  [c02]  [c03]  [c04]  [c05]  [c06]  [c07]  [c08]
+  4       [m]   [f036 ]     [n]           [d01]  [d02]  [d03]  [d04]  [d05]  [d06]  [d07]  [d08]
+  5       [o]   [f045 ]     [p]           [e01]  [e02]  [e03]  [e04]  [e05]  [e06]  [e07]  [e08]
+  6       [q]   [f054 ]     [r]           [f01]  [f02]  [f03]  [f04]  [f05]  [f06]  [f07]  [f08]
+  7       [s]   [f063 ]     [t]           [g01]  [g02]  [g03]  [g04]  [g05]  [g06]  [g07]  [g08]
+  8       [u]   [f072 ]     [v]           [h01]  [h02]  [h03]  [h04]  [h05]  [h06]  [h07]  [h08]
+}
+end
+tables
+zone
+attributes
+a = zone.zn_fleet,RIGHT,UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="Vognparkindikator";
+abc = zone.zn_nbr,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Et distnr. (1-999) specifikt til denne vognprk eller et superdistnr. (1-32,000)";
+f002 = zone.zn_desc,RIGHT,UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="Beskrivelse af dette distrikts eller superdistrikts indhold";
+c = zone.zn_type,NOENTRY,NOUPDATE,COMMENTS="Distriktstype. Gyldige typer er 1-Holdeplads, 2-Distrikt, 3-Superdistrikt";
+b = zone.zn_superzn_detail,UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="Vedrører kun superdistriktposter, bruges i superdistriktsrapporter";
+f001 = zone.zn_superzn_nbr,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Et superdistriktnummer som dette distrikt hører til (1-32,000)";
+z = zone.zn_mdt_screen, UPSHIFT, NOENTRY, NOUPDATE, COMMENTS="MDT skærmnr. hvor distriktet ses";
+def = zone.zn_max_time_calls, UPSHIFT, NOENTRY, NOUPDATE, COMMENTS="Antal forudbestillinger tilladt indenfor et enkelt tidsrum (0 = ubegrænset)";
+f007 = zone.zn_avl_call_q_time,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Den tid en tur venter i afsendelsen inden den sendes ud";
+f004 = zone.zn_pckup_lead_time,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Antal minutter før forfaldstid en forudbestilling skal frigives";
+f005 = zone.zn_stand_time_from,RIGHT,NOENTRY,NOUPDATE,COMMENTS="I 24-timers tidsformat";
+f006 = zone.zn_stand_time_to,RIGHT,NOENTRY,NOUPDATE,COMMENTS="I 24-timers tidsformat";
+e = zone.zn_enr_post_allow,UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="J/N. Om snart-ledig melding er tilladt i dette distrikt";
+f008 = zone.zn_enr_post_lead,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Max. tilladte tid mellem SL og IDIST meldinger (I minutter)";
+f003 = zone.zn_pckup_seals,UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="16 flag som indikerer bevillinger nødvendige for at tage ture i dette distrikt";
+f009 = zone.zn_break_duration,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Max. længde på en gyldig pause. (I minutter)";
+f010 = zone.zn_accept_duration,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Antal sekunder for chaufføren at trykke ACPT. (I sekunder)";
+f = zone.zn_lev1_alg,UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="Definerer måden hvorpå ture afpasses med vogne på holdeplads i et distrikt";
+f016 = zone.zn_lev1_excl_time,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Definerer intervallet (i sekunder)";
+g = zone.zn_lev1_rej_penlty,UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="Afvisningsstraf/valg for niveau 1";
+a01 = zone.zn_lev1_zone_nbr1,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Første distrikt på niveau 1";
+a02 = zone.zn_lev1_zone_nbr2,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Andet distrikt på niveau 1";
+a03 = zone.zn_lev1_zone_nbr3,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Tredie distrikt på niveau 1";
+a04 = zone.zn_lev1_zone_nbr4,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Fjerde distrikt på niveau 1";
+a05 = zone.zn_lev1_zone_nbr5,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Femte distrikt på niveau 1";
+a06 = zone.zn_lev1_zone_nbr6,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Sjette distrikt på niveau 1";
+a07 = zone.zn_lev1_zone_nbr7,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Syvende distrikt på niveau 1";
+a08 = zone.zn_lev1_zone_nbr8,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Ottende distrikt på niveau 1";
+f017 = zone.zn_main_excl_time,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Eksklusiv tid for primært distrikt og holdepladser";
+h = zone.zn_main_rej_penlty,UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="Afvisningsstraf/valg for primært distrikt";
+i = zone.zn_lev2_alg,UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="Definerer måden hvorpå ture afpasses med vogne i primære distrikter";
+f018 = zone.zn_lev2_excl_time,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Definerer intervallet (i sekunder)";
+j = zone.zn_lev2_rej_penlty,UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="Afvisningsstraf/valg for niveau 2";
+b01 = zone.zn_lev2_zone_nbr1,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Første distrikt på niveau 2";
+b02 = zone.zn_lev2_zone_nbr2,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Andet distrikt på niveau 2";
+b03 = zone.zn_lev2_zone_nbr3,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Tredie distrikt på niveau 2";
+b04 = zone.zn_lev2_zone_nbr4,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Fjerde distrikt på niveau 2";
+b05 = zone.zn_lev2_zone_nbr5,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Femte distrikt på niveau 2";
+b06 = zone.zn_lev2_zone_nbr6,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Sjette distrikt på niveau 2";
+b07 = zone.zn_lev2_zone_nbr7,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Syvende distrikt på niveau 2";
+b08 = zone.zn_lev2_zone_nbr8,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Ottende distrikt på niveau 2";
+k = zone.zn_lev3_alg,UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="Definerer måden hvorpå ture afpasses med vogne på niveau 3 backupdistrikt";
+f027 = zone.zn_lev3_excl_time,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Definerer intervallet (i sekunder)";
+l = zone.zn_lev3_rej_penlty,UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="Afvisningsstraf/valg for niveau 3";
+c01 = zone.zn_lev3_zone_nbr1,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Første distrikt på niveau 3";
+c02 = zone.zn_lev3_zone_nbr2,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Andet distrikt på niveau 3";
+c03 = zone.zn_lev3_zone_nbr3,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Tredie distrikt på niveau 3";
+c04 = zone.zn_lev3_zone_nbr4,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Fjerde distrikt på niveau 3";
+c05 = zone.zn_lev3_zone_nbr5,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Femte distrikt på niveau 3";
+c06 = zone.zn_lev3_zone_nbr6,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Sjette distrikt på niveau 3";
+c07 = zone.zn_lev3_zone_nbr7,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Syvende distrikt på niveau 3";
+c08 = zone.zn_lev3_zone_nbr8,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Ottende distrikt på niveau 3";
+m = zone.zn_lev4_alg,UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="Definerer måden hvorpå ture afpasses med vogne på niveau 4 backupdistrikt";
+f036 = zone.zn_lev4_excl_time,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Definerer intervallet (i sekunder)";
+n = zone.zn_lev4_rej_penlty,UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="Afvisningsstraf/valg for niveau 4";
+d01 = zone.zn_lev4_zone_nbr1,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Første distrikt på niveau 4";
+d02 = zone.zn_lev4_zone_nbr2,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Andet distrikt på niveau 4";
+d03 = zone.zn_lev4_zone_nbr3,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Tredie distrikt på niveau 4";
+d04 = zone.zn_lev4_zone_nbr4,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Fjerde distrikt på niveau 4";
+d05 = zone.zn_lev4_zone_nbr5,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Femte distrikt på niveau 4";
+d06 = zone.zn_lev4_zone_nbr6,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Sjette distrikt på niveau 4";
+d07 = zone.zn_lev4_zone_nbr7,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Syvende distrikt på niveau 4";
+d08 = zone.zn_lev4_zone_nbr8,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Ottende distrikt på niveau 4";
+o = zone.zn_lev5_alg,UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="Definerer måden hvorpå ture afpasses med vogne på niveau 5 backupdistrikt";
+f045 = zone.zn_lev5_excl_time,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Definerer intervallet (i sekunder)";
+p = zone.zn_lev5_rej_penlty,UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="Afvisningsstraf/valg for niveau 5";
+e01 = zone.zn_lev5_zone_nbr1,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Første distrikt på niveau 5";
+e02 = zone.zn_lev5_zone_nbr2,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Andet distrikt på niveau 5";
+e03 = zone.zn_lev5_zone_nbr3,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Tredie distrikt på niveau 5";
+e04 = zone.zn_lev5_zone_nbr4,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Fjerde distrikt på niveau 5";
+e05 = zone.zn_lev5_zone_nbr5,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Femte distrikt på niveau 5";
+e06 = zone.zn_lev5_zone_nbr6,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Sjette distrikt på niveau 5";
+e07 = zone.zn_lev5_zone_nbr7,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Syvende distrikt på niveau 5";
+e08 = zone.zn_lev5_zone_nbr8,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Ottende distrikt på niveau 5";
+q = zone.zn_lev6_alg,UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="Definerer måden hvorpå ture afpasses med vogne på niveau 6 backupdistrikt";
+f054 = zone.zn_lev6_excl_time,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Definerer intervallet (i sekunder)";
+r = zone.zn_lev6_rej_penlty,UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="Afvisningsstraf/valg for niveau 6";
+f01 = zone.zn_lev6_zone_nbr1,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Første distrikt på niveau 6";
+f02 = zone.zn_lev6_zone_nbr2,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Ander distrikt på niveau 6";
+f03 = zone.zn_lev6_zone_nbr3,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Tredie distrikt på niveau 6";
+f04 = zone.zn_lev6_zone_nbr4,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Fjerde distrikt på niveau 6";
+f05 = zone.zn_lev6_zone_nbr5,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Femte distrikt på niveau 6";
+f06 = zone.zn_lev6_zone_nbr6,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Sjette distrikt på niveau 6";
+f07 = zone.zn_lev6_zone_nbr7,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Syvende distrikt på niveau 6";
+f08 = zone.zn_lev6_zone_nbr8,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Ottende distrikt på niveau 6";
+s = zone.zn_lev7_alg,UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="Definerer måden hvorpå ture afpasses med vogne på niveau 7 backupdistrikt";
+f063 = zone.zn_lev7_excl_time,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Definerer intervallet (i sekunder)";
+t = zone.zn_lev7_rej_penlty,UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="Afvisningsstraf/valg for niveau 7";
+g01 = zone.zn_lev7_zone_nbr1,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Første distrikt på niveau 7";
+g02 = zone.zn_lev7_zone_nbr2,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Andet distrikt på niveau 7";
+g03 = zone.zn_lev7_zone_nbr3,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Tredie distrikt på niveau 7";
+g04 = zone.zn_lev7_zone_nbr4,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Fjerde distrikt på niveau 7";
+g05 = zone.zn_lev7_zone_nbr5,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Femte distrikt på niveau 7";
+g06 = zone.zn_lev7_zone_nbr6,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Sjette distrikt på niveau 7";
+g07 = zone.zn_lev7_zone_nbr7,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Syvende distrikt på niveau 7";
+g08 = zone.zn_lev7_zone_nbr8,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Ottende distrikt på niveau 7";
+u = zone.zn_lev8_alg,UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="Definerer måden hvorpå ture afpasses med vogne på niveau 8 backupdistrikt";
+f072 = zone.zn_lev8_excl_time,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Definerer intervallet (i sekunder)";
+v = zone.zn_lev8_rej_penlty,UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="Afvisningsstraf/valg for niveau 8";
+h01 = zone.zn_lev8_zone_nbr1,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Første distrikt på niveau 8";
+h02 = zone.zn_lev8_zone_nbr2,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Ander distrikt på niveau 8";
+h03 = zone.zn_lev8_zone_nbr3,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Tredie distrikt på niveau 8";
+h04 = zone.zn_lev8_zone_nbr4,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Fjerde distrikt på niveau 8";
+h05 = zone.zn_lev8_zone_nbr5,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Femte distrikt på niveau 8";
+h06 = zone.zn_lev8_zone_nbr6,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Sjette distrikt på niveau 8";
+h07 = zone.zn_lev8_zone_nbr7,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Syvende distrikt på niveau 8";
+h08 = zone.zn_lev8_zone_nbr8,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Ottende distrikt på niveau 8";
+end
+instructions
+   delimiters "()";
+before remove of zone
+	comments reverse
+	' Permission not granted to allow remove of "distrikt" '
+	abort
+end

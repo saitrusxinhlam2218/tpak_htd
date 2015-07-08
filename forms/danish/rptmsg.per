@@ -1,0 +1,57 @@
+{
+|***********************************************************************
+|                 RCS INFO
+|
+|  @(#)  $RCSfile: rptmsg.per,v $
+|  @(#)  $Revision: 1.4 $
+|  @(#)  $Date: 1998/01/08 19:35:53 $
+|  @(#)  $Author: taxiadm $
+|  @(#)  $Source: /taxi-scan/taxi_proj/cvs/taxi-scan/src/forms/danish/rptmsg.per,v $
+|
+|  Copyright (c) 1994 - MobileSoft Consulting, Inc. Woodinville WA
+|
+|**********************************************************************/
+|ident "@(#) head:$RCSfile: rptmsg.per,v $	$Revision: 1.4 $"
+}
+database mads
+screen
+{
+						VISNING AF GENTAG. BESKEDS-FIL
+
+Nummer                               Gentaget  Vgnpk  Til type  Udvalgt        Hvor ofte  
+[f000                ]               [a]       [b]       [c ]  [f001 ]     [f002  ]   
+
+Skrevet:  Af      Dato        Tid           Systemdato/tid  
+          [f003]  [f004    ]  [f005  ]      [f006              ]  
+
+Indtil: Dato        Tid      Systemdato/tid  
+        [f007    ]  [f008  ]   [f009              ]
+
+Beskedslinie 
+[f010                                              ][f011                                              ]
+[f012                                              ][f013                                              ]
+}
+end
+tables
+rptmsg
+attributes
+a = rptmsg.rm_repeat,include=(J,N),default="J",UPSHIFT,COMMENTS="J/N. Om denne besked skal gentages";
+b = rptmsg.rm_fleet,UPSHIFT,COMMENTS="Vognpark forbundet med denne besked";
+c = rptmsg.rm_to_type,UPSHIFT,COMMENTS="Brugertype denne besked blev sendt til";
+f000 = rptmsg.rm_msg_nbr,NOENTRY,RIGHT,NOUPDATE,COMMENTS="Et nummer systemet tildelte denne besked";
+f001 = rptmsg.rm_to_selection,UPSHIFT,COMMENTS="Hvem beskeden blev sendt til";
+f002 = rptmsg.rm_how_often,RIGHT,COMMENTS="Hvor ofte denne besked skal sendes";
+f003 = rptmsg.rm_created_by,RIGHT,REQUIRED,COMMENTS="Bruger-ID (hvem skrev denne gentagelsesbesked)"; 
+f004 = rptmsg.rm_cr_date,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Dato besked blev skrevet";
+f005 = rptmsg.rm_cr_time,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Tid besked blev skrevet";
+f006 = rptmsg.rm_created_dt_tm,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Systemdato og tid besked blev skrevet";
+f007 = rptmsg.rm_until_date,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Beskedens udløbsdato";
+f008 = rptmsg.rm_until_time,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Beskedens udløbstid";
+f009 = rptmsg.rm_until_dt_tm,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Systembeskeds udløbsdato og tid";
+f010 = rptmsg.rm_line_1[1,50],UPSHIFT,COMMENTS="Beskedens første linie";
+f011 = rptmsg.rm_line_1[51,100],UPSHIFT,COMMENTS="Beskedens første linie";
+f012 = rptmsg.rm_line_2[1,50],UPSHIFT,COMMENTS="Beskedens anden linie";
+f013 = rptmsg.rm_line_2[51,100],UPSHIFT,COMMENTS="Beskedens anden linie";
+instructions
+   delimiters "()";
+end

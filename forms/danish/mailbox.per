@@ -1,0 +1,51 @@
+{
+|***********************************************************************
+|                 RCS INFO
+|
+|  @(#)  $RCSfile: mailbox.per,v $
+|  @(#)  $Revision: 1.4 $
+|  @(#)  $Date: 1998/01/08 19:35:43 $
+|  @(#)  $Author: taxiadm $
+|  @(#)  $Source: /taxi-scan/taxi_proj/cvs/taxi-scan/src/forms/danish/mailbox.per,v $
+|
+|  Copyright (c) 1994 - MobileSoft Consulting, Inc. Woodinville WA
+|
+|**********************************************************************/
+|ident "@(#) head:$RCSfile: mailbox.per,v $	$Revision: 1.4 $"
+}
+database mads
+screen
+{
+						VEDLIGEH. AF POSTKASSE-FIL
+
+Modtager-ID   Besk.nr.                Afsnd-ID    Status   Dato sendt    Tid sendt
+[f000  ]      [f001                ]  [f002]       [a]      [f004    ]   [f005  ]
+
+Vognpk   Til  Type  Udvalg           Beskedstype
+[b]           [c]   [f003 ]           [f006    ]
+
+Besked
+[f007                                              ][f008                                              ]
+[f009                                              ][f010                                              ]
+}
+end
+tables
+mailbox
+attributes
+f000 = mailbox.mb_address,include=(1 to 29999),RIGHT,REQUIRED,COMMENTS="Modtagers brugernummer";
+f001 = mailbox.mb_msg_nbr,REQUIRED,NOENTRY,NOUPDATE,COMMENTS="Et nummer systemet har tildelt denne besked";
+f002 = mailbox.mb_from,include=(1 to 9999),RIGHT,COMMENTS="Afsenders brugernummer";
+a = mailbox.mb_status,include=(N,O),UPSHIFT,REQUIRED,COMMENTS="Om denne besked er 'N'y eller 'G'ammel";
+f004 = mailbox.mb_date_sent,COMMENTS="Dato besked sendt";
+f005 = mailbox.mb_time_sent,COMMENTS="Tid besked sendt";
+b = mailbox.mb_fleet,UPSHIFT,REQUIRED,COMMENTS="Vognpark-ID";
+c = mailbox.mb_to_type,include=("*",P,S,C,L,V,T,D," "),UPSHIFT,COMMENTS="Vælg modtagere for besked (*,P,S,C,L,V,T,D)";
+f003 = mailbox.mb_to_selection,UPSHIFT,COMMENTS="Indskrænker valg af modtagere";
+f006 = mailbox.mb_msgtype,RIGHT,COMMENTS="Type MDT terminal kommando";
+f007 = mailbox.mb_msg_line1[1,50],UPSHIFT,COMMENTS="Første linie af besked";
+f008 = mailbox.mb_msg_line1[51,100],UPSHIFT,COMMENTS="Første linie af besked";
+f009 = mailbox.mb_msg_line2[1,50],UPSHIFT,COMMENTS="Anden linie af besked";
+f010 = mailbox.mb_msg_line2[51,100],UPSHIFT,COMMENTS="Anden linie af besked";
+instructions
+   delimiters "()";
+end

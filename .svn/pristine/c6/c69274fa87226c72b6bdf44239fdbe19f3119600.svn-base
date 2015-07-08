@@ -1,0 +1,36 @@
+$ /****************************************************************************
+$ *                                                                           *
+$ *                           S C C S   I N F O                               *
+$ *                                                                           *
+$ * @(#)  da_report.MSF.fin; Rel: 10.1.3.1; Get date: 5/18/95 at 10:18:00
+$ * @(#)  Last delta: 12/5/94 at 11:02:32
+$ * @(#)  SCCS File: /taxi/sccs/s.da_report.MSF.fin
+$ *                                                                           *
+$ * Copyright (c) 1990 - MDI Seattle                                          *
+$ *                                                                           *
+$ *****************************************************************************/
+$ #ident "@(#) head:da_report.MSF.fi/usr/users/brian/enh_src/src/msf/fin	10.1.3.1"
+
+$quote "
+$delset 1
+$set 1
+1	"\n%sPäiväraporttiohjelma on jo käynnissä "
+2	"\n%ssen voi aloittaa uudelleen vasta sen loputtua."
+3	"\n%sPäiväraportti: EI yhtiöitä ajossa eikä raportteja.\n"
+4	"\n\n%sTämä ohjelma tuottaa 21 päiväraporttia.\n"
+5	"%sAnna K jos haluat jatkaa. (K/E) E\b"
+6	"\n\n%sTAKSISYSTEEMIT\n"
+7	"\n\n%sPÄIVITT TIEDOSTONHOITO ja RAPORTTIEN TUOTTO\n"
+8	"\n\n%sRaporttituoton kokonaisaika riippuu taksitilausten määrästä.\n"
+9	"%sOdota sanomaa PAINA <CR>\n"
+10	"%sTämä ohjelma ilmoittaa sinulle mitä on käynnissä.\n"
+11	"\n\n%sAika on: "
+12	"%sHUOMIO: Tilausten kopiointi päiv. vuorotiedostoon vie jonkun minuutin......\n"
+13	"%sHUOMIO: Huomisten jatk.tilausten aikataulun teko käy itsenäisesti.\n"
+14	"%sRAPORTINTUOTTO: raportti tekeillä %d\n"
+15	"%sRAPORTINTUOTTO: raporttia tulostetaan %d\n"
+16	"%sRAPORTINTUOTTO ON VALMIS\n"
+17	"%sHUOMAA: Aikaisemman vuoron tilausten poisto käy itsenäisesti.\n"
+18	"\n%sEi voi lukea tiedostoa %s.\n"
+19	"%s<cr> kun haluat jatkaa.."
+20	"da_report: Ei voi lukea tiedostoa %s.\n"

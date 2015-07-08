@@ -1,0 +1,72 @@
+database mads
+screen
+{
+						Tilastotiedoston n{ytt|
+Yhti|      Pvm         Lajittelupvm                     Aloitusaika      Lopetusaika
+[a]        [f000    ]  [f001                ]           [f002]           [f003]  
+
+                                     K{ytt{j{tilaston tilaukset
+Matkustaja    Toimitus      "X"-tyyppi   Her{tys       Lopetus       Taajuus       Kyselyt     
+[f004]        [f005]        [f006]       [f007]        [f008]        [f009  ]       [f010]
+Ruuduttam     Peruutus      Viestit      V{litykset    Muutokset     Poikkeukset   Ty|tunnit    
+[f011]        [f012]        [f013]       [f014]        [f015]        [f016 ]       [f017  ]
+
+
+				     Ajajatilasto 
+Hyvks           Ruutuun     Eruutuun        Mruutuun       Kpystyt              Tarj           Eihyvks        Hylk     
+[f018]          [f019 ]     [f020 ]         [f021]         [f022]               [f023]         [f024]         [f025]
+Lyhyt M         My|h M      Kyselyt         Mkyselyt       Kyselyt/Jullikat     Kutsut         Jullikat       Tauot      
+[f026]          [f027]      [f028]          [f029]         [f030]               [f031]         [f032]         [f033]
+Puhe            Viestit     H{t{tilat       Aloitukset     Lopetukset           Ty|tunnit/yht  Keskim/autot
+[f034]          [f035]      [f036]          [f037]         [f038]               [f039  ]       [f040  ]
+}
+end
+tables
+stats
+attributes
+a = stats.sa_fleet,NOUPDATE,UPSHIFT,REQUIRED,COMMENTS="Yhti|n tunnusnumero";
+f000 = stats.sa_date,NOUPDATE,REQUIRED,COMMENTS="P{iv{ jota n{m{ tilastot k{sittelev{t. PP.KK.VV-muoto";
+f001 = stats.sa_sort_date,RIGHT,COMMENTS="C-versio edellisest{ p{iv{m{{r{st{ lajittelun suorittamiseksi";
+f002 = stats.sa_day_start,RIGHT,COMMENTS="P{iv{n aloitusaika 24-tunnin muodossa";
+f003 = stats.sa_day_end,RIGHT,COMMENTS="P{iv{n lopetusaika 24-tunnin muodossa";
+f004 = stats.sa_u_pass_calls,RIGHT,COMMENTS="K{ytt{jien systeemiin kirjaamien ajojen m{{r{";
+f005 = stats.sa_u_del_calls,RIGHT,COMMENTS="K{ytt{jien systeemiin kirjaamien tavara-ajojen m{{r{";
+f006 = stats.sa_u_typex_calls,RIGHT,COMMENTS="K{ytt{jien systeemiin kirjaamien X-tyyppisten ajojen m{{r{";
+f007 = stats.sa_u_wakeup_calls,RIGHT,COMMENTS="K{ytt{jien systeemiin kirjaamien her{tystilausten m{{r{";
+f008 = stats.sa_u_killed_calls,RIGHT,COMMENTS="K{ytt{jien lopettamien tilausten m{{r{";
+f009 = stats.sa_u_call_rate,RIGHT,COMMENTS="Systeemiin tunnin aikana tulevien tilausten m{{r{";
+f010 = stats.sa_u_callbacks,RIGHT,COMMENTS="K{ytt{jien k{sittelemien kyselytilausten m{{r{";
+f011 = stats.sa_u_unzoned,RIGHT,COMMENTS="Systeemiin kirjattujen ruuduttamattomien tilausten m{{r{";
+f012 = stats.sa_u_cancelled,RIGHT,COMMENTS="K{ytt{jien peruuttamien tilausten m{{r{";
+f013 = stats.sa_u_messages,RIGHT,COMMENTS="K{ytt{jien toisille k{ytt{jille tai ajajille l{hett{mien tilausten m{{r{";
+f014 = stats.sa_u_assigns,RIGHT,COMMENTS="V{litt{m{tt{ j{{neet tilaukset, jotka v{litt{j{ antoi autolle";
+f015 = stats.sa_u_overrides,RIGHT,COMMENTS="Tilausm{{r{ jonka systeemi antoi tietylle autolle";
+f016 = stats.sa_u_exceptions,RIGHT,COMMENTS="K{siteltyjen poikkeusten kokonaism{{r{";
+f017 = stats.sa_u_hours_worked,RIGHT,COMMENTS="Kaikkien k{ytt{jien systeemink{ytt|tuntien yhteism{{r{";
+f018 = stats.sa_d_calls,RIGHT,COMMENTS="Ajajan HYVKS-tilausten m{{r{";
+f019 = stats.sa_d_posts,RIGHT,COMMENTS="Systeemin k{sittelemien ruutuun-pyynt|jen m{{r{";
+f020 = stats.sa_d_cposts,RIGHT,COMMENTS="Systeemin k{sittelemien ehdollisten ruutuun-pyynt|jen m{{r{";
+f021 = stats.sa_d_eposts,RIGHT,COMMENTS="Systeemin k{sittelemien Kohta vapaa-pyynt|jen m{{r{";
+f022 = stats.sa_d_flags,RIGHT,COMMENTS="Systeemin k{sittelemien k{sipystypyynt|jen m{{r{";
+f023 = stats.sa_d_bids,RIGHT,COMMENTS="Systeemin k{sittelemien tarjousvastausten m{{r{";
+f024 = stats.sa_d_no_accepts,RIGHT,COMMENTS="Systeemin k{sittelemien jullikka-vastausten m{{r{";
+f025 = stats.sa_d_rejects,RIGHT,COMMENTS="Systeemin k{sittelemien hylk{yspyynt|jen m{{r{";
+f026 = stats.sa_d_short_meters,RIGHT,COMMENTS="Ajajien aiheuttamien lyhyiden mittarien m{{r{";
+f027 = stats.sa_d_late_meters,RIGHT,COMMENTS="Ajajien aiheuttamien my|h{isten mittarien m{{r{";
+f028 = stats.sa_d_callbacks,RIGHT,COMMENTS="Ajajien tekemien kyselyiden m{{r{";
+f029 = stats.sa_d_callb_mon,RIGHT,COMMENTS="Kyselym{{r{ ajajilta jotka k{{nsiv{t mittarin p{{lle";
+f030 = stats.sa_d_callb_noshow,RIGHT,COMMENTS="Kyselym{{r{ ajajilta jotka ilmoittivat JULLIKKA";
+f031 = stats.sa_d_callouts,RIGHT,COMMENTS="Systeemin k{sittelemien kutsupyynt|jen m{{r{";
+f032 = stats.sa_d_noshows,RIGHT,COMMENTS="Systeemin k{sittelemien jullikkapyynt|jen m{{r{";
+f033 = stats.sa_d_breaks,RIGHT,COMMENTS="Systeemin k{sittelemien taukopyynt|jen m{{r{";
+f034 = stats.sa_d_talks,RIGHT,COMMENTS="Systeemin k{sittelemien puhepyynt|jen m{{r{";
+f035 = stats.sa_d_messages,RIGHT,COMMENTS="Ajajien keskukselle l{hett{mien viestien m{{r{";
+f036 = stats.sa_d_emergencies,RIGHT,COMMENTS="Systeemin k{sittelemien h{t{pyynt|jen m{{r{";
+f037 = stats.sa_d_sign_ins,RIGHT,COMMENTS="Systeemin k{sittelemien aloituspyynt|jen m{{r{";
+f038 = stats.sa_d_sign_outs,RIGHT,COMMENTS="Systeemin k{sittelemien lopetuspyynt|jen m{{r{";
+f039 = stats.sa_d_hours_worked,RIGHT,COMMENTS="Kaikkien ajajien yhteinen ajotuntim{{r{";
+f040 = stats.sa_d_avg_act_cabs,RIGHT,COMMENTS="Keskim{{r{inen autom{{r{ yhden tunnin aikana";
+end
+instructions
+   delimiters "()";
+end

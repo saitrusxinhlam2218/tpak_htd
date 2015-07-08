@@ -1,0 +1,34 @@
+{
+|***********************************************************************
+|                 RCS INFO
+|
+|  @(#)  $RCSfile: holiday.per,v $
+|  @(#)  $Revision: 1.4 $
+|  @(#)  $Date: 1998/01/08 19:35:40 $
+|  @(#)  $Author: taxiadm $
+|  @(#)  $Source: /taxi-scan/taxi_proj/cvs/taxi-scan/src/forms/danish/holiday.per,v $
+|
+|  Copyright (c) 1994 - MobileSoft Consulting, Inc. Woodinville WA
+|
+|**********************************************************************/
+|ident "@(#) head:$RCSfile: holiday.per,v $	$Revision: 1.4 $"
+}
+
+database mads
+screen
+{
+                                            VEDLIGEH. AF HELLIGDAGS-FIL
+Helligdagsdato      Helligdagsnavn
+[f1]/[f2]/[f3]      [f001                ]
+}
+end
+tables
+holiday
+attributes
+f1   = holiday.hl_mon,right,include=(1 to 12),REQUIRED,AUTONEXT,COMMENTS="Helligdagsmåned";
+f2   = holiday.hl_day,right,include=(1 to 31),REQUIRED,AUTONEXT,COMMENTS="Helligdagsdato";
+f3   = holiday.hl_year,right,include=(0 to 99),REQUIRED,AUTONEXT,COMMENTS="Helligdagsår";
+f001 = holiday.hl_desc,UPSHIFT,COMMENTS="Helligdagsbeskrivelse";
+instructions
+   delimiters "()";
+end

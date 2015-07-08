@@ -1,0 +1,31 @@
+{
+|***********************************************************************
+|                 RCS INFO
+|
+|  @(#)  $RCSfile: holiday.per,v $
+|  @(#)  $Revision: 1.2 $
+|  @(#)  $Date: 1999/03/19 21:26:38 $
+|  @(#)  $Author: taxiadm $
+|  @(#)  $Source: /taxi-scan/taxi_proj/cvs/taxi-scan/src/forms/english/holiday.per,v $
+|
+|  Copyright (c) 1994 - MobileSoft Consulting, Inc. Woodinville WA
+|
+|**********************************************************************/
+|ident "@(#) head:$RCSfile: holiday.per,v $	$Revision: 1.2 $"
+}
+database mads
+screen
+{
+                                            HOLIDAY FILE MAINTENANCE
+Holiday Date        Holiday Name
+[f1]/[f2]/[f3]      [f001                ]
+}
+end
+tables
+holiday
+attributes
+f1   = holiday.hl_mon,right,include=(1 to 12),REQUIRED,AUTONEXT,COMMENTS="Holiday month";
+f2   = holiday.hl_day,right,include=(1 to 31),REQUIRED,AUTONEXT,COMMENTS="Holiday day";
+f3   = holiday.hl_year,right,include=(0 to 99),REQUIRED,AUTONEXT,COMMENTS="Holiday year";
+f001 = holiday.hl_desc,UPSHIFT,COMMENTS="Holiday description";
+end

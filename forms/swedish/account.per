@@ -1,0 +1,83 @@
+database mads
+screen
+{
+						Kontofil underhåll
+Konto
+    Bilpark Kontonr              Namn                         Prioritet  TaxiVIP Kontobeställning   Kontant
+    [a]     [f000              ] [f001                     ]    [a6]      [d]         [e]           [z]    
+
+   Faktovärde	 Tilläggsvärde
+    [f019 ]       [f020 ]
+
+Hämtningsadress
+    Gatunr                 Gatunamn                               Uppgång  Kommun        Postnummer          Hämtningsadress
+    [f002  ]               [f003                ]                 [f004 ]  [a3 ]         [f005 ]             [c] 
+Kontakt
+    Namn tel.kontakt      Namn kontokontakt     Kommentar                                      Telefonnummer 
+    [f009              ]  [f010              ]  [f011                                    ]     [f007              ]
+
+Bil/Förare       1-3      4-6      7-9     10-12    13-15   16-18   19-21   22-24   25-27   28-30   31-32
+    Bilattr     [j1 ]    [j2 ]    [j3 ]    [j4 ]    [j5 ]   [j6 ]   [j7 ]   [j8 ]   [j9 ]   [j10]   [l1]   
+    Förarattr   [k1 ]    [k2 ]    [k3 ]    [k4 ]    [k5 ]   [k6 ]   [k7 ]   [k8 ]   [k9 ]   [k10]   [l2]
+Meddelande
+    Rubrik 1                          Rubrik 2                          Lösenord 1      Lösenord 2
+    [f012                          ]  [f014                          ]  [f016        ]  [f017           ]
+    Förarmeddelande                        
+    [f018                               ]  
+}
+end
+tables
+account
+fleet
+attributes
+a = account.ac_fleet,REQUIRED,UPSHIFT,COMMENTS="Bilpark ID", LOOKUP JOINING * fleet.fl_id;
+f000 = account.ac_nbr,REQUIRED,UPSHIFT,COMMENTS="Ett konto eller kreditkortsnummer", PICTURE="##################";
+f001 = account.ac_name,COMMENTS="Namn på företag eller person som detta konto tillhör";
+a6 = account.ac_priority,include=(1 to 63),REQUIRED,RIGHT,COMMENTS="Förvald prioritet tilldelad alla best. på detta konto";
+d = account.ac_autobook_enable,include=(J,N),default="N",UPSHIFT,COMMENTS="Får detta konto använda autobokning (J/N)?";
+e = account.ac_acc_chrg_enable,include=(J,N),default="J",UPSHIFT,COMMENTS="Får detta konto debitera (J/N)?";
+z = account.ac_cash_account,include=(J,N),default="N",UPSHIFT;
+f019 = account.ac_factor_val,COMMENTS="Flat Rate Factor Value for account";
+f020 = account.ac_extra_val, COMMENTS="Flat Rate Extra Value for account";
+f002 = account.ac_str_nbr,RIGHT,COMMENTS="Kundens gatunummer";
+f003 = account.ac_str_name,UPSHIFT,COMMENTS="Gatunamn";
+f004 = account.ac_apt_room, UPSHIFT, COMMENTS="Uppgång";
+a3 = account.ac_city,UPSHIFT,COMMENTS="Kommun";
+f005 = account.ac_zip,COMMENTS="Postnummer";
+c = account.ac_show_pckup_adr,include=(J,N),default="J",UPSHIFT,COMMENTS="Ska kontots hämtningsadress automatiskt placeras i hämtningsfälten (J/N)?";
+f009 = account.ac_phone_contact,COMMENTS="Namn för telefonkontakt";
+f010 = account.ac_attention,COMMENTS="Namn för kontokontakt";
+f011 = account.ac_comment,COMMENTS="Kommentar";
+f007 = account.ac_phone_number, UPSHIFT, COMMENTS="Telefonnummer";
+j1 = account.ac_veh_attr[1, 3], UPSHIFT, COMMENTS="Begärda bilattribut (J/N)", DEFAULT = "NNN";
+j2 = account.ac_veh_attr[4, 6], UPSHIFT, COMMENTS="Begärda bilattribut (J/N)", DEFAULT = "NNN";
+j3 = account.ac_veh_attr[7, 9], UPSHIFT, COMMENTS="Begärda bilattribut (J/N)", DEFAULT = "NNN";
+j4 = account.ac_veh_attr[10, 12], UPSHIFT, COMMENTS="Begärda bilattribut (J/N)", DEFAULT = "NNN";
+j5 = account.ac_veh_attr[13, 15], UPSHIFT, COMMENTS="Begärda bilattribut (J/N)", DEFAULT = "NNN";
+j6 = account.ac_veh_attr[16, 18], UPSHIFT, COMMENTS="Begärda bilattribut (J/N)", DEFAULT = "NNN";
+j7 = account.ac_veh_attr[19, 21 ], UPSHIFT, COMMENTS="Begärda bilattribut (J/N)", DEFAULT = "NNN";
+j8 = account.ac_veh_attr[22, 24], UPSHIFT, COMMENTS="Begärda bilattribut (J/N)", DEFAULT = "NNN";
+j9  = account.ac_veh_attr[25, 27], UPSHIFT, COMMENTS="Begärda bilattribut (J/N)", DEFAULT = "NNN";
+j10  = account.ac_veh_attr[28, 30], UPSHIFT, COMMENTS="Begärda bilattribut (J/N)", DEFAULT = "NNN";
+l1  = account.ac_veh_attr[31, 32], UPSHIFT, COMMENTS="Begärda bilattribut (J/N)", DEFAULT = "NNN";
+k1 = account.ac_drv_attr[1, 3], UPSHIFT, COMMENTS="Begärda förarattribut (J/N)", DEFAULT = "NNN";
+k2 = account.ac_drv_attr[4, 6], UPSHIFT, COMMENTS="Begärda förarattribut (J/N)", DEFAULT = "NNN";
+k3 = account.ac_drv_attr[7, 9], UPSHIFT, COMMENTS="Begärda förarattribut (J/N)", DEFAULT = "NNN";
+k4 = account.ac_drv_attr[10, 12], UPSHIFT, COMMENTS="Begärda förarattribut (J/N)", DEFAULT = "NNN";
+k5 = account.ac_drv_attr[13, 15], UPSHIFT, COMMENTS="Begärda förarattribut (J/N)", DEFAULT = "NNN";
+k6 = account.ac_drv_attr[16, 18], UPSHIFT, COMMENTS="Begärda förarattribut (J/N)", DEFAULT = "NNN";
+k7 = account.ac_drv_attr[19, 21], UPSHIFT, COMMENTS="Begärda förarattribut (J/N)", DEFAULT = "NNN";
+k8 = account.ac_drv_attr[22, 24], UPSHIFT, COMMENTS="Begärda förarattribut (J/N)", DEFAULT = "NNN";
+k9 = account.ac_drv_attr[25, 27], UPSHIFT, COMMENTS="Begärda förarattribut (J/N)", DEFAULT = "NNN";
+k10 = account.ac_drv_attr[28, 30], UPSHIFT, COMMENTS="Begärda förarattribut (J/N)", DEFAULT = "NNN";
+l2 = account.ac_drv_attr[31, 32], UPSHIFT, COMMENTS="Begärda förarattribut (J/N)", DEFAULT = "NNN";
+
+f012 = account.ac_header_1,COMMENTS="Fältrubrik på det första visningsfältet på beställningsskärmen";
+f014 = account.ac_header_2,COMMENTS="Fältrubrik på det andra visningsfältet på beställningsskärmen";
+f016 = account.ac_header_3,COMMENTS="Anmodan för första postfältet";
+f017 = account.ac_header_4,COMMENTS="Anmodan för det andra postfältet";
+f018 = account.ac_driver_msg,UPSHIFT,COMMENTS="Ett meddelande som ska sändas till föraren";
+end
+instructions
+   delimiters "()";
+end

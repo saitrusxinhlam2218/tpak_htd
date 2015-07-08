@@ -1,0 +1,75 @@
+database mads
+screen
+{
+						Fil för systemstyrning underhåll
+                                                                             1. Best e. när best förf. 
+    Dag starttid  	Dag sluttid  		Start  produktionskörtid     2. Ga best e. bilnr e förf.tid 
+	   [f000]          [f001]                  [f002]                    3. Anv.aktivitet e. anv.typ e. anv.id 
+								             4. Föraraktivitet e. förarid       
+Bilparknr              Rapp. att prod             Rapp. att skriva ut        5. Bilaktivitet e. bilnr 		 
+                     11111111112222222222  	      11111111112222222222   6. Best.distr. e. zon e. förf.tid 		  
+            12345678901234567890123456789    12345678901234567890123456789   7. Best.distr. e. bil e. utförandetid 
+ [i]  [a]  [f003                         ]  [f004                         ]  8. Best.distr. e. best.typ e. zon 	  
+ [j]  [b]  [f005                         ]  [f006                         ]  9. Ej zonade best e. gatunamn f. hämt.  
+ [k]  [c]  [f007                         ]  [f008                         ] 10. Förarmedd e. förare e. tid	   
+ [l]  [d]  [f009                         ]  [f010                         ] 11. Nödfall e. tid på dagen 			  
+ [m]  [e]  [f011                         ]  [f012                         ] 12. Man. sända best e. trafikled. e. utf.tid 
+ [n]  [f]  [f013                         ]  [f014                         ] 13. Systemfel efter tid på dagen 		  
+ [o]  [g]  [f015                         ]  [f016                         ] 14. Avstängda förare e. förarnamn    
+ [p]  [h]  [f017                         ]  [f018                         ] 15. Kontoaktivitet e. kontonummer 	 
+                                                                            16. Retursamt. rapport e. förarnummer 		 
+                                                                            17. Medel sändningstid e. zon e. tid 	  
+                                     20. Kreditkortskonto transaktion       18. Medel hämtn.tid e. zon e. tid  	 
+                                     21. Autobokn.kontoaktivitet            19. Medellängd resa e. zon e. tid   
+}
+end
+tables
+syscntl
+fleet
+attributes
+f000 = syscntl.ss_day_start,include=(0to 59,100 to 159,200 to 259,300 to 359,400 to 459, 500 to 559,600 to 659,700 to 759,
+800 to 859,900 to 959,1000 to 1059,1100 to 1159,1200 to 1259,1300 to 1359,1400 to 1459,1500 to 1559,1600 to 1659,1700 to 1759,
+1800 to 1859,1900 to 1959,2000 to 2059,2100 to 2159,2200 to 2259,2300 to 2359),RIGHT,COMMENTS="Starttid för hel arbetsdag";
+f001 = syscntl.ss_day_end,include=(0to 59,100 to 159,200 to 259,300 to 359,400 to 459, 500 to 559,600 to 659,700 to 759,
+800 to 859,900 to 959,1000 to 1059,1100 to 1159,1200 to 1259,1300 to 1359,1400 to 1459,1500 to 1559,1600 to 1659,1700 to 1759,
+1800 to 1859,1900 to 1959,2000 to 2059,2100 to 2159,2200 to 2259,2300 to 2359),RIGHT,COMMENTS="Sluttid för hel arbetsdag";
+f002 = syscntl.ss_prod_start_tm,include=(0to 59,100 to 159,200 to 259,300 to 359,400 to 459, 500 to 559,600 to 659,700 to 759,
+800 to 859,900 to 959,1000 to 1059,1100 to 1159,1200 to 1259,1300 to 1359,1400 to 1459,1500 to 1559,1600 to 1659,1700 to 1759,
+1800 to 1859,1900 to 1959,2000 to 2059,2100 to 2159,2200 to 2259,2300 to 2359),RIGHT,COMMENTS="Tid på dagen då daglig produktionskörning ska startas";
+a    = syscntl.ss_0index,UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="Bilpark ID",lookup i = fleet.fl_id joining *fleet.fl_nbr;
+f003 = syscntl.ss_gen_rpt0_n,UPSHIFT,COMMENTS="En (J/N) flagga för varje rapport";
+f004 = syscntl.ss_print_rpt0_n,UPSHIFT,COMMENTS="En (J/N) flagga för varje rapport";
+b    = ss_index1,UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="Bilpark ID",DEFAULT = 1,lookup j = fleet.fl_id joining fleet.fl_nbr;
+f005 = syscntl.ss_gen_rpt1_n,UPSHIFT,COMMENTS="En (J/N) flagga för varje rapport";
+f006 = syscntl.ss_print_rpt1_n,UPSHIFT,COMMENTS="En (J/N) flagga för varje rapport";
+c    = ss_index2,UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="Bilpark ID",DEFAULT = 2,lookup k = fleet.fl_id joining fleet.fl_nbr;
+f007 = syscntl.ss_gen_rpt2_n,UPSHIFT,COMMENTS="En (J/N) flagga för varje rapport";
+f008 = syscntl.ss_print_rpt2_n,UPSHIFT,COMMENTS="En (J/N) flagga för varje rapport";
+d    = ss_index3,UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="Bilpark ID",DEFAULT = 3,lookup l = fleet.fl_id joining fleet.fl_nbr;
+f009 = syscntl.ss_gen_rpt3_n,UPSHIFT,COMMENTS="En (J/N) flagga för varje rapport";
+f010 = syscntl.ss_print_rpt3_n,UPSHIFT,COMMENTS="En (J/N) flagga för varje rapport";
+e    = ss_index4,UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="Bilpark ID",DEFAULT = 4,lookup m = fleet.fl_id joining fleet.fl_nbr;
+f011 = syscntl.ss_gen_rpt4_n,UPSHIFT,COMMENTS="En (J/N) flagga för varje rapport";
+f012 = syscntl.ss_print_rpt4_n,UPSHIFT,COMMENTS="En (J/N) flagga för varje rapport";
+f    = ss_index5,UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="Bilpark ID",DEFAULT = 5,lookup n = fleet.fl_id joining fleet.fl_nbr;
+f013 = syscntl.ss_gen_rpt5_n,UPSHIFT,COMMENTS="En (J/N) flagga för varje rapport";
+f014 = syscntl.ss_print_rpt5_n,UPSHIFT,COMMENTS="En (J/N) flagga för varje rapport";
+g    = ss_index6,UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="Bilpark ID",DEFAULT = 6,lookup o = fleet.fl_id joining fleet.fl_nbr;
+f015 = syscntl.ss_gen_rpt6_n,UPSHIFT,COMMENTS="En (J/N) flagga för varje rapport";
+f016 = syscntl.ss_print_rpt6_n,UPSHIFT,COMMENTS="En (J/N) flagga för varje rapport";
+h    = ss_index7,UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="Bilpark ID",DEFAULT = 7,lookup p = fleet.fl_id joining fleet.fl_nbr;
+f017 = syscntl.ss_gen_rpt7_n,UPSHIFT,COMMENTS="En (J/N) flagga för varje rapport";
+f018 = syscntl.ss_print_rpt7_n,UPSHIFT,COMMENTS="En (J/N) flagga för varje rapport";
+
+instructions
+after display of syscntl
+let a = 0
+let b = 1
+let c = 2
+let d = 3
+let e = 4
+let f = 5
+let g = 6
+let h = 7
+   delimiters "()";
+end

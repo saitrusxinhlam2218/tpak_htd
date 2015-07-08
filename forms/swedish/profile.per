@@ -1,0 +1,104 @@
+database mads
+screen
+{
+					Användarprofil-fil visning
+Användar ID      Namn        Hälsningsnamn            Fullst. namn             Bilparksrättigh 
+  [f000]         [f001     ] [f002        ]           [G001     ]              [f004    ]
+
+Normal    Bilpark Skärm Sök              Best.typ  Kommun   Högsta pri  Kan zona best   Logofil
+	  [a]     [a01] [a02]            [b]       [a0 ]    [a1]        [c]             [f025                ]
+Superzoner :
+      1       2       3       4       5       6       7       8       9       10      11      12      13      14      15      16
+    [f009 ] [f010 ] [f011 ] [f012 ] [f013 ] [f014 ] [f015 ] [f016 ] [f017 ] [f018 ] [f019 ] [f020 ] [f021 ] [f022 ] [f023 ] [f024 ]
+
+Und.grupper: 1   2   3   4   5   6   7   8   9   10  11  12      Menyrättigheter
+            [d] [e] [f] [g] [h] [i] [j] [k] [l] [m] [n] [o]      [f003                                                    ]
+
+Und.  1    2    3    4    5    6    7    8    9    10   11   12   13   14   15   16   
+Typ [f1] [a2] [a3] [a4] [a5] [a6] [a7] [a8] [a9] [b1] [b2] [b3] [b4] [b5] [b6] [b7]
+
+Und. 17   18   19   20   21   22   23   24   25   26   27   28   29   30   31   32 
+Typ [b8] [b9] [c1] [c2] [c3] [c4] [c5] [c6] [c7] [c8] [c9] [d1] [d2] [d3] [d4] [d5]
+}
+end
+tables
+profile
+attributes
+f000 = profile.up_user_id,RIGHT,COMMENTS="Anv.ID visat på alla skärmar, använt för transaktionsloggning";
+f001 = profile.up_user_name,COMMENTS="Fullständigt användarnamn";
+f002 = profile.up_greeting_name,UPSHIFT,COMMENTS="Hälsningsnamn som ska visas på hälsningsraden";
+G001 = profile.up_fullname,UPSHIFT,COMMENTS="Användarens fullständiga namn";
+f004 = profile.up_fleet_perms,UPSHIFT,COMMENTS="Flagga för varje bilpark där denne anv. kan arbeta";
+a = profile.up_default_fleet,UPSHIFT,COMMENTS="Normalt bilparks ID";
+a01 = profile.up_default_screen,RIGHT,COMMENTS="Normal skärm för denne användare i flyttningsformat";
+a02 = profile.up_default_search,RIGHT,COMMENTS="Normal sökning för denne användare i flyttningsformat";
+b = profile.up_default_call_tp,UPSHIFT,COMMENTS="Normal beställningstyp";
+a0 = profile.up_default_city,UPSHIFT,COMMENTS="Normal kommunkod";
+a1 = profile.up_high_call_pri,RIGHT,COMMENTS="1-62. Den högsta prioritet denne användare kan tilldela en best ";
+c = profile.up_can_zone_calls,UPSHIFT,COMMENTS="J/N. Kan denna användare zona beställningar";
+f025 = profile.up_logo_file,UPSHIFT,COMMENTS="Ett sökvägsnamn på en ascii-fil som avslutar MADS-systemet";
+f009 = profile.up_superzone_1,RIGHT,COMMENTS="Superzon 1 förvalt avsnitt";
+f010 = profile.up_superzone_2,RIGHT,COMMENTS="Superzon 2 förvalt avsnitt";
+f011 = profile.up_superzone_3,RIGHT,COMMENTS="Superzon 3 förvalt avsnitt";
+f012 = profile.up_superzone_4,RIGHT,COMMENTS="Superzon 4 förvalt avsnitt";
+f013 = profile.up_superzone_5,RIGHT,COMMENTS="Superzon 5 förvalt avsnitt";
+f014 = profile.up_superzone_6,RIGHT,COMMENTS="Superzon 6 förvalt avsnitt";
+f015 = profile.up_superzone_7,RIGHT,COMMENTS="Superzon 7 förvalt avsnitt";
+f016 = profile.up_superzone_8,RIGHT,COMMENTS="Superzon 8 förvalt avsnitt";
+f017 = profile.up_superzone_9,RIGHT,COMMENTS="Superzon 9 förvalt avsnitt";
+f018 = profile.up_superzone_10,RIGHT,COMMENTS="Superzon 10 förvalt avsnitt";
+f019 = profile.up_superzone_11,RIGHT,COMMENTS="Superzon 11 förvalt avsnitt";
+f020 = profile.up_superzone_12,RIGHT,COMMENTS="Superzon 12 förvalt avsnitt";
+f021 = profile.up_superzone_13,RIGHT,COMMENTS="Superzon 13 förvalt avsnitt";
+f022 = profile.up_superzone_14,RIGHT,COMMENTS="Superzon 14 förvalt avsnitt";
+f023 = profile.up_superzone_15,RIGHT,COMMENTS="Superzon 15 förvalt avsnitt";
+f024 = profile.up_superzone_16,RIGHT,COMMENTS="Superzon 16 förvalt avsnitt";
+d = profile.up_group_1,UPSHIFT,COMMENTS="J/N. Om undantagsgrupp 1 innefattas i denne användares urval";
+e = profile.up_group_2,UPSHIFT,COMMENTS="J/N. Om undantagsgrupp 2 innefattas i denne användares urval";
+f = profile.up_group_3,UPSHIFT,COMMENTS="J/N. Om undantagsgrupp 3 innefattas i denne användares urval";
+g = profile.up_group_4,UPSHIFT,COMMENTS="J/N. Om undantagsgrupp 4 innefattas i denne användares urval";
+h = profile.up_group_5,UPSHIFT,COMMENTS="J/N. Om undantagsgrupp 5 innefattas i denne användares urval";
+i = profile.up_group_6,UPSHIFT,COMMENTS="J/N. Om undantagsgrupp 6 innefattas i denne användares urval";
+j = profile.up_group_7,UPSHIFT,COMMENTS="J/N. Om undantagsgrupp 7 innefattas i denne användares urval";
+k = profile.up_group_8,UPSHIFT,COMMENTS="J/N. Om undantagsgrupp 8 innefattas i denne användares urval";
+l = profile.up_group_9,UPSHIFT,COMMENTS="J/N. Om undantagsgrupp 9 innefattas i denne användares urval";
+m = profile.up_group_10,UPSHIFT,COMMENTS="J/N. Om undantagsgrupp 10 innefattas i denne användares urval";
+n = profile.up_group_11,UPSHIFT,COMMENTS="J/N. Om undantagsgrupp 11 innefattas i denne användares urval";
+o = profile.up_group_12,UPSHIFT,COMMENTS="J/N. Om undantagsgrupp 12 innefattas i denne användares urval";
+f003 = profile.up_menu_perms,UPSHIFT,COMMENTS="En flagga för varje markerbart menyobjekt ";
+f1 = profile.up_type_1,UPSHIFT,COMMENTS="J/N. Om undantagstyp 1 innefattas i denne användares urval";
+a2 = profile.up_type_2,UPSHIFT,COMMENTS="J/N. Om undantagstyp 2 innefattas i denne användares urval";
+a3 = profile.up_type_3,UPSHIFT,COMMENTS="J/N. Om undantagstyp 3 innefattas i denne användares urval";
+a4 = profile.up_type_4,UPSHIFT,COMMENTS="J/N. Om undantagstyp 4 innefattas i denne användares urval";
+a5 = profile.up_type_5,UPSHIFT,COMMENTS="J/N. Om undantagstyp 5 innefattas i denne användares urval";
+a6 = profile.up_type_6,UPSHIFT,COMMENTS="J/N. Om undantagstyp 6 innefattas i denne användares urval";
+a7 = profile.up_type_7,UPSHIFT,COMMENTS="J/N. Om undantagstyp 7 innefattas i denne användares urval";
+a8 = profile.up_type_8,UPSHIFT,COMMENTS="J/N. Om undantagstyp 8 innefattas i denne användares urval";
+a9 = profile.up_type_9,UPSHIFT,COMMENTS="J/N. Om undantagstyp 9 innefattas i denne användares urval";
+b1 = profile.up_type_10,UPSHIFT,COMMENTS="J/N. Om undantagstyp 10 innefattas i denne användares urval";
+b2 = profile.up_type_11,UPSHIFT,COMMENTS="J/N. Om undantagstyp 11 innefattas i denne användares urval";
+b3 = profile.up_type_12,UPSHIFT,COMMENTS="J/N. Om undantagstyp 12 innefattas i denne användares urval";
+b4= profile.up_type_13,UPSHIFT,COMMENTS="J/N. Om undantagstyp 13 innefattas i denne användares urval";
+b5 = profile.up_type_14,UPSHIFT,COMMENTS="J/N. Om undantagstyp 14 innefattas i denne användares urval";
+b6 = profile.up_type_15,UPSHIFT,COMMENTS="J/N. Om undantagstyp 15 innefattas i denne användares urval";
+b7 = profile.up_type_16,UPSHIFT,COMMENTS="J/N. Om undantagstyp 16 innefattas i denne användares urval";
+b8 = profile.up_type_17,UPSHIFT,COMMENTS="J/N. Om undantagstyp 17 innefattas i denne användares urval";
+b9 = profile.up_type_18,UPSHIFT,COMMENTS="J/N. Om undantagstyp 18 innefattas i denne användares urval";
+c1 = profile.up_type_19,UPSHIFT,COMMENTS="J/N. Om undantagstyp 19 innefattas i denne användares urval";
+c2 = profile.up_type_20,UPSHIFT,COMMENTS="J/N. Om undantagstyp 20 innefattas i denne användares urval";
+c3 = profile.up_type_21,UPSHIFT,COMMENTS="J/N. Om undantagstyp 21 innefattas i denne användares urval";
+c4 = profile.up_type_22,UPSHIFT,COMMENTS="J/N. Om undantagstyp 22 innefattas i denne användares urval";
+c5 = profile.up_type_23,UPSHIFT,COMMENTS="J/N. Om undantagstyp 23 innefattas i denne användares urval";
+c6 = profile.up_type_24,UPSHIFT,COMMENTS="J/N. Om undantagstyp 24 innefattas i denne användares urval";
+c7 = profile.up_type_25,UPSHIFT,COMMENTS="J/N. Om undantagstyp 25 innefattas i denne användares urval";
+c8 = profile.up_type_26,UPSHIFT,COMMENTS="J/N. Om undantagstyp 26 innefattas i denne användares urval";
+c9 = profile.up_type_27,UPSHIFT,COMMENTS="J/N. Om undantagstyp 27 innefattas i denne användares urval";
+d1 = profile.up_type_28,UPSHIFT,COMMENTS="J/N. Om undantagstyp 28 innefattas i denne användares urval";
+d2 = profile.up_type_29,UPSHIFT,COMMENTS="J/N. Om undantagstyp 29 innefattas i denne användares urval";
+d3 = profile.up_type_30,UPSHIFT,COMMENTS="J/N. Om undantags typ 30 innefattas i denne användares urval";
+d4 = profile.up_type_31,UPSHIFT,COMMENTS="J/N. Om undantags typ 31 innefattas i denne användares urval";
+d5 = profile.up_type_32,UPSHIFT,COMMENTS="J/N. Om undantags typ 32 innefattas i denne användares urval";
+end
+instructions
+   delimiters "()";
+end

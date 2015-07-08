@@ -1,0 +1,78 @@
+database mads
+screen
+{
+						Bilfil visning
+Bilparknr     Bilnr   Mid      Reg.nr    .  Märke          Modell         Color        Tele         Mdt OK  Meter OK  Schema
+[a]   [g]     [f000]  [f001 ]  [f002      ] [f003      ]   [f004      ]   [f040      ] [f041      ] [b]     [f]       [ss]
+
+Tillstånd               Attribut    Avstängd från         Avstängd till           Avstängningsorsak           "P"  "L"  "X"
+[f005            ]      [f013    ]  [f006              ]  [f007              ]    [f008                    ]  [c]  [d]  [e]
+
+Avstängningsmeddelande
+[f009                            ][f010                            ][f011                            ]
+
+Förarkommentar                                                                     
+[f038                                    ][f039                                    ]
+
+Sista nödläge den      Nödläget uppklarat       Inloggad              Utloggad              Förare   Best utförd
+[f014              ]   [f015              ]     [f016              ]  [f017              ]  [f018 ]  [f019              ]
+
+Bokn   Vbokn  SL      Ej acpt Avslag Utrop  Bom    Lift   Fval   Tal     Medd  Rast   Tilldel Körn   Kort m   Sen m  Retursamt
+[f024] [f025] [f026]  [f029]  [f030] [f035] [f036] [f022] [f023] [f032] [f033] [f031] [f020]  [f021] [f027]   [f028] [f034]
+}
+end
+tables
+vehicle
+attributes
+a = vehicle.vh_fleet,UPSHIFT,COMMENTS="Bilpark indikator";
+g = vehicle.vh_fleet_nbr,RIGHT,COMMENTS="Bilkparksnummer motsvarande bilpark som denna bil tillhör";
+f000 = vehicle.vh_nbr,RIGHT,COMMENTS="Bilnummer";
+f001 = vehicle.vh_mobile_rf_id,include=(1 to 3839), UPSHIFT,COMMENTS="Mobilt ID för MDT-terminalen i denna bil";
+f002 = vehicle.vh_license_nbr,COMMENTS="Bilens registreringsnummer";
+f003 = vehicle.vh_make,UPSHIFT,COMMENTS="Bilmärke";
+f004 = vehicle.vh_model,UPSHIFT,COMMENTS="Bilmodell";
+f040 = vehicle.vh_color, UPSHIFT, COMMENTS="Color";
+f041 = vehicle.vh_tele, UPSHIFT, COMMENTS="Telephone Number";
+b = vehicle.vh_kdt_working,UPSHIFT,COMMENTS="J/N. Om MDT-terminalen fungerar i denna bil";
+f = vehicle.vh_meter_working,UPSHIFT,COMMENTS="J/N. Om taxametern fungerar i denna bil eller inte";
+ss = vehicle.vh_schedule_num,RIGHT,COMMENTS="Schemmanummer (1..25) som tilldelats denna bil";
+f005 = vehicle.vh_seals,UPSHIFT,COMMENTS="Anger vilka tillstånd bilen har";
+f013 = vehicle.vh_attr,UPSHIFT,COMMENTS="8 flaggor anger de event. unika attr. som denna bil har";
+f006 = vehicle.vh_susp_from_dt_tm,RIGHT,COMMENTS="Datum & klockslag då denna bil senast avstängdes";
+f007 = vehicle.vh_susp_to_dt_tm,RIGHT,COMMENTS="Datum & klockslag denna bil återinträdde i tjänst";
+f008 = vehicle.vh_susp_reason,UPSHIFT,COMMENTS="Orsak för bilavstängning (intern)";
+c = vehicle.vh_susp_pass_call,UPSHIFT,COMMENTS="J/N. Om bilen avstängts från passagerarbeställningar";
+d = vehicle.vh_susp_del_call,UPSHIFT,COMMENTS="J/N. Om bilen avstängts från leveransbeställningar";
+e = vehicle.vh_susp_typex_call,UPSHIFT,COMMENTS="J/N. Om bilen avstängts från typbeställningar";
+f009 = vehicle.vh_susp_message[1,32],UPSHIFT,COMMENTS="Avstängningsmeddelande som ska skickas till bilen";
+f010 = vehicle.vh_susp_message[33,64],UPSHIFT,COMMENTS="Avstängningsmeddelande som ska skickas till bilen";
+f011 = vehicle.vh_susp_message[65,96],UPSHIFT,COMMENTS="Avstängningsmeddelande som ska skickas till bilen";
+f038 = vehicle.vh_comments[1,40],UPSHIFT,COMMENTS="Kommentarer som berör denna bil";
+f039 = vehicle.vh_comments[41,80],UPSHIFT,COMMENTS="Kommentarer som berör denna bil";
+f014 = vehicle.vh_last_emerg_on,RIGHT,COMMENTS="Senast datum & klockslag bilen förorsakade nödläge";
+f015 = vehicle.vh_last_emerg_off,RIGHT,COMMENTS="Datum & klockslag senaste nödläge omhändertogs";
+f016 = vehicle.vh_last_signed_on,RIGHT,COMMENTS="Senaste datum & klockslag bilen var på gatan";
+f017 = vehicle.vh_last_signed_off,RIGHT,COMMENTS="Senaste datum & klockslag bilen blev sysslolös";
+f018 = vehicle.vh_last_driver,RIGHT,COMMENTS="Förare som senast körde denna bil";
+f019 = vehicle.vh_last_call,RIGHT,COMMENTS="Senaste körning som utfördes i denna bil";
+f024 = vehicle.vh_posts,RIGHT,COMMENTS="Antal gånger denna bil bokade";
+f025 = vehicle.vh_cond_posts,RIGHT,COMMENTS="Antal gånger denna bil bokade villkorligt";
+f026 = vehicle.vh_enroute_posts,RIGHT,COMMENTS="Antal gånger denna bil bokade på väg";
+f029 = vehicle.vh_no_accepts,RIGHT,COMMENTS="Antal ej accepterade körningar";
+f030 = vehicle.vh_rejects,RIGHT,COMMENTS="Antal avslag";
+f035 = vehicle.vh_callouts,RIGHT,COMMENTS="Antal utrop";
+f036 = vehicle.vh_no_shows,RIGHT,COMMENTS="Antal bomkörningar";
+f022 = vehicle.vh_flags,RIGHT,COMMENTS="Antal liftkunder som tagits upp på gatan";
+f023 = vehicle.vh_bids,RIGHT,COMMENTS="Antal fria val som erbjudits denna bil";
+f032 = vehicle.vh_req_to_talk,RIGHT,COMMENTS="Antal gånger denna bil begärde samtalsförbindelse";
+f033 = vehicle.vh_messages,RIGHT,COMMENTS="Antal meddelanden skickade till arbetsledare";
+f031 = vehicle.vh_breaks,RIGHT,COMMENTS="Antal tagna raster";
+f020 = vehicle.vh_assigns,RIGHT,COMMENTS="Antal best. som manuellt tilldelats bilen under sista skiftet";
+f021 = vehicle.vh_calls,RIGHT,COMMENTS="Antal körningar via trafikledningen";
+f027 = vehicle.vh_short_meters,RIGHT,COMMENTS="Antal kort meter";
+f028 = vehicle.vh_late_meters,RIGHT,COMMENTS="Antal sen meter";
+f034 = vehicle.vh_callbacks,RIGHT,COMMENTS="Antal retursamtal";
+end
+instructions
+   delimiters "()";
+end

@@ -1,0 +1,107 @@
+$ /****************************************************************************
+$ *                                                                           *
+$ *                           S C C S   I N F O                               *
+$ *                                                                           *
+$ * @(#)  shift_s.MSF.fin; Rel: 6.3.0.0; Get date: 2/26/92 at 16:33:19
+$ * @(#)  Last delta: 12/7/90 at 09:53:10
+$ * @(#)  SCCS File: /taxi/sccs/s.shift_s.MSF.fin
+$ *                                                                           *
+$ * Copyright (c) 1990 - MDI Seattle                                          *
+$ *                                                                           *
+$ *****************************************************************************/
+$ #ident "@(#) head:shift_s.MSF.fin	6.3.0.0"
+
+$quote "
+$delset 1
+$set 1
+
+1	"Vuorolistausten päävalikko"		/*max 40 */
+2	"Vuorolistauksen tilanne"			/*max 40 */
+3	"Vuorolistauksen raportit"	/*max 40 */
+4	"Vuorolistauksen hoito"			/*max 40 */
+5	"Listaa käyttötilanne"			/*max 40 */
+6	"Listaa autot"				/*max 40 */
+7	"Listaa autotilanne"			/*max 40 */
+8	"Tulosta vuorolistaus"				/*max 40 */
+9	"Tulosta autolistaus"			/*max 40 */
+10	"Yhtiö:"							/*max 6 */
+11	"Kuukausi:"							/*max 6 */
+12	"Listausnro:"					/*max 11 */
+13	"Pv"									/*max 3 */
+14	"Al.aika"					/*max 10 */
+15	"Lop.aika"						/*max 8 */
+16	"Listaus"					/*max 8 */
+17	"Ajossa"							/*max 6 */
+18	"Jouten"						/*max 8 */
+19	"autoja"							/*max 8 */
+20	"Autot käytössä ei listattu"		/*max 30 */
+21	"Ei listattu"					/*max 14 */
+22	"Autonro"						/*max 9 */
+23	"Autot käytössä"			/*max 16 */
+24	"Autot ei käytössä"		/*max 18 */
+25	"listausrakenne"		/*max 25   memory structure that stores schedule information */
+26	"listaustilan rakenne"	/*max 35   memory structure that stores status information */
+27	"autorakenne"			/*max 25   memory structure that stores vehicle information */
+28	"Listausta ei ole - paina <päivitä> luodaksesi tai syöttääksesi listauksia"		/*max 80 */
+29	"Anna yhtiö, kuukausi ja listauksen numero"		/*max 80 */
+30	"Aikataululistauksen päivitys ..."		/*max 80   saving changes to database */
+31	"Listauksen päivitys tehty"		/*max 80 */
+32	"Tilanne:"					/*max 10 */
+33	"Vuoroaikataulu"				/*max 14 */
+34	"Tammikuu"								/*max 10 */
+35	"Helmikuu"								/*max 10 */
+36	"Maaliskuu"									/*max 10 */
+37	"Huhtikuu"									/*max 10 */
+38	"Toukokuu"									/*max 10 */
+39	"Kesäkuu"									/*max 10 */
+40	"Heinäkuu"									/*max 10 */
+41	"Elokuu"								/*max 10 */
+42 "Syyskuu"								/*max 10 */
+43	"Lokakuu"								/*max 10 */
+44	"Marraskuu"								/*max 10 */
+45	"Joulukuu"								/*max 10 */
+46	"Raportin lähettäminen kirjoittimelle onnistui"		/*max 80 */
+47	"Virhe - raporttitiedostoa ei luotu"		/*max 80 */
+48	"VAPAA"						/*max 5    taxi not scheduled that day i.e. VAPAA */
+49	"Edell. päivä:"					/*max 13 */
+50	"Tämä päivä:"					/*max 13 */
+51	"Listatut autot"			/*max 18 */
+52	"Aikatauluun sijoitetut autot"		/*max 30 */
+53	"Anna listauksen nro: 0 tulostaa kaikki "		/*max 40 */
+54	"Komento: "							/*max 9 */
+55	"Virhe - ei voi avata tulostustiedostoa"		/*max 80 */
+56	"Maksimiväli kirjauksille ajossa pysymiseen:"		/*max 43 */
+57	"Muistinjakovirhe:"		/*max 30 */
+58	"Tietokannan pääsyvirhe:"		/*max 30 */
+59	"Listauksen luontivirhe:"	/*max 30 */
+60	"Vuoron päivitysvirhe:"		/*max 30 */
+61	"Vuoron luontivirhe:"		/*max 30 */
+62	"listaus on jo olemassa"	/*max 30 */
+63	"Väärä listauksen numero"		/*max 30 */
+64	"Väärä yhtiö"				/*max 30 */
+65	"Yhtiö ei käytössä"		/*max 30 */
+66	"Käyttäjällä ei ole yhtiön käyttämislupaa"		/*max 60 */
+67	"Väärä kuukausi"				/*max 30 */
+68	"Väärä aika"				/*max 30 */
+69	"Virhe liittymisessä jaettuun muistiin"		/*max 80 */
+70 "Käyttäjätietuetta ei löydy jaetusta muistista"		/*max 80 */
+71	"Väärä merkki - vain numeroita"		/*max 50 */
+72	"Ensimmäisen vuoron aloitusaika on täytettävä ennen kuin muita aikoja annetaan sille päivälle"		/*max 100 */
+73	"On annettava lopetusaika jokaista annettua aloitusaikaa kohtaan"		/*max 80 */
+74	"On annettava aloitusaika jokaista lopetusaikaa kohtaan"		/*max 80 */
+75	"Jos annetaan kaksi vuoroa, ensimmäinen vuoro ei saa kattaa kahta päivää"		/*max 80 */
+76	"Ensimm. vuoron aloitusaika on limittäin edell. päivän vuoron kanssa"		/*max 80 */
+77	"Ensimm. vuoron lopetusaika on limittäin seur.äivän vuoron kanssa"		/*max 80 */
+78	"Toisen vuoron lopetusaika on limittäin seuraavan päivän vuoron kanssa"		/*max 80 */
+79	"Toisen vuoron aloitusaika on limittäin ensimmäisen vuoron lopetusajan kanssa"		/*max 80 */
+80	"Annetussa suunnassa ei ole enempää autoja"		/*max 80 */
+81	"Tulostustiedosto ei löydy - luo se ennen tulostusta"		/*max 80 */
+82	"Väärä komento"		/*max 20 */
+83	"MDI Tietokoneohjattu taksivälitys"		/*max 80 */
+84	"Käytä välilyöntiä, nuolinäppäimiä tai anna numero valitaksesi"		/*max 80    make all three help lines */
+85	"Anna 'e' palataksesi edelliseen valikkoon tai lopettaaksesi.              "		/*max 80    the same length using */
+86	"Anna <CR> valinnan suorittamiseksi:                "		/*max 80    spaces  */
+87	"Väärä toimintonäppäin"		/*max 80 */
+88	"Näyttö lähetetty kirjoittimelle"		/*max 80 */
+89	"Valitse ensin oikea listaus, ennen kuin valitset <YKSITYISKOHTA>"		/*max 80 */
+90	"Paina <LÄHETÄ> raportin tulostamiseksi"		/*max 40 */

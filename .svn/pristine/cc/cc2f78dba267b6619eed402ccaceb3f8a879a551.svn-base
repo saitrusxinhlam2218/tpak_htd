@@ -1,0 +1,99 @@
+$ /****************************************************************************
+$ *                                                                           *
+$ *                           S C C S   I N F O                               *
+$ *                                                                           *
+$ * @(#)  adminmgmt.MSF.fin; Rel: 10.1.3.1; Get date: 5/18/95 at 10:16:57
+$ * @(#)  Last delta: 12/5/94 at 10:34:37
+$ * @(#)  SCCS File: /taxi/sccs/s.adminmgmt.MSF.fin
+$ *                                                                           *
+$ * Copyright (c) 1990 - MDI Seattle                                          *
+$ *                                                                           *
+$ *****************************************************************************/
+$ #ident "@(#) head:adminmgmt.MSF.fi/usr/users/brian/enh_src/src/msf/fin	10.1.3.1"
+
+$ /*
+$  * Message file for PROGRAM: admin_mgmt
+$  * CATALOG:   admin_mgmt.cat
+$  * MNEMONICS: amgmt_strdefs.h
+$  */
+
+$quote "
+$delset 1
+$set 1
+
+$ /*    NOTE TO THE TRANSLATOR                          */
+$ /*    Quoted text will be followed by a maximum string length if the  */
+$ /*    text length is different than the number of chars in the string.*/
+$ /*    If no string length is entered default to the current number of */
+$ /*    characters.  A comment about the string is also included where  */
+$ /*    necessary.                                                      */
+
+1	"Ei löydy tiedostoa /etc/passwd"				/* 50, do not translate '/etc/passwd'	*/
+2	"Korjaa /etc/passwd ja aja tämä ohjelma uudelleen"	/* 50, do not translate '/etc/passwd'	*/
+3	"<CR> kun haluat jatkaa.."					/* 50, carriage return to continue	*/
+4	"Ei löydy tiedostoa /etc/group"				/* 50, do not translate '/etc/group'	*/
+5	"Korjaa /etc/group ja aja tämä ohjelma uudelleen"	/* 50, do not translate '/etc/group'    */
+6	"Anna aakkosnumeerisia merkkejä"			/* 50					*/
+7	"<CR> kun haluat jatkaa..."					/* 50, carriage return to continue      */
+8	"Ei voi lukea"						/* 15, Cannot read XXXX file		*/
+9	"tiedostoa"							/* 10, Cannot read XXXX file		*/
+10	"Käyttäjänimi ei ole ainoa"			/* 50					*/
+11	"Haluatko lisätä tämän tilin? (K/E) E"	/* 35, check constant used for Yes and No*/
+12	"Ei löydy tiedostoa"				/* 30, Cannot find file XXXX		*/
+13	"Ei löydy ryhmää"				/* Cannot find group X in file XYZ	*/
+14	"tiedostossa"					/* Cannot find group X in file XYZ	*/
+15	"Anna 6 - 8 merkin tunnussana"		/* 50					*/
+16	"Käytä ainakin 2 kirjainta ja 1 numero (esim reitti1).\n"	/* 50			*/
+17	"Odota hetki: uusi henkilö lisätään TAKSIsysteemiin"	/* 50			*/
+18	"Haluatko lisätä toisen"			/* Do you wish to enter another XXX account?	*/
+19	"tilin? (K/E) E"				/* Do you wish to enter another XXX account?    */
+20	"Ei voi lukea tilapäistä tunnussanatiedostoa"		/* 50					*/
+21	"<CR> kun haluat jatkaa...."				/* 50					*/
+22	"EI löydy TN:a"					/* 20					*/
+23	"<CR> kun haluat jatkaa.."				/* 50					*/
+24	"TN"
+25	"EI ole ainoa"					/* ID XXXX is not unique		*/
+26	"Väärä ryhmänumero"
+27	"Korjaa /etc/passwd."			/* 50, do not translate '/etc/passwd'	*/
+28	"Haluatko vaihtaa tunnussanan? (K/E) E"	/* 50, check constant used for Yes and No*/
+29	"OK, aja apuohjelma myöhemmin"			/* 50					*/
+30	"Anna tunnusnimi tai tilin numero"	/* 50					*/
+31	"Haluatko poistaa tämän tilin? (K/E) E"	/* 50					*/
+32	"Odota hetki: Henkilö poistetaan TAKSISYSTEEMISTÄ"	/* 50			*/
+33	"Keskeytystyyppi"				/* 20, Interrupt type XXX trapped	*/
+34	"keskeytetty"					/* 20, Interrupt type XXXX trapped	*/
+35	"Kontrollitiedostoja puhdistetaan"			/* 50					*/
+36	"TILAAJA"
+37	"VÄLITTÄJÄ"
+38	"HOITAJA"
+39	"  TAKSIEN valvonta"
+40	"     TILIVALIKKO"
+41	"1  Lisää uusia tilejä     \n"				/* 27		*/
+42	"2  Selaa kaikkia tilejä   \n"				/* 27		*/
+43	"3  Muuta tilin tunnussanaa\n"				
+44	"4  Poista tili          \n"				/* 27		*/
+45	"Anna \'e\' edell. valikko tai lopetus."
+46	"Kirjoita numero ja sen jälkeen anna <CR>"
+47	"valinnan suorittamiseksi: "
+48	"        TAKSIEN valvonta"
+49	"          LISÄÄ TILEJÄ"
+50	"Anna henkilön tunnusnimi (7 merkkiä tai vähemmän): "	/* 70	*/
+51	"Anna henkilön koko nimi (22 merkkiä tai vähemmän): "	/* 50	*/
+52	"TILITYYPPI       TUNNUSNIMI     TILIN TN       KOKO NIMI"
+$				/* starting positions for each phrase must remain the same	*/
+53	"Ovatko nämä tiedot oikein (K/E)? E"			/* 50	*/
+54	"Haluatko lisätä toisen tilin (K/E)? E"		/* 50	*/
+55	"Paina <CR> jatkaaksesi."
+56	"Vastaus EI sisälly valintoihin."
+57	"          SELAA TILEJÄ"
+58	"TUNNUSNIMI     KÄYTT TN    KOKO NIMI"	/* starting positions must remain the same	*/
+59	"Haluatko lisätä tietoja (K/E)? N"	/* 50	*/
+60	"1  TAKSI til. ottaja   \n"
+61	"2  TAKSI välittäjä      \n"
+62	"3  TAKSI syst.hoitaja   \n"
+63	"          VAIHDA TUNNUSSANA"
+64	"Anna henkilön tunnusnimi tai tilin tunnusnro: "		/* 50	*/
+65	"          POISTA TILI"
+66	"          TILIVALIKKO"
+67	"Ei voi päivittää tunnussanatiedostoa....pyydä apua" /* 80 */
+68	"Varoitus: Ei voi päivittää ryhmätiedostoa....pyydä apua" /* 80 */

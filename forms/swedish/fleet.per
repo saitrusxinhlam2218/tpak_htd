@@ -1,0 +1,157 @@
+database mads
+screen
+{
+                                                 Bilparksfil visning
+ID nr      Namn                                                          Niv1 Primär Niv2 Niv3 Niv4 Niv5 Niv6 Niv7 Niv8
+[a] [b]     [f001                ]                         Avvisn.straff  [a1] [a2]   [a3] [a4] [a5] [a6] [a7] [a8] [a9]
+Kommentarer [f002                                    ]     Exklusiv tid   [b1] [b2]   [b3] [b4] [b5] [b6] [b7] [b8] [b9]
+
+            Frekvens        Prioritet       ]tgärd          Längd              Straff             Info                  Maximum
+Bokn        [f003 ]  Bom      [c1]     Bom    [c]    Acpt   [f011 ]   Ej acpt  [h]   Best.tilldeln [k]     Avsl ant     [d1]
+Vbokn       [f004 ]  Avbest   [c2]     Avbest [d]    Rast   [f012 ]   Ej acpt  [f017 ]                     Förarattr    [d2]
+Zonfinfo    [f006 ]  Reguljär [c4]     SL     [e]    Kort m [f013 ]   NAK      [f049]                      Bilattr      [d3]
+Körn.fråga  [f007 ]  Lokal    [c5]     F.val  [f]    F.val  [f014 ]             Ledtid          Tillåtn.   Bil/Best     [d4]    
+Zf          [f008 ]  Aspir    [c6]                   Lokal  [f015 ]   SL        [f018 ]   SL       [l]     Förbest.post [f021 ]
+Zonstat     [f009 ]                              Best.match [f016 ]   Förbest   [f020 ]   Personal [m]     Pers. ledtid [f022 ]
+Förbest     [f010 ]         Svar på best.erbj [g]                     Sen meter [f019 ]                    Förbest. tid [f023] 
+								                                      Väckn     [f025 ]
+
+           Funktioner             Funktioner            Förvald pri            Förvald pri  Man. meter    Pris
+kontr. tillst   [n]  Lift. hållpl     [o]      Kontok.best  [e5]     "P"assagerare [e1]        [u]           [x] 
+Håll linje      [p]  Zon reservnivå   [q]      Abn.best     [e6]     "L"everans    [e2]        [v]           [y]
+Hälsn.rad       [t]  Förarmedd godk [r]      Förbest      [e7]       "X"typ        [e3]        [w]
+                     Abn.best. gransk [s]                            "V"äckn       [e4]
+}
+screen
+{
+
+
+          Systeminformation                          Rapportfrek
+Händelse.journ. utgång  [f024                ]   Förbest.rapport [f29]
+                                                 Medd.rapport    [f30]
+
+              Förval                              Tidsbegr  Beräkn. text
+Stadskod       [f1 ]                1a beräkn      [f032 ]   [f033   ]
+Riktnr         [f2 ]                2a beräkn      [f034 ]   [f035   ]
+Best.typ       [f3]                 3e beräkn      [f036 ]   [f037   ]
+Hist.sökn      [f4   ] 	            4e beräkn      [f038 ]   [f039   ]
+Match algoritm [z] 		            5e beräkn      [f040 ]   [f041   ]
+                                    6e beräkn      [f042 ]   [f043   ]
+                                    7e beräkn      [f044 ]   [f045   ]
+                                    8e beräkn      [f046 ]   [f047   ]
+                                    Normal                   [f048   ]
+}
+end
+tables
+fleet
+attributes
+a    = fl_id,UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="Bilpark ID";
+b    = fl_nbr,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Bilparksnr (0-7) syst.tilldelat, används för intern korsreferens";
+f001 = fl_name,UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="Bilparkssnamn";
+f002 = fl_comments,UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="Allmän kommentar";
+a1   = fl_lev1_rej_penalt,UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="Niv1 avvisn.straff: 1 - ej tillåt.; 2 - ej straff; 3 - sist i kön"; 
+a2   = fl_main_rej_penalt,UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="Primär avvisn.straff: 1 - ej tillåt.; 2 - ej straff; 3 - sist i kön";
+a3   = fl_lev2_rej_penalt,UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="Niv2 avvisn.straff: 1 - ej tillåt.; 2 - ej straff; 3 - sist i kön";
+a4   = fl_lev3_rej_penalt,UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="Niv3 avvisn.straff: 1 - ej tillåt.; 2 - ej straff; 3 - sist i kön";
+a5   = fl_lev4_rej_penalt,UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="Niv4 avvisn.straff: 1 - ej tillåt.; 2 - ej straff; 3 - sist i kön";
+a6   = fl_lev5_rej_penalt,UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="Niv5 avvisn.straff: 1 - ej tillåt.; 2 - ej straff; 3 - sist i kön";
+a7   = fl_lev6_rej_penalt,UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="Niv6 avvisn.straff: 1 - ej tillåt.; 2 - ej straff; 3 - sist i kön";
+a8   = fl_lev7_rej_penalt,UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="Niv7 avvisn.straff: 1 - ej tillåt.; 2 - ej straff; 3 - sist i kön";
+a9   = fl_lev8_rej_penalt,UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="Niv8 avvisn.straff: 1 - ej tillåt.; 2 - ej straff; 3 - sist i kön";
+b1   = fl_lev1_excl_time,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Nivå 1 Exklusiv tid (i minuter)";
+b2   = fl_main_excl_time,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Primär exklusiv tid (i minuter)";
+b3   = fl_lev2_excl_time,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Nivå 2 Exklusiv tid (i minuter)";
+b4   = fl_lev3_excl_time,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Nivå 3 Exklusiv tid (i minuter)";
+b5   = fl_lev4_excl_time,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Nivå 4 Exklusiv tid (i minuter)";
+b6   = fl_lev5_excl_time,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Nivå 5 Exklusiv tid (i minuter)";
+b7   = fl_lev6_excl_time,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Nivå 6 Exklusiv tid (i minuter)";
+b8   = fl_lev7_excl_time,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Nivå 7 Exklusiv tid (i minuter)";
+b9   = fl_lev8_excl_time,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Nivå 8 Exklusiv tid (i minuter)";
+f003 = fl_post_freq,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Hur ofta en förare får trycka på tangenten Boka in (i sek.)";
+f004 = fl_cond_post_freq,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Hur ofta en förare får trycka på tangenten Villkorl. Bokning. (i sek.)";
+f006 = fl_veh_inqry_freq,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Hur ofta en förare får trycka på tangenten Fråga. (i sek.)";
+f007 = fl_zone_info_freq,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Hur ofta systemet skapar en sökrapport. (i sek.)";
+f008 = fl_zone_inqry_freq,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Hur ofta en förare får trycka på tangenten Fråga. (i sek.)";
+f009 = fl_zone_stat_freq,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Hur ofta zonstatusskärmen uppdateras. (i sek.)";
+f010 = fl_time_call_freq,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Hur ofta systemet kontrollerar om förbest. förfaller. (i min.)";
+c1   = fl_drv_no_show_pri,include=(1 to 5),NOENTRY,NOUPDATE,COMMENTS="Prioritet tilldelad förare som tryckt på tangenten Bomk. (1-högst, 5-lägst)";
+c2   = fl_drv_cancel_pri,include=(1 to 5),NOENTRY,NOUPDATE,COMMENTS="Prioritet tilldelad förare med avbeställningar. (1-högst, 5-lägst)";
+c4   = fl_drv_regular_pri,include=(1 to 5),NOENTRY,NOUPDATE,COMMENTS="Prioritet tilldelad reguljära förare. (1-högst, 5-lägst)";
+c5   = fl_drv_local_pri,include=(1 to 5),NOENTRY,NOUPDATE,COMMENTS="Prioritet tilldelad förare som utfört lokal best. (1-högst, 5-lägst)";
+c6   = fl_high_rookie_pri,include=(1 to 63),NOENTRY,NOUPDATE,COMMENTS="Högsta prioritetsbest. som aspirant får hantera. (1-högst, 63-lägst)";
+c    = fl_no_show_action,include=(1 to 4),NOENTRY,NOUPDATE,COMMENTS="1-tr.led.godk.;2-som 1 & autobokn;3-autoavbest & bokn;4-autoavbest, visa tr.led";
+d    = fl_cancel_action,include=(1 to 3),NOENTRY,NOUPDATE,COMMENTS="1-trafikled.godk. krävs;2-som 1 & autobokn;3-autoavbest & bokn";
+e    = fl_enr_post_action,include=("J", "N"),default="N",UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="Ska syst. hålla beställn.på prim. niv. om bilar bokat på väg. till zon";
+f    = fl_bid_action,include=(1 to 2),NOENTRY,NOUPDATE,COMMENTS="1-trafikled. godk.; 2-ingen trafikled. inblandning";
+g    = fl_call_offer_proc,include=(1 to 3),NOENTRY,NOUPDATE,COMMENTS="1-indir. acpt på hållp. & primarär;2-indir. acpt;3-direkt acpt";
+f011 = fl_call_accept_per,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Antal sek. förare har på sig att trycka på tangenten Acpt. (i sekunder)";
+f012 = fl_break_duration,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Längsta tid för giltig rast. (i minuter)";
+f013 = fl_short_meter_dur,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Kortast tillåtna intervall för meter-på/meter-av. (i minuter)";
+f014 = fl_bid_duration,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Antal sek. förare har på sig att trycka på tangenten Fritt val";
+f015 = fl_local_calls_dur,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Kortast tillåtna intervall för meter-på/meter-av för lok. beställn. (i min.)";
+f016 = fl_avl_call_q_time,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Den tid syst. har på sig att matcha en beställn. innan Tid ute. (i min.)";
+h    = fl_no_acpt_penalt,include=(1 to 3),NOENTRY,NOUPDATE,COMMENTS="1-ingen;2-4 sist i kön;3-avpost. och staffa förare.";
+f017 = fl_no_acpt_penalty,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Tidslängd efter en ej acpt som förare ej får bokas in. (i min.)";
+f018 = fl_enr_post_lead,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Högsta tillåtna tid mellan Vbokn och faktisk Bokn. (i min.)";
+f020 = fl_future_call_min,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Kortaste varseltid för angivande av förbest. (i min.)";
+f019 = fl_late_meter,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Högsta tillåtna tid mellan Acpt och Hämta/M-på. (i minuter)";
+k    = fl_cal_assign_info,include=(1 to 5),NOENTRY,NOUPDATE,COMMENTS="1-ingen;2-zoninfo;3-zoninfo,typ,kartsida;4-zon    ;5-adress";
+l    = fl_when_enr_post,include=(1 to 3),NOENTRY,NOUPDATE,COMMENTS="1-alltid;2-eft. Hämta/M-på;3-eft. Hämta/M-på för sys.tilld. beställn";
+m    = fl_no_personal,include=("J", "N"),default="N",UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="Om eller inte personliga beställningar ska tillåtas";
+d1   = fl_max_rej_count,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Högsta antal ggr en best. får avslås innan den blir ett undantag";
+d2   = fl_max_nbr_drv_atr,include=(1 to 8),NOENTRY,NOUPDATE,COMMENTS="Högsta antal förarattr en best.mottagare får ange för en best";
+d3   = fl_max_nbr_veh_atr,include=(1 to 8),NOENTRY,NOUPDATE,COMMENTS="Högsta antal bilattribut en best.mottagare får ange för en best";
+d4   = fl_max_vehs_call,include=(1 to 9),RIGHT,NOENTRY,NOUPDATE,COMMENTS="Flesta bilar som får anges för att ta hand om en best";
+f021 = fl_future_call_max,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Hur många dagar i förväg, utan godk, en best.mottagare får skriva in en förbest";
+f022 = fl_pers_lead_tm,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Ledtid för personlig beställning. (i minuter)";
+f023 = fl_time_call_max,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Hur långt framåt i tiden ska vi markera förbest. (i min.)";
+n    = fl_no_seals,include=("J", "N"),UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="Om eller inte upphäva kontr. av tillstånd";
+p    = fl_hold_line_flag,include=("J", "N"),UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="Om funkt. för håll linje är aktiverad för denna bilpark";
+t    = fl_greeting_line,include=("J", "N"),UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="Om hälsn.raderna ska visas på best.skärmen eller inte";
+o    = fl_auto_stand_flag,NOENTRY,NOUPDATE,COMMENTS="1-ej tillåtet;2-trafiled.godk;3-auto godk. och ny best.tilldelning";
+q    = fl_zone_backup_lev,include=(1 to 8),NOENTRY,NOUPDATE,COMMENTS="Hur många zonniv. som ska beaktas när en beställn. matchas";
+r    = fl_drv_msg_approve,include=(1 to 2),NOENTRY,NOUPDATE,COMMENTS="1-trafikled.godk krävs;2-meddel. skickas automatiskt";
+s    = fl_subsc_review,include=(1 to 2),NOENTRY,NOUPDATE,COMMENTS="1-trafikled.godk krävs;2-betällnin. skickas automatiskt";
+e5   = fl_charge_pri_def,include=(6 to 63),RIGHT,NOENTRY,NOUPDATE,COMMENTS="Normal prioritet för beställn. via kontokort";
+e6   = fl_subsc_pri_def,include=(6 to 63),RIGHT,NOENTRY,NOUPDATE,COMMENTS="Normal prioritet för abonnemangsbest";
+e7   = fl_calls_pri_def,include=(6 to 63),RIGHT,NOENTRY,NOUPDATE,COMMENTS="Normal prioritet för förbeställningar";
+e1   = fl_pass_pri_def,include=(6 to 63),RIGHT,NOENTRY,NOUPDATE,COMMENTS="Normal prioritet för passagerarbest";
+e2   = fl_del_pri_def,include=(6 to 63),RIGHT,NOENTRY,NOUPDATE,COMMENTS="Normal prioritet för leveransbest";
+e3   = fl_typex_pri_def,include=(6 to 63),RIGHT,NOENTRY,NOUPDATE,COMMENTS="Normal prioritet för best av typ 'X'";
+e4   = fl_wake_up_pri_def,include=(6 to 63),RIGHT,NOENTRY,NOUPDATE,COMMENTS="Normal prioritet för väckningsbest";
+u    = fl_met_pass_call,include=("J", "N"),UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="Om manuell meter på/av tillåts vid passagerarbestr";
+v    = fl_met_del_call,include=("J", "N"),UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="Om manuell meter på/av tillåts vid leveransbest";
+w    = fl_met_typex_call,include=("J", "N"),UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="Om manuell meter på/av tillåts vid typ X-bestr";
+x    = fl_pass_rate_calc,include=(1 to 4),NOENTRY,NOUPDATE,COMMENTS="1-ingen;2-man.;3-zon till zontabell;4-postnr till postnr.tabell";
+y    = fl_dlv_rate_calc,include=(1 to 4),NOENTRY,NOUPDATE,COMMENTS="1-ingen;2-man.;3-zon till zontabell;4-postnr till postnr.tabell";
+f024 = fl_audt_trail_port,NOENTRY,NOUPDATE,COMMENTS="Vilk. utg. skriv. för händelsejourn. är ansluten till för denna bilpark";
+f025 = fl_wakeup_lead_tm,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Ledtid för väckning (i minuter).";
+f29 = fl_time_calls_freq,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Hur ofta rapporten för förbeställningar ska skrivas ut (i timmar)";
+f30 = fl_msg_rpt_freq,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Hur ofta rapporten för meddelanden ska skrivas ut (i timmar)";
+f1   = fl_city_default,UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="Normal kommunkod om denne användares profil saknar sådan";
+f2   = fl_phone_area_def,NOENTRY,NOUPDATE,COMMENTS="Normal riktnummerkod om denne användares profil saknar sådan";
+f3   = fl_call_type_def,default="P ",UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="Normal best.typ om denne användares profil saknar sådan";
+f4   = fl_hist_search_def,default=30,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Förval för sökningar i beställningshistorik (i minuter)";
+z    = fl_match_algorithm,include=(1 to 3),NOENTRY,NOUPDATE,COMMENTS="1-sekv. e. zon,temp e. bil;2-sekv. e. zon,biköordning;3-temp e. zontyp";
+f032 = fl_range_limit1,NOENTRY,NOUPDATE,COMMENTS="Värdeområde för första övre gräns. (i minuter)";
+f033 = fl_estimate_text1,NOENTRY,NOUPDATE,UPSHIFT,COMMENTS="Text som motsvarar värdeomr. för första övre gräns. (t ex 10-15)";
+f034 = fl_range_limit2,NOENTRY,NOUPDATE,COMMENTS="Värdeområde för andra övre gräns. (i minuter)";
+f035 = fl_estimate_text2,NOENTRY,NOUPDATE,UPSHIFT,COMMENTS="Text som motsvarar värdeomr. för andra övre gräns (t ex 10-15)";
+f036 = fl_range_limit3,NOENTRY,NOUPDATE,COMMENTS="Värdeområde för tredje övre gräns. (i minuter)";
+f037 = fl_estimate_text3,NOENTRY,NOUPDATE,UPSHIFT,COMMENTS="Text som motsvarar värdeom. för tredje övre gräns(t ex 10-15)";
+f038 = fl_range_limit4,NOENTRY,NOUPDATE,COMMENTS="Värdeområde för fjärde övre gräns. (i minuter)";
+f039 = fl_estimate_text4,NOENTRY,NOUPDATE,UPSHIFT,COMMENTS="Text som motsvarar värdeomr. för fjärde övre gräns (t ex 10-15)";
+f040 = fl_range_limit5,NOENTRY,NOUPDATE,COMMENTS="Värdeområde för femte övre gräns. (i minuter)";
+f041 = fl_estimate_text5,NOENTRY,NOUPDATE,UPSHIFT,COMMENTS="Text som motsvarar värdeomr. för femte övre gräns (t ex 10-15)";
+f042 = fl_range_limit6,NOENTRY,NOUPDATE,COMMENTS="Värdeområde för sjätte övre gräns. (i minuter)";
+f043 = fl_estimate_text6,NOENTRY,NOUPDATE,UPSHIFT,COMMENTS="Text som motsvarar värdeomr. för sjätte övre gräns (t ex 10-15)";
+f044 = fl_range_limit7,NOENTRY,NOUPDATE,COMMENTS="Värdeområde för sjunde övre gräns. (i minuter)";
+f045 = fl_estimate_text7,NOENTRY,NOUPDATE,UPSHIFT,COMMENTS="Text som motsvarar värdeomr. för sjunde övre gräns (t ex 10-15)";
+f046 = fl_range_limit8,NOENTRY,NOUPDATE,COMMENTS="Värdeområde för åttonde övre gräns. (i minuter)";
+f047 = fl_estimate_text8,NOENTRY,NOUPDATE,UPSHIFT,COMMENTS="Text som motsvarar värdeomr. för åttonde övre gräns (t ex 10-15)";
+f048 = fl_def_est_text,NOENTRY,NOUPDATE,UPSHIFT,COMMENTS="Normal uppskattningstext, om inga värdeområden angivits";
+f049 = fl_nak_offer_penal,include=(1 to 3),NOENTRY,COMMENTS="1-ingen;2-4 sist i kön;3-avpost. och staffa förare.";
+end
+instructions
+   delimiters "()";
+end

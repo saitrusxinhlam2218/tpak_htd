@@ -1,0 +1,21 @@
+database mads
+screen
+{
+						Lokalitetsfil underhåll
+					
+Förk   Faktisk    Fullst namn                     Subzon   Postnr
+[a0 ]  [a1 ]      [f000                     ]     [f001 ]  [f002    ]
+}
+end
+tables
+localty
+attributes
+a0 = localty.lo_code,UPSHIFT,REQUIRED,NOUPDATE,COMMENTS="Lokalitetskod eller förkortning (t ex ST för STOCKHOLM)";
+a1 = localty.lo_act_city_code,UPSHIFT,REQUIRED,COMMENTS="Faktisk lokalitetskod (t ex STH för STOCKHOLM)";
+f000 = localty.lo_full_name,UPSHIFT,COMMENTS="Lokalitet fullständigt namn";
+f001 = localty.lo_subzone,UPSHIFT,COMMENTS="Ange subzon om inga individ. adresser ska anges för denna lokalitet ";
+f002 = localty.lo_zip,RIGHT,COMMENTS="Ange postnr om inga individ. adresser ska anges för denna lokalitet";
+end
+instructions
+   delimiters "()";
+end

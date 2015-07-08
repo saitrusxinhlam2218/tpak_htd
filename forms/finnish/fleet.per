@@ -1,0 +1,156 @@
+database mads
+screen
+{
+                                                 Yhtiötiedoston näyttö
+TN   nro  Nimi                                                           Tas1 Perus   Tas2 Tas3 Tas4 Tas5 Tas6 Tas7 Tas8
+[a] [b]   [f001                ]                         Hylkäyssakot     [a1] [a2]    [a3] [a4] [a5] [a6] [a7] [a8] [a9]
+Huomautuk [f002                                    ]     Varoitusaika     [b1] [b2]    [b3] [b4] [b5] [b6] [b7] [b8] [b9]
+
+         Toistot         Tärkeys          Toiminto        Kesto            Rangaistus          Selitys               Maksimi
+RUUTUUN   [f003 ]   JULLI   [c1]    JULLI  [c]    HYVKS   [f011 ]     EIHYVKS [h]    Tilausvälitys[k]     HYLK luku      [d1]
+ERUUTU    [f004 ]   PERUUT  [c2]    PERUUT [d]    TAUKO   [f012 ]     EIHYVKS [f017 ]                     Ajajan ominais [d2]
+RTIEDUST  [f006 ]   Tavall  [c4]    MRUUTU [e]    Lyhyt M [f013 ]     NAK     [f049]                      Auton ominais  [d3]
+AJOTIEDUS [f007 ]   Paikall [c5]    TARJ   [f]    TARJ    [f014 ]            Ennakko            Sallittu  Autot/Tilaukset   [d4]    
+RJ        [f008 ]   Tilap   [c6]                  Paikall [f015 ]     MRUUTUUN[f018 ]   MRUUTUUN  [l]     Etukäteiskirj  [f021 ]
+Ruututila [f009 ]                              Tilaustäsm [f016 ]  Ennakkotil [f020 ]   Erik.pyynt[m]     Erikoisennakko [f022 ]
+Ennakkotil[f010 ]   Vastaus ajotarjoukseen [g]                     Myöh mitt  [f019 ]                     Tilausennakko  [f023] 
+								   Herätys    [f025 ]
+
+            Piirteet                     Piirteet            Oletustärk         Oletustärk      Käsimittari  Taksalask 
+                      Asemakäsipystyn hoito [o]      Laskutilaus [e5]     "M"atkust   [e1]        [u]           [x] 
+Pidä linja    [p]     Ruutujen varataso     [q]      Jatk.tilaus [e6]     "T"avara-ajo[e2]        [v]           [y]
+Tervehdysrivi [t]     Ajajaviestien hyväks  [r]      Ennakkotil  [e7]     "X"-tyyppi  [e3]        [w]
+                      Jatkuv.til. tarkist   [s]                           "H"erätys   [e4]
+}
+screen
+{
+
+
+          Systeemitiedot                             Raportointitiheys
+Avoim.ennakot portti[f024                ]        Ennakkotil.raportti [f29]
+                                                  Viestiraportti      [f30]
+
+              Oletukset                             Korkea alue Arvioteksti
+Kuntakoodi      [f1 ]               1. arvio          [f032 ]   [f033   ]
+Kuntakoodi      [f2 ]               2. arvio          [f034 ]   [f035   ]
+Tilaustyyppi    [f3]                3. arvio          [f036 ]   [f037   ]
+Historia        [f4   ] 	    4. arvio          [f038 ]   [f039   ]
+Täsmäysalgoritmi[z] 		    5. arvio          [f040 ]   [f041   ]
+                                    6. arvio          [f042 ]   [f043   ]
+                                    7. arvio          [f044 ]   [f045   ]
+                                    8. arvio          [f046 ]   [f047   ]
+                                    Oletus                      [f048   ]
+}
+end
+tables
+fleet
+attributes
+a    = fl_id,UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="Yhtiön TN";
+b    = fl_nbr,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Systeemin antama yhtiön numero (0-7), jota käytetään sisäisiin viittauksiin";
+f001 = fl_name,UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="Yhtiön nimi";
+f002 = fl_comments,UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="Muita huomautuksia";
+a1   = fl_lev1_rej_penalt,UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="1-tason hylkäyssakko: 1 - ei sallittu; 2 - ei sakkoa ; 3 - jonon loppuun"; 
+a2   = fl_main_rej_penalt,UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="Perustason hylkäyssakko: 1 - ei sallittu; 2 - ei sakkoa ; 3 - jonon loppuun";
+a3   = fl_lev2_rej_penalt,UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="2-tason hylkäyssakko: 1 - ei sallittu; 2 - ei sakkoa ; 3 - jonon loppuun";
+a4   = fl_lev3_rej_penalt,UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="3-tason hylkäyssakko: 1 - ei sallittu; 2 - ei sakkoa ; 3 - jonon loppuun";
+a5   = fl_lev4_rej_penalt,UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="4-tason hylkäyssakko: 1 - ei sallittu; 2 - ei sakkoa ; 3 - jonon loppuun";
+a6   = fl_lev5_rej_penalt,UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="5-tason hylkäyssakko: 1 - ei sallittu; 2 - ei sakkoa ; 3 - jonon loppuun";
+a7   = fl_lev6_rej_penalt,UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="6-tason hylkäyssakko: 1 - ei sallittu; 2 - ei sakkoa ; 3 - jonon loppuun";
+a8   = fl_lev7_rej_penalt,UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="7-tason hylkäyssakko: 1 - ei sallittu; 2 - ei sakkoa ; 3 - jonon loppuun";
+a9   = fl_lev8_rej_penalt,UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="8-tason hylkäyssakko: 1 - ei sallittu; 2 - ei sakkoa ; 3 - jonon loppuun";
+b1   = fl_lev1_excl_time,RIGHT,NOENTRY,NOUPDATE,COMMENTS="1-tason varoitusaika. (Minuuteissa)";
+b2   = fl_main_excl_time,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Perustason varoitusaika. (Minuuteissa)";
+b3   = fl_lev2_excl_time,RIGHT,NOENTRY,NOUPDATE,COMMENTS="2-tason varoitusaika. (Minuuteissa)";
+b4   = fl_lev3_excl_time,RIGHT,NOENTRY,NOUPDATE,COMMENTS="3-tason varoitusaika. (Minuuteissa)";
+b5   = fl_lev4_excl_time,RIGHT,NOENTRY,NOUPDATE,COMMENTS="4-tason varoitusaika. (Minuuteissa)";
+b6   = fl_lev5_excl_time,RIGHT,NOENTRY,NOUPDATE,COMMENTS="5-tason varoitusaika. (Minuuteissa)";
+b7   = fl_lev6_excl_time,RIGHT,NOENTRY,NOUPDATE,COMMENTS="6-tason varoitusaika. (Minuuteissa)";
+b8   = fl_lev7_excl_time,RIGHT,NOENTRY,NOUPDATE,COMMENTS="7-tason varoitusaika. (Minuuteissa)";
+b9   = fl_lev8_excl_time,RIGHT,NOENTRY,NOUPDATE,COMMENTS="8-tason varoitusaika. (Minuuteissa)";
+f003 = fl_post_freq,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Kuinka usein ajaja saa painaa RUUTUUN-näppäintä.  (Sekunneissa)";
+f004 = fl_cond_post_freq,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Kuinka usein ajaja saa painaa ERUUTUUN-näppäintä.  (Sekunneissa)";
+f006 = fl_veh_inqry_freq,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Kuinka usein ajaja saa painaa TIEDUST-näppäintä.  (Sekunneissa)";
+f007 = fl_zone_info_freq,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Systeemin etsintäraporttien tiheys.  (Sekunneissa)";
+f008 = fl_zone_inqry_freq,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Kuinka usein ajaja saa painaa RUUTUTIEDUSTELU-näppäintä.  (Sekunneissa)";
+f009 = fl_zone_stat_freq,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Kuinka usein ruuduntilanäyttö uusitaan.  (Sekunneissa)";
+f010 = fl_time_call_freq,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Kuinka usein systeemi tarkistaa onko aikapuheluiden määräaika.  (Minuuteissa)";
+c1   = fl_drv_no_show_pri,include=(1 to 5),NOENTRY,NOUPDATE,COMMENTS="Etusija annettu EIAJO-näppäintä painaneille ajajille. (1-korkein, 5-alin)";
+c2   = fl_drv_cancel_pri,include=(1 to 5),NOENTRY,NOUPDATE,COMMENTS="Etusija annettu ajajille joiden ajo peruutettiin. (1-korkein, 5-alin)";
+c4   = fl_drv_regular_pri,include=(1 to 5),NOENTRY,NOUPDATE,COMMENTS="Etusija annettu säännöllisille ajajille. (1-korkein, 5-alin)";
+c5   = fl_drv_local_pri,include=(1 to 5),NOENTRY,NOUPDATE,COMMENTS="Etusija annettu paikallisen ajon tehneille ajajille. (1-korkein, 5-alin)";
+c6   = fl_high_rookie_pri,include=(1 to 63),NOENTRY,NOUPDATE,COMMENTS="Korkein etusija-ajo jonka tilapäinen voi ajaa. (1-korkein, 63-alin)";
+c    = fl_no_show_action,include=(1 to 4),NOENTRY,NOUPDATE,COMMENTS="1-väl. hyvks;2-kuin 1 & autom ruut;3-autom. per & ruut;4-autom. per, näytä väl.";
+d    = fl_cancel_action,include=(1 to 3),NOENTRY,NOUPDATE,COMMENTS="1-välitt. hyväksyntä tarpeen;2-kuin 1 & autom.ruut;3-autom. per & ruut";
+e    = fl_enr_post_action,include=("K", "E"),default="E",UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="Pitääkö systeemi tilaukset ensiötasolla jos taksi on ilm. ruutuun kohta vapaana";
+f    = fl_bid_action,include=(1 to 2),NOENTRY,NOUPDATE,COMMENTS="1-lähettäjä hyväksyy; 2-ei lähettäjän apua";
+g    = fl_call_offer_proc,include=(1 to 3),NOENTRY,NOUPDATE,COMMENTS="1-viitattu HYVKS asema & perus;2-viitattu HYVKS;3-suora HYVKS";
+f011 = fl_call_accept_per,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Sekuntimäärä joka ajajalla on aikaa painaa HYVKS-näppäintä. (Sekunneissa)";
+f012 = fl_break_duration,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Suurin hyväksyttävä tauon pituus. (Minuuteissa)";
+f013 = fl_short_meter_dur,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Lyhin sallittu mittari-pois/mittari-päälle -jakso. (Minuuteissa)";
+f014 = fl_bid_duration,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Sekuntimäärä joka sallitaan kaikille ajajille TARJ-näppäimen painamiseen";
+f015 = fl_local_calls_dur,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Lyhin sallittu mittari-pois/mittari-päälle -jakso paik.ajoissa. (Minuuteissa)";
+f016 = fl_avl_call_q_time,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Systeemin saama aika tilauksen täsmäämiseen ennen AIKAKATKOa.  (Minuuteissa)";
+h    = fl_no_acpt_penalt,include=(1 to 3),NOENTRY,NOUPDATE,COMMENTS="1-none;2-bottom of queue;3-book-off and penalize the driver";
+f017 = fl_no_acpt_penalty,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Amount of time (in minutes) after no-accept the driver is not allowed to book";
+f018 = fl_enr_post_lead,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Suurin sallittu aika välillä KOHTA-VAPAA-RUUDUSSA ja RUUTUUN.  (Minuuteissa)";
+f020 = fl_future_call_min,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Ilmoitusennakko tulevan ajon kirjaamiseksi. (Minuuteissa)";
+f019 = fl_late_meter,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Suurin sallittu aika välille HYVKS ja NOUTO/M-P[[LL[. (Minuuteissa)";
+k    = fl_cal_assign_info,include=(2),NOENTRY,NOUPDATE,COMMENTS="2-ruutuinfo";
+l    = fl_when_enr_post,include=(1 to 3),NOENTRY,NOUPDATE,COMMENTS="1-aina;2-jälkeen NOUTO/M-P[[LL[;3-jälkeen NOUTO/M-P[[LL[ syst. välit. ajoissa";
+m    = fl_no_personal,include=("K", "E"),default="E",UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="Sallitaanko erikoispyyntöjen kirjaaminen";
+d1   = fl_max_rej_count,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Montako kertaa ajo voidaan hylätä ennen kuin siitä tulee poikkeus";
+d2   = fl_max_nbr_drv_atr,include=(1 to 8),NOENTRY,NOUPDATE,COMMENTS="Montako ajajan ominaisuutta tilauksen ottaja voi määritellä ajoa varten";
+d3   = fl_max_nbr_veh_atr,include=(1 to 8),NOENTRY,NOUPDATE,COMMENTS="Montako auton ominaisuutta tilauksen ottaja voi määritellä ajoa varten";
+d4   = fl_max_vehs_call,include=(1 to 9),RIGHT,NOENTRY,NOUPDATE,COMMENTS="Montako autoa voidaan määrätä yhdelle ajolle";
+f021 = fl_future_call_max,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Montako päivää etukäteen til. ottaja saa ilman hyväks. kirjata tulevan ajon";
+f022 = fl_pers_lead_tm,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Erikoisajon ennakko. (Minuuteissa)";
+f023 = fl_time_call_max,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Kuinka pitkälle eteen valitaan ennakkotilauksia. (Minuuteissa)";
+p    = fl_hold_line_flag,include=("K", "E"),UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="Mahdollistetaanko linjalla odotus tälle yhtiölle";
+t    = fl_greeting_line,include=("K", "E"),UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="Näytetäänkö tervehdysrivit tilauksenkirjausnäytöllä";
+o    = fl_auto_stand_flag,NOENTRY,NOUPDATE,COMMENTS="1-ei sallittu;2-lähett.hyvks;3-autom.hyvks ja ajon uudelleenväl";
+q    = fl_zone_backup_lev,include=(1 to 8),NOENTRY,NOUPDATE,COMMENTS="Montako ruututasoa käytetään tilausta täsmättäessä";
+r    = fl_drv_msg_approve,include=(1 to 2),NOENTRY,NOUPDATE,COMMENTS="1-lähettäjän hyväksyminen tarpeen;2-viesti lähetetään automaattisesti";
+s    = fl_subsc_review,include=(1 to 2),NOENTRY,NOUPDATE,COMMENTS="1-tarvitaan lähettäjän hyväksyntä;2-ajot annetaan automaattisesti";
+e5   = fl_charge_pri_def,include=(6 to 63),RIGHT,NOENTRY,NOUPDATE,COMMENTS="Oletustärkeys laskutusajoille";
+e6   = fl_subsc_pri_def,include=(6 to 63),RIGHT,NOENTRY,NOUPDATE,COMMENTS="Oletustärkeys sopimusajoille";
+e7   = fl_calls_pri_def,include=(6 to 63),RIGHT,NOENTRY,NOUPDATE,COMMENTS="Oletustärkeys tuleville ajoille";
+e1   = fl_pass_pri_def,include=(6 to 63),RIGHT,NOENTRY,NOUPDATE,COMMENTS="Oletustärkeys matkustaja-ajoille";
+e2   = fl_del_pri_def,include=(6 to 63),RIGHT,NOENTRY,NOUPDATE,COMMENTS="Oletustärkeys tavara-ajoille";
+e3   = fl_typex_pri_def,include=(6 to 63),RIGHT,NOENTRY,NOUPDATE,COMMENTS="Oletustärkeys 'X'-tyypin ajoille";
+e4   = fl_wake_up_pri_def,include=(6 to 63),RIGHT,NOENTRY,NOUPDATE,COMMENTS="Oletustärkeys herätystilauksille";
+u    = fl_met_pass_call,include=("K", "E"),UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="Sallitaanko manuaalinen mittari päälle/pois matkustaja-ajoissa";
+v    = fl_met_del_call,include=("K", "E"),UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="Sallitaanko manuaalinen mittari päälle/pois tavara-ajoissa";
+w    = fl_met_typex_call,include=("K", "E"),UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="Sallitaanko manuaalinen mittari päälle/pois x-tyypin ajoissa";
+x    = fl_pass_rate_calc,include=(1 to 4),NOENTRY,NOUPDATE,COMMENTS="1-ei;2-manuaalinen;3-ruudusta ruutuun -taul.;4-postinumerosta toiseen -taul.";
+y    = fl_dlv_rate_calc,include=(1 to 4),NOENTRY,NOUPDATE,COMMENTS="1-ei;2-manuaalinen;3-ruudusta ruutuun -taul.;4-postinumerosta toiseen -taul.";
+f024 = fl_audt_trail_port,NOENTRY,NOUPDATE,COMMENTS="Mihin porttiin tämän yhtiön avoim.ennakoiden tulostin on liitetty";
+f025 = fl_wakeup_lead_tm,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Herätystilauksen ennakko. (Minuuteisssa).";
+f29 = fl_time_calls_freq,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Kuinka usein ennakkotilausraportti tulostetaan (tunneissa)";
+f30 = fl_msg_rpt_freq,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Kuinka usein viestiraportti tulostetaan (tunneissa)";
+f1   = fl_city_default,UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="Oletusaluekoodi jota käytetään, jos käyttäjätiedot eivät anna sitä (in hours)";
+f2   = fl_phone_area_def,NOENTRY,NOUPDATE,COMMENTS="Oletuskoodi alueelle, jos tämän käyttäjän käyttäjätiedot eivät anna sitä";
+f3   = fl_call_type_def,default="P ",UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="Oletustyyppi tilaukselle, jos tämän käyttäjän käyttäjätiedot eivät anna sitä";
+f4   = fl_hist_search_def,default=30,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Oletusarvo tilausten etsinnälle takasuuntaan. (Minuuteissa)";
+z    = fl_match_algorithm,include=(1 to 3),NOENTRY,NOUPDATE,COMMENTS="1-ruutujärj.,tilap. r-tyypeittäin;2-ruutujärj,autojonojärj.;3-tilap. ruutujärj.";
+f032 = fl_range_limit1,NOENTRY,NOUPDATE,COMMENTS="Ensimmäinen yläraja-alue. (Minuuteissa)";
+f033 = fl_estimate_text1,NOENTRY,NOUPDATE,UPSHIFT,COMMENTS="Teksti joka vastaa ensimmäistä yläraja-aluetta (esim. 10-15)";
+f034 = fl_range_limit2,NOENTRY,NOUPDATE,COMMENTS="Second upper limit range. (In Minutes)";
+f035 = fl_estimate_text2,NOENTRY,NOUPDATE,UPSHIFT,COMMENTS="Teksti joka vastaa toista yläraja-aluetta (esim. 10-15)";
+f036 = fl_range_limit3,NOENTRY,NOUPDATE,COMMENTS="Kolmas yläraja-alue. (Minuuteissa)";
+f037 = fl_estimate_text3,NOENTRY,NOUPDATE,UPSHIFT,COMMENTS="Teksti joka vastaa kolmatta yläraja-aluetta (esim. 10-15)";
+f038 = fl_range_limit4,NOENTRY,NOUPDATE,COMMENTS="Neljäs yläraja-alue. (Minuuteissa)";
+f039 = fl_estimate_text4,NOENTRY,NOUPDATE,UPSHIFT,COMMENTS="Teksti joka vastaa neljättä yläraja-aluetta (esim. 10-15)";
+f040 = fl_range_limit5,NOENTRY,NOUPDATE,COMMENTS="Viides yläraja-alue. (Minuuteissa)";
+f041 = fl_estimate_text5,NOENTRY,NOUPDATE,UPSHIFT,COMMENTS="Teksti joka vastaa viidettä yläraja-aluetta (esim. 10-15)";
+f042 = fl_range_limit6,NOENTRY,NOUPDATE,COMMENTS="Kuudes yläraja-alue. (Minuuteissa)";
+f043 = fl_estimate_text6,NOENTRY,NOUPDATE,UPSHIFT,COMMENTS="Teksti joka vastaa kuudetta yläraja-aluetta (esim. 10-15)";
+f044 = fl_range_limit7,NOENTRY,NOUPDATE,COMMENTS="Seitsemäs yläraja-alue. (Minuuteissa)";
+f045 = fl_estimate_text7,NOENTRY,NOUPDATE,UPSHIFT,COMMENTS="Teksti joka vastaa seitsemättä yläraja-aluetta (esim. 10-15)";
+f046 = fl_range_limit8,NOENTRY,NOUPDATE,COMMENTS="Kahdeksas yläraja-alue. (Minuuteissa)";
+f047 = fl_estimate_text8,NOENTRY,NOUPDATE,UPSHIFT,COMMENTS="Teksti joka vastaa kahdeksatta yläraja-aluetta (esim. 10-15)";
+f048 = fl_def_est_text,NOENTRY,NOUPDATE,UPSHIFT,COMMENTS="Oletusarvio tekstille, jos raja-alueita ei ole annettu";
+f049 = fl_nak_offer_penal,include=(1 to 3),NOENTRY,NOUPDATE,COMMENTS="1-none;2-bottom of queue;3-book-off and penalize the driver";
+end
+instructions
+   delimiters "()";
+end

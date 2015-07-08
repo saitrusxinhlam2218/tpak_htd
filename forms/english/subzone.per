@@ -1,0 +1,37 @@
+{
+|***********************************************************************
+|                 RCS INFO
+|
+|  @(#)  $RCSfile: subzone.per,v $
+|  @(#)  $Revision: 1.2 $
+|  @(#)  $Date: 1999/03/19 21:27:02 $
+|  @(#)  $Author: taxiadm $
+|  @(#)  $Source: /taxi-scan/taxi_proj/cvs/taxi-scan/src/forms/english/subzone.per,v $
+|
+|  Copyright (c) 1994 - MobileSoft Consulting, Inc. Woodinville WA
+|
+|**********************************************************************/
+|ident "@(#) head:$RCSfile: subzone.per,v $	$Revision: 1.2 $"
+}
+database mads
+screen
+{
+						SUBZONE FILE MAINTENANCE
+
+Number     Fleet A   Fleet B   Fleet C   Fleet D   Fleet E   Fleet F   Fleet G   Fleet H
+[f000 ]    [f01]     [f02]     [f03]     [f04]     [f05]     [f06]     [f07]     [f08]
+}
+end
+tables
+subzone
+attributes
+f000 = subzone.sz_nbr,UPSHIFT,REQUIRED,COMMENTS="A unique subzone number (can include letters)";
+f01  = subzone.sz_zone_fleet1,RIGHT,COMMENTS="Corresponding zone number for fleet 0";
+f02  = subzone.sz_zone_fleet2,RIGHT,COMMENTS="Corresponding zone number for fleet 1";
+f03  = subzone.sz_zone_fleet3,RIGHT,COMMENTS="Corresponding zone number for fleet 2";
+f04  = subzone.sz_zone_fleet4,RIGHT,COMMENTS="Corresponding zone number for fleet 3";
+f05  = subzone.sz_zone_fleet5,RIGHT,COMMENTS="Corresponding zone number for fleet 4";
+f06  = subzone.sz_zone_fleet6,RIGHT,COMMENTS="Corresponding zone number for fleet 5";
+f07  = subzone.sz_zone_fleet7,RIGHT,COMMENTS="Corresponding zone number for fleet 6";
+f08  = subzone.sz_zone_fleet8,RIGHT,COMMENTS="Corresponding zone number for fleet 7";
+end

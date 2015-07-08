@@ -1,0 +1,37 @@
+database mads
+screen
+{
+						Brevlådefil underhåll
+
+Adressat ID  Meddl.nr              Utsändare ID    Status   Datum utsänt    Tid utsänt
+[f000  ]     [f001             ]   [f002]          [a]      [f004    ]      [f005  ]
+
+Bilpark     Till  Typ  Urval         Meddelandetyp
+[b]               [c]  [f003 ]       [f006    ]
+
+Meddelande
+[f007                                              ][f008                                              ]
+[f009                                              ][f010                                              ]
+}
+end
+tables
+mailbox
+attributes
+f000 = mailbox.mb_address,include=(1 to 29999),RIGHT,REQUIRED,COMMENTS="Adressatens användarnummer";
+f001 = mailbox.mb_msg_nbr,REQUIRED,NOENTRY,NOUPDATE,COMMENTS="Ett nummer tilldelat detta meddelande av systemet";
+f002 = mailbox.mb_from,include=(1 to 9999),RIGHT,COMMENTS="Utsändarens användarnummer";
+a = mailbox.mb_status,include=(N,G),UPSHIFT,REQUIRED,COMMENTS="Om detta meddelande är 'N'ytt eller 'G'ammalt";
+f004 = mailbox.mb_date_sent,COMMENTS="Datum meddelandet skickades";
+f005 = mailbox.mb_time_sent,COMMENTS="Klockslag meddelandet skickades";
+b = mailbox.mb_fleet,UPSHIFT,REQUIRED,COMMENTS="ID för bilpark";
+c = mailbox.mb_to_type,include=("*",P,L,M,A,B,C,Z," "),UPSHIFT,COMMENTS="Väljer ut meddelandemottagare (*,P,L,M,A,B,C,Z)";
+f003 = mailbox.mb_to_selection,UPSHIFT,COMMENTS="Minskar antalet mottagare";
+f006 = mailbox.mb_msgtype,RIGHT,COMMENTS="Typ av MDT terminalkommando";
+f007 = mailbox.mb_msg_line1[1,50],UPSHIFT,COMMENTS="Meddelandets första rad";
+f008 = mailbox.mb_msg_line1[51,100],UPSHIFT,COMMENTS="Meddelandets första rad";
+f009 = mailbox.mb_msg_line2[1,50],UPSHIFT,COMMENTS="Meddelandets andra rad";
+f010 = mailbox.mb_msg_line2[51,100],UPSHIFT,COMMENTS="Meddelandets andra rad";
+end
+instructions
+   delimiters "()";
+end

@@ -1,0 +1,54 @@
+{
+|***********************************************************************
+|                 RCS INFO
+|
+|  @(#)  $RCSfile: placenm.per,v $
+|  @(#)  $Revision: 1.4 $
+|  @(#)  $Date: 1998/01/08 19:35:48 $
+|  @(#)  $Author: taxiadm $
+|  @(#)  $Source: /taxi-scan/taxi_proj/cvs/taxi-scan/src/forms/danish/placenm.per,v $
+|
+|  Copyright (c) 1994 - MobileSoft Consulting, Inc. Woodinville WA
+|
+|**********************************************************************/
+|ident "@(#) head:$RCSfile: placenm.per,v $	$Revision: 1.4 $"
+}
+database mads
+screen
+{
+						VISNING AF STEDNAVNS-FIL
+
+Indeks                Stednavn                Husnummer        Suf          Navn                   Type            Kom   Gadeafsnit 
+[f002              ]  [f000                ]         [f003  ]  [b]  [a0]    [f001                ] [a1 ]  [a2]     [a3 ] [a]
+
+Postnummer Underdist X-koord                 Y-koord
+[f004 ]    [f005 ]   [f006                ]  [f007                ]
+
+Kortref.sd.     Kortref.sd kvadrat Bemærkning                        Lokal
+[f08]          [a4  ]         [f009                          ]  [c]
+}
+end
+tables
+placenm
+attributes
+f002 = placenm.pl_index, RIGHT, NOENTRY, NOUPDATE, COMMENTS="Et systemstildelt nummer fra gadenavns-filen";
+f000 = placenm.pl_name, NOENTRY, UPSHIFT, NOUPDATE, COMMENTS="Stednavn";
+f003 = placenm.pl_street_nbr, RIGHT, NOENTRY, NOUPDATE, COMMENTS="Adressens husnummer";
+b = placenm.pl_str_nbr_suf, NOENTRY, UPSHIFT, NOUPDATE, COMMENTS="Et alfabetisk suffiks";
+a0 = placenm.pl_str_pre_dir, NOENTRY, UPSHIFT, NOUPDATE, COMMENTS="  ";
+f001 = placenm.pl_str_name, NOENTRY, UPSHIFT, NOUPDATE, COMMENTS="Gadenavn";
+a1 = placenm.pl_str_type, NOENTRY, UPSHIFT, NOUPDATE, COMMENTS="Gadetype";
+a2 = placenm.pl_str_post_dir, NOENTRY, UPSHIFT, NOUPDATE, COMMENTS="  ";
+a3 = placenm.pl_str_city, NOENTRY, UPSHIFT, NOUPDATE, COMMENTS="Kommune-kode";
+a = placenm.pl_odd_even, NOENTRY, UPSHIFT, NOUPDATE, COMMENTS="L-lige, U-ulige, 'B'-begge";
+f004 = placenm.pl_str_zip, NOENTRY, NOUPDATE, COMMENTS="Postnummer forbundet med dette stednavn";
+f005 = placenm.pl_str_subzone, NOENTRY, NOUPDATE, COMMENTS="Underdistrikt forbundet med dette stednavn";
+f006 = placenm.pl_str_x_coord, RIGHT, NOENTRY, NOUPDATE, COMMENTS="Gadens X-koordinat";
+f007 = placenm.pl_str_y_coord, RIGHT, NOENTRY, NOUPDATE, COMMENTS="Gadens Y-koordinat";
+f08  = placenm.pl_map_ref_page, RIGHT, NOENTRY, NOUPDATE, COMMENTS="Kortreferencens sidenummer";
+a4 = placenm.pl_map_ref_block, NOENTRY, NOUPDATE, COMMENTS="Kortkvardrat betegnelse";
+f009 = placenm.pl_str_comment, NOENTRY, UPSHIFT, NOUPDATE, COMMENTS="Beliggenhedsbemærkn. for denne stednavnspost";
+c = placenm.pl_local, NOENTRY, UPSHIFT, NOUPDATE, COMMENTS="Betyder denne adresse automatisk at det er en lokaltur (J/N)?";
+instructions
+   delimiters "()";
+end

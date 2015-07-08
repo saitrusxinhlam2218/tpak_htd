@@ -1,0 +1,23 @@
+database mads
+screen
+{
+						Attributfil underhåll
+
+Bilpark  Typ  Nummer  Beskrivning             Förkortning	Faktovärde	Tilläggsvärde
+[a]      [b]   [c ]   [f000                ]  [a0]		[f001  ]        [f002  ]
+}
+end
+tables
+attr
+attributes
+a = attr.at_fleet,REQUIRED,UPSHIFT,COMMENTS="Bilpark ID";
+b = attr.at_type,include=(B,F),REQUIRED,UPSHIFT,COMMENTS="Antingen 'B'il- eller 'F'örarattribut";
+c = attr.at_nbr,include=(1 to 32),REQUIRED,COMMENTS="Attributnummer (endast 1 t o m 32 är giltiga)";
+f000 = attr.at_desc,UPSHIFT,COMMENTS="Attributbeskrivning";
+a0 = attr.at_abbrev,REQUIRED,UPSHIFT,COMMENTS="Attributförkortning som den visas på beställningsskärmen";
+f001 = attr.at_factor_val,REQUIRED,UPSHIFT,COMMENTS="Flat Rate Factor Value for Attribute";
+f002 = attr.at_extra_val, REQUIRED, UPSHIFT, COMMENTS="Flat Rate Extra Value for Attribute";
+end
+instructions
+   delimiters "()";
+end

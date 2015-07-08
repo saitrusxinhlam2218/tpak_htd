@@ -1,0 +1,36 @@
+database mads
+screen
+{
+Yhtiˆ     Tunnus      K‰ytt‰j‰tiedot/alku       K‰ytt‰j‰tiedot/loppu
+[a]       [f000]      [f001              ]      [f002              ]  
+
+Tilaukset  Matkustaja   Tavara-ajo   "X"-tyyppi   Her‰tys      Lopetus    Kysely      
+           [f007]       [f008]       [f009]       [f010]       [f011]     [f012]
+
+Tilaukset  Ruuduttam    Peruutus     Viestit      K‰sinv‰l      Muutokset     Poikkeukset
+           [f013]       [f014]       [f015]       [f016]        [f017]        [f018]
+}
+end
+tables
+statusr
+attributes
+a = statusr.su_fleet,REQUIRED,UPSHIFT,NOUPDATE,COMMENTS="Yhtiˆn tunnusnumero";
+f000 = statusr.su_user_id,REQUIRED,RIGHT,NOUPDATE,COMMENTS="K‰ytt‰j‰n tunnusnumero";
+f001 = statusr.su_from_dt_tm,RIGHT,COMMENTS="Ajanjakson alku"; 
+f002 = statusr.su_to_dt_tm,RIGHT,COMMENTS="Ajanjakson loppu"; 
+f007 = statusr.su_pass_calls,RIGHT,COMMENTS="Matkustaja-ajojen m‰‰r‰";
+f008 = statusr.su_del_calls,RIGHT,COMMENTS="Tavara-ajojen m‰‰r‰";
+f009 = statusr.su_typex_calls,RIGHT,COMMENTS="'X'-ajojen m‰‰r‰";
+f010 = statusr.su_wkup_calls,RIGHT,COMMENTS="Her‰tystilausten m‰‰r‰";
+f011 = statusr.su_killed,RIGHT,COMMENTS="K‰ytt‰j‰n lopettamien tilausten m‰‰r‰ t‰ll‰ aikav‰lill‰";
+f012 = statusr.su_callbacks,RIGHT,COMMENTS="K‰ytt‰j‰n k‰sittelemien kyselyjen m‰‰r‰ t‰ll‰ aikav‰lill‰";
+f013 = statusr.su_unzoned,RIGHT,COMMENTS="K‰ytt‰j‰n kirjaamien ruuduttamattomien tilausten m‰‰r‰ t‰ll‰ aikav‰lill‰";
+f014 = statusr.su_cancelled,RIGHT,COMMENTS="K‰ytt‰j‰n peruuttamien tilausten m‰‰r‰ t‰ll‰ aikav‰lill‰";
+f015 = statusr.su_messages,RIGHT,COMMENTS="K‰ytt‰j‰n l‰hett‰mien viestien m‰‰r‰ t‰ll‰ aikav‰lill‰";
+f016 = statusr.su_man_assigns,RIGHT,COMMENTS="K‰ytt‰j‰n k‰sin jakamien ajojen m‰‰r‰ t‰ll‰ aikav‰lill‰";
+f017 = statusr.su_overrides,RIGHT,COMMENTS="Keskuksen pakolla jakamien ajojen m‰‰r‰";
+f018 = statusr.su_exceptions,RIGHT,COMMENTS="Keskuksen k‰sittelemien poikkeusten m‰‰r‰";
+end
+instructions
+   delimiters "()";
+end

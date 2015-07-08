@@ -1,0 +1,203 @@
+$ /****************************************************************************
+$ *                                                                           *
+$ *                           S C C S   I N F O                               *
+$ *                                                                           *
+$ * @(#)  geo_maint.MSF.fin; Rel: 10.1.3.1; Get date: 5/18/95 at 10:19:20
+$ * @(#)  Last delta: 12/5/94 at 11:00:06
+$ * @(#)  SCCS File: /taxi/sccs/s.geo_maint.MSF.fin
+$ *                                                                           *
+$ * Copyright (c) 1990 - MDI Seattle                                          *
+$ *                                                                           *
+$ *****************************************************************************/
+$ #ident "@(#) head:geo_maint.MSF.fi/usr/users/brian/enh_src/src/msf/fin	10.1.3.1"
+
+$ /*
+$  * Message file for PROGRAM: geo_maint
+$  * CATALOG:   geo_maint.cat
+$  * MNEMONICS: geo_m_strdefs.h
+$  */
+
+$quote "
+$set 1
+
+$ /*    NOTE TO THE TRANSLATOR                          */
+$ /*    Quoted text will be followed by a maximum string length if the  */
+$ /*    text length is different than the number of chars in the string.*/
+$ /*    If no string length is entered default to the current number of */
+$ /*    characters.  A comment about the string is also included where  */
+$ /* 	necessary.							*/
+$ /*	From GEO_MAINT_116 to GEO_MAINT_    translate `Ä` to `(' and	*/
+$ /*	'Å' to ')'							*/
+
+GEO_MAINT_1	"On annettava kadun nimi"			/* 50	*/
+GEO_MAINT_2	"Paina ESC suorittaaksesi"				/* 50	*/
+GEO_MAINT_3	"On annettava kadun tyyppi"			/* 50	*/
+GEO_MAINT_4	"W"						/* do not translate 	*/
+GEO_MAINT_5	"E"						/* do not translate     */
+GEO_MAINT_6	"N"						/* do not translate     */
+GEO_MAINT_7	"S"						/* do not translate     */
+GEO_MAINT_8	"NW"						/* do not translate     */
+GEO_MAINT_9	"NE"						/* do not translate     */
+GEO_MAINT_10	"SE"						/* do not translate     */
+GEO_MAINT_11	"SW"						/* do not translate     */
+GEO_MAINT_12	"                     "				/* 50	*/	
+GEO_MAINT_13	"                      "			/* 50   */
+GEO_MAINT_14	"Väärä kuntakoodi"				/* 50   */
+GEO_MAINT_15	"Virhe kentässä"				/* 50   */
+GEO_MAINT_16	"Väärä kadun numero"				/* 50   */
+GEO_MAINT_17	"              "				/* 50   */
+GEO_MAINT_18	"Väärä postinumero"				/* 50   */
+GEO_MAINT_19	"Väärä alaruutu"			/* 50   */
+GEO_MAINT_20	"Väärä x-koordinaatti"				/* 50   */
+GEO_MAINT_21	"Väärä y-koordinaatti"				/* 50   */
+GEO_MAINT_22	"Väärä karttaviitteen sivunumero"		/* 50   */
+GEO_MAINT_23	"Väärä matala numero"				/* 50   */
+GEO_MAINT_24	"Alue limittäin"				/* 50   */
+GEO_MAINT_25	"Väärä numero"				/* 50   */
+GEO_MAINT_26	"Väärä korkea numero"				/* 50   */
+GEO_MAINT_27	"Väärä sivun viitenumero"			/* 50   */
+GEO_MAINT_28	"Alaruutu ei täsmää"				/* 50   */
+GEO_MAINT_29	"                     "				/* 50   */
+GEO_MAINT_30	"                    "				/* 50   */
+GEO_MAINT_31	"Kadunnimitiedoston avausvirhe"			/* 50   */
+GEO_MAINT_32	"Osoitetiedoston avausvirhe"			/* 50   */
+GEO_MAINT_33	"Paikannimitiedoston avausvirhe"			/* 50   */
+GEO_MAINT_34	"Paikkatiedoston avausvirhe"			/* 50   */
+GEO_MAINT_35	"Paikkanimitiedoston avausvirhe"			/* 50   */
+GEO_MAINT_36	"Alaruututiedoston avausvirhe"			/* 50   */
+GEO_MAINT_37	"Alaruutunimitiedoston avausvirhe"			/* 50   */
+GEO_MAINT_38	"Tietue ei löydy"				/* 50   */
+GEO_MAINT_39	"Kadunnimitiedoston lukuvirhe"			/* 30	*/
+GEO_MAINT_40	"Kadunnimitiedoston sulkemisvirhe"		/* 30	*/
+GEO_MAINT_41	"Paikannimitiedoston sulkemisvirhe"			/* 30	*/
+GEO_MAINT_42	"Osoitenimitiedoston sulkemisvirhe"		/* 30   */
+GEO_MAINT_43	"Paikkatiedoston sulkemisvirhe"			/* 30   */
+GEO_MAINT_44	"Alaruututiedoston sulkemisvirhe"			/* 30   */
+GEO_MAINT_45	"Paina ESC suorittaaksesi"				/* 50	*/
+GEO_MAINT_46	"On annettava arvo"				/* 50	*/
+GEO_MAINT_47	"Tietuetta ei löydy"				/* 50 	*/
+GEO_MAINT_48    " (SEUR-TILA)   (0) Päävalikko (1) Kadun nimi & tyyppi (2) Lyhenne (3) Aliakset (4) Paikannimi (5) Osoite : "
+$                       /* change ÄÅ around NEXT MODE to ()     */
+GEO_MAINT_49	"Tietuetta ei löydy"
+GEO_MAINT_50    " (SEUR-TILA)   (0) Päävalikko (1) Kadun nimi & tyyppi (2) Lyhenne (3) Aliakset (4) Paikannimi (5) Osoite : "
+$                       /* change ÄÅ around PREV MODE to ()     */
+GEO_MAINT_51    " (LISÄÄ-TILA) (0) Päävalikko (1) Uusi kadunnimi & tyyppi (2) Lyhenne (3) Aliakset (4) Paikannimi (5) Osoite : "
+$                       /* change ÄÅ around ADD MODE to ()     */
+GEO_MAINT_52	"On annettava kadun nimi"			/* 50	*/
+GEO_MAINT_53	"Sama kadunnimi ja tyyppi löytyi"		/* 50	*/
+GEO_MAINT_54	"Tietueen lisäysvirhe"				/* 50	*/
+GEO_MAINT_55	"Tietue lisätty"					/* 50	*/
+GEO_MAINT_56	"Väärä kunta"					/* 50   */
+GEO_MAINT_57	"Väärä alaruutu"				/* 50   */
+GEO_MAINT_58	"Osoitetietueen päivitysvirhe"			/* 50   */
+GEO_MAINT_59	"Lisäysvirhe"					/* 50   */
+GEO_MAINT_60    " (PÄIVITÄ-TILA)  (0) Päävalikko (1) Lyhenne (2) Aliakset (3) Paikannimi (4) Osoite : "
+$                       /* change ÄÅ around UPDATE MODE to ()     */
+GEO_MAINT_61	"Lukuvirhe"					/* 50   */
+GEO_MAINT_62	"Päivitysvirhe"					/* 50   */
+GEO_MAINT_63	"Tietue päivitetty"				/* 50   */
+GEO_MAINT_64	"Lukuvirhe 1"					/* 50   */
+GEO_MAINT_65	"Lukuvirhe 2"					/* 50   */
+GEO_MAINT_66	"Lukuvirhe 3"					/* 50   */
+GEO_MAINT_67	"Lukuvirhe 4"					/* 50   */
+GEO_MAINT_68	"Lukuvirhe 5"					/* 50   */
+GEO_MAINT_69	"Päivitettävä tietue puuttuu"		/* 50   */
+GEO_MAINT_70	"Päivitettävä tietue puuttuu"		/* 50   */
+GEO_MAINT_71	"Kadun nimi             Tyyppi                                          Lyhenne                         Aliakset                "
+$			/* Starting positions for text must remain the same.  Street name can be 15 chars	*/
+$			/* Abbreviation can be 15 chars and Aliases can be 15 chars. Type can be 4 chars	*/
+GEO_MAINT_72	" Paikannimi                   Alue P/R Katunro.   Pnro  Alaruutu Huomautus                      X-koord   Y-koord  Krtsivu/ Ruut Pkk"
+$			/* Starting positions for text must remain the same	*/
+GEO_MAINT_73	"Alueet              Alue P/R  Alh nro  Kork nro Pnro   Alaruutu  Huomautus                      X-koord   Y-koord  Krtsivu/ Ruut"
+$			/* Starting postions for text must remain the same	*/
+GEO_MAINT_74	"Ruututiedoston hoidon viestihaku epäonnistui "		/* 50	*/
+GEO_MAINT_75	"Ruututiedoston hoidon viestihaku epäonnistui"			/* 50   */
+GEO_MAINT_76	"Ruututiedoston hoidon viestiläh epäonnistui "		/* 50   */
+GEO_MAINT_77	"Ruututiedoston hoidon viestiläh epäonnistui"			/* 50   */
+GEO_MAINT_78	"KYSELY: ESC suorittaa, CTRL-X keskeyttää. "	/* 50, escape key, interrupt key	*/
+GEO_MAINT_79    "Query Next Previous Add Update Remove Output Exit" 
+GEO_MAINT_80	"KARTTATIEDOSTON HOITO"
+GEO_MAINT_81	"PÄIVITÄ: ESC suorittaa, CTRL-X keskeyttää. "	/* 50, escape key, interrupt key	*/
+GEO_MAINT_82	"Anna tulostustied. nimi (oletus geo_scr.out): "	/* Don't translate filename geo_scr.out	*/
+GEO_MAINT_83	"Tulostustiedosto"					/* Tulostustiedosto XXX, Lisää tai Uusi	*/
+GEO_MAINT_84	"Lisää tai Uusi (oletus : U) "		/* Tulostustiedosto XXX, Lisää tai Uusi    */
+GEO_MAINT_85	"C-isam-virhe numero ="				/* C- Indexed Sequential Access Method	*/
+GEO_MAINT_86	"Unix-virhe numero ="
+GEO_MAINT_87    " (POISTO-TILA)   (0) Päävalikko(1) Kadun nimi & tyyppi(2) Lyhenne (3) Aliakset (4) Paikannimi (5) Osoite : "
+$                       /* change ÄÅ around REMOVE MODE to ()     */
+GEO_MAINT_88	" Paina ESC poistaaksesi tietue kohdistimen alta "
+GEO_MAINT_89	"Paina ESC poistaaksesi kaikki tietueet"		/* 50	*/
+GEO_MAINT_90	"Lukuvirhe"					/* 50	*/
+GEO_MAINT_91	"Poistovirhe"					/* 50   */
+GEO_MAINT_92	"Tietue poistettu"				/* 50   */
+GEO_MAINT_93	"Poistettu-virhe"				/* 50   */
+GEO_MAINT_94	" Hakemistonumero "				/* 50, keep leading space	*/
+GEO_MAINT_95	" Kadun koko nimi "				/* 50, keep leading space	*/
+GEO_MAINT_96	" Kadun tyyppi "					/* 50, keep leading space       */
+GEO_MAINT_97	" Katunimen lyhenne "			/* 50, keep leading space       */
+GEO_MAINT_98	" Kadun aliasnimi  "				/* 50, keep leading space       */
+GEO_MAINT_99	" Paikannimi "					/* 50, keep leading space       */
+GEO_MAINT_100	"                      "			/* 50, keep leading space       */
+GEO_MAINT_101	"                       "			/* 50, keep leading space       */
+GEO_MAINT_102	" Kuntakoodi "					/* 50, keep leading space       */
+GEO_MAINT_103	"  P-Parillinen, R-Pariton, M-Molemmat "			/* 50, keep lead space, check translated values for E,O,B	*/
+GEO_MAINT_104	" Katuosoitteen numero "			/* 50, keep leading space       */
+GEO_MAINT_105	"                 "				/* 50, keep leading space       */
+GEO_MAINT_106	" Tähän osoitteeseen liittyvä postinumero "	/* 50, keep leading space       */
+GEO_MAINT_107	" Tähän osoitteeseen liittyvä alaruutu "	/* 50, keep leading space       */
+GEO_MAINT_108	" Paikan selitys tälle katutietueelle "	/* 50, keep leading space       */
+GEO_MAINT_109	" Kadun X-koordinaatti "			/* 50, keep leading space       */
+GEO_MAINT_110	" Kadun Y-koordinaatti "			/* 50, keep leading space       */
+GEO_MAINT_111	" Karttasivun viitenumero "			/* 50, keep leading space       */
+GEO_MAINT_112	" Karttalohkon nimitys  "			/* 50, keep leading space       */
+GEO_MAINT_113	" K/E, osoittaako tämä paikannimi paikallista noutoa "	/* 50, keep leading space, verify Y/N values       */
+GEO_MAINT_114	" Kadun osan alhainen numero "		/* 50, keep leading space       */
+GEO_MAINT_115	" Kadun osan korkea numero "		/* 50, keep leading space       */
+$		/* translate Ä to ( and Å to ) on the next 5 lines	*/
+GEO_MAINT_116	"(                  )  "
+GEO_MAINT_117	"(                    ) (   )                                           (                    )          (                    )  "
+GEO_MAINT_118	"                                                                       (                    )          (                    )  "
+GEO_MAINT_119	"(                    )(  )(  )(   )( )(      )( )(     )(     )(                              )(        )(        ) (   ) /(    )( )"
+GEO_MAINT_120	"         (  ) (  ) (   ) ( ) (      ) (      ) (     ) (     ) (                              )(        )(        ) (   ) / (    )"
+GEO_MAINT_121   "Väärä valinta - ole hyvä anna (L/U) lisätäksesi tai aloittaaksesi uuden"
+
+$ /*
+$  * The following strings were extracted from geo_msg.h
+$  */
+
+$set 2
+
+GEO_MSG_1	"Syöttö on lopetettava painamalla ESC"		/* 40	*/
+GEO_MSG_2	"Virhe kentässä"				/* 40   */
+GEO_MSG_3	"Ensimmäisen tietueen lukuvirhe"			/* 40   */
+GEO_MSG_4	"Yhtiötiedoston avausvirhe"				/* 40   */
+GEO_MSG_5	"Lupatiedoston avausvirhe"				/* 40   */
+GEO_MSG_6	"Ei ole rivejä jotka täyttävät ehdot"	/* 40   */
+GEO_MSG_7	"Ruututiedoston lukuvirhe"				/* 40   */
+GEO_MSG_8	"Ei rivejä nykyisessä listassa"		/* 40   */
+GEO_MSG_9	"Menosuunnassa ei ole enää rivejä"	/* 40   */
+GEO_MSG_10	"Seuraavan lukuvirhe"				/* 40   */
+GEO_MSG_11	"Edellisen lukuvirhe"				/* 40   */
+GEO_MSG_12	"Tietueen lisäysvirhe"				/* 40   */
+GEO_MSG_13	"Tietueen lukitusvvirhe"				/* 40   */
+GEO_MSG_14	"Ruututiedoston päivitysvirhe"			/* 40   */
+GEO_MSG_15	"Tietue päivitetty"				/* 40   */
+GEO_MSG_16	"Nykyisen tietueen vapautusvirhe"			/* 40   */
+GEO_MSG_17	"Ruututiedoston poistovirhe"			/* 40   */
+GEO_MSG_18	"Tulostetiedoston avausvirhe"			/* 40   */
+GEO_MSG_19	"Ruututiedoston hoidon viestihaku epäonnistui"			/* 40   */
+GEO_MSG_20	"Ruutuprof.tied. hoid. viestiläh epäonnistui"		/* 40   */
+GEO_MSG_21	"KYSELY: ESC=suorita, CTRL-X=keskeytä."	/* 40, escape key, interrupt key   */
+GEO_MSG_22	"LISÄÄ: ESC=suorita, CTRL-X=keskeytä. "		/* 40, escape key, interrupt key  */
+GEO_MSG_23      "Query Next Previous Add Update Remove Output Exit "
+GEO_MSG_24	"RUUTUTIEDOSTON HOITO"
+GEO_MSG_25	"PÄIVITÄ: ESC=suorita, CTRL-X=keskeytä"		/* 40, escape key, interrupt key   */
+GEO_MSG_26	"Poista (K/E)? "
+GEO_MSG_27	"Anna tulostustied.(oletus zn_scr.out): "	/* do not translate filename zn_scr.out	*/
+GEO_MSG_28	"Tulostustiedosto %s Lisää/Uusi (oletus: U)? "	/* do not translate %s. A filename will be substituted	*/
+$				/* for %s.  Position %s wherever it makes the most sense	*/
+GEO_MSG_29	"Jäljitystiedoston avausvirhe"				/* 40   */
+GEO_MSG_30	"Ruututiedoston avausvirhe"				/* 40   */
+GEO_MSG_31	"Ruututiedoston sulkemisvirhe"				/* 40   */
+GEO_MSG_32	"Jäljitystiedoston sulkemisvirhe"			/* 40   */
+GEO_MSG_33	"Käyttäjän nimeä ei löydy"			/* 40   */

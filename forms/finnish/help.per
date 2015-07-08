@@ -1,0 +1,27 @@
+database mads
+screen
+{
+						Opastustiedoston hoito
+
+Viitejono   Kent‰n nro    Rivin nro      Vast. viitejono   Kent‰n nro  
+[f00]       [f001]         [f002]             [f03]        [f004]
+
+Opastustietoja
+[f005                                                             ]
+[f006                                                             ]
+}
+end
+tables
+help
+attributes
+f00  = help.hp_nav_string,RIGHT,REQUIRED,COMMENTS="Komentojono jolla p‰‰st‰‰n n‰yttˆˆn, johon t‰m‰ opastus liittyy";
+f001 = help.hp_field_nbr,RIGHT,REQUIRED,COMMENTS="Kent‰n numero jolle t‰m‰ opastus on";
+f002 = help.hp_line_nbr,RIGHT,REQUIRED,COMMENTS="Rivin numero t‰m‰n kent‰n opastustekstille";
+f03  = help.hp_like_nav_string,default=0,RIGHT,COMMENTS="Komentojono sille kent‰lle jonka opastustietoa k‰ytet‰‰n";
+f004 = help.hp_like_field_nbr,default=0,RIGHT,COMMENTS="Kent‰n numero sille kent‰lle, jonka opastustietoa k‰ytet‰‰n";
+f005 = help.hp_help_line[1,65],COMMENTS="Opastustiedon ensimm‰inen osa";
+f006 = help.hp_help_line[66,130],COMMENTS="Opastustiedon toinen osa";
+end
+instructions
+   delimiters "()";
+end

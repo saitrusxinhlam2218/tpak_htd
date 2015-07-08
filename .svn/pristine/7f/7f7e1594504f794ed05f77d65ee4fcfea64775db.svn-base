@@ -1,0 +1,85 @@
+$ /****************************************************************************
+$ *                                                                           *
+$ *                           S C C S   I N F O                               *
+$ *                                                                           *
+$ * @(#)  filemgmt.MSF.fin; Rel: 10.1.3.1; Get date: 5/18/95 at 10:19:11
+$ * @(#)  Last delta: 12/5/94 at 11:03:50
+$ * @(#)  SCCS File: /taxi/sccs/s.filemgmt.MSF.fin
+$ *                                                                           *
+$ * Copyright (c) 1990 - MDI Seattle                                          *
+$ *                                                                           *
+$ *****************************************************************************/
+$ #ident "@(#) head:filemgmt.MSF.fin/usr/users/brian/enh_src/src/msf/fin	10.1.3.1"
+
+$ /*
+$  * Message file for PROGRAM: file_mgmt
+$  * CATALOG:   file_mgmt.cat
+$  * MNEMONICS: fmgmt_strdefs.h
+$  */
+
+$quote "
+$set 1
+
+$ /*    NOTE TO THE TRANSLATOR                          */
+$ /*    Quoted text will be followed by a maximum string length if the  */
+$ /*    text length is different than the number of chars in the string.*/
+$ /*    If no string length is entered default to the current number of */
+$ /*    characters.  A comment about the string is also included where  */
+$ /*    necessary.                                                      */
+FMGMT_1		"VIRHE tiedostossa statfs\n"					/* 50 	*/
+FMGMT_2		"VIRHE levynk‰yttˆtiedoston avaamisessa\n"			/* 50	*/
+FMGMT_3		"Ei tarpeeksi levytilaa raporttien uusimiseen. Odota p‰ivitt. puhdistusta."
+FMGMT_4		"Anna \'e\' palataksesi edell. valikk. tai lopeta."	/* 50	*/
+FMGMT_5		"Tiedosto"						/* 10, The file XXX was restored	*/
+FMGMT_6		"entistettiin."						/* 15, The file XXX was restored	*/
+FMGMT_7		"Jos haluat varakopion TAKSISYSTEEMIN tiedostoista, "		/* 50		*/
+FMGMT_8		"aseta paikoilleen ensimm‰inen nauhakasetti ja anna K ja <CR>."	/* 50	*/
+FMGMT_9		"TAKSISYSTEEMIN varmistus menossa, kest‰‰ useita minuutteja."		/* 50	*/
+FMGMT_10	"Saat ilmoituksen kun on valmista."			/* 50	*/
+FMGMT_11	"TAKSISYSTEEMIN varmistus on valmis."			/* 50	*/
+FMGMT_12	"Poista nauha ja merkitse siihen t‰m‰ p‰iv‰m‰‰r‰."	
+FMGMT_13	"Paina <CR> kun haluat jatkaa.... "				/* 50	*/
+FMGMT_14	"Jos haluat entist‰‰ TAKSI-tiedostot, "			/* 50	*/
+FMGMT_15	"aseta paikoilleen ensimm‰inen nauhakasetti ja anna K ja <CR>."
+FMGMT_16	"Entist‰mme TAKSISYSTEEMIN. Se kest‰‰ useita minuutteja."
+FMGMT_17	"Saat ilmoituksen kun systeemi on entistetty."
+FMGMT_18	"TAKSISYSTEEMI on entistetty."				/* 50	*/
+FMGMT_19	"Poista nauha."				/* 50	*/
+FMGMT_20	"Paina <CR> kun haluat jatkaa....."				/* 50	*/
+FMGMT_21	"Jos haluat varmistaa seitsem‰n p‰iv‰n TAKSI-raporttitiedostot, "
+FMGMT_22	"pane paikoilleen ensimm‰inen nauhakasetti ja anna K ja <CR>."
+FMGMT_23	"TAKSI-raportin varmistus tekeill‰, kest‰‰ useita minuutteja."
+FMGMT_24	"EI yhtiˆit‰ ajossa eik‰ varmistettavia raportteja."
+FMGMT_25	"Raportinvarmistus on valmis."			/* 50	*/
+FMGMT_26	"Poista nauha ja merkitse siihen Taksiraportti ja t‰m‰ p‰iv‰m‰‰r‰."
+FMGMT_27	"Jos haluat entist‰‰ raporttitiedostoja, "		/* 50	*/
+FMGMT_28	"aseta paikoilleen ensimm‰inen raporttikasetti ja anna K ja <CR>."
+FMGMT_29	"Odota kun nauhan p‰iv‰m‰‰ri‰ tarkistetaan."	/* 50	*/
+FMGMT_30	"N‰m‰ ovat nauhan raporttip‰iv‰m‰‰ri‰"		/* 50	*/
+FMGMT_31	"Anna rivin numero ja sitten <CR> "	/* 50	*/
+FMGMT_32	"katsellaksesi valitun pvm:n raportteja."		/* 50	*/
+FMGMT_33	"N‰m‰ ovat valitun pvm:n raportteja. "
+FMGMT_34	"Paina <CR> kun haluat jatkaa raporttien nimien katselemista"
+FMGMT_35	"Nauhalla ei ole raportteja sille p‰iv‰lle."
+FMGMT_36	"raportin entist‰miseksi tai * kaikkien raporttien entist. valitulle pvm:lle."
+FMGMT_37	"Odota kun nauhaa luetaan"				/* 50 	*/
+FMGMT_38	"               NƒITƒ TIEDOSTOJA HOIDETAAN"
+FMGMT_39	"Anna tied. numero "
+FMGMT_40	"tietyn tied. entist‰miseksi"
+FMGMT_41	"Anna \'e\' palataksesi edell. valikk. tai * on kaikki tied"
+FMGMT_42	"Vastaus EI kelpaa"				/* 50	*/
+FMGMT_43	"<CR> kun haluat jatkaa .... "				/* 50	*/
+FMGMT_44	"  TAKSIEN VALVONTA"
+FMGMT_45	"   TIEDOSTON HOITO"
+FMGMT_46	"1  Varmista Taksisysteemin tiedostoja \n"
+FMGMT_47	"2  Varmista Taksiraporttitiedostoja \n"
+FMGMT_48	"3  Entist‰ Taksisysteemin tiedostoja \n"
+FMGMT_49	"4  Entist‰ Taksiraporttitiedostoja \n"
+FMGMT_50	"5  Uudista datatiedostot     \n"				/* 33	*/
+FMGMT_51	"Anna \'e\' palataksesi edell. valikk. tai lopeta."
+FMGMT_52	"Anna numero ja <CR> "
+FMGMT_53	"valinnan suorittamiseksi: "				/* 40	*/
+FMGMT_54	"Vastaus EI ole v‰lill‰ 1-7. Uudestaan."
+FMGMT_55	"6  Lis‰‰, p‰ivit‰ tai entist‰ katteettomien luottokorttien tiedostoa\n"
+FMGMT_56	"7  Varmista katteettomien luottokorttien tiedosto\n"
+FMGMT_57	"Valittua taulukkoa ei voi avata."

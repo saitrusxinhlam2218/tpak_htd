@@ -1,0 +1,19 @@
+database mads
+screen
+{
+						Tillståndsfil underhåll
+
+Nummer    Beskrivning             Förkortning
+[f0]      [f001                ]  [a0 ]
+}
+end
+tables
+seal
+attributes
+f0   = seal.sl_seal_nbr,include=(1 to 16),RIGHT,REQUIRED,COMMENTS="Tillståndsnummer (endast 1 t o m 16 är giltiga)";
+f001 = seal.sl_desc,UPSHIFT,COMMENTS="Tillståndsbeskrivning";
+a0 = seal.sl_abbrev,UPSHIFT,COMMENTS="Förkortning som ska anv. på skärmarna som fältetiketter";
+end
+instructions
+   delimiters "()";
+end

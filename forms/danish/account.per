@@ -1,0 +1,92 @@
+{
+|***********************************************************************
+|                 RCS INFO
+|
+|  @(#)  $RCSfile: account.per,v $
+|  @(#)  $Revision: 1.9 $
+|  @(#)  $Date: 1998/03/13 18:32:44 $
+|  @(#)  $Author: taxiadm $
+|  @(#)  $Source: /taxi-scan/taxi_proj/cvs/taxi-scan/src/forms/danish/account.per,v $
+|
+|  Copyright (c) 1994 - MobileSoft Consulting, Inc. Woodinville WA
+|
+|**********************************************************************/
+|ident "@(#) head:$RCSfile: account.per,v $	$Revision: 1.9 $"
+}
+
+database mads
+screen
+{
+						VEDLIGEH. AF KONTO-FIL
+Konto
+    Vgnpk  Kontonummer           Navn                         Prioritet  Autobook aktiveret  Kontokør. aktiveret  Factor Val
+     [a]   [f000              ]  [f001                     ]    [a6]            [d]                  [e]	  [f019 ]
+
+Adresse
+    Husnummer                Gadenavn                               Lejl/vær  Kom          Postnr            Vise adresse
+    [f002  ]                 [f003                ]                 [f004 ]  [a3 ]         [f005 ]              [c] 
+Kontakt
+    Navn tel.kontakt      Navn konto kontakt      Bemærkning                                         Telefonnummer
+    [f009                ]  [f010                ]  [f011                                    ]       [f007              ]
+
+		          1-3      4-6      7-9     10-12    13-15   16-18   19-21   22-24   25-27   28-30   31-32
+    Vognattr		  [j1 ]    [j2 ]    [j3 ]    [j4 ]    [j5 ]   [j6 ]   [j7 ]   [j8 ]   [j9 ]   [j10]   [l1]
+    Chaufførattr          [k1 ]    [k2 ]    [k3 ]    [k4 ]    [k5 ]   [k6 ]   [k7 ]   [k8 ]   [k9 ]   [k10]   [l2]
+Meddelelser
+    Betegn. 1                          Betegn. 2                          Betegn. 3           Betegn. 4
+    [f012                          ]  [f014                          ]  [f016           ]  [f017           ]
+    Chaufførbesked                        
+    [f018                               ]
+}
+end
+tables
+account
+fleet
+attributes
+a = account.ac_fleet,REQUIRED,UPSHIFT,COMMENTS="Vognpark-ID", LOOKUP JOINING * fleet.fl_id;
+f000 = account.ac_nbr,REQUIRED,UPSHIFT,COMMENTS="Et firmakonto- eller kontokortnummer";
+f001 = account.ac_name,COMMENTS="Navn på firma eller person som er ansvarlig for denne konto";
+a6 = account.ac_priority,include=(1 to 63),REQUIRED,RIGHT,COMMENTS="Stdværdi-prioritet tildelt alle bestillinger på denne konto";
+d = account.ac_autobook_enable,include=(J,N),default="N",UPSHIFT,COMMENTS="Har denne konto tilladelse til at bruge Auto-booking (J/N)?";
+e = account.ac_acc_chrg_enable,include=(J,N),default="J",UPSHIFT,COMMENTS="Er konto aktiv (J/N)?";
+f019 = account.ac_factor_val,noentry, default=0.0;
+f002 = account.ac_str_nbr,RIGHT,COMMENTS="Husnummer på kundens adresse";
+f003 = account.ac_str_name,UPSHIFT,COMMENTS="Gadenavn";
+f004 = account.ac_apt_room, UPSHIFT, COMMENTS="Lejligheds- eller værelsenummer";
+a3 = account.ac_city,UPSHIFT,COMMENTS="Kommune";
+f005 = account.ac_zip,COMMENTS="Postnr";
+c = account.ac_show_pckup_adr,include=(J,N),default="J",UPSHIFT,COMMENTS="Automatisk placere kontoindehaverens adresse i adresse-feltet (J/N)?";
+f009 = account.ac_phone_contact,COMMENTS="Navn på telefon-kontaktperson";
+f010 = account.ac_attention,COMMENTS="Navn på konto-kontaktperson";
+f011 = account.ac_comment,COMMENTS="Bemærkning";
+f007 = account.ac_phone_number, UPSHIFT, COMMENTS="Telefonnummer";
+j1 = account.ac_veh_attr[1, 3], UPSHIFT, COMMENTS="Nødvendige vognattributter (J/N)", DEFAULT = "NNN";
+j2 = account.ac_veh_attr[4, 6], UPSHIFT, COMMENTS="Nødvendige vognattributter (J/N)", DEFAULT = "NNN";
+j3 = account.ac_veh_attr[7, 9], UPSHIFT, COMMENTS="Nødvendige vognattributter (J/N)", DEFAULT = "NNN";
+j4 = account.ac_veh_attr[10, 12], UPSHIFT, COMMENTS="Nødvendige vognattributter (J/N)", DEFAULT = "NNN";
+j5 = account.ac_veh_attr[13, 15], UPSHIFT, COMMENTS="Nødvendige vognattributter (J/N)", DEFAULT = "NNN";
+j6 = account.ac_veh_attr[16, 18], UPSHIFT, COMMENTS="Nødvendige vognattributter (J/N)", DEFAULT = "NNN";
+j7 = account.ac_veh_attr[19, 21 ], UPSHIFT, COMMENTS="Nødvendige vognattributter (J/N)", DEFAULT = "NNN";
+j8 = account.ac_veh_attr[22, 24], UPSHIFT, COMMENTS="Nødvendige vognattributter (J/N)", DEFAULT = "NNN";
+j9  = account.ac_veh_attr[25, 27], UPSHIFT, COMMENTS="Nødvendige vognattributter (J/N)", DEFAULT = "NNN";
+j10  = account.ac_veh_attr[28, 30], UPSHIFT, COMMENTS="Nødvendige vognattributter (J/N)", DEFAULT = "NNN";
+l1  = account.ac_veh_attr[31, 32], UPSHIFT, COMMENTS="Nødvendige vognattributter (J/N)", DEFAULT = "NNN";
+k1 = account.ac_drv_attr[1, 3], UPSHIFT, COMMENTS="Nødvendige chaufførattributter (J/N)", DEFAULT = "NNN";
+k2 = account.ac_drv_attr[4, 6], UPSHIFT, COMMENTS="Nødvendige chaufførattributter (J/N)", DEFAULT = "NNN";
+k3 = account.ac_drv_attr[7, 9], UPSHIFT, COMMENTS="Nødvendige chaufførattributter (J/N)", DEFAULT = "NNN";
+k4 = account.ac_drv_attr[10, 12], UPSHIFT, COMMENTS="Nødvendige chaufførattributter (J/N)", DEFAULT = "NNN";
+k5 = account.ac_drv_attr[13, 15], UPSHIFT, COMMENTS="Nødvendige chaufførattributter (J/N)", DEFAULT = "NNN";
+k6 = account.ac_drv_attr[16, 18], UPSHIFT, COMMENTS="Nødvendige chaufførattributter (J/N)", DEFAULT = "NNN";
+k7 = account.ac_drv_attr[19, 21], UPSHIFT, COMMENTS="Nødvendige chaufførattributter (J/N)", DEFAULT = "NNN";
+k8 = account.ac_drv_attr[22, 24], UPSHIFT, COMMENTS="Nødvendige chaufførattributter (J/N)", DEFAULT = "NNN";
+k9 = account.ac_drv_attr[25, 27], UPSHIFT, COMMENTS="Nødvendige chaufførattributter (J/N)", DEFAULT = "NNN";
+k10 = account.ac_drv_attr[28, 30], UPSHIFT, COMMENTS="Nødvendige chaufførattributter (J/N)", DEFAULT = "NNN";
+l2 = account.ac_drv_attr[31, 32], UPSHIFT, COMMENTS="Nødvendige chaufførattributter (J/N)", DEFAULT = "NNN";
+f012 = account.ac_header_1,COMMENTS="Feltbetegnelse for det første fremvisningsfelt som vises på bestillingsskærmen";
+f014 = account.ac_header_2,COMMENTS="Feltbetegnelse for det andet fremvisningsfelt som vises på bestillingsskærmen";
+f016 = account.ac_header_3,COMMENTS="Opfordring for det første indskrivningsfelt";
+f017 = account.ac_header_4,COMMENTS="Opfordring for det andet indskrivningsfelt";
+f018 = account.ac_driver_msg,UPSHIFT,COMMENTS="En besked som skal sendes til chaufføren";
+instructions
+   delimiters "()";
+end

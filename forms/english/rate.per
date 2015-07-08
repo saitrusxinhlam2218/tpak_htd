@@ -1,0 +1,33 @@
+{
+|***********************************************************************
+|                 RCS INFO
+|
+|  @(#)  $RCSfile: rate.per,v $
+|  @(#)  $Revision: 1.2 $
+|  @(#)  $Date: 1999/03/19 21:26:48 $
+|  @(#)  $Author: taxiadm $
+|  @(#)  $Source: /taxi-scan/taxi_proj/cvs/taxi-scan/src/forms/english/rate.per,v $
+|
+|  Copyright (c) 1994 - MobileSoft Consulting, Inc. Woodinville WA
+|
+|**********************************************************************/
+|ident "@(#) head:$RCSfile: rate.per,v $	$Revision: 1.2 $"
+}
+database mads
+screen
+{
+						RATE FILE MAINTENANCE
+
+Fleet    From Zone/Zip    To Zone/Zip        Flat Rate     
+[a]      [f000     ]      [f001     ]        [f002   ]    
+}
+end
+tables
+rate
+attributes
+a = rate.rt_fleet,REQUIRED,UPSHIFT,COMMENTS="Fleet ID";
+f000 = rate.rt_zone_zip_nbr1,RIGHT,REQUIRED,COMMENTS="A zone or zip code number";
+f001 = rate.rt_zone_zip_nbr2,RIGHT,REQUIRED,COMMENTS="A zone or zip code number";
+f002 = rate.rt_flat_rat,FORMAT="####.##",RIGHT,INCLUDE=(0.00 to 9999.999),
+	COMMENTS="Dollar amount for this service (Maximum value 9999.99)";
+end

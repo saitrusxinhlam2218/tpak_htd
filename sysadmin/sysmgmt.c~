@@ -1,0 +1,696 @@
+/***********************************************************************
+*                 RCS INFO
+*
+*  @(#)  $RCSfile: sysmgmt.c,v $
+*  @(#)  $Revision: 1.10 $
+*  @(#)  $Date: 1998/08/12 21:19:23 $
+*  @(#)  $Author: taxiadm $
+*  @(#)  $Source: /taxi-scan/taxi_proj/cvs/taxi-scan/src/sysadmin/sysmgmt.c,v $
+*
+*  Copyright (c) 1994 - MobileSoft Consulting, Inc. Woodinville WA
+*
+***********************************************************************/
+
+static char rcsid[] = "$Id: sysmgmt.c,v 1.10 1998/08/12 21:19:23 taxiadm Exp $";
+
+#define  DECLARING
+#include "comm_strdefs.h"
+#include "smgmt_strdefs.h"
+
+#include <stdio.h>
+#include <ctype.h>
+#include <sys/signal.h>
+#ifdef __alpha
+#include <curses.h>
+#else
+#include <cursesX.h>
+#endif
+#include <sys/errno.h>
+#include <setjmp.h>
+#include "msgcomms.h"
+#include "language.h"
+
+char inbuf[10];
+jmp_buf alrm_trap;
+extern char getret();
+WINDOW   *wMain, *wStatus;
+int  bStatusText = 0;
+
+static char *blanks="                         ";
+
+#define MAX_LINE_LEN    80
+#define MGMT_MENU1_MAX  21
+
+extern int pstat_dispatch;
+extern int pstat_async;
+extern int pstat_autobook;
+extern int pstat_pi;
+extern int pstat_gps_proc;
+extern int pstat_ccp;
+extern int pstat_autocall;
+
+struct  menutype { char line[ MAX_LINE_LEN ]; } mgmt_menu1[MGMT_MENU1_MAX]={0};
+
+void init_sys_mgmt_arrays()
+{
+        strcpy( mgmt_menu1[0].line, "\n" );
+        strcpy( mgmt_menu1[1].line, catgets(SMGMT_m_catd, SMGMT_SET, SMGMT_1, "  TaxiPak Administration\n"));
+        strcpy( mgmt_menu1[2].line, catgets(SMGMT_m_catd, SMGMT_SET, SMGMT_2, "   SYSTEM MANAGEMENT\n"));
+        strcpy( mgmt_menu1[3].line, "\n" );
+        strcpy( mgmt_menu1[4].line, catgets(SMGMT_m_catd, SMGMT_SET, SMGMT_3, "1  Cold Start"));
+        strcpy( mgmt_menu1[5].line, catgets(SMGMT_m_catd, SMGMT_SET, SMGMT_4, "2  Warm Start"));
+        strcpy( mgmt_menu1[6].line, catgets(SMGMT_m_catd, SMGMT_SET, SMGMT_4, "3  Start select process"));
+        strcpy( mgmt_menu1[7].line, catgets(SMGMT_m_catd, SMGMT_SET, SMGMT_6, "4  Stop select process"));
+
+        strcpy( mgmt_menu1[8].line, catgets(SMGMT_m_catd, SMGMT_SET, SMGMT_7, "5  Reserved"));
+        strcpy( mgmt_menu1[9].line, catgets(SMGMT_m_catd, SMGMT_SET, SMGMT_8, "6  Display Processes"));
+        strcpy( mgmt_menu1[10].line, catgets(SMGMT_m_catd, SMGMT_SET, SMGMT_9, "7  Stop TaxiPak System\n"));
+#ifndef __alpha
+	strcpy( mgmt_menu1[11].line, catgets(SMGMT_m_catd, SMGMT_SET, SMGMT_63, "8  Start dublering for transaktioner") );
+	strcpy( mgmt_menu1[12].line, catgets(SMGMT_m_catd, SMGMT_SET, SMGMT_64, "9  Stop transaction shadowing") );
+#endif
+	
+        strcpy( mgmt_menu1[17].line, catgets(SMGMT_m_catd, SMGMT_SET, SMGMT_12, "Enter \'e\' to return to previous menu or exit."));
+        strcpy( mgmt_menu1[18].line, catgets(SMGMT_m_catd, SMGMT_SET, SMGMT_13, "Type a number followed by a carriage return"));
+        strcpy( mgmt_menu1[19].line, catgets(SMGMT_m_catd, SMGMT_SET, SMGMT_14, "to execute a selection: "));
+	strcpy( mgmt_menu1[20].line, "" );
+
+}
+ 
+PutMenu()
+{
+	int i=0;
+
+	box( wMain, 0, 0 );
+	box( wStatus, 0, 0 );
+	mvwprintw( wMain, 1, 15, "%s", catgets(SMGMT_m_catd, SMGMT_SET, SMGMT_1, "  TaxiPak Administration"));
+	mvwprintw( wMain, 2, 17, "%s", catgets(SMGMT_m_catd, SMGMT_SET, SMGMT_2, "  SYSTEM MANAGEMENT"));
+	mvwprintw( wMain, 4, 5, "%s", catgets(SMGMT_m_catd, SMGMT_SET, SMGMT_3, "1  Cold Start"));
+	mvwprintw( wMain, 5, 5, "%s", catgets(SMGMT_m_catd, SMGMT_SET, SMGMT_4, "2  Warm Start"));
+	mvwprintw( wMain, 6, 5, "%s", catgets(SMGMT_m_catd, SMGMT_SET, SMGMT_5, "3  Start select process"));
+	mvwprintw( wMain, 7, 5, "%s", catgets(SMGMT_m_catd, SMGMT_SET, SMGMT_6, "4  Stop select process"));
+	mvwprintw( wMain, 8, 5, "%s", catgets(SMGMT_m_catd, SMGMT_SET, SMGMT_7, "5  reserved"));
+	mvwprintw( wMain, 9, 5, "%s", catgets(SMGMT_m_catd, SMGMT_SET, SMGMT_8, "6  Display Processes"));
+	mvwprintw( wMain, 10, 5, "%s",catgets(SMGMT_m_catd, SMGMT_SET, SMGMT_9, "7  Stop TaxiPak System"));
+#ifndef __alpha
+	mvwprintw( wMain, 11, 5, "%s", catgets(SMGMT_m_catd, SMGMT_SET, SMGMT_63, "8  Start transaction shadowing"));
+	mvwprintw( wMain, 12, 5, "%s", catgets(SMGMT_m_catd, SMGMT_SET, SMGMT_64, "9  Stop transaction shadowing"));
+#endif
+	mvwprintw( wMain, 13, 5, "%s",catgets(SMGMT_m_catd, SMGMT_SET, SMGMT_12, "Enter \'e\' to return to previous menu or exit"));
+	mvwprintw( wMain, 14, 5, "%s",catgets(SMGMT_m_catd, SMGMT_SET, SMGMT_13, "Type a number to execute a selection  "));
+
+	wattrset( wStatus, A_REVERSE );
+	if ( pstat_dispatch )
+	  mvwprintw( wStatus, 3, 5, "%9s",  "DISPATCH" );
+	if ( pstat_async )
+	  mvwprintw( wStatus, 3, 17, "%9s", "  ASYNC " );
+	if ( pstat_autobook )
+	  mvwprintw( wStatus, 3, 29, "%9s", "AUTOBOOK" );
+	if ( pstat_pi )
+	  mvwprintw( wStatus, 3, 41, "%9s", "   PI   " );
+	if ( pstat_ccp )
+	  mvwprintw( wStatus, 3, 53, "%9s", "  CCP   " );
+	if ( pstat_gps_proc )
+	  mvwprintw( wStatus, 3, 65, "%9s", "GPS_PROC" );
+	if ( pstat_autocall )
+	  mvwprintw( wStatus, 3, 77, "%9s", "AUTOCALL" );
+	wattrset( wStatus, 0 );
+	wmove( wMain, 14, 42 );
+	touchwin( wMain );
+	touchwin( wStatus );
+	wrefresh( wStatus );
+	wrefresh( wMain );
+
+	
+
+} 
+
+timeout()
+{
+  if ( bStatusText )
+    {
+        wclear( wStatus );
+	box( wStatus, 0, 0 );
+	PutMenu();
+	wrefresh( wStatus );
+	wmove( wMain, 14, 42 );
+	wrefresh( wMain );
+	bStatusText = 0;
+      }
+        longjmp(alrm_trap);
+}
+
+
+	
+main(argc, argv)
+int argc;
+char ** argv;
+{
+    	int i,j, mode;
+			int c,res;
+    	FILE * fp, * fopen();
+
+
+	initscr();
+	/* Tell monitor of our presents */
+        setuid(0);           /* set id to ROOT */
+        setgid(0);           /* set id to ROOT */
+
+    	if ((fp=fopen("/usr/taxi/run/monitor.pid","r"))!=NULL)
+    	{
+       		 fscanf(fp,"%d",&i);
+		 set_monitor_pid(i);
+       		 fclose(fp);
+
+    	}
+	wMain = newwin( 16, 120, 2, 2 );
+	wStatus = newwin( 5, 120, 18, 2 );
+	ManagerUI();
+	res=kill(i,0);
+	/*
+	 * Set up for internationalization by setting the locale and opening the catalog
+	 */
+	setlocale(LC_ALL, "");
+	open_catalog(&COMMON_m_catd, "common", 0, 0);
+	open_catalog(&SMGMT_m_catd, "system_mgmt", 0, 0);
+	init_sys_mgmt_arrays();
+	if (res==-1)
+	{
+		if (errno == ESRCH)
+		{
+			clear_scrn();
+       			printf("%s\n%s\n", catgets(SMGMT_m_catd, SMGMT_SET, SMGMT_15, "Monitor is not running ......"),
+					   catgets(SMGMT_m_catd, SMGMT_SET, SMGMT_16, "Press <return> to continue ........"));
+			getret();
+               		catclose( COMMON_m_catd );
+        	        catclose( SMGMT_m_catd );
+			exit(1);
+ 
+		}
+		else perror("kill");
+	}
+	clear_scrn();
+/*
+	i=0;
+	do {
+		i++;
+		CheckResponses();
+		sleep(4);
+		if (i > 10) 
+		{
+			printf("%s\n", catgets(SMGMT_m_catd, SMGMT_SET, SMGMT_18, "No communications established ... aborted"));
+               		catclose( COMMON_m_catd );
+        	        catclose( SMGMT_m_catd );
+			exit(0);
+		}
+	 } while (!get_monitor_pid());
+	alarm(0);
+*/
+	for (;;)
+	{
+	        wclear( wMain );
+		PutMenu();
+        	if (setjmp(alrm_trap) != 0)
+        	{
+			CheckResponses();
+
+ 		}
+	        signal(SIGALRM,timeout);
+       	 	alarm(5);
+		CheckResponses();
+		c=toupper(wgetkey(wMain));
+		alarm(0);
+		wclear( wStatus );
+		PutMenu();
+		box( wStatus, 0, 0 );
+		wrefresh( wStatus );
+ 
+		/*
+		 * NOTE: there are several characters in the switch below that are not handled
+		 *       in language.h, this is due to the fact that they are used to gain access
+		 *       to undocumented features (ie what the user does not know will not hurt them)
+		 *
+		 */
+		switch (c)
+		{
+		 	case '1':
+		                ColdStart();
+				break;
+			
+                        case '2':
+				WarmStart();
+				break;
+
+			case '3':
+				SelectProcessStart( );
+				break;
+ 
+                        case '4':
+				SelectProcessStop();
+                                break;  
+ 
+                        case '5':
+				break;
+                        case '6':
+				touchwin( wMain );
+				wrefresh( wMain );
+				    SendRequest(VIEWPROCESS);
+				    set_sw(1);
+				
+				    while (CheckResponses()!=1)
+				      {
+					sleep(1);
+				      }
+                                break;  
+ 
+                        case 'P':
+                                clear_scrn();
+				SendRequest(VIEWPROCESS);
+				set_sw(0);
+				printf("\n%s", catgets(SMGMT_m_catd, SMGMT_SET, SMGMT_17, "Please wait while waking up monitor ........"));
+				while (CheckResponses()!=1)
+				{
+					printf(".");
+					fflush(stdout);
+					sleep(1);
+				}
+                                break;  
+
+			case 'S':	
+				clear_scrn();
+				SendRequest(SUSPENDEDSTART);
+				printf("\n%s", catgets(SMGMT_m_catd, SMGMT_SET, SMGMT_19, "Suspended start in progress ...."));
+				fflush(stdout);
+				while (CheckResponses()!=1) 
+				{
+					printf(".");
+					fflush(stdout);
+					sleep(1);
+				}
+				break;
+                        case 'Q': 
+				SendRequest(QSTATUS);
+                                break;  
+
+			case 'Z': signal(get_monitor_pid() ,SIGQUIT);
+				  break;
+
+			case 'X':
+				ClearMsgQ();
+				break;
+			case 'R':    
+				SendRequest(REREADCONFIG);
+				break;
+			case 'T':
+				SendRequest(TRACEON);
+				break;
+
+			case 'O':
+				SendRequest(TRACEOFF);
+				break;
+
+			case '7':
+				StopSystem();
+				break;
+
+                                break;
+
+#ifndef __alpha
+			      case '8':
+				if ( system( "/usr/taxi/etc/startbear" ) == -1 )
+				  {
+				    /** error **/
+				  }
+				else
+				  {
+				    wclear( wStatus );
+				    mvwprintw( wStatus, 1, 5, "MagicDisk started" );
+				    wrefresh( wStatus );
+				    bStatusText = 1;
+				  }
+				break;
+
+			      case '9':
+				if ( system( "/usr/taxi/etc/stopbear" ) == -1 )
+				  {
+				    /** error **/
+				  }
+				else
+				  {
+				    wclear( wStatus );
+				    mvwprintw( wStatus, 1, 5, "MagicDisk stopped" );
+				    wrefresh( wStatus );
+				    bStatusText = 1;
+				  }
+				break;
+#endif
+				
+
+			case 'G':
+			        	
+				clear_scrn();
+				printf("\n%s\n", catgets(SMGMT_m_catd, SMGMT_SET, SMGMT_17, "Please wait while waking up monitor ........"));
+				fflush(stdout);
+				system("ps -augx|egrep 'monit|refle|mirro|async|dispa|time_|count|autob|mkdisk'");
+				getret();
+				break;
+
+			case M_EXIT:
+				SendRequest(EXITUI);
+				clear_scrn();
+               		        catclose( COMMON_m_catd );
+        	                catclose( SMGMT_m_catd );
+				nocbreak();
+				endwin();
+				exit(0);
+				break;
+ 
+			default : 
+				  break;
+		}
+	}
+}
+
+ColdStart()
+{
+  char  msg[80];
+  int   mode;
+  
+  if ( GetConfirm() )
+    {
+      clr_vh_context();
+
+      SendRequest(COLDSTART);
+      strcpy( msg, catgets(SMGMT_m_catd, SMGMT_SET, SMGMT_19, "Cold start in progress ....") );
+      StatusResponse( msg );
+    }
+}
+
+WarmStart()
+{
+  char  msg[80];
+  int   mode;
+
+  if ( GetConfirm() )
+    {
+#ifdef FOO
+      system("/usr/taxi/bin/dispwstart");
+#endif
+      SendRequest(WARMSTART);
+      strcpy( msg, catgets(SMGMT_m_catd, SMGMT_SET, SMGMT_20, "Warm start in progress ...") );
+      StatusResponse( msg );
+    }
+}
+
+StopSystem()
+{
+  char   msg[80];
+  int   mode;
+
+  if ( GetConfirm() )
+    {
+      CheckResponses();   /* remove an eventually pending heartbeat */
+      SendRequest(STOPSYSTEM);
+      strcpy( msg, "TaxiPak being stopped..." );
+      StatusResponse( msg );
+    }
+}
+
+int
+GetConfirm()
+{
+  WINDOW  *wConfirm;
+
+  char    c;
+
+  wConfirm = newwin( 9, 40, 8, 40 );
+  mvwprintw( wConfirm, 2, 4, "%s", catgets(SMGMT_m_catd, SMGMT_SET, SMGMT_23, "Are you sure (Y/N) " ));
+  box( wConfirm, 0, 0 );
+  wrefresh( wConfirm );
+
+  c = toupper( wgetkey( wConfirm ) );
+  while ( ( c != YES ) && ( c != NO ) )
+    {
+      wclear( wConfirm );
+      mvwprintw( wConfirm, 2, 4, "%s", catgets(SMGMT_m_catd, SMGMT_SET, SMGMT_23, "Are you sure (Y/N) " ));
+      wrefresh( wConfirm );
+      c = toupper( wgetkey( wConfirm ) );
+    }
+      
+
+  if ( c == YES )
+    {
+      delwin( wConfirm );
+      touchwin( wMain );
+      wrefresh( wMain );
+      return(1);
+    }
+  else
+    {
+      delwin( wConfirm );
+      touchwin( wMain );
+      wrefresh( wMain );
+      return(0);
+    }
+}
+
+SelectProcessStart()
+{
+  WINDOW   *wSelectProc;
+  int      mode = A_NORMAL;
+  char     msg[80], c;
+  
+  wSelectProc = newwin( 12, 40, 8, 40 );
+  box( wSelectProc, 0, 0 );
+
+  mvwprintw( wSelectProc, 1, 4, "%s", "   Select Process Start" );
+#ifdef G7_TAXI
+  mvwprintw( wSelectProc, 2, 4, "%s", "1.   GEOTAXI" );
+  mvwprintw( wSelectProc, 3, 4, "%s", "2.   TAO    " );
+  mvwprintw( wSelectProc, 4, 4, "%s", "3.   TCB SERVER  " );
+  mvwprintw( wSelectProc, 5, 4, "%s", "4.   ASYNC" );
+  mvwprintw( wSelectProc, 6, 4, "%s", "5.   DISPATCH/TIME CALLS " );
+#else
+  mvwprintw( wSelectProc, 2, 4, "%s", "1.   AUTOBOOK  " );
+  mvwprintw( wSelectProc, 3, 4, "%s", "2.   PI" );
+  mvwprintw( wSelectProc, 4, 4, "%s", "3.   GPS PROC " );
+  mvwprintw( wSelectProc, 5, 4, "%s", "4.   ASYNC " );
+  mvwprintw( wSelectProc, 6, 4, "%s", "5.   CREDIT CARD PROCESSOR" );
+  mvwprintw( wSelectProc, 7, 4, "%s", "6.   AUTOCALL" );
+#endif
+  mvwprintw( wSelectProc, 9, 4, "%s", "Enter selection: " );
+
+  wrefresh( wSelectProc );
+
+  c = toupper( wgetkey( wSelectProc ) );
+
+  switch( c )
+    {
+#ifdef G7_TAXI
+    case '1':
+      SendRequest( START_GEOTAXI );
+      delwin( wSelectProc );
+      strcpy( msg, "Starting GEOTAXI..." );
+      StatusResponse( msg );
+      return;
+      break;
+
+    case '2':
+      SendRequest( START_TAO );
+      delwin( wSelectProc );
+      strcpy( msg, "Starting TAO..." );
+      StatusResponse( msg );
+      return;
+      break;
+
+    case '3':
+      SendRequest( START_TCB );
+      delwin( wSelectProc );
+      strcpy( msg, "Starting TCB..." );
+      StatusResponse( msg );
+      return;
+      break;
+#else
+    case '1':
+      SendRequest( START_AB );
+      delwin( wSelectProc );
+      strcpy( msg, "Starting AUTOBOOK..." );
+      StatusResponse( msg );
+      return;
+      break;
+
+    case '2':
+      SendRequest( START_PI );
+      delwin( wSelectProc );
+      strcpy( msg, "Starting PI..." );
+      StatusResponse( msg );
+      return;
+      break;
+
+    case '3':
+      SendRequest( START_GPS_PROC );
+      delwin( wSelectProc );
+      strcpy( msg, "Starting GPS_PROC..." );
+      StatusResponse( msg );
+      return;
+      break;
+
+    case '5':
+      SendRequest( START_CCP );
+      delwin( wSelectProc );
+      strcpy( msg, "Starting Credit Card Processor..." );
+      StatusResponse( msg );
+      return;
+      break;
+#endif
+
+    case '4':
+      SendRequest( START_ASYNC );
+      delwin( wSelectProc );
+      strcpy( msg, "Starting ASYNC..." );
+      StatusResponse( msg );
+      return;
+      break;
+
+    case '6':
+      SendRequest( START_AUTOCALL );
+      delwin( wSelectProc );
+      strcpy( msg, "Starting AUTOCALL..." );
+      StatusResponse( msg );
+      return;
+      break;      
+      
+    default:
+      delwin( wSelectProc );
+      return;
+      break;
+    }
+}
+
+SelectProcessStop()
+{
+  WINDOW   *wSelectProc;
+  int      mode = A_NORMAL;
+  char     msg[80], c;
+  
+  wSelectProc = newwin( 12, 40, 8, 40 );
+  box( wSelectProc, 0, 0 );
+
+  mvwprintw( wSelectProc, 1, 4, "%s", "   Select Process Stop" );
+#ifdef G7_TAXI
+  mvwprintw( wSelectProc, 2, 4, "%s", "1.   GEOTAXI" );
+  mvwprintw( wSelectProc, 3, 4, "%s", "2.   TAO    " );
+  mvwprintw( wSelectProc, 4, 4, "%s", "3.   TCB SERVER  " );
+  mvwprintw( wSelectProc, 5, 4, "%s", "4.   ASYNC" );
+  mvwprintw( wSelectProc, 6, 4, "%s", "5.   DISPATCH/TIME CALLS " );
+#else
+  mvwprintw( wSelectProc, 2, 4, "%s", "1.   AUTOBOOK  " );
+  mvwprintw( wSelectProc, 3, 4, "%s", "2.   PI" );
+  mvwprintw( wSelectProc, 4, 4, "%s", "3.   GPS PROC " );
+  mvwprintw( wSelectProc, 5, 4, "%s", "4.   ASYNC " );
+  mvwprintw( wSelectProc, 6, 4, "%s", "5.   CREDIT CARD PROCESSOR" );
+  mvwprintw( wSelectProc, 7, 4, "%s", "6.   AUTOCALL" );
+#endif
+  mvwprintw( wSelectProc, 9, 4, "%s", "Enter selection: " );
+
+  wrefresh( wSelectProc );
+
+  c = toupper( wgetkey( wSelectProc ) );
+
+  switch( c )
+    {
+#ifdef G7_TAXI
+    case '1':
+      SendRequest( STOP_GEOTAXI );
+      delwin( wSelectProc );
+      strcpy( msg, "Stopping GEOTAXI..." );
+      StatusResponse( msg );
+      return;
+      break;
+      
+    case '2':
+      SendRequest( STOP_TAO );
+      delwin( wSelectProc );
+      strcpy( msg, "Stopping TAO..." );
+      StatusResponse( msg );
+      return;
+      break;
+
+    case '3':
+      SendRequest( STOP_TCB );
+      delwin( wSelectProc );
+      strcpy( msg, "Stopping TCB..." );
+      StatusResponse( msg );
+      break;
+#else
+    case '1':
+      SendRequest( STOP_AB );
+      delwin( wSelectProc );
+      strcpy( msg, "Stopping AUTOBOOK..." );
+      StatusResponse( msg );
+      return;
+      break;
+      
+    case '2':
+      SendRequest( STOP_PI );
+      delwin( wSelectProc );
+      strcpy( msg, "Stopping PI..." );
+      StatusResponse( msg );
+      return;
+      break;
+
+    case '3':
+      SendRequest( STOP_GPS_PROC );
+      delwin( wSelectProc );
+      strcpy( msg, "Stopping GPS_PROC..." );
+      StatusResponse( msg );
+      break;
+
+    case '5':
+      SendRequest( STOP_CCP );
+      delwin( wSelectProc );
+      strcpy( msg, "Stopping CCP..." );
+      StatusResponse( msg );
+      break;      
+#endif
+
+    case '4':
+      SendRequest( STOP_ASYNC );
+      delwin( wSelectProc );
+      strcpy( msg, "Stopping ASYNC..." );
+      StatusResponse( msg );
+      break;
+
+    case '6':
+      SendRequest( STOP_AUTOCALL );
+      delwin( wSelectProc );
+      strcpy( msg, "Stopping AUTOCALL..." );
+      StatusResponse( msg );
+      break;
+      
+    default:
+      delwin( wSelectProc );
+      return;
+      break;
+    }
+}
+  
+StatusResponse( char *pMsg )
+{
+  int  mode = 0;
+  
+  while (CheckResponses()!=1) 
+    {
+      PutMenu();
+      wattrset( wStatus, mode );
+      mvwprintw( wStatus, 1, 5, "%s",
+		pMsg );
+      wrefresh( wStatus );
+      if ( mode == A_NORMAL )
+	mode = A_REVERSE;
+      else
+	mode = A_NORMAL;
+      wattrset( wStatus, A_NORMAL );
+      sleep(1);
+    }
+}

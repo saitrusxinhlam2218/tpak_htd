@@ -1,0 +1,98 @@
+$ /****************************************************************************
+$ *                                                                           *
+$ *                           S C C S   I N F O                               *
+$ *                                                                           *
+$ * @(#)  adminmgmt.MSF.fin; Rel: 10.1.3.1; Get date: 5/18/95 at 10:16:57
+$ * @(#)  Last delta: 12/5/94 at 10:34:37
+$ * @(#)  SCCS File: /taxi/sccs/s.adminmgmt.MSF.fin
+$ *                                                                           *
+$ * Copyright (c) 1990 - MDI Seattle                                          *
+$ *                                                                           *
+$ *****************************************************************************/
+$ #ident "@(#) head:adminmgmt.MSF.fi/usr/users/brian/enh_src/src/msf/fin	10.1.3.1"
+
+$ /*
+$  * Message file for PROGRAM: admin_mgmt
+$  * CATALOG:   admin_mgmt.cat
+$  * MNEMONICS: amgmt_strdefs.h
+$  */
+
+$quote "
+$set 1
+
+$ /*    NOTE TO THE TRANSLATOR                          */
+$ /*    Quoted text will be followed by a maximum string length if the  */
+$ /*    text length is different than the number of chars in the string.*/
+$ /*    If no string length is entered default to the current number of */
+$ /*    characters.  A comment about the string is also included where  */
+$ /*    necessary.                                                      */
+
+AMGMT_1	"Ei löydy tiedostoa /etc/passwd"				/* 50, do not translate '/etc/passwd'	*/
+AMGMT_2	"Korjaa /etc/passwd ja aja tämä ohjelma uudelleen"	/* 50, do not translate '/etc/passwd'	*/
+AMGMT_3	"<CR> kun haluat jatkaa.."					/* 50, carriage return to continue	*/
+AMGMT_4	"Ei löydy tiedostoa /etc/group"				/* 50, do not translate '/etc/group'	*/
+AMGMT_5	"Korjaa /etc/group ja aja tämä ohjelma uudelleen"	/* 50, do not translate '/etc/group'    */
+AMGMT_6	"Anna aakkosnumeerisia merkkejä"			/* 50					*/
+AMGMT_7	"<CR> kun haluat jatkaa..."					/* 50, carriage return to continue      */
+AMGMT_8	"Ei voi lukea"						/* 15, Cannot read XXXX file		*/
+AMGMT_9	"tiedostoa"							/* 10, Cannot read XXXX file		*/
+AMGMT_10	"Käyttäjänimi ei ole ainoa"			/* 50					*/
+AMGMT_11	"Haluatko lisätä tämän tilin? (K/E) E"	/* 35, check constant used for Yes and No*/
+AMGMT_12	"Ei löydy tiedostoa"				/* 30, Cannot find file XXXX		*/
+AMGMT_13	"Ei löydy ryhmää"				/* Cannot find group X in file XYZ	*/
+AMGMT_14	"tiedostossa"					/* Cannot find group X in file XYZ	*/
+AMGMT_15	"Anna 6 - 8 merkin tunnussana"		/* 50					*/
+AMGMT_16	"Käytä ainakin 2 kirjainta ja 1 numero (esim reitti1).\n"	/* 50			*/
+AMGMT_17	"Odota hetki: uusi henkilö lisätään TAKSIsysteemiin"	/* 50			*/
+AMGMT_18	"Haluatko lisätä toisen"			/* Do you wish to enter another XXX account?	*/
+AMGMT_19	"tilin? (K/E) E"				/* Do you wish to enter another XXX account?    */
+AMGMT_20	"Ei voi lukea tilapäistä tunnussanatiedostoa"		/* 50					*/
+AMGMT_21	"<CR> kun haluat jatkaa...."				/* 50					*/
+AMGMT_22	"EI löydy TN:a"					/* 20					*/
+AMGMT_23	"<CR> kun haluat jatkaa.."				/* 50					*/
+AMGMT_24	"TN"
+AMGMT_25	"EI ole ainoa"					/* ID XXXX is not unique		*/
+AMGMT_26	"Väärä ryhmänumero"
+AMGMT_27	"Korjaa /etc/passwd."			/* 50, do not translate '/etc/passwd'	*/
+AMGMT_28	"Haluatko vaihtaa tunnussanan? (K/E) E"	/* 50, check constant used for Yes and No*/
+AMGMT_29	"OK, aja apuohjelma myöhemmin"			/* 50					*/
+AMGMT_30	"Anna tunnusnimi tai tilin numero"	/* 50					*/
+AMGMT_31	"Haluatko poistaa tämän tilin? (K/E) E"	/* 50					*/
+AMGMT_32	"Odota hetki: Henkilö poistetaan TAKSISYSTEEMISTÄ"	/* 50			*/
+AMGMT_33	"Keskeytystyyppi"				/* 20, Interrupt type XXX trapped	*/
+AMGMT_34	"keskeytetty"					/* 20, Interrupt type XXXX trapped	*/
+AMGMT_35	"Kontrollitiedostoja puhdistetaan"			/* 50					*/
+AMGMT_36	"TILAAJA"
+AMGMT_37	"VÄLITTÄJÄ"
+AMGMT_38	"HOITAJA"
+AMGMT_39	"  TAKSIEN valvonta"
+AMGMT_40	"     TILIVALIKKO"
+AMGMT_41	"1  Lisää uusia tilejä     \n"				/* 27		*/
+AMGMT_42	"2  Selaa kaikkia tilejä   \n"				/* 27		*/
+AMGMT_43	"3  Muuta tilin tunnussanaa\n"				
+AMGMT_44	"4  Poista tili          \n"				/* 27		*/
+AMGMT_45	"Anna \'e\' edell. valikko tai lopetus."
+AMGMT_46	"Kirjoita numero ja sen jälkeen anna <CR>"
+AMGMT_47	"valinnan suorittamiseksi: "
+AMGMT_48	"        TAKSIEN valvonta"
+AMGMT_49	"          LISÄÄ TILEJÄ"
+AMGMT_50	"Anna henkilön tunnusnimi (7 merkkiä tai vähemmän): "	/* 70	*/
+AMGMT_51	"Anna henkilön koko nimi (22 merkkiä tai vähemmän): "	/* 50	*/
+AMGMT_52	"TILITYYPPI       TUNNUSNIMI     TILIN TN       KOKO NIMI"
+$				/* starting positions for each phrase must remain the same	*/
+AMGMT_53	"Ovatko nämä tiedot oikein (K/E)? E"			/* 50	*/
+AMGMT_54	"Haluatko lisätä toisen tilin (K/E)? E"		/* 50	*/
+AMGMT_55	"Paina <CR> jatkaaksesi."
+AMGMT_56	"Vastaus EI sisälly valintoihin."
+AMGMT_57	"          SELAA TILEJÄ"
+AMGMT_58	"TUNNUSNIMI     KÄYTT TN    KOKO NIMI"	/* starting positions must remain the same	*/
+AMGMT_59	"Haluatko lisätä tietoja (K/E)? N"	/* 50	*/
+AMGMT_60	"1  TAKSI til. ottaja   \n"
+AMGMT_61	"2  TAKSI välittäjä      \n"
+AMGMT_62	"3  TAKSI syst.hoitaja   \n"
+AMGMT_63	"          VAIHDA TUNNUSSANA"
+AMGMT_64	"Anna henkilön tunnusnimi tai tilin tunnusnro: "		/* 50	*/
+AMGMT_65	"          POISTA TILI"
+AMGMT_66	"          TILIVALIKKO"
+AMGMT_67	"Ei voi päivittää tunnussanatiedostoa....pyydä apua" /* 80 */
+AMGMT_68	"Varoitus: Ei voi päivittää ryhmätiedostoa....pyydä apua" /* 80 */

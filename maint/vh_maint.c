@@ -1,0 +1,357 @@
+static char sz__FILE__[]="@(#)vh_maint.c	10.1(ver) Date Release 12/2/94" ;
+ /****************************************************************************
+ *                                                                           *
+ *                           S C C S   I N F O                               *
+ *                                                                           *
+ * @(#)  vh_maint.c; Rel: 10.1.0.0; Get date: 4/18/95 at 16:48:41
+ * @(#)  Last delta: 12/2/94 at 11:41:17
+ * @(#)  SCCS File: /taxi/sccs/s.vh_maint.c
+ *                                                                           *
+ *****************************************************************************/
+
+#include <stdio.h>
+#include <errno.h>
+#include <sys/types.h>
+#include <sys/ipc.h>
+#include <isam.h>
+#include <cursesX.h>
+#include <signal.h>
+#include <pwd.h>
+#include <grp.h>
+
+#define	DECLARING
+#include "comm_strdefs.h"
+#include "vh_m_strdefs.h"
+#include "mad_error.h"
+#include "mads_types.h"
+#include "key.h"
+#include "vh_maint.h"
+#include "literals.h"
+#include "language.h"
+#include "fleet.h"
+#include "Fleet_db.h"
+#include "mad_ipc.h"
+#include "enhance.h"
+#include "switch_ext.h"
+
+/* Declare an array of pointers to functions which check the field entered for validity. */
+
+extern int (*check_field[])();	/* Array of pointers to routines to validate the data input by the user */
+
+extern struct scr_flds vh_scr_flds[];
+extern int vh_cl_flds();
+extern int read_field();
+extern char buf[];		/* buffer used for interface to db routine */
+extern char req_buf[];		/* buffer used for interface to db routine */
+extern int iserrno;		/* C-isam error number */
+extern int errno;		/* Error number returned from system calls */
+
+char o_file[F_NAME_SIZE];	/* output file as specified by the user */
+char mode[2];			/* user specifies Append or Create */
+
+extern int prt_query_hdr(), prt_add_hdr();
+extern int prt_scr(), process_intr();
+extern void prt_hdr(), prt_labels();
+extern char read_request(), prompt_confirm();
+extern int prompt_fname(), prompt_mode();
+extern int prt_data(), process_input(), send_ipc();
+extern int prt_upd_hdr(), prt_error();
+extern int clear_flds();
+extern int clear_err_line(), clear_hdr_line();
+extern int process_query(), process_next();
+extern int process_previous(), process_add();
+extern int process_update(), process_remove(), process_output();
+
+int ret_val;			/* return value  */
+int intr_allowed;		/* interrupts allowed */
+int saw_intr;			/* indicates an interrupt signal was entered */
+char intr_char;			/* interrupt character */
+int end_read_field;		/* flag, 0/1, set to end read_field function */
+short ipc_required;		/* Set if a field changed which is in shared memory */
+char read_buf[BUFFER_SIZE];	/* buffer for reading fields */
+int piu = 3;			/* field number to start reading input from */
+int field_entered;		/* field entered or not */
+int key_val;			/* value of key entered */
+int cur_list;			/* Indicates a row is in the current list */
+int record_nbr;			/* C-ISAM record number */
+int err_n_fld;			/* set if an error in field condition exists */
+int doing_add;			/* performing add operation */
+int fleet_flag = 0;
+int vh_flag = 0;
+int rf_flag = 0;
+int	file_open;
+struct df_maint df_maint_ipc;	/* structure for passing information to dispatch  */
+struct cisam_vh *vh_ptr;	/* pointer to vehicle file structure */
+struct cisam_vh *temp_vh_ptr;	
+struct cisam_vh temp_vh_buf;	
+struct cisam_fl *fl_ptr;	/* pointer to vehicle file structure */
+struct offsets *offset;		/* shared memory offset for redundant db routine */
+struct offsets *get_offsets();
+char zero_date[9];
+struct fleets *fleet[FLEET_MAX];
+long glEnhSwitch;
+int MaxAttrs;
+
+#define VEHICLE_OPEN	1
+#define	FLEET_OPEN		2
+
+/*****************************************************************************
+*  vh_maint - main for the vehicle file maintenance program.
+*******************************************************************************/
+
+main(argc,argv)
+int argc;
+char **argv;
+{
+	char request;		/*  User request : Q, N, P, A, U, R, O, or E */
+	struct passwd *PasswordEntry;
+	struct group  *ManagerGroupEntry;
+	char   **pGroupNames;
+	uid_t  UserUID;
+	short  done = FALSE;
+        char nlspath[80];
+        static char put_nlspath[80];
+        int  putenv();
+
+	/*
+	 * Set up for internationalization by setting the locale and opening the catalog
+	 */
+	strcpy(nlspath, "/usr/taxi/catalogs/finnish/%N.cat");
+	sprintf(put_nlspath, "NLSPATH=%s", nlspath);
+	putenv(put_nlspath);	
+	setlocale(LC_ALL, "");
+	open_catalog(&COMMON_m_catd, "common", 0, 0);
+	open_catalog(&VH_MAINT_m_catd, "vh_maint", 0, 0);
+	open_catalog(&LITERAL_m_catd, "literals", 0, 0);
+
+	file_open = 0;
+
+
+	init();
+
+//	db_init();
+
+	temp_vh_ptr = (struct cisam_vh *)req_buf;
+	fl_ptr = (struct cisam_fl *)req_buf;
+	temp_vh_ptr = &temp_vh_buf;
+	prt_hdr();
+	prt_labels();
+
+	/*  Get the first record from the vehicle file */
+
+	vh_ptr->fleet = ' ';
+	vh_ptr->nbr = 0;
+	if((db(VEHICLE_FILE_ID,READ_KEYS,&veh_key2,ISGTEQ,0)) < 0) 
+		prt_error(catgets(VH_MAINT_m_catd, VH_MAINT_SET, VH_MAINT_80, "No record found, ADD first !"));
+	else  {
+		prt_data();		/* Display the data from the first record */
+		record_nbr = isrecnum; 	/* save record number for future read */
+		cur_list = 1;		/* valid row in current list */
+	}
+
+	/*  Input the users request (Query, Next, Previous, Add, Update, Remove, Output, Exit).	*/
+
+	 while(request = read_request())  {
+		fleet_flag = 0;
+		vh_flag = 0;
+		rf_flag = 0;
+		err_n_fld = 0;
+		ipc_required = 0;
+	    	switch(request)  {
+			case M_QUERY:
+				clear_err_line();
+				process_query();
+				break;
+
+			    case M_NEXT:
+				clear_err_line();
+				process_next();
+				break;
+
+			case M_PREVIOUS:
+				clear_err_line();
+				process_previous();
+				break;
+
+			case M_ADD:
+				if (AddUpdateDeleteAllowed())
+				  {
+				    clear_err_line();
+				    process_add();
+				    if (ipc_required)
+				      send_ipc();
+				    break;
+				  }
+				else
+				  
+				    break;
+
+			case M_UPDATE:
+				if (AddUpdateDeleteAllowed())
+				  {
+				    clear_err_line();
+				    process_update();
+				    if (ipc_required)
+				      send_ipc();
+				  }
+				break;
+
+			case M_REMOVE:
+				if (AddUpdateDeleteAllowed())
+				  {
+				    clear_err_line();
+				    process_remove();
+				    if (ipc_required)
+				      send_ipc();
+				  }
+				break;
+
+			case M_OUTPUT:
+				clear_err_line();
+				process_output();
+				break;
+		
+			case M_EXIT:
+				cleanup();
+				break;
+
+			case '\014':					/* ^L, refresh screen */
+				wrefresh(curscr);
+				break;
+
+			default:
+				cleanup();
+				break;
+		}
+
+	}
+
+	cleanup();
+	catclose(COMMON_m_catd);
+	catclose(VH_MAINT_m_catd);
+	catclose(LITERAL_m_catd);
+}
+
+/******************************************************************************
+* init - open files, initialize variables, setup signals, prepare curses.
+*******************************************************************************/
+
+init()
+{
+  int i;
+	intr_allowed = 0;	/* interrupts not allowed */
+	saw_intr = 0;		/* an interrupt signal has not been entered */
+	cur_list = 0;		/* no row in current list */
+	
+	initscr();
+	noecho();
+/*
+	keypad(stdscr,TRUE);
+*/
+        term_setup(getenv("TERM"));
+        config_tty();
+
+
+	cbreak();
+
+	if ( enh(&glEnhSwitch) < 0 )
+	  {
+	    cleanup();
+	  }
+
+	if (1)
+	  MaxAttrs = 32;
+	else
+	  MaxAttrs = 8;
+	
+	if((offset = get_offsets()) == 0)  {
+		prt_error(NO_ATTACH);
+		sleep(3);
+		cleanup();
+	}
+	fleet[0] = offset->fleet;
+	for ( i = 1; i < FLEET_MAX; i++ )
+	  fleet[i] = fleet[0] + i;
+	
+	signal(SIGQUIT,SIG_IGN);
+	signal(SIGINT,process_intr);
+	signal(SIGTERM,cleanup);
+	signal(SIGHUP,cleanup);
+	signal(SIGPIPE,cleanup);
+	signal(SIGTSTP, SIG_IGN);
+
+	vh_ptr = (struct cisam_vh *) req_buf;
+
+	if((db(VEHICLE_FILE_ID,OPEN,&veh_key2,ISINOUT+ISMANULOCK,0)) < 0)  {   
+		prt_error(VEHICLE_OPEN_ERR);
+		sleep(3);
+		ERROR(' ',VEHICLE_FILE,VEHICLE_OPEN_ERR);
+		cleanup();
+	} else
+		file_open |= VEHICLE_OPEN;
+
+	if((db(FLEET_FILE_ID,OPEN,&fl_key1,ISINOUT+ISMANULOCK,0)) < 0)  {   
+		prt_error(catgets(VH_MAINT_m_catd, VH_MAINT_SET, VH_MAINT_81, "Fleet file open error"));
+		cleanup();
+	} else
+		file_open |= FLEET_OPEN;
+
+	sprintf(zero_date, "00%c00%c00", DATE_SEPERATOR, DATE_SEPERATOR);
+}
+
+int
+AddUpdateDeleteAllowed()
+{
+  struct passwd *PasswordEntry;
+  struct group  *ManagerGroupEntry;
+  char   **pGroupNames;
+  uid_t  UserUID;
+  short  done = FALSE;
+
+  return( TRUE );
+  
+  UserUID = getuid();
+  PasswordEntry = getpwuid(UserUID);
+  ManagerGroupEntry = getgrgid((gid_t)500);
+  pGroupNames = (char **)ManagerGroupEntry->gr_mem;
+  done = FALSE;
+  while ((*pGroupNames != NULL) && (!done))
+    {
+      if (!strcmp(PasswordEntry->pw_name, *pGroupNames))
+	{
+	  done = TRUE;
+	}
+      else
+	pGroupNames++;
+
+    }
+  return (done);
+}
+
+/******************************************************************************
+* cleanup - if an error has occured, close files and terminate curses.
+*******************************************************************************/
+
+cleanup()
+{
+	if(file_open & VEHICLE_OPEN)
+		if((db(VEHICLE_FILE_ID,CLOSE,&veh_key2,ISEQUAL,0)) < 0)  {
+			prt_error(VEHICLE_CLOSE_ERR);
+			ERROR(' ',VEHICLE_FILE,VEHICLE_CLOSE_ERR);
+		}
+
+	if(file_open & FLEET_OPEN)
+		if((db(FLEET_FILE_ID,CLOSE,&fl_key1,ISEQUAL,0)) < 0)
+			prt_error(catgets(VH_MAINT_m_catd, VH_MAINT_SET, VH_MAINT_82, "fleet file closed error"));
+
+	shmdt(offset);
+
+	nocbreak();
+	echo();
+	erase();
+	refresh();
+	endwin();
+
+	exit(0);
+}
+

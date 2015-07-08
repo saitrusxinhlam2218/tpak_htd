@@ -1,0 +1,37 @@
+database mads
+screen
+{
+						Viestilistatiedoston hoito
+
+Numero                  Antajan TN    Lähetyspvm   Lähetysaika
+[f000                ]  [f001 ]       [f004     ]  [f005  ]   
+
+Lähettäjän TN     Käsitelty    Toisto    Yhtiö      Saajatyyppi    Valinta
+[f003]            [a]          [b]       [c]        [d]            [ f006]
+
+Viesti 
+[f007                                              ] [f008                                              ]
+[f009                                              ] [f010                                              ]
+}
+end
+tables
+msglog
+attributes
+f000 = msglog.ml_nbr,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Systeemin tälle viestille antama numero";
+f001 = msglog.ml_from,include=(1 to 9999),RIGHT,COMMENTS="Viestin lähettäneen käyttäjän tunnusnumero";
+f004 = msglog.ml_date_sent,COMMENTS="Viestin lähetyspäivä";
+f005 = msglog.ml_time_sent,COMMENTS="Viestin lähetysaika";
+f003 = msglog.ml_supervisor_id,include=(1 to 9999),RIGHT,COMMENTS="Keskuksen lähettäjän tunnusnumero";
+a = msglog.ml_supervisor_saw,include=(H,E,N,K),UPSHIFT,COMMENTS="Viesti on 'H'yväksytty, 'E'vätty, 'N'äki, 'K'äynnissä";
+b = msglog.ml_repeat,include=(Y,N),UPSHIFT,COMMENTS="Toista sanoma (K/E)";
+c = msglog.ml_fleet,UPSHIFT,REQUIRED,COMMENTS="Yhtiö johon sanoma liittyy";
+d = msglog.ml_to_type,include=("*",Y,V,O,J,T,A,R," "),UPSHIFT,COMMENTS="Käyttäjätyyppi jolle viesti lähetettiin";
+f006 = msglog.ml_to_selection,UPSHIFT,COMMENTS="Kenelle viesti lähetettiin";
+f007 = msglog.ml_msg_line1[1,50],UPSHIFT,COMMENTS="Viestien ensimmäinen rivi";
+f008 = msglog.ml_msg_line1[51,100],UPSHIFT,COMMENTS="Viestien ensimmäinen rivi"; 
+f009 = msglog.ml_msg_line2[1,50],UPSHIFT,COMMENTS="Viestien toinen rivi"; 
+f010 = msglog.ml_msg_line2[51,100],UPSHIFT,COMMENTS="Viestien toinen rivi";
+end
+instructions
+   delimiters "()";
+end

@@ -1,0 +1,39 @@
+database mads
+screen
+{
+						Tilausluettelon hoito
+
+Tilaus nro                Poikkeuskoodi          Yhtiö       Tapahtuma
+[f000                ]    [c ]                   [a]         [b]
+
+
+Selitys           Pvm         Aika      Auto TN  Ajaja TN    Käytt TN
+       [f005    ] [f003     ] [f004  ]  [f006]   [f007 ]     [f008]
+
+Toimenpide        Pvm         Aika     Auto TN   Ajaja TN    Käytt TN
+       [f009    ] [f010     ] [f011  ] [f013]    [f014 ]     [f015]
+}
+end
+tables
+callh
+attributes
+f000 = callh.ch_call_nbr,NOENTRY,NOUPDATE,RIGHT,COMMENTS="Tilauksen tilausnumero";
+c = callh.ch_exception_nbr,NOENTRY,RIGHT,COMMENTS="Poikkeuskoodi.  Vastaa numeroa poikkeustyyppien tiedostossa";
+a = callh.ch_fleet,NOENTRY,UPSHIFT,COMMENTS="Yhtiön tunnusnumero";
+b = callh.ch_event_type,NOENTRY,UPSHIFT,include=(T,E),default="T",COMMENTS="'T'avalliset systeemifunktiot tai 'E'muloi MDT-terminaalia";
+f005 = callh.ch_event_desc,NOENTRY,UPSHIFT,COMMENTS="Tapahtuman selitys";
+f003 = callh.ch_status_date,NOENTRY,NOENTRY,NOUPDATE,COMMENTS="Tapahtumapäivä";
+f004 = callh.ch_status_time,NOENTRY,NOENTRY,NOUPDATE,COMMENTS="Tapahtuma-aika";
+f006 = callh.ch_veh_nbr,NOENTRY,RIGHT,COMMENTS="Ajon hoitaneen auton tunnusnumero";
+f007 = callh.ch_drv_id,NOENTRY,RIGHT,COMMENTS="Tapahtuman aiheuttaneen ajajan tunnusnumero";
+f008 = callh.ch_user_id,NOENTRY,RIGHT,COMMENTS="Tapahtuman aiheuttaneen käyttäjän tunnusnumero";
+f009 = callh.ch_action_taken,NOENTRY,UPSHIFT,COMMENTS="Ajajan/käyttäjän toimenpide asian ratkaisemiseksi";
+f010 = callh.ch_action_date,NOENTRY,NOENTRY,NOUPDATE,COMMENTS="Toimenpiteen pvm";
+f011 = callh.ch_action_time,NOENTRY,NOENTRY,NOUPDATE,COMMENTS="Toimenpiteen aika";
+f013 = callh.ch_action_veh_nbr,NOENTRY,RIGHT,COMMENTS="Toimenpidettä suorittavan auton tunnusnumero";
+f014 = callh.ch_action_drv_id,NOENTRY,RIGHT,COMMENTS="Toimenpidettä suorittavan ajajan tunnusnumero";
+f015 = callh.ch_action_user_id,NOENTRY,RIGHT,COMMENTS="Toimenpidettä suorittavan käyttäjän tunnusnumero";
+end
+instructions
+   delimiters "()";
+end

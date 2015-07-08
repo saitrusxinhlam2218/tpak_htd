@@ -1,0 +1,40 @@
+database mads
+screen
+{
+						Platsnamnsfil visning
+
+Index                 Platsnamn              Gatunummer             Namn                                   Kommun U/J          
+[f002              ]  [f000              ]   [f003 ]   [b]  [a0]    [f001                ] [a1 ]  [a2]     [a3 ]  [a]
+
+Postnr     Subzon   X-koord                 Y-koord
+[f004 ]    [f005 ]  [f006                ]  [f007                ]
+
+Kartref. sida   Kartindeln    Kommentar                                                      Lokal
+[f08]           [a4  ]        [f009                                                        ]  [c]
+}
+end
+tables
+placenm
+attributes
+f002 = placenm.pl_index, RIGHT, NOENTRY, NOUPDATE, COMMENTS="Ett av systemet tilldelat nummer från gatunamnsfilen";
+f000 = placenm.pl_name, NOENTRY, UPSHIFT, NOUPDATE, COMMENTS="Platsnamn";
+f003 = placenm.pl_street_nbr, RIGHT, NOENTRY, NOUPDATE, COMMENTS="Gatuadress, nummer";
+b = placenm.pl_str_nbr_suf, NOENTRY, UPSHIFT, NOUPDATE, COMMENTS="Fältet stöds inte";
+a0 = placenm.pl_str_pre_dir, NOENTRY, UPSHIFT, NOUPDATE, COMMENTS="Fältet stöds inte";
+f001 = placenm.pl_str_name, NOENTRY, UPSHIFT, NOUPDATE, COMMENTS="Gatunamn";
+a1 = placenm.pl_str_type, NOENTRY, UPSHIFT, NOUPDATE, COMMENTS="Fältet stöds inte";
+a2 = placenm.pl_str_post_dir, NOENTRY, UPSHIFT, NOUPDATE, COMMENTS="Fältet stöds inte";
+a3 = placenm.pl_str_city, NOENTRY, UPSHIFT, NOUPDATE, COMMENTS="Kommunkod";
+a = placenm.pl_odd_even, NOENTRY, UPSHIFT, NOUPDATE, COMMENTS="U - udda, J - jämn, ' ' - båda";
+f004 = placenm.pl_str_zip, NOENTRY, NOUPDATE, COMMENTS="Postnummer associerat med detta platsnamn";
+f005 = placenm.pl_str_subzone, NOENTRY, NOUPDATE, COMMENTS="Subzon associerad med detta platsnamn";
+f006 = placenm.pl_str_x_coord, RIGHT, NOENTRY, NOUPDATE, COMMENTS="X-koordinat för gatan";
+f007 = placenm.pl_str_y_coord, RIGHT, NOENTRY, NOUPDATE, COMMENTS="Y-koordinat för gatan";
+f08  = placenm.pl_map_ref_page, RIGHT, NOENTRY, NOUPDATE, COMMENTS="Sidnummer för kartreferens";
+a4 = placenm.pl_map_ref_block, NOENTRY, NOUPDATE, COMMENTS="Kartindelningsanvisning";
+f009 = placenm.pl_str_comment, NOENTRY, UPSHIFT, NOUPDATE, COMMENTS="Lokalitetskommentar för notering om denna plats";
+c = placenm.pl_local, NOENTRY, UPSHIFT, NOUPDATE, COMMENTS="[r denna adress för en lokal körning (J/N)?";
+end
+instructions
+   delimiters "()";
+end

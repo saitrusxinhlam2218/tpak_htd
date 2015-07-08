@@ -1,0 +1,44 @@
+database mads
+screen
+{
+Yhtiˆ   TN       Auto nro Ajajatiedot - alkaen       Ajajatiedot - saakka 
+[a]     [ f000]  [f001]   [f002      ]       	     [f003      ]
+
+Viestej‰          H‰t‰tilat        Aloitus            Lopetus       Puhepyyntˆ
+[f020]            [f024]           [f025]             [f026]        [f019]
+
+Ruutuun  Mruutu  Eruutu   Eihyvks    Eikiitos Tilaus   Jullikka  K‰sip   Tarj     Tilaukset   Tauko    Lyhyt M   Myˆh M    Kysely  
+[f011]   [f013]  [f012]   [f016]     [f017]   [f022]   [f023]    [f009]  [f010]   [f008]   [f018]   [f014]    [f015]    [f021]
+}
+end
+tables
+statdrv
+attributes
+a = statdrv.sd_fleet,REQUIRED,UPSHIFT,NOUPDATE,COMMENTS="Yhtiˆn tunnusnumero";
+f000 = statdrv.sd_drv_id,REQUIRED,NOUPDATE,RIGHT,COMMENTS="Ajajan tunnusnumero";
+f001 = statdrv.sd_veh_nbr,REQUIRED,NOUPDATE,RIGHT,COMMENTS="Auton numero";
+f002 = statdrv.sd_from_dt_tm,RIGHT,COMMENTS="Aloitusaika (C Format)";
+f003 = statdrv.sd_to_dt_tm,RIGHT,COMMENTS="Lopetusaika (C Format)";
+f020 = statdrv.sd_messages,RIGHT,COMMENTS="L‰hetettyjen viestien lukum‰‰r‰";
+f024 = statdrv.sd_emergencies,RIGHT,COMMENTS="H‰t‰tilojen lukum‰‰r‰";
+f025 = statdrv.sd_sign_ins,RIGHT,COMMENTS="Aloituslukum‰‰r‰";
+f026 = statdrv.sd_sign_offs,RIGHT,COMMENTS="Lopetuslukum‰‰r‰";
+f019 = statdrv.sd_req_to_talk,RIGHT,COMMENTS="Ajajan puhepyyntˆjen lukum‰‰r‰";
+f011 = statdrv.sd_posts,RIGHT,COMMENTS="Ajajan ruutuunkirjausten m‰‰r‰";
+f013 = statdrv.sd_enroute_posts,RIGHT,COMMENTS="Ajajan ruutuunkirjausten m‰‰r‰ matkan aikana";
+f012 = statdrv.sd_cond_posts,RIGHT,COMMENTS="Ajajan ruutuunkirjausten m‰‰r‰ ehdollisesti";
+f016 = statdrv.sd_no_accepts,RIGHT,COMMENTS="Eihyvks-ajojen lukum‰‰r‰";
+f017 = statdrv.sd_rejects,RIGHT,COMMENTS="Hylk‰ysten lukum‰‰r‰";
+f022 = statdrv.sd_callouts,RIGHT,COMMENTS="Tilausten lukum‰‰r‰";
+f023 = statdrv.sd_no_shows,RIGHT,COMMENTS="Jullikkojen lukum‰‰r‰";
+f009 = statdrv.sd_flags,RIGHT,COMMENTS="K‰sipystyjen lukum‰‰r‰";
+f010 = statdrv.sd_bids,RIGHT,COMMENTS="Tarjousten lukum‰‰r‰";
+f008 = statdrv.sd_calls,RIGHT,COMMENTS="Systeemin tai keskuksen ajajalle v‰litt‰m‰t tilaukset";
+f018 = statdrv.sd_breaks,RIGHT,COMMENTS="Taukojen lukum‰‰r‰";
+f014 = statdrv.sd_short_meters,RIGHT,COMMENTS="Lyhyiden mittareiden lukum‰‰r‰";
+f015 = statdrv.sd_late_meters,RIGHT,COMMENTS="Myˆh‰isten mittareiden lukum‰‰r‰";
+f021 = statdrv.sd_callbacks,RIGHT,COMMENTS="Ajajan kyselyjen lukum‰‰r‰";
+end
+instructions
+   delimiters "()";
+end

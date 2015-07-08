@@ -1,0 +1,78 @@
+database mads
+screen
+{
+						Autotiedoston näyttö
+Yhtiö TN    Auto-TN MID     Rekisterinro  Merkki        Malli         Color        Tele        MDT OK  Mittari OK  Aikataulu
+[a]   [g]   [f000]  [f001]  [f002      ]  [f003      ]  [f004      ]  [f040      ] [f041      ][b]     [f]         [ss]
+
+Luvat               Ominaisuudet  Kieltopvm              Paluupvm               Kiellon syy               "M"  "T"  "X"
+[f005            ]  [f013    ]    [f006              ]   [f007              ]   [f008                  ]  [c]  [d]  [e]
+
+Kieltoviesti      
+[f009                            ][f010                            ][f011                            ]
+
+Ajajan huomautukset                                                                 
+[f038                                    ][f039                                    ]
+
+Edellinen hälytys          Hätätila hoidettu        Aloitus               Lopetus               Ajaja   Ajo hoidettu
+     [f014              ]  [f015              ]     [f016              ]  [f017              ]  [f018]  [f019              ]
+
+RUUTU  ERUUTU MRUUTU EIHYVKS EIKIIT KUTSU  JULLIK KPYSTY TARJ   PUHE   VIESTI TAUKO  Välitks Tilaukset Lyhyt M Myöh M Kyselyt 
+[f024] [f025] [f026] [f029]  [f030] [f035] [f036] [f022] [f023] [f032] [f033] [f031] [f020]  [f021] [f027]  [f028] [f034]
+}
+end
+tables
+vehicle
+attributes
+a = vehicle.vh_fleet,UPSHIFT,COMMENTS="Yhtiö";
+g = vehicle.vh_fleet_nbr,RIGHT,COMMENTS="Yhtiön tunnusnumero tämän auton yhtiölle";
+f000 = vehicle.vh_nbr,RIGHT,COMMENTS="Auton numero";
+f001 = vehicle.vh_mobile_rf_id,UPSHIFT,COMMENTS="Tämän auton MDT-terminaalin MID (Mobile ID)";
+f002 = vehicle.vh_license_nbr,COMMENTS="Auton rekisterinumero";
+f003 = vehicle.vh_make,UPSHIFT,COMMENTS="Auton merkki";
+f004 = vehicle.vh_model,UPSHIFT,COMMENTS="Auton malli";
+f040 = vehicle.vh_color, UPSHIFT, COMMENTS="Color";
+f041 = vehicle.vh_tele, UPSHIFT, COMMENTS="Telephone Number";
+b = vehicle.vh_kdt_working,UPSHIFT,COMMENTS="Toimiiko tämän auton MDT-terminaali (K/E)";
+f = vehicle.vh_meter_working,UPSHIFT,COMMENTS="Toimiiko tämän auton mittari (K/E)";
+ss = vehicle.vh_schedule_num,RIGHT,COMMENTS="Aikataulun numero (1..25) johon tämä auto liittyy";
+f005 = vehicle.vh_seals,UPSHIFT,COMMENTS="Määrittelee mitkä luvat tällä autolla on";
+f013 = vehicle.vh_attr,UPSHIFT,COMMENTS="8 merkkiä määrittelee auton autokohtaiset ominaisuudet";
+f006 = vehicle.vh_susp_from_dt_tm,RIGHT,COMMENTS="Pvm ja kellonaika jolloin tämä auto on viimeksi pantu ajokieltoon";
+f007 = vehicle.vh_susp_to_dt_tm,RIGHT,COMMENTS="Pvm ja kellonaika jolloin auto on viimeksi poistettu ajokiellosta";
+f008 = vehicle.vh_susp_reason,UPSHIFT,COMMENTS="Syy auton ajokieltoon (sisäinen)";
+c = vehicle.vh_susp_pass_call,UPSHIFT,COMMENTS="Onko autolla este matkustaja-ajoihin (K/E)";
+d = vehicle.vh_susp_del_call,UPSHIFT,COMMENTS="Onko autolla este tavara-ajoihin (K/E)";
+e = vehicle.vh_susp_typex_call,UPSHIFT,COMMENTS="Onko autolla este palvelutyyppisiin ajoihin (K/E)";
+f009 = vehicle.vh_susp_message[1,32],UPSHIFT,COMMENTS="Kieltoviesti joka lähetetään autolle";
+f010 = vehicle.vh_susp_message[33,64],UPSHIFT,COMMENTS="Kieltoviesti joka lähetetään autolle";
+f011 = vehicle.vh_susp_message[65,96],UPSHIFT,COMMENTS="Kieltoviesti joka lähetetään autolle";
+f038 = vehicle.vh_comments[1,40],UPSHIFT,COMMENTS="Tätä autoa koskevia huomautuksia";
+f039 = vehicle.vh_comments[41,80],UPSHIFT,COMMENTS="Tätä autoa koskevia huomautuksia";
+f014 = vehicle.vh_last_emerg_on,RIGHT,COMMENTS="Edellinen pvm ja kellonaika jolloin tämä auto teki hälytyksen";
+f015 = vehicle.vh_last_emerg_off,RIGHT,COMMENTS="Edellinen pvm ja kellonaika hätätila selvitettiin";
+f016 = vehicle.vh_last_signed_on,RIGHT,COMMENTS="Edellinen pvm ja kellonaika jolloin tämä auto oli ajossa";
+f017 = vehicle.vh_last_signed_off,RIGHT,COMMENTS="Edellinen pvm ja kellonaika jolloin tämä auto jäi käytöstä";
+f018 = vehicle.vh_last_driver,RIGHT,COMMENTS="Edellinen ajaja joka ajoi tätä autoa";
+f019 = vehicle.vh_last_call,RIGHT,COMMENTS="Edellinen ajo joka tehtiin tällä autolla";
+f024 = vehicle.vh_posts,RIGHT,COMMENTS="Montako kertaa tämä auto kirjasi ruutuun";
+f025 = vehicle.vh_cond_posts,RIGHT,COMMENTS="Montako kertaa tämä auto kirjasi ruutuun ehdollisesti";
+f026 = vehicle.vh_enroute_posts,RIGHT,COMMENTS="Montako kertaa tämä auto teki Kohta vapaa-pyyntöjä";
+f029 = vehicle.vh_no_accepts,RIGHT,COMMENTS="Montako kertaa EIHYVKS -viestejä";
+f030 = vehicle.vh_rejects,RIGHT,COMMENTS="Montako kertaa EI-KIITOS -viestejä";
+f035 = vehicle.vh_callouts,RIGHT,COMMENTS="Montako kertaa tilauksia";
+f036 = vehicle.vh_no_shows,RIGHT,COMMENTS="Montako kertaa JULLIKKA-tapauksia";
+f022 = vehicle.vh_flags,RIGHT,COMMENTS="Montako kertaa käsipystyajoja";
+f023 = vehicle.vh_bids,RIGHT,COMMENTS="Montako kertaa tarjouksia tälle autolle";
+f032 = vehicle.vh_req_to_talk,RIGHT,COMMENTS="Montako kertaa puhepyyntöjä tästä autosta";
+f033 = vehicle.vh_messages,RIGHT,COMMENTS="Keskukselle lähetettyjen viestien määrä";
+f031 = vehicle.vh_breaks,RIGHT,COMMENTS="Taukojen määrä";
+f020 = vehicle.vh_assigns,RIGHT,COMMENTS="Montako käsivälitysajoa tälle autolle edellisen vuoron aikana";
+f021 = vehicle.vh_calls,RIGHT,COMMENTS="Välitettyjen tilausten määrä";
+f027 = vehicle.vh_short_meters,RIGHT,COMMENTS="Lyhyiden mittareiden määrä";
+f028 = vehicle.vh_late_meters,RIGHT,COMMENTS="Myöhäisten mittareiden määrä";
+f034 = vehicle.vh_callbacks,RIGHT,COMMENTS="Kyselyiden määrä";
+end
+instructions
+   delimiters "()";
+end

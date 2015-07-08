@@ -1,0 +1,187 @@
+static char sz__FILE__[]="@(#)drv_stat.c	10.1.2.1(ver) Date Release 12/2/94" ;
+ /****************************************************************************
+ *                                                                           *
+ *                           S C C S   I N F O                               *
+ *                                                                           *
+ * @(#)  drv_stat.c; Rel: 10.1.2.1; Get date: 5/11/95 at 10:14:15
+ * @(#)  Last delta: 12/2/94 at 18:20:50
+ * @(#)  SCCS File: /taxi/sccs/s.drv_stat.c
+ *                                                                           *
+ *****************************************************************************/
+
+#include <sys/types.h>
+#include <isam.h>
+#include "mad_error.h"
+#include "taxipak.h"
+#include "Object.h"
+#include "List_public.h"
+#include "Fleet_public.h"
+#include "Fleet_lists_public.h"
+#include "path.h"
+#include "taxi_db.h"
+#include "ex_key.h"
+#include "acc.h"
+#include "Vehicle_public.h"
+#include "Vehicle_private.h"
+#include "sprintf.h"
+#include "Stats_drv_db.h"
+#include "Call_private.h"
+#include "mad_ipc.h"
+#include "enhance.h"
+#include "switch_ext.h"
+
+extern char req_buf[];
+extern int veh_used;			/* number of vehicles loaded into memory */
+extern time_t mads_time;		/* system time update in main dispatch loop */
+int last_rf_id = 0;
+int next_veh_index = 0;
+extern int veh_stats_inc;
+
+/****************************************************************************
+* wr_drv_stat
+*****************************************************************************/
+wr_drv_stat(veh_ptr)
+struct veh_driv *veh_ptr;
+{
+	struct cisam_sd *sd_ptr;
+	register i, jj;
+        int index_max;
+
+	/** Stockholm doesn't want driver stats records **/
+	if ( !(0) )
+	  {
+	    if (db(STATDRV_FILE_ID,OPEN,&sd_key1,ISINOUT+ISMANULOCK,0) < 0) {	
+	      ERROR(' ',STATDRV_FILE,"Error opening file\n");
+	      return;
+	    }
+	    sd_ptr = (struct cisam_sd*)req_buf;
+	    
+	    if(veh_ptr != NULL){	
+	      sub_drv_stat(sd_ptr,veh_ptr);
+	      if (db(STATDRV_FILE_ID,ADD_REC,&sd_key1,0,0) < 0) {	
+		sprintf(error_str,"Error writing new record: veh_nbr = %d", sd_ptr->veh_nbr);
+		ERROR(sd_ptr->fleet,STATDRV_FILE,error_str);
+		if (db(STATDRV_FILE_ID,CLOSE,&sd_key1,0,0) < 0) {			
+		  ERROR(' ',STATDRV_FILE,"Error closing file\n");
+		}
+		return;
+	      }
+	      update_drv_counts(veh_ptr);
+	    }
+	    else{
+	      /*	for(i=0;i<veh_used;i++){  */
+	      if ((next_veh_index + veh_stats_inc) > veh_used)
+		index_max = veh_used - next_veh_index;
+	      else
+		index_max = veh_stats_inc;
+	      
+	      if (last_rf_id != 0)
+		(void) Fleet_veh_id_list_find(last_rf_id); /* prime the pump */
+	      /* Use Fleet Vehicle list macros **/
+	      for (jj = 0; jj < index_max; jj++)
+                {
+		  i = jj + next_veh_index;
+		  if ((last_rf_id == 0) && ( i == 0))
+		    veh_ptr = (struct veh_driv *) Fleet_veh_id_list_get( LIST_FIRST );
+		  else
+		    veh_ptr = (struct veh_driv *) Fleet_veh_id_list_get( LIST_NEXT );
+		  if (veh_ptr == NULL)
+		    {
+		      veh_ptr = (struct veh_driv *) Fleet_veh_id_list_get(LIST_FIRST);
+		      if (veh_ptr == NULL)
+			{
+			  ERROR(' ',"","null veh_ptr returned from Fleet_veh_id_list_get");
+			  break;
+			}
+		    }
+		  if( veh_ptr->t_status.inuse ){
+		    sub_drv_stat(sd_ptr,veh_ptr); 
+		    if (db(STATDRV_FILE_ID,ADD_REC,&sd_key1,0,0) < 0) {	
+		      sprintf(error_str,"Error writing new record: veh_nbr = %d", sd_ptr->veh_nbr);
+		      ERROR(sd_ptr->fleet,STATDRV_FILE,error_str);
+		      if (db(STATDRV_FILE_ID,CLOSE,&sd_key1,0,0) < 0) {			
+			ERROR(' ',STATDRV_FILE,"Error closing file\n");
+		      }
+		      return;
+		    }
+		    update_drv_counts(veh_ptr);
+		  }
+		} /* end for */
+	      if (veh_ptr != NULL)
+		last_rf_id = veh_ptr->rf_id;
+	      next_veh_index += veh_stats_inc;
+	      if (next_veh_index > veh_used)
+		next_veh_index = 0;
+	    }
+	    
+	    if (db(STATDRV_FILE_ID,CLOSE,&sd_key1,0,0) < 0) {			
+	      ERROR(' ',STATDRV_FILE,"Error closing file\n");
+	    }
+	  }
+}
+/*****************************************************************************
+* sub_drv_stat - put the number of commands since last check into a cisam file 
+*****************************************************************************/
+sub_drv_stat(dest,src)
+struct cisam_sd *dest;
+struct veh_driv *src;
+{
+
+	dest->fleet = src->fleet;
+	dest->drv_id  = src->driver_id;
+	dest->veh_nbr = src->veh_nbr;
+
+	get_asc_time(src->stat_start_tm,dest->from_date,dest->from_time);		/* get from time */
+	dest->from_dt_tm = src->stat_start_tm;	 	
+
+	get_asc_time(mads_time,dest->to_date,dest->to_time);			/* get current time */
+	dest->to_dt_tm = mads_time;	 
+
+	dest->calls = src->calls - src->tmp_calls;
+	dest->flags = src->flags - src->tmp_flags;
+	dest->bids = src->bids - src->tmp_bids;		
+	dest->posts = src->posts - src->tmp_posts;
+	dest->cond_posts = src->cond_posts - src->tmp_cond_posts;
+	dest->enroute_posts = src->enroute_posts - src->tmp_enroute_posts;	
+	dest->short_meters = src->short_meters - src->tmp_short_meters;	
+	dest->late_meters = src->late_meters - src->tmp_late_meters;
+	dest->no_accepts = src->no_accepts - src->tmp_no_accepts;
+	dest->rejects =  src->rejects - src->tmp_rejects;
+	dest->breaks = src->breaks - src->tmp_breaks;
+	dest->req_to_talk = src->req_to_talk - src->tmp_req_to_talk;	
+	dest->messages = src->messages - src->tmp_messages;	
+	dest->callbacks = src->callbacks - src->tmp_callbacks;	
+	dest->callouts = src->callouts - src->tmp_callouts;	
+	dest->no_shows = src->no_shows - src->tmp_no_shows;	
+	dest->emergencies = src->emergencies - src->tmp_emergencies;	
+	dest->sign_ins = src->sign_ins - src->tmp_sign_ins;	
+	dest->sign_offs = src->sign_offs - src->sign_offs;	
+}
+
+update_drv_counts(veh_ptr)
+struct veh_driv *veh_ptr;
+{
+
+	veh_ptr->stat_start_tm = mads_time;
+	veh_ptr->tmp_calls = veh_ptr->calls;
+	veh_ptr->tmp_flags = veh_ptr->flags;
+	veh_ptr->tmp_bids = veh_ptr->bids;		
+	veh_ptr->tmp_posts = veh_ptr->posts;
+	veh_ptr->tmp_cond_posts = veh_ptr->cond_posts;	
+	veh_ptr->tmp_enroute_posts = veh_ptr->enroute_posts;	
+	veh_ptr->tmp_short_meters = veh_ptr->short_meters;	
+	veh_ptr->tmp_late_meters = veh_ptr->late_meters;
+	veh_ptr->tmp_no_accepts = veh_ptr->no_accepts;
+	veh_ptr->tmp_rejects =  veh_ptr->rejects;
+	veh_ptr->tmp_breaks = veh_ptr->breaks;
+	veh_ptr->tmp_req_to_talk = veh_ptr->req_to_talk;	
+	veh_ptr->tmp_messages = veh_ptr->messages;	
+	veh_ptr->tmp_callbacks = veh_ptr->callbacks;	
+	veh_ptr->tmp_callouts = veh_ptr->callouts;	
+	veh_ptr->tmp_no_shows = veh_ptr->no_shows;	
+	veh_ptr->tmp_emergencies = veh_ptr->emergencies;	
+	veh_ptr->tmp_sign_ins = veh_ptr->sign_ins;	
+	veh_ptr->tmp_sign_offs = veh_ptr->sign_offs;	
+}
+
+

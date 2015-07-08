@@ -1,0 +1,43 @@
+database mads
+screen
+{
+					Gatuadressfil visning
+
+Gaturegister
+[f000                ]
+
+Gata lägsta nr   Gata högsta nr        Namn                                    Kommun  U/J 
+[f003  ]         [f002  ]       [a0]   [f001                ] [a1 ] [a2]       [a3 ]   [a]
+
+Platsnamn  Postnummer      Subzon      X-koordinat            Y-koordinat        
+[b]        [f004 ]         [f005 ]     [f006                ] [f007                ]
+
+Karta ref.sida Kartindeln  Kommentar			      Call Taker Comments
+[a5 ]          [a4  ]      [f009                          ]   [f010                          ]
+}
+end
+tables
+address
+attributes
+f000 = address.ad_str_index,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Ett nummer från gatufilen som angivits av systemet";
+f003 = address.ad_low_nbr,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Lägsta gatunumret. Om specifik adress, identisk med högsta nummer";
+f002 = address.ad_high_nbr,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Högsta gatunummer. Om specifik adress, identisk med lägsta nummer";
+a0 = address.ad_str_pre_dir,NOENTRY,NOUPDATE,UPSHIFT,COMMENTS="Fältet stöds inte";
+f001 = address.ad_str_name,NOENTRY,NOUPDATE,UPSHIFT,COMMENTS="Gatunamn";
+a1 = address.ad_str_type,NOENTRY,NOUPDATE,UPSHIFT,COMMENTS="Fältet stöds inte";
+a2 = address.ad_str_post_dir,NOENTRY,NOUPDATE,UPSHIFT,COMMENTS="Fältet stöds inte";
+a3 = address.ad_str_city,NOENTRY,NOUPDATE,UPSHIFT,COMMENTS="Kommunkod";
+a = address.ad_odd_even,NOENTRY,NOUPDATE,UPSHIFT,COMMENTS="U - udda, J - jämn, ' ' - båda";
+b = address.ad_place_names,NOENTRY,NOUPDATE,UPSHIFT,COMMENTS="Finns platsnamn för denna adress (J/N)?";
+f004 = address.ad_str_zip,NOENTRY,NOUPDATE,COMMENTS="Postnummer för denna adress";
+f005 = address.ad_str_subzone,NOENTRY,NOUPDATE,UPSHIFT,COMMENTS="Subzon som associeras med denna adress";
+f006 = address.ad_str_x_coord,RIGHT,NOENTRY,NOUPDATE,COMMENTS="X-koordinat för denna gata";
+f007 = address.ad_str_y_coord,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Y-koordinat för denna gata";
+a5 = address.ad_map_ref_page,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Referensida på kartan";
+a4 = address.ad_map_ref_block,NOENTRY,NOUPDATE,UPSHIFT,COMMENTS="Kartindelning (t ex F3)";
+f009 = address.ad_str_comment,NOENTRY,NOUPDATE,UPSHIFT,COMMENTS="Lägeskommentar för denna gaturegistrering";
+f010 = address.ad_ct_cmnt, UPSHIFT, COMMENTS="Call taker comments for address ";
+end
+instructions
+   delimiters "()";
+end

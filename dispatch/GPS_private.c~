@@ -1,0 +1,928 @@
+/***********************************************************************
+*                 RCS INFO
+*
+*  @(#)  $RCSfile: GPS_private.c,v $
+*  @(#)  $Revision: 1.29 $
+*  @(#)  $Date: 2004/02/02 18:34:36 $
+*  @(#)  $Author: jwelch $
+*  @(#)  $Source: /taxi-scan/taxi_proj/cvs/taxi-scan/src/dispatch/GPS_private.c,v $
+*
+*  Copyright (c) 1994 - MobileSoft Consulting, Inc. Woodinville WA
+*
+***********************************************************************/
+
+static char rcsid[] = "$Id: GPS_private.c,v 1.29 2004/02/02 18:34:36 jwelch Exp $";
+
+#include <stdio.h>
+#include <sys/param.h>
+#include <sys/types.h>
+#include <sys/ipc.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <netdb.h>
+#include <math.h>
+#include "taxipak.h"
+#include "dispatch.h"
+#include "mad_error.h"
+#include "path.h"
+#include "taxi_db.h"
+#include "language.h"
+#include "kdt.h"
+#include "Object.h"
+#include "List_public.h"
+#include "msg_defs.h"
+#include "Call_public.h"
+#include "Fleet_public.h"
+#include "Fleet_private.h"
+#include "Vehicle_public.h"
+#include "Vehicle_private.h"
+#include "Vehicle_db.h"
+#include "Driver_public.h"
+#include "Zone_public.h"
+#include "Zone_private.h"
+#include "Zone_lists_public.h"
+#include "ui_ipc.h"
+#include "mad_ipc.h"
+#include "dispatch_strdefs.h"
+#include "GPS_private.h"
+#include "Exception_private.h"
+#include "enhance.h"
+#include "switch_ext.h"
+
+//#define deg2rad (M_PI/180.0)
+//#define rad2deg (180.0/M_PI)
+
+double rad2deg = (180.0/M_PI);
+double deg2rad = (M_PI/180.0);
+
+extern struct offsets *offset;
+extern int gps_pipe_fd;
+extern FLEET *fleet[ ];	/* shared memory fleet structure */
+RET_STATUS GPS_get_best_zone( VEH_HNDL, short * );
+
+void UTM_to_LatLong( double UTMNorthingMeter, double UTMEastingMeter, double *LatDegree, double *LongDegree )
+{
+  double equatorial_radius=6378137;
+  double eccentricity_squared=0.00669437999013;
+  double eccentricity_prime_squared=(eccentricity_squared)/(1-eccentricity_squared);
+  double eccentricity_e1 = (1-sqrt(1-eccentricity_squared))/(1+sqrt(1-eccentricity_squared));
+  double utm_long_origin = 27.0;
+  
+  	const double k0 = 0.9996;
+
+	double x = UTMEastingMeter - 500000.0; // remove 500,000 meter offset for longitude
+	double y = UTMNorthingMeter;
+
+	double M = y / k0;
+	double mu = M/(equatorial_radius*(1-eccentricity_squared/4-3*eccentricity_squared*eccentricity_squared/64-5*eccentricity_squared*eccentricity_squared*eccentricity_squared/256));
+
+	double phi1Rad = mu	+ (3*eccentricity_e1/2-27*eccentricity_e1*eccentricity_e1*eccentricity_e1/32)*sin(2*mu) 
+				              + (21*eccentricity_e1*eccentricity_e1/16-55*eccentricity_e1*eccentricity_e1*eccentricity_e1*eccentricity_e1/32)*sin(4*mu)
+				              + (151*eccentricity_e1*eccentricity_e1*eccentricity_e1/96)*sin(6*mu);
+	double phi1 = phi1Rad*rad2deg;
+
+	double N1 = equatorial_radius/sqrt(1-eccentricity_squared*sin(phi1Rad)*sin(phi1Rad));
+	double T1 = tan(phi1Rad)*tan(phi1Rad);
+	double C1 = eccentricity_prime_squared*cos(phi1Rad)*cos(phi1Rad);
+	double R1 = equatorial_radius*(1-eccentricity_squared)/pow(1-eccentricity_squared*sin(phi1Rad)*sin(phi1Rad), 1.5);
+	double D = x/(N1*k0);
+
+	*LatDegree = phi1Rad - (N1*tan(phi1Rad)/R1)*(D*D/2-(5+3*T1+10*C1-4*C1*C1-9*eccentricity_prime_squared)*D*D*D*D/24
+		            + (61+90*T1+298*C1+45*T1*T1-252*eccentricity_prime_squared-3*C1*C1)*D*D*D*D*D*D/720);
+	*LatDegree = *LatDegree * rad2deg;
+
+	*LongDegree = (D-(1+2*T1+C1)*D*D*D/6+(5-2*C1+28*T1-3*C1*C1+8*eccentricity_prime_squared+24*T1*T1)*D*D*D*D*D/120)/cos(phi1Rad);
+	*LongDegree = *LongDegree * rad2deg + utm_long_origin;
+
+}
+
+#ifdef FOO
+void UTM_to_LatLong( double Northing, double Easting, double *pLat, double *pLong )
+{
+  double a = 6378137.0;
+  double eccSquared = 0.00669439;
+  double k0 = 0.9996013;
+  double FE = 500000.0;  /* False Easting value */
+  double LongOrigin;
+  double eccPrimeSquared, e1, mew1, phi1, rho1, theta1, lambda = 0.0, phi0 = 0.0;
+  double D, T, C, M;
+  double temp1 = 0.0;
+  double temp2 = 0.0;
+  double temp3 = 0.0;
+  
+  /** this is valid for UTM Zone 32 only...currently only HTD is using this code to support
+      navigation messages **/
+  LongOrigin = 27.0 * deg2rad;
+  
+  eccPrimeSquared = (eccSquared)/(1.0-eccSquared);  
+  e1 = (1.0-(sqrt(1.0 - eccPrimeSquared)))/(1.0+(sqrt(1.0+eccPrimeSquared)));
+  M = ( Northing )/k0;
+
+  temp3 = (double)64.0-(double)5.0*pow(eccSquared,(double)3.0)/(double)256.0;
+  temp2 = ((double)1.0-eccSquared/(double)4.0-(double)3.0*(pow(eccSquared,(double)2.0))/temp3);
+  temp1 = (a*temp2);
+  mew1 = M/temp1;
+
+  /** ouch! Math to support this is available upon request :) **/
+  phi1 = mew1+(3.0*e1/2.0-27.0*pow(e1,3.0)/32.0)*sin(2.0*mew1)+
+    (21.0*pow(e1,2.0)/16.0-55.0*pow(e1,4.0)/32.0)*sin(4.0*mew1)+
+    (151.0*pow(e1,3.0)/96.0)*sin(6.0*mew1)+
+    (1097.0*pow(e1,4.0)/512.0)*sin(8.0*mew1);
+
+  rho1 = a*(1.0-eccSquared)/pow((1.0-eccSquared*pow(sin(phi1),2.0)),1.5);
+
+  theta1 = a/(sqrt(1.0-eccSquared*pow(sin(phi1),2.0)));
+
+  D = (Easting - FE)/(theta1*k0);
+  
+  T = pow(tan(phi1), 2.0);
+
+  C = eccPrimeSquared*pow(cos(phi1),2.0);
+
+  /** here we calculate the longitude in radians and then convert to decimal degrees **/
+  lambda = LongOrigin+
+    (D-(1.0+2.0*T+C)*pow(D,3.0)/6.0+(5.0-2.0*C+28.0*T-3.0*pow(C,2.0)+8.0*eccPrimeSquared+24.0*pow(T,2.0))*pow(D,5.0))/cos(phi1);
+
+  *pLong = lambda * rad2deg;
+
+  /** here we calculate the latitude in radians and then convert to decimal degrees **/
+  phi0 = phi1 - theta1*tan(phi1)/rho1*
+    (pow(D,2.0)/2.0-(5.0+3.0*T+10.0*C-4.0*pow(C,2.0)-9.0*eccPrimeSquared)*pow(D,4.0)/24.0 +
+     (61.0+90.0*T+298.0*C+45.0*pow(T,2.0)-252.0*eccPrimeSquared-3.0*pow(C,2.0))*pow(D,6.0)/720);
+
+  *pLat = phi0 * rad2deg;
+  
+}
+#endif
+
+void LatLong_to_UTM( double LatDegree, double LongDegree, double *UTMNorthingMeter, double *UTMEastingMeter )
+{
+	const double k0 = 0.9996;
+
+  double equatorial_radius=6378137;
+  double eccentricity_squared=0.00669437999013;
+  double eccentricity_prime_squared=(eccentricity_squared)/(1-eccentricity_squared);
+  double eccentricity_e1 = (1-sqrt(1-eccentricity_squared))/(1+sqrt(1-eccentricity_squared));
+  
+	double LatRad = LatDegree*deg2rad;
+	double LongRad = LongDegree*deg2rad;
+
+  
+	double LongOriginRad = 27.0 * deg2rad;  // + 3 puts origin in middle of zone
+
+
+	double N = equatorial_radius/sqrt(1-eccentricity_squared*sin(LatRad)*sin(LatRad));
+	double T = tan(LatRad)*tan(LatRad);
+	double C = eccentricity_prime_squared*cos(LatRad)*cos(LatRad);
+	double A = cos(LatRad)*(LongRad-LongOriginRad);
+
+	double M = equatorial_radius*((1	- eccentricity_squared/4 - 3*eccentricity_squared*eccentricity_squared/64	- 5*eccentricity_squared*eccentricity_squared*eccentricity_squared/256)*LatRad 
+	 			     - (3*eccentricity_squared/8	+ 3*eccentricity_squared*eccentricity_squared/32	+ 45*eccentricity_squared*eccentricity_squared*eccentricity_squared/1024)*sin(2*LatRad)
+				     + (15*eccentricity_squared*eccentricity_squared/256 + 45*eccentricity_squared*eccentricity_squared*eccentricity_squared/1024)*sin(4*LatRad) 
+				     - (35*eccentricity_squared*eccentricity_squared*eccentricity_squared/3072)*sin(6*LatRad));
+	
+	*UTMEastingMeter = (double)(k0*N*(A+(1-T+C)*A*A*A/6
+					+ (5-18*T+T*T+72*C-58*eccentricity_prime_squared)*A*A*A*A*A/120)
+					+ 500000.0);
+
+	*UTMNorthingMeter = (double)(k0*(M+N*tan(LatRad)*(A*A/2+(5-T+9*C+4*C*C)*A*A*A*A/24
+				 + (61-58*T+T*T+600*C-330*eccentricity_prime_squared)*A*A*A*A*A*A/720)));
+
+#ifdef FOO
+	if(LatDegree < 0)
+	{
+		UTMNorthingMeter += 10000000.0; //10000000 meter offset for southern hemisphere
+	}
+#endif
+	
+}
+#ifdef FOO
+void LatLong_to_UTM( double Lat, double Long, double *pNorthing, double *pEasting )
+{
+  int   iLong;
+  double a = 6378137.0;
+  double eccSquared = 0.00669439;
+  double k0 = 0.9996013;
+
+  double LongOrigin;
+  double eccPrimeSquared;
+  double N, T, C, A, M;
+
+
+#ifdef FOO
+  if ( !strcmp(LANGUAGE, "Danish") )
+    LongOrigin = 9.0;
+  else
+    {
+      if ( Long > 6.0 )
+	LongOrigin = (int)(Long/6)*6 + 3*(int)(Long/6)/abs((int)(Long/6));
+      else
+	LongOrigin = 0.0;
+    }
+#endif
+  
+  LongOrigin = 27.0;
+
+
+  eccPrimeSquared = (eccSquared)/(1.0-eccSquared);
+
+  N = a/sqrt(1.0-eccSquared*sin(Lat*deg2rad)*sin(Lat*deg2rad));
+  T = tan(Lat*deg2rad)*tan(Lat*deg2rad);
+  C = eccPrimeSquared*cos(Lat*deg2rad)*cos(Lat*deg2rad);
+  A = cos(Lat*deg2rad)*(Long-LongOrigin)*deg2rad;
+
+  M = 111132.9520 * Lat - 16038.5200*sin(2.000*Lat*deg2rad) +
+      16.8300*sin(4.0*Lat*deg2rad) - 0.0200*sin(6.000*Lat*deg2rad);
+
+  *pEasting = k0*N*(A+(1.0-T+C)*A*A*A/6.0
+	            + (5.0-18.0*T+T*T+72.0*C-58.0*eccPrimeSquared)*A*A*A*A*A/120.0)
+                    + 500000.0;
+  *pNorthing = k0*(M+N*tan(Lat*deg2rad)*(A*A/2.0+(5.0-T+9.0*C+4.0*C*C)*A*A*A*A/24.0
+					 +(61.0-58.0*T+T*T+600.0*C-330.0*eccPrimeSquared)*A*A*A*A*A*A/720.0));
+}
+#endif
+
+int
+gps_msg_hndl(  veh_ptr, mdt_msg )
+     struct veh_driv *veh_ptr;
+     int   mdt_msg;
+{
+  char *pGPSdata;
+  ZONE_HNDL   zone_hndl;
+  ZONE        *zone_ptr;
+  short       new_zone = 0;
+  int         distance = 0;
+  
+  //  if ((char)Veh_get_value( (VEH_HNDL) veh_ptr, VEH_NAV_TYPE ) != STAR2000_MDT )
+  //    return(FAIL);
+
+  zone_ptr = (ZONE *)zone_hndl;
+  
+  /** POST_KEY processing will handle the book_in process **/
+  /** EPOST message should not trigger a book_in          **/
+  if ( ( mdt_msg == MDT_MSG_POST ) ||
+       ( mdt_msg == MDT_MSG_EPOST ) )
+    return(SUCCESS);
+  
+  if ( Veh_get_state( (VEH_HNDL)veh_ptr, VEH_EMERGENCY_RESOLVED_STATE ) )
+    {
+      authorize( veh_ptr );
+      Veh_reset_state( (VEH_HNDL)veh_ptr, VEH_EMERGENCY_RESOLVED_STATE, HNDL_NULL, HNDL_NULL );
+      return(SUCCESS);
+    }
+
+  // Check for emergency state of taxi and determine if emergency broadcast is required
+  if ( Veh_get_state( (VEH_HNDL)veh_ptr, VEH_EMERGENCY_STATE ) )
+    {
+      // process list of exceptions to see if bcast params require a broadcast
+      GPS_broadcast_emergency( (VEH_HNDL)veh_ptr );
+    }
+
+  if ( (char)Fleet_get_value( (FLEET_HNDL)fleet[veh_ptr->fleet_nbr], FLEET_GPS_STATE ) == NO )
+    return(FAIL);
+  
+  if ( (char)Fleet_get_value( (FLEET_HNDL)fleet[veh_ptr->fleet_nbr], FLEET_GPS_BOOK ) == NO )
+    return(FAIL);
+  
+  /** First case - VEH booked into zone 
+    check zone boundaries. If out of limits
+    book out of original zone and find best match **/
+  if ( ( Veh_get_state( (VEH_HNDL)veh_ptr, VEH_POSTED_STATE ) ) &&
+	    !( Veh_get_state( (VEH_HNDL)veh_ptr, VEH_ON_BREAK_STATE ) ) &&
+	    !( Veh_get_state( (VEH_HNDL)veh_ptr, VEH_CALL_OFFER_STATE ) ) )
+    {
+      if ( (int)Fleet_get_value( (FLEET_HNDL)fleet[veh_ptr->fleet_nbr], FLEET_GPS_TIME ) > 0 )
+	{
+	  if ( abs( (time_t )Veh_get_value( (VEH_HNDL) veh_ptr, VEH_GPS_TIME ) - time(0) ) >=
+	       (int)Fleet_get_value( (FLEET_HNDL)fleet[veh_ptr->fleet_nbr], FLEET_GPS_TIME ) )
+	    {
+	      /** No current GPS Position -- send error message **/
+	      send_text( veh_ptr->mid, catgets(DISPATCH_catd, 1, 41,"GPS SAYS: NO CURRENT POSITION"), veh_ptr, PRIORITY_3 );
+	      send_text_predefined( veh_ptr->mid, POST_OFF, veh_ptr );	  
+	      Veh_reset_state( (VEH_HNDL) veh_ptr, VEH_POSTED_STATE, HNDL_NULL, HNDL_NULL );
+	      return(SUCCESS);
+	    }
+	}
+	  
+      Zone_get_hndl( (short)Veh_get_value( (VEH_HNDL) veh_ptr, VEH_ZONE_NBR ),
+		    (short)Veh_get_value( (VEH_HNDL) veh_ptr, VEH_FLEET_NBR ),
+		    &zone_hndl );
+      zone_ptr = (ZONE *)zone_hndl;
+
+      /* Handle the case where Zones are defined by center point and radius of a circle */
+      if ( ( zone_hndl != HNDL_NULL ) &&
+	  (  zone_ptr->gps_lat  > 0 ) &&
+	  (  zone_ptr->gps_long > 0 ) &&
+	  ( (int)Zone_get_value( zone_hndl, ZONE_GPS_RADIUS) > 0 ) )
+	{
+	  if ( ( distance = GPS_veh_zone_get_distance( (VEH_HNDL)veh_ptr, zone_hndl ) ) >
+	      (int) Zone_get_value( zone_hndl, ZONE_GPS_RADIUS ) )
+	    {
+	      Veh_reset_state( (VEH_HNDL) veh_ptr, VEH_POSTED_STATE, HNDL_NULL, HNDL_NULL );
+	      new_zone = 0;
+	      GPS_get_best_zone( (VEH_HNDL) veh_ptr, &new_zone );
+	      if ( new_zone > 0 )
+		{
+		  Veh_set_state((VEH_HNDL) veh_ptr, VEH_POSTED_STATE, (HNDL) new_zone );
+		}
+	      else
+		{
+		  send_text( veh_ptr->mid, catgets(DISPATCH_catd, 1, 40, "GPS SAYS: NOT IN ZONE"),
+			    veh_ptr, PRIORITY_3 );		      
+		}
+	    }
+	}
+      else if ( ( zone_hndl != HNDL_NULL ) &&
+	        ( zone_ptr->poly_points > 0 ) )
+	{
+	  if ( VehInZonePoly( (VEH_HNDL) veh_ptr, zone_hndl ) == -1 )
+	    {
+	      new_zone = 0;
+	      GPS_get_best_zone( (VEH_HNDL) veh_ptr, &new_zone );
+	      if ( new_zone > 0 )
+		{
+		  Veh_set_state((VEH_HNDL) veh_ptr, VEH_POSTED_STATE, (HNDL) new_zone );
+		}
+	      else
+		{
+                  // Taxi is located in a 'hole' in the zone map. Book taxi out of zone and
+                  // send a message the first time we determine that the taxi is located in the 'hole'
+                  
+                  
+                  if ( (BOOLEAN)Veh_get_value( (VEH_HNDL) veh_ptr, VEH_SEND_GPS_NOT_IN_ZONE ) == TRUE )
+                    {
+                      send_text( veh_ptr->mid, catgets(DISPATCH_catd, 1, 40, "GPS SAYS: NOT IN ZONE"),
+                                 veh_ptr, PRIORITY_3 );
+                      Veh_reset_state( (VEH_HNDL) veh_ptr, VEH_POSTED_STATE, HNDL_NULL, HNDL_NULL );                      
+                      Veh_set_value( (VEH_HNDL) veh_ptr, VEH_SEND_GPS_NOT_IN_ZONE, (HNDL) FALSE );
+                    }
+		}
+	    }
+	}	      
+	        
+    }
+      /** Second case - VEH idle and not on break **/
+  else if ( ( Veh_get_state( (VEH_HNDL)veh_ptr, VEH_IDLE_STATE ) ) &&
+	    !( Veh_get_state( (VEH_HNDL)veh_ptr, VEH_ON_BREAK_STATE ) ) &&
+	    !( Veh_get_state( (VEH_HNDL)veh_ptr, VEH_CALL_OFFER_STATE ) ) &&
+	    !( Veh_get_state( (VEH_HNDL)veh_ptr, VEH_METER_ON_STATE ) ) &&
+	    ( Veh_get_state( (VEH_HNDL)veh_ptr, VEH_SIGN_IN_STATE ) ) )
+    {
+      if ( (int)Fleet_get_value( (FLEET_HNDL)fleet[veh_ptr->fleet_nbr], FLEET_GPS_TIME ) > 0 )
+	{
+	  if ( abs( (time_t )Veh_get_value( (VEH_HNDL) veh_ptr, VEH_GPS_TIME ) - time(0) ) >=
+	       (int)Fleet_get_value( (FLEET_HNDL)fleet[veh_ptr->fleet_nbr], FLEET_GPS_TIME ) )
+	    {
+	      /** No current GPS Position -- send error message **/
+	      return(SUCCESS);
+	    }
+	}
+      
+      GPS_get_best_zone( (VEH_HNDL) veh_ptr, &new_zone );
+      if ( new_zone > 0 )
+	{
+	  Veh_set_state((VEH_HNDL) veh_ptr, VEH_POSTED_STATE, (HNDL) new_zone );
+	}
+      else
+	{
+          if ( (BOOLEAN) Veh_get_value( (VEH_HNDL) veh_ptr, VEH_SEND_GPS_NOT_IN_ZONE ) == TRUE )
+            send_text( veh_ptr->mid, catgets(DISPATCH_catd, 1, 40, "GPS SAYS: NOT IN ZONE"),
+                       veh_ptr, PRIORITY_3 );		      	    
+	}
+    }
+}
+
+
+RET_STATUS
+GPS_get_best_zone( veh_hndl, pZone )
+     VEH_HNDL   veh_hndl;
+     short      *pZone;
+{
+  FLEET_HNDL    fleet_hndl;
+  ZONE_HNDL     zone_hndl;
+  ZONE          *zone_ptr;
+  int           i;
+  int           best_distance = 0, distance = 0;
+
+  (void) Fleet_get_hndl(BY_NBR, (int) Veh_get_value(veh_hndl, VEH_FLEET_NBR), &fleet_hndl);
+  if ( fleet_hndl == HNDL_NULL )
+    return (FAIL);
+
+
+
+  for ( i = 0; i < ZONE_MAX; i++ )
+    {
+      if ( ( Zone_get_hndl( i, (short)Fleet_get_value(fleet_hndl, FLEET_NBR), &zone_hndl ) ) == FAIL )
+	continue;
+
+      zone_ptr = (ZONE *)zone_hndl;
+
+      /* the zone is defined as a circle */
+      if ( ( zone_ptr->gps_long > 0.0 ) &&
+	   ( zone_ptr->gps_lat  > 0.0 ) &&
+	   ( (char)Zone_get_value( zone_hndl, ZONE_TYPE ) != ZN_STAND ) &&
+	   ((int)Zone_get_value( zone_hndl, ZONE_GPS_RADIUS) > 0 ) )
+	{
+	  if ( ( distance = GPS_veh_zone_get_distance( veh_hndl, zone_hndl ) ) <
+	       (int)Zone_get_value( zone_hndl, ZONE_GPS_RADIUS) )
+	    {	    
+	      if ( best_distance == 0 )
+		{
+		  best_distance = distance;
+		  *pZone = i;
+		}
+	      else if ( distance < best_distance )
+		{
+		  best_distance = distance;
+		  *pZone = i;
+		}
+	    }
+	}
+      /** The zone is defined by a polygon **/
+      else if ( ( zone_ptr->poly_points > 0 ) && ( (char)Zone_get_value( zone_hndl, ZONE_TYPE ) != ZN_STAND ) )
+	{
+	  if ( VehInZonePoly( veh_hndl, zone_hndl ) == 1 )
+	    {
+	      distance = GPS_veh_zone_get_poly_center_distance( veh_hndl, zone_hndl );
+	      if ( best_distance == 0 )
+		{
+		  best_distance = distance;
+		  *pZone = i;
+		}
+	      else if ( distance < best_distance )
+		{
+		  best_distance = distance;
+		  *pZone = i;
+		}
+	    }
+	}
+    }
+
+  if ( best_distance > 0 )
+    return (SUCCESS);
+  else
+    return (FAIL);
+}
+	      
+	  
+
+RET_STATUS
+GPS_check_zone( zone_hndl, veh_ptr )
+     ZONE_HNDL  zone_hndl;
+     VEH        *veh_ptr;
+{
+  int    zone_nbr = 0;
+  short  rc, fl_nbr;
+  FLEET_HNDL   fl_hndl;
+  struct zones *pZone = NULL;
+  double      Xval, Yval;
+   
+  pZone = (struct zones *)zone_hndl;
+
+  fl_nbr = (int) Zone_get_value(zone_hndl, ZONE_FLEET_NBR);
+  if (Fleet_get_hndl(BY_NBR, fl_nbr, &fl_hndl) == FAIL)
+    {
+      sprintf(trace_str, "Cannt get fleet handle fl_nbr %d zone %d", fl_nbr, zone_nbr);
+      ERROR(' ',"", trace_str);
+      return(FAIL);
+    }
+
+  if ( (int)Fleet_get_value( fl_hndl, FLEET_GPS_TIME ) > 0 )
+    {
+      if ( abs( (time_t )Veh_get_value( (VEH_HNDL) veh_ptr, VEH_GPS_TIME ) - time(0) ) >=
+	   (int)Fleet_get_value( fl_hndl, FLEET_GPS_TIME ) )
+	{
+	  /** No current GPS Position -- send error message **/
+	  send_text( veh_ptr->mid, catgets(DISPATCH_catd, 1, 41,"GPS SAYS: NO CURRENT POSITION"), veh_ptr, PRIORITY_3 );
+	  if  ( POSTED( veh_ptr ) )
+	    {
+	      send_text_predefined( veh_ptr->mid, POST_OFF, veh_ptr );
+	      Veh_reset_state((VEH_HNDL) veh_ptr, VEH_POSTED_STATE, HNDL_NULL, HNDL_NULL);
+	    }
+	  return ( FAIL );
+	}
+    }
+
+  if ( ( pZone->gps_long > 0.0 ) &&
+       ( pZone->gps_lat  > 0.0 ) &&
+      ( (int)Zone_get_value( zone_hndl, ZONE_GPS_RADIUS) > 0 ) )
+    {
+      /** GPS coordinates are defined for the zone - check vehicle position **/
+      /** Localization check here **/
+      Xval = pow( ((double)veh_ptr->gps_long -
+		   (double)pZone->gps_long), 2.0 );
+      Yval = pow( ((double)veh_ptr->gps_lat -
+		   (double)pZone->gps_lat), 2.0 );
+      
+      if ( (Xval + Yval) > pow( ((double)pZone->gps_radius), 2.0 ) )
+	{
+	  if (( POSTED( veh_ptr ) ) &&
+	      ( (short)Veh_get_value((VEH_HNDL)veh_ptr, VEH_ZONE_NBR) == (short)Zone_get_value(zone_hndl, ZONE_NBR) ) )
+	    Veh_reset_state((VEH_HNDL) veh_ptr, VEH_POSTED_STATE, HNDL_NULL, HNDL_NULL);
+	  return( FAIL );
+	}
+      else
+	return( SUCCESS );
+      
+      
+    }
+  
+    else if ( pZone->poly_points > 0 )
+	{	
+		if ( VehInZonePoly((VEH_HNDL)veh_ptr, zone_hndl ) == 1 )
+			return( SUCCESS );
+		else
+			return( FAIL );
+	}
+  else
+    return( SUCCESS ); /** no coordinates defined for zone **/
+}
+
+VehInZonePoly( veh_hndl, zone_hndl )
+     VEH_HNDL  veh_hndl;
+     ZONE_HNDL zone_hndl;
+{
+  VEH          *veh_ptr;
+  ZONE         *zone_ptr;
+  POINT_POLY   veh_point, p1, p2;
+  POINT_POLY   *zone_poly;
+  int          nbr_points, i;
+  double       minx_value, maxx_value,miny_value;
+  double xinters;
+  int          counter = 0;
+  
+  veh_ptr = (VEH *)veh_hndl;
+  zone_ptr = (ZONE *)zone_hndl;
+  nbr_points = zone_ptr->poly_points;
+  
+  zone_poly = (POINT_POLY *)zone_ptr->zone_poly;
+  veh_point.x = veh_ptr->gps_long;
+  veh_point.y = veh_ptr->gps_lat;
+  
+  p1 = zone_poly[0];
+  for ( i = 1; i<= nbr_points; i++ )
+    {
+      p2 = zone_poly[i % nbr_points];
+      if (p1.y < p2.y)
+	miny_value = p1.y;
+      else
+	miny_value = p2.y;
+      if (p1.y > p2.y)
+	maxy_value = p1.y;
+      else
+	maxy_value = p2.y;
+      if (p1.x > p2.x)
+	maxx_value = p1.x;
+      else
+	maxx_value = p2.x;
+      
+      if ( veh_point.y > miny_value )
+	{
+	  if ( veh_point.y <= maxy_value )
+	    {
+	      if ( veh_point.x <= maxx_value )
+		{
+		  if ( p1.y != p2.y )
+		    {
+		      xinters = (veh_point.y - p1.y)*(p2.x-p1.x)/(p2.y-p1.y)+p1.x;
+		      if (p1.x == p2.x || veh_point.x <= xinters)
+			counter++;
+		    }
+		}
+	    }
+	}
+      p1 = p2;
+    }
+
+  if (counter % 2 == 0)
+    return(-1);
+  else
+    return(1);
+}
+
+GPS_veh_zone_get_poly_center_distance( veh_hndl, zone_hndl )
+     VEH_HNDL  veh_hndl;
+     ZONE_HNDL zone_hndl;
+{
+  double        dist = 0.0;
+  double         veh_gps_x, veh_gps_y, zone_gps_x, zone_gps_y;
+  VEH           *veh_ptr;
+  ZONE          *zone_ptr;
+
+  veh_ptr = (VEH *)veh_hndl;
+  zone_ptr = (ZONE *)zone_hndl;
+
+  veh_gps_x = veh_ptr->gps_long;
+  veh_gps_y = veh_ptr->gps_lat;
+  zone_gps_x = zone_ptr->poly_centroid_x;
+  zone_gps_y = zone_ptr->poly_centroid_y;
+  
+  dist = sqrt( pow(((double)veh_gps_x - (double)zone_gps_x), 2.0 ) +
+	      pow(((double)veh_gps_y - (double)zone_gps_y), 2.0 ) );
+
+  return( (int)dist );
+}
+  
+GPS_veh_zone_get_distance( veh_hndl, zone_hndl )
+     VEH_HNDL  veh_hndl;
+     ZONE_HNDL zone_hndl;
+{
+  double        dist = 0.0;
+  double         veh_gps_x, veh_gps_y, zone_gps_x, zone_gps_y;
+  VEH           *veh_ptr;
+  ZONE          *zone_ptr;
+
+  veh_ptr = (VEH *)veh_hndl;
+  zone_ptr = (ZONE *)zone_hndl;
+
+  zone_gps_x = zone_ptr->gps_long;
+  zone_gps_y = zone_ptr->gps_lat;
+
+  veh_gps_x = veh_ptr->gps_long;
+  veh_gps_y = veh_ptr->gps_lat;
+
+  dist = sqrt( pow(((double)veh_gps_x - (double)zone_gps_x), 2.0 ) +
+	      pow(((double)veh_gps_y - (double)zone_gps_y), 2.0 ) );
+  
+  return((int)dist);
+}
+
+GPS_veh_call_get_distance( veh_hndl, call_hndl )
+     VEH_HNDL  veh_hndl;
+     CALL_HNDL call_hndl;
+{
+  double        dist = 0.0;
+  double        veh_gps_x, veh_gps_y, call_gps_x, call_gps_y;
+  VEH           *veh_ptr;
+  CALL          *call_ptr;
+
+  veh_ptr = (VEH *) veh_hndl;
+  call_ptr = (CALL *)call_hndl;
+
+  call_gps_x = call_ptr->gps_long;
+  call_gps_y = call_ptr->gps_lat;
+
+  veh_gps_x = veh_ptr->gps_long;
+  veh_gps_y = veh_ptr->gps_lat;
+
+  dist = sqrt( pow(((double)veh_gps_x - (double)call_gps_x), 2.0 ) +
+	        pow(((double)veh_gps_y - (double)call_gps_y), 2.0 ) );
+
+  return((int)dist);
+}
+
+GPS_closest_taxi( veh_hndl1, veh_hndl2, call_hndl )
+     VEH_HNDL veh_hndl1, veh_hndl2;
+     CALL_HNDL call_hndl;
+{
+  int        dist1 = 0, dist2 = 0;
+
+  dist1 = GPS_veh_call_get_distance( veh_hndl1, call_hndl );
+
+  dist2 = GPS_veh_call_get_distance( veh_hndl2, call_hndl );
+
+  if ( dist2 < dist1 )
+    return (LIST_LT);
+  else
+    return (LIST_GT);
+}
+
+int
+GPS_verify_call_coords( CALL_HNDL call_hndl )
+{
+  CALL               *call_ptr;
+  CALL_REC           *cl_ptr;     
+  ZONE               *zone_ptr;
+  ZONE_HNDL          zone_hndl;
+  FLEET_HNDL         fleet_hndl;
+  BOOLEAN            bUpdateCallCoordsToZoneCoords = FALSE;
+  double             Xval, Yval;  
+  
+  if ( call_hndl == HNDL_NULL )
+    return(0);
+  
+  call_ptr = ( CALL * ) call_hndl;
+  if ( call_ptr->gps_long <= 0 || call_ptr->gps_lat <= 0 )
+    return(0);
+
+  if ( Fleet_get_hndl( BY_NBR, (short)Call_get_value(call_hndl,CALL_FLEET_NBR), &fleet_hndl ) == FAIL )
+    return(0);
+
+  Zone_get_hndl( (short)Call_get_value(call_hndl, CALL_PICKUP_ZONE),
+		 (short)Call_get_value(call_hndl,CALL_FLEET_NBR),
+		 &zone_hndl );
+  
+  if ( zone_hndl == HNDL_NULL )
+    return(0);
+
+  zone_ptr = ( ZONE * )zone_hndl;
+  if ( ( zone_ptr->gps_long > 0.0 ) &&
+       ( zone_ptr->gps_lat  > 0.0 ) &&
+       ( (int)Zone_get_value( zone_hndl, ZONE_GPS_RADIUS ) > 0 ) )
+    {
+      // Zone defined by circle with radius
+      Xval = pow( ((double)call_ptr->gps_long -
+		   (double)zone_ptr->gps_long), 2.0 );
+      Yval = pow( ((double)call_ptr->gps_lat -
+		   (double)zone_ptr->gps_lat), 2.0 );
+      if ( (Xval + Yval) > pow( ((double)zone_ptr->gps_radius), 2.0 ) )
+	  // call coordinates are not in defined zone!!
+	bUpdateCallCoordsToZoneCoords = TRUE;
+    }
+  else if ( zone_ptr->poly_points > 0 )
+    {
+      if ( CallInZonePoly((CALL_HNDL)call_hndl, zone_hndl ) != 1 )
+	bUpdateCallCoordsToZoneCoords = TRUE;
+    }
+
+  if ( bUpdateCallCoordsToZoneCoords == TRUE )
+    {
+      if ( zone_ptr->poly_points > 0 )
+	{
+	  call_ptr->gps_long = zone_ptr->poly_centroid_x;
+	  call_ptr->gps_lat = zone_ptr->poly_centroid_y;
+	}
+      else
+	{
+	  call_ptr->gps_long = zone_ptr->gps_long;
+	  call_ptr->gps_lat = zone_ptr->gps_lat;
+	}
+      
+      if ( Call_rec_alloc((CALL_REC_HNDL *) & cl_ptr ) != SUCCESS )
+	{
+	  ERROR(' ', "", "Call_rec_alloc failure GPS_check_zone");
+	}
+      else
+	{
+	  cl_ptr->nbr = (int)Call_get_value( call_hndl, CALL_NBR );
+	  if ( Call_rec_read((CALL_REC_HNDL) cl_ptr, DB_EQUAL | DB_LOCK, CALL_KEY1 ) != SUCCESS )
+	    {
+	      ERROR(' ', "", "Call_rec_read failure GPS_check_zone");
+              Call_release_locks();
+	      Call_rec_free((CALL_REC_HNDL *) & cl_ptr );
+	    }
+	  else
+	    {
+	      if ( zone_ptr->poly_points > 0 )
+		{
+		  cl_ptr->gps_lat = zone_ptr->poly_centroid_y;
+		  cl_ptr->gps_long = zone_ptr->poly_centroid_x;
+		}
+	      else
+		{
+		  cl_ptr->gps_lat = zone_ptr->gps_lat;
+		  cl_ptr->gps_long = zone_ptr->gps_long;
+		}
+	      Call_db_update((CALL_REC_HNDL) cl_ptr);
+              Call_release_locks();              
+	      Call_rec_free((CALL_REC_HNDL *) & cl_ptr);
+	    }
+	}
+    }
+  return(SUCCESS);
+}  
+  
+int
+GPS_send_display_system( VEH_HNDL  veh_hndl, char msgtype )
+{
+  int                 res, i, sockfd;
+  char                send_buf[132];
+  struct sockaddr_in  serv_addr, cli_addr;
+  struct hostent      *hp;
+  VEH                 *veh_ptr;
+
+  veh_ptr = (VEH *)veh_hndl;
+  
+  bzero( send_buf, sizeof( send_buf ) );
+  sprintf( send_buf, "%c!%c!%d", msgtype, veh_ptr->fleet, veh_ptr->veh_nbr );
+
+  
+  bzero((char *)&serv_addr, sizeof(serv_addr));
+  serv_addr.sin_family = AF_INET;
+  hp = gethostbyname("TAXIGEO");
+  if ( hp != NULL )
+    {
+      bcopy(hp->h_addr, (char *)&serv_addr.sin_addr, hp->h_length);
+      serv_addr.sin_port = htons(6232);
+      if ( ( sockfd = socket(AF_INET, SOCK_DGRAM, 0 ) ) != 0 )      
+	{
+	  bzero((char *)&cli_addr, sizeof(cli_addr));
+	  cli_addr.sin_family = AF_INET;
+	  cli_addr.sin_addr.s_addr = htonl(INADDR_ANY);
+	  cli_addr.sin_port = htons(0);
+	  if ( bind( sockfd, (struct sockaddr *) &cli_addr, sizeof(cli_addr) ) >= 0 )
+	    res = sendto(sockfd, send_buf, strlen(send_buf), 0, (struct sockaddr *)&serv_addr, sizeof(serv_addr));
+	  
+	  close( sockfd );
+	}
+    }
+  return(SUCCESS);
+}
+
+int
+CallInZonePoly( CALL_HNDL call_hndl, ZONE_HNDL zone_hndl )
+{
+  CALL   *call_ptr;
+  ZONE   *zone_ptr;
+
+  POINT_POLY   call_point, p1, p2;
+  POINT_POLY   *zone_poly;
+  int          nbr_points, i;
+  double xinters;
+  int          counter = 0;
+
+  call_ptr = (CALL *)call_hndl;
+  zone_ptr = (ZONE *)zone_hndl;
+  nbr_points = zone_ptr->poly_points;
+
+  zone_poly = (POINT_POLY *)zone_ptr->zone_poly;
+  call_point.x = call_ptr->gps_long;
+  call_point.y = call_ptr->gps_lat;
+
+  p1 = zone_poly[0];
+  for ( i = 1; i<= nbr_points; i++ )
+    {
+      p2 = zone_poly[i % nbr_points];
+      if ( call_point.y > MIN(p1.y,p2.y) )
+	{
+	  if ( call_point.y <= MAX(p1.y,p2.y) )
+	    {
+	      if ( call_point.x <= MAX(p1.x,p2.x) )
+		{
+		  if ( p1.y != p2.y )
+		    {
+		      xinters = (call_point.y - p1.y)*(p2.x-p1.x)/(p2.y-p1.y)+p1.x;
+		      if (p1.x == p2.x || call_point.x <= xinters)
+			counter++;
+		    }
+		}
+	    }
+	}
+      p1 = p2;
+    }
+
+  if (counter % 2 == 0)
+    return(-1);
+  else
+    return(1);
+}  
+
+GPS_broadcast_emergency( VEH_HNDL veh_hndl )
+{
+  struct veh_driv *veh_ptr;
+  FLEET_HNDL      fleet_hndl;
+  double veh_gps_x, veh_gps_y;
+  struct excepts *walk_except_ptr = NULL;
+  
+  veh_ptr = (struct veh_driv *)veh_hndl;
+  veh_gps_x = veh_ptr->gps_long;
+  veh_gps_y = veh_ptr->gps_lat;
+
+  walk_except_ptr = offset->first_except;
+
+  while ( walk_except_ptr != NULL )
+    {
+      if ( ( walk_except_ptr->veh_ptr == veh_ptr ) &&
+           ( walk_except_ptr->type == EMERGENCY ) &&
+           ( walk_except_ptr->emerg_bcast.active == YES ) )
+        {
+          Fleet_get_hndl( BY_NBR, veh_ptr->fleet_nbr, &fleet_hndl );
+          Fleet_bcast_emergency( fleet_hndl, veh_hndl, walk_except_ptr->emerg_bcast.radius );
+          break;
+        }
+      else
+        walk_except_ptr = walk_except_ptr->next;
+    }
+    
+}
+
+GPS_request_position( except_buf )
+     struct excpt_rec *except_buf;
+{
+  FLEET_HNDL fleet_hndl = HNDL_NULL;
+  struct veh_driv *veh_ptr = NULL;
+  
+  if ( except_buf->veh_nbr <= 0 )
+    {
+      ERROR(' ', "", "No veh number in GPS_request");
+      return;
+    }
+
+  if ( Fleet_get_hndl(BY_NBR, except_buf->except_nbr, &fleet_hndl) == FAIL )
+    {
+      ERROR(' ', "", "Could not get fleet hndl in GPS_request");
+      return;
+    }
+
+  if ( Veh_get_hndl(BY_NBR, except_buf->veh_nbr, (short)Fleet_get_value(fleet_hndl, FLEET_NBR),
+		    (VEH_HNDL *)&veh_ptr) == FAIL )
+    {
+      ERROR(' ', "", "Could not get veh hndl in GPS_request");
+      return;
+    }
+
+  mk_outb_text("%SV430B31730C30D");
+  send_msg_mmp( veh_ptr->mid, TEXT_DISPLAY, veh_ptr );
+  return;
+  
+}

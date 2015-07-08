@@ -1,0 +1,31 @@
+{
+|***********************************************************************
+|                 RCS INFO
+|
+|  @(#)  $RCSfile: seal.per,v $
+|  @(#)  $Revision: 1.2 $
+|  @(#)  $Date: 1999/03/19 21:26:51 $
+|  @(#)  $Author: taxiadm $
+|  @(#)  $Source: /taxi-scan/taxi_proj/cvs/taxi-scan/src/forms/english/seal.per,v $
+|
+|  Copyright (c) 1994 - MobileSoft Consulting, Inc. Woodinville WA
+|
+|**********************************************************************/
+|ident "@(#) head:$RCSfile: seal.per,v $	$Revision: 1.2 $"
+}
+database mads
+screen
+{
+						SEAL FILE MAINTENANCE
+
+Number    Description             Abbreviation
+[f0]      [f001                ]  [a0 ]
+}
+end
+tables
+seal
+attributes
+f0   = seal.sl_seal_nbr,include=(1 to 16),RIGHT,REQUIRED,COMMENTS="Seal number (only 1 through 16 are valid)";
+f001 = seal.sl_desc,UPSHIFT,COMMENTS="Seal description";
+a0 = seal.sl_abbrev,UPSHIFT,COMMENTS="Abbreviation to be used on screens as field labels";
+end

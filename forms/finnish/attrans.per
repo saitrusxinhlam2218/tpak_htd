@@ -1,0 +1,36 @@
+{
+|***********************************************************************
+|                 RCS INFO
+|
+|  @(#)  $RCSfile: attrans.per,v $
+|  @(#)  $Revision: 1.2 $
+|  @(#)  $Date: 2002/03/25 16:38:21 $
+|  @(#)  $Author: jwelch $
+|  @(#)  $Source: /taxi-scan/taxi_proj/cvs/taxi-scan/src/forms/finnish/attrans.per,v $
+|
+|  Copyright (c) 1994 - MobileSoft Consulting, Inc. Woodinville WA
+|
+|**********************************************************************/
+|ident "@(#) head:$RCSfile: attrans.per,v $	$Revision: 1.2 $"
+}
+database mads
+screen
+{
+
+                                Interlink Attribute Translation
+
+Taxi800 Kuvaus                          TaxiPak Lyhenne
+[f000                           ]       [a0]
+
+}
+end
+tables
+attrans
+attr
+attributes
+f000 = attrans.attr_t800,REQUIRED,UPSHIFT,COMMENTS="Taxi800 Attribute Description";
+a0 = attrans.attr_tpak,REQUIRED,UPSHIFT,COMMENTS="TaxiPak Attribute Abbreviation", LOOKUP JOINING * attr.at_abbrev;
+end
+instructions
+   delimiters "()";
+end

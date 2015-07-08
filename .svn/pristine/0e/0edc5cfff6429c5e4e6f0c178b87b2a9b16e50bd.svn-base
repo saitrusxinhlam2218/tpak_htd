@@ -1,0 +1,31 @@
+$ /****************************************************************************
+$ *                                                                           *
+$ *                           S C C S   I N F O                               *
+$ *                                                                           *
+$ * @(#)  de_actveh.MSF.fin; Rel: 10.1.3.1; Get date: 5/18/95 at 10:18:19
+$ * @(#)  Last delta: 12/5/94 at 11:02:54
+$ * @(#)  SCCS File: /taxi/sccs/s.de_actveh.MSF.fin
+$ *                                                                           *
+$ * Copyright (c) 1990 - MDI Seattle                                          *
+$ *                                                                           *
+$ *****************************************************************************/
+$ #ident "@(#) head:de_actveh.MSF.fi/usr/users/brian/enh_src/src/msf/fin	10.1.3.1"
+
+$quote "
+$delset 1
+$set 1
+
+1	"AUTOTIEDOSTON AVAUSVIRHE %d iserrno %d\n"
+2	"TILAUSTIEDOSTON AVAUSVIRHE %d iserrno %d\n"
+3	"Autoja käytössä yht............%d\n"
+4	"Autoja vapaana yht.............%d\n"
+5	"Edell. tilauks. keskim. väl.aika...%5.2f min\n"
+6	"Edell. tilauks. keskim. väl.aika...Tilauksia ei välitetty jakson aikana\n"
+7	"Edell. tilauks. keskim. noutoaika...%5.2f min\n"
+8	"Edell. tilauks. keskim. noutoaika...Tilauksia ei noud. jakson aikana\n"
+9	"Edell. tilauks. keskim. ajoaika...%5.2f min\n"
+10	"Edell. tilauks. keskim. ajoaika...Ajoja ei suoritettu jakson aikana\n"
+11	"         AJOSSA OLEVAT AUTOT auton numeron muk."
+12	"AUTO  AUTO  AUTO  AUTO  AUTO  AUTO  AUTO  AUTO  AUTO  AUTO  AUTO  AUTO  AUTO  AUTO  AUTO  AUTO  AUTO  AUTO  AUTO  AUTO  AUTO  AUTO"
+13	"Raportti päiville: %8s - %8s                 %20s                  Sivu: %3d   Tulostuspvm: %s\n"
+14	"Raportti ajalle:   %8s - %8s      %-55s      Tulostusaika: %s\n\n"

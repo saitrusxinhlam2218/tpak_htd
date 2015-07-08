@@ -1,0 +1,40 @@
+{
+|***********************************************************************
+|                 RCS INFO
+|
+|  @(#)  $RCSfile: indv.per,v $
+|  @(#)  $Revision: 1.4 $
+|  @(#)  $Date: 1998/11/14 14:48:18 $
+|  @(#)  $Author: taxiadm $
+|  @(#)  $Source: /taxi-scan/taxi_proj/cvs/taxi-scan/src/forms/danish/indv.per,v $
+|
+|  Copyright (c) 1994 - MobileSoft Consulting, Inc. Woodinville WA
+|
+|**********************************************************************/
+|ident "@(#) head:$RCSfile: indv.per,v $	$Revision: 1.4 $"
+}
+
+database mads
+screen
+{
+Konto
+    Vgnpk   Kontonummer		 Passager nummer
+    [a]     [f000              ] [   b]
+
+    Passagernavn
+    [f001               ]
+}
+end
+tables
+indv
+fleet
+account
+attributes
+a = indv.indv_fleet,REQUIRED, UPSHIFT, COMMENTS="Vgnpark-ID", LOOKUP JOINING * fleet.fl_id;
+f000 = indv.indv_account,REQUIRED,UPSHIFT,COMMENTS="Et firmakonto- eller kontokortnummer", PICTURE="##################", LOOKUP JOINING * account.ac_nbr;
+b = indv.indv_subacct,REQUIRED, COMMENTS="Number assigned to this passenger";
+f001 = indv.indv_passenger,REQUIRED,UPSHIFT,COMMENTS="Passagerens navn";
+end
+instructions
+	delimiters "()";
+end

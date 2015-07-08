@@ -1,0 +1,27 @@
+database mads
+screen
+{
+						Virhelistan hoito
+
+Virhe nro               Yhtiö  Tiedosto   Pvm          Aika
+[f000                ]  [a]    [f001   ]  [f002    ]  [f003    ]
+
+Lähdetiedosto      Rivi nro     Viesti 
+[f004           ]  [f005  ]     [f006                                         ]
+}
+end
+tables
+error
+attributes
+f000 = error.el_nbr,NOENTRY,RIGHT,NOUPDATE,COMMENTS="Systeemin antama virhenumero";
+a = error.el_fleet,UPSHIFT,COMMENTS="Yhtiön tunnusnumero";
+f001 = error.el_file,UPSHIFT,COMMENTS="Tiedoston nimi joka ilmoittaa virheellisen C-ISAM-datatiedoston";
+f002 = error.el_date,COMMENTS="Pvm jolloin pulma ilmeni   PP.KK.VV-muoto";
+f003 = error.el_time,COMMENTS="Aika jolloin pulma ilmeni  TT:MM:SS-muoto";
+f004 = error.el_source_file,COMMENTS="Lähdetiedosto jossa virhe ilmeni";
+f005 = error.el_line_nbr,RIGHT,COMMENTS="Lähdetiedoston rivi jolla virhe ilmeni";
+f006 = error.el_error_msg,UPSHIFT,COMMENTS="Virheilmoituksen teksti";
+end
+instructions
+   delimiters "()";
+end

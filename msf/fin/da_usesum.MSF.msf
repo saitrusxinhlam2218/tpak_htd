@@ -1,0 +1,20 @@
+$ /****************************************************************************
+$ *                                                                           *
+$ *                           S C C S   I N F O                               *
+$ *                                                                           *
+$ * @(#)  da_usesum.MSF.fin; Rel: 10.1.3.1; Get date: 5/18/95 at 10:18:08
+$ * @(#)  Last delta: 12/5/94 at 11:02:42
+$ * @(#)  SCCS File: /taxi/sccs/s.da_usesum.MSF.fin
+$ *                                                                           *
+$ * Copyright (c) 1990 - MDI Seattle                                          *
+$ *                                                                           *
+$ *****************************************************************************/
+$ #ident "@(#) head:da_usesum.MSF.fi/usr/users/brian/enh_src/src/msf/fin	10.1.3.1"
+
+$quote "
+$delset 1
+$set 1
+
+1	"Taulukon AVAUSVIRHE %d iserrno %d\n"
+2	"Taulukon SULKEMISVIRHE %d iserrno %d\n"
+3	"Tiedoston AVAUSVIRHE %d iserrno %d\n"

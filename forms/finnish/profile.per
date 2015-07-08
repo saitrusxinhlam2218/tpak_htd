@@ -1,0 +1,104 @@
+database mads
+screen
+{
+					Käyttäjätiedoston hoito
+Käytt TN      Nimi       Tervehdysnimi           Koko nimi           Yhtiötied hoitajat
+     [f000]   [f001     ]  [f002        ]  [G001                  ]   [f004    ]
+
+Oletus     Yhtiö  Ruudunetsintä             Ajotyyppi  Kunta   Korkein tärk  Voi ruuduttaa   Logotied 
+	   [a]    [a01]  [a02]              [b]        [a0 ]  [a1]         [c]              [f025                ]
+Superruudut:
+    1       2       3       4       5       6       7       8       9       10      11      12      13      14      15      16
+    [f009 ] [f010 ] [f011 ] [f012 ] [f013 ] [f014 ] [f015 ] [f016 ] [f017 ] [f018 ] [f019 ] [f020 ] [f021 ] [f022 ] [f023 ] [f024 ]
+
+Poikk.ryhm: 1   2   3   4   5   6   7   8   9   10  11  12      Valikkoluvat
+            [d] [e] [f] [g] [h] [i] [j] [k] [l] [m] [n] [o]      [f003                                                    ]
+
+Poik 1    2    3    4    5    6    7    8    9    10   11   12   13   14   15   16   
+Tyyp [f1] [a2] [a3] [a4] [a5] [a6] [a7] [a8] [a9] [b1] [b2] [b3] [b4] [b5] [b6] [b7]
+
+Poik 17   18   19   20   21   22   23   24   25   26   27   28   29   30   31   32 
+Tyyp [b8] [b9] [c1] [c2] [c3] [c4] [c5] [c6] [c7] [c8] [c9] [d1] [d2] [d3] [d4] [d5]
+}
+end
+tables
+profile
+attributes
+f000 = profile.up_user_id,RIGHT,COMMENTS="Käyttäjän TN näytetään kaikissa ruuduissa ja sitä käyt. tapaht. kirjaamiseen";
+f001 = profile.up_user_name,COMMENTS="Käyttäjän koko nimi";
+f002 = profile.up_greeting_name,UPSHIFT,COMMENTS="Tervehdysnimi joka näytetään tervehdysrivillä";
+G001 = profile.up_fullname,UPSHIFT,COMMENTS="Käyttäjän koko nimi";
+f004 = profile.up_fleet_perms,UPSHIFT,COMMENTS="Merkki jokaiselle yhtiölle, jonka tiedostoon käyttäjällä on pääsy";
+a = profile.up_default_fleet,UPSHIFT,COMMENTS="Oletustunnus yhtiölle";
+a01 = profile.up_default_screen,RIGHT,COMMENTS="Oletusruutu tälle käyttäjälle hakumuodossa";
+a02 = profile.up_default_search,RIGHT,COMMENTS="Oletusetsintä tälle käyttäjälle hakumuodossa";
+b = profile.up_default_call_tp,UPSHIFT,COMMENTS="Tilauksen oletustyyppi";
+a0 = profile.up_default_city,UPSHIFT,COMMENTS="Alueen oletuskoodi";
+a1 = profile.up_high_call_pri,RIGHT,COMMENTS="1-62. Korkein tärkeysaste, jonka tämä käyttäjä voi antaa tilaukselle";
+c = profile.up_can_zone_calls,UPSHIFT,COMMENTS="K/E.  Voiko tämä käyttäjä ruuduttaa tilauksia";
+f025 = profile.up_logo_file,UPSHIFT,COMMENTS="Ascii-tiedoston hakupolku johon TaxiPak-tiedostosta poistutaan";
+f009 = profile.up_superzone_1,RIGHT,COMMENTS="Superruutu 1:n oletusosa";
+f010 = profile.up_superzone_2,RIGHT,COMMENTS="Superruutu 2:n oletusosa";
+f011 = profile.up_superzone_3,RIGHT,COMMENTS="Superruutu 3:n oletusosa";
+f012 = profile.up_superzone_4,RIGHT,COMMENTS="Superruutu 4:n oletusosa";
+f013 = profile.up_superzone_5,RIGHT,COMMENTS="Superruutu 5:n oletusosa";
+f014 = profile.up_superzone_6,RIGHT,COMMENTS="Superruutu 6:n oletusosa";
+f015 = profile.up_superzone_7,RIGHT,COMMENTS="Superruutu 7:n oletusosa";
+f016 = profile.up_superzone_8,RIGHT,COMMENTS="Superruutu 8:n oletusosa";
+f017 = profile.up_superzone_9,RIGHT,COMMENTS="Superruutu 9:n oletusosa";
+f018 = profile.up_superzone_10,RIGHT,COMMENTS="Superruutu 10:n oletusosa";
+f019 = profile.up_superzone_11,RIGHT,COMMENTS="Superruutu 11:n oletusosa";
+f020 = profile.up_superzone_12,RIGHT,COMMENTS="Superruutu 12:n oletusosa";
+f021 = profile.up_superzone_13,RIGHT,COMMENTS="Superruutu 13:n oletusosa";
+f022 = profile.up_superzone_14,RIGHT,COMMENTS="Superruutu 14:n oletusosa";
+f023 = profile.up_superzone_15,RIGHT,COMMENTS="Superruutu 15:n oletusosa";
+f024 = profile.up_superzone_16,RIGHT,COMMENTS="Superruutu 16:n oletusosa";
+d = profile.up_group_1,UPSHIFT,COMMENTS="K/E.  Onko poikkeusryhmä 1 mukana käyttäjän tässä valinnassa";
+e = profile.up_group_2,UPSHIFT,COMMENTS="K/E.  Onko poikkeusryhmä 2 mukana käyttäjän tässä valinnassa";
+f = profile.up_group_3,UPSHIFT,COMMENTS="K/E.  Onko poikkeusryhmä 3 mukana käyttäjän tässä valinnassa";
+g = profile.up_group_4,UPSHIFT,COMMENTS="K/E.  Onko poikkeusryhmä 4 mukana käyttäjän tässä valinnassa";
+h = profile.up_group_5,UPSHIFT,COMMENTS="K/E.  Onko poikkeusryhmä 5 mukana käyttäjän tässä valinnassa";
+i = profile.up_group_6,UPSHIFT,COMMENTS="K/E.  Onko poikkeusryhmä 6 mukana käyttäjän tässä valinnassa";
+j = profile.up_group_7,UPSHIFT,COMMENTS="K/E.  Onko poikkeusryhmä 7 mukana käyttäjän tässä valinnassa";
+k = profile.up_group_8,UPSHIFT,COMMENTS="K/E.  Onko poikkeusryhmä 8 mukana käyttäjän tässä valinnassa";
+l = profile.up_group_9,UPSHIFT,COMMENTS="K/E.  Onko poikkeusryhmä 9 mukana käyttäjän tässä valinnassa";
+m = profile.up_group_10,UPSHIFT,COMMENTS="K/E.  Onko poikkeusryhmä 10 mukana käyttäjän tässä valinnassa";
+n = profile.up_group_11,UPSHIFT,COMMENTS="K/E.  Onko poikkeusryhmä 11 mukana käyttäjän tässä valinnassa";
+o = profile.up_group_12,UPSHIFT,COMMENTS="K/E.  Onko poikkeusryhmä 12 mukana käyttäjän tässä valinnassa";
+f003 = profile.up_menu_perms,UPSHIFT,COMMENTS="Anna K/E määrätäksesi näytön tai valikon katsomisesta";
+f1 = profile.up_type_1,UPSHIFT,COMMENTS="K/E.  Onko poikkeustyyppi 1 mukana käyttäjän tässä valinnassa";
+a2 = profile.up_type_2,UPSHIFT,COMMENTS="K/E.  Onko poikkeustyyppi 2 mukana käyttäjän tässä valinnassa";
+a3 = profile.up_type_3,UPSHIFT,COMMENTS="K/E.  Onko poikkeustyyppi 3 mukana käyttäjän tässä valinnassa";
+a4 = profile.up_type_4,UPSHIFT,COMMENTS="K/E.  Onko poikkeustyyppi 4 mukana käyttäjän tässä valinnassa";
+a5 = profile.up_type_5,UPSHIFT,COMMENTS="K/E.  Onko poikkeustyyppi 5 mukana käyttäjän tässä valinnassa";
+a6 = profile.up_type_6,UPSHIFT,COMMENTS="K/E.  Onko poikkeustyyppi 6 mukana käyttäjän tässä valinnassa";
+a7 = profile.up_type_7,UPSHIFT,COMMENTS="K/E.  Onko poikkeustyyppi 7 mukana käyttäjän tässä valinnassa";
+a8 = profile.up_type_8,UPSHIFT,COMMENTS="K/E.  Onko poikkeustyyppi 8 mukana käyttäjän tässä valinnassa";
+a9 = profile.up_type_9,UPSHIFT,COMMENTS="K/E.  Onko poikkeustyyppi 9 mukana käyttäjän tässä valinnassa";
+b1 = profile.up_type_10,UPSHIFT,COMMENTS="K/E.  Onko poikkeustyyppi 10 mukana käyttäjän tässä valinnassa";
+b2 = profile.up_type_11,UPSHIFT,COMMENTS="K/E.  Onko poikkeustyyppi 11 mukana käyttäjän tässä valinnassa";
+b3 = profile.up_type_12,UPSHIFT,COMMENTS="K/E.  Onko poikkeustyyppi 12 mukana käyttäjän tässä valinnassa";
+b4= profile.up_type_13,UPSHIFT,COMMENTS="K/E.  Onko poikkeustyyppi 13 mukana käyttäjän tässä valinnassa";
+b5 = profile.up_type_14,UPSHIFT,COMMENTS="K/E.  Onko poikkeustyyppi 14 mukana käyttäjän tässä valinnassa";
+b6 = profile.up_type_15,UPSHIFT,COMMENTS="K/E.  Onko poikkeustyyppi 15 mukana käyttäjän tässä valinnassa";
+b7 = profile.up_type_16,UPSHIFT,COMMENTS="K/E.  Onko poikkeustyyppi 16 mukana käyttäjän tässä valinnassa";
+b8 = profile.up_type_17,UPSHIFT,COMMENTS="K/E.  Onko poikkeustyyppi 17 mukana käyttäjän tässä valinnassa";
+b9 = profile.up_type_18,UPSHIFT,COMMENTS="K/E.  Onko poikkeustyyppi 18 mukana käyttäjän tässä valinnassa";
+c1 = profile.up_type_19,UPSHIFT,COMMENTS="K/E.  Onko poikkeustyyppi 19 mukana käyttäjän tässä valinnassa";
+c2 = profile.up_type_20,UPSHIFT,COMMENTS="K/E.  Onko poikkeustyyppi 20 mukana käyttäjän tässä valinnassa";
+c3 = profile.up_type_21,UPSHIFT,COMMENTS="K/E.  Onko poikkeustyyppi 21 mukana käyttäjän tässä valinnassa";
+c4 = profile.up_type_22,UPSHIFT,COMMENTS="K/E.  Onko poikkeustyyppi 22 mukana käyttäjän tässä valinnassa";
+c5 = profile.up_type_23,UPSHIFT,COMMENTS="K/E.  Onko poikkeustyyppi 23 mukana käyttäjän tässä valinnassa";
+c6 = profile.up_type_24,UPSHIFT,COMMENTS="K/E.  Onko poikkeustyyppi 24 mukana käyttäjän tässä valinnassa";
+c7 = profile.up_type_25,UPSHIFT,COMMENTS="K/E.  Onko poikkeustyyppi 25 mukana käyttäjän tässä valinnassa";
+c8 = profile.up_type_26,UPSHIFT,COMMENTS="K/E.  Onko poikkeustyyppi 26 mukana käyttäjän tässä valinnassa";
+c9 = profile.up_type_27,UPSHIFT,COMMENTS="K/E.  Onko poikkeustyyppi 27 mukana käyttäjän tässä valinnassa";
+d1 = profile.up_type_28,UPSHIFT,COMMENTS="K/E.  Onko poikkeustyyppi 28 mukana käyttäjän tässä valinnassa";
+d2 = profile.up_type_29,UPSHIFT,COMMENTS="K/E.  Onko poikkeustyyppi 29 mukana käyttäjän tässä valinnassa";
+d3 = profile.up_type_30,UPSHIFT,COMMENTS="K/E.  Onko poikkeustyyppi 30 mukana käyttäjän tässä valinnassa";
+d4 = profile.up_type_31,UPSHIFT,COMMENTS="K/E.  Onko poikkeustyyppi 31 mukana käyttäjän tässä valinnassa";
+d5 = profile.up_type_32,UPSHIFT,COMMENTS="K/E.  Onko poikkeustyyppi 32 mukana käyttäjän tässä valinnassa";
+end
+instructions
+   delimiters "()";
+end

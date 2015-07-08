@@ -1,0 +1,17 @@
+database mads
+screen size 24 by 80
+{
+vh_fleet           [a]
+vh_nbr             [f000  ]
+vh_imsi            [f001                            ]
+vh_tele            [f002                            ]
+}
+end
+tables
+imsi
+attributes
+a = imsi.vh_fleet;
+f000 = imsi.vh_nbr;
+f001 = imsi.vh_imsi;
+f002 = imsi.vh_tele;
+end

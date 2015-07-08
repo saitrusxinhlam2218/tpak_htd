@@ -1,0 +1,284 @@
+static char sz__FILE__[]="@(#)ab_time.c	10.1(ver) Date Release 12/2/94" ;
+ /****************************************************************************
+ *                                                                           *
+ *                           S C C S   I N F O                               *
+ *                                                                           *
+ * @(#)  ab_time.c; Rel: 10.1.0.0; Get date: 4/18/95 at 16:32:15
+ * @(#)  Last delta: 12/2/94 at 11:17:27
+ * @(#)  SCCS File: /taxi/sccs/s.ab_time.c
+ *                                                                           *
+ * Copyright (c) 1990 - MDI Seattle                                          *
+ *                                                                           *
+ *****************************************************************************/
+#ident "@(#) head:ab_time.c	10.1.0.0"
+
+#include <time.h>
+#include <sys/types.h>
+#include <sys/timeb.h>
+
+#include "pi_account_defines.h"
+
+#define TO_DIGIT(c)  ((int) (c - '0'))
+
+/************************* This is tzfile.h from the sun *********************/
+
+/*	@(#)tzfile.h 1.5 88/02/07 SMI; from Arthur Olson's 3.1	*/
+
+/*
+** Information about time zone files.
+*/
+
+#define TZDIR		"/usr/share/lib/zoneinfo"	
+
+#define TZDEFAULT	"localtime"
+
+/*
+** Each file begins with. . .
+*/
+
+struct tzhead {
+	char	tzh_reserved[32];	/* reserved for future use */
+	char	tzh_timecnt[4];		/* coded number of transition times */
+	char	tzh_typecnt[4];		/* coded number of local time types */
+	char	tzh_charcnt[4];		/* coded number of abbr. chars */
+};
+
+/*
+** . . .followed by. . .
+**
+**	tzh_timecnt (char [4])s		coded transition times a la time(2)
+**	tzh_timecnt (unsigned char)s	types of local time starting at above
+**	tzh_typecnt repetitions of
+**		one (char [4])		coded GMT offset in seconds
+**		one (unsigned char)	used to set tm_isdt
+**		one (unsigned char)	that's an abbreviation list index
+**	tzh_charcnt (char)s		'\0'-terminated zone abbreviaton strings
+*/
+
+/*
+** In the current implementation, "tzset()" refuses to deal with files that
+** exceed any of the limits below.
+*/
+
+/*
+** The TZ_MAX_TIMES value below is enough to handle a bit more than a
+** year's worth of solar time (corrected daily to the nearest second) or
+** 138 years of Pacific Presidential Election time
+** (where there are three time zone transitions every fourth year).
+*/
+#define TZ_MAX_TIMES	370
+
+#ifndef NOSOLAR
+#define TZ_MAX_TYPES	256	/* Limited by what (unsigned char)'s can hold */
+#else /* !NOSOLAR */
+#define TZ_MAX_TYPES	10	/* Maximum number of local time types */
+#endif /* !NOSOLAR */
+
+#define TZ_MAX_CHARS	50	/* Maximum number of abbreviation characters */
+
+#define SECS_PER_MIN	60
+#define MINS_PER_HOUR	60
+#define HOURS_PER_DAY	24
+#define DAYS_PER_WEEK	7
+#define DAYS_PER_NYEAR	365
+#define DAYS_PER_LYEAR	366
+#define SECS_PER_HOUR	(SECS_PER_MIN * MINS_PER_HOUR)
+#define SECS_PER_DAY	((long) SECS_PER_HOUR * HOURS_PER_DAY)
+#define MONS_PER_YEAR	12
+
+#define TM_SUNDAY	0
+#define TM_MONDAY	1
+#define TM_TUESDAY	2
+#define TM_WEDNESDAY	3
+#define TM_THURSDAY	4
+#define TM_FRIDAY	5
+#define TM_SATURDAY	6
+
+#define TM_JANUARY	0
+#define TM_FEBRUARY	1
+#define TM_MARCH	2
+#define TM_APRIL	3
+#define TM_MAY		4
+#define TM_JUNE		5
+#define TM_JULY		6
+#define TM_AUGUST	7
+#define TM_SEPTEMBER	8
+#define TM_OCTOBER	9
+#define TM_NOVEMBER	10
+#define TM_DECEMBER	11
+#define TM_SUNDAY	0
+
+#define TM_YEAR_BASE	1900
+
+#define EPOCH_YEAR	1970
+#define EPOCH_WDAY	TM_THURSDAY
+
+/*
+** Accurate only for the past couple of centuries;
+** that will probably do.
+*/
+
+#define isleap(y) (((y) % 4) == 0 && ((y) % 100) != 0 || ((y) % 400) == 0)
+
+
+/************************ End of tzfile.h ************************************/
+
+/**************************** start of timemk.c *******************************/
+
+/*
+** Code provided by Robert Elz, who writes:
+**      The "best" way to do mktime I think is based on an idea of Bob
+**      Kridle's (so its said...) from a long time ago. (mtxinu!kridle now).
+**      It does a binary search of the time_t space.  Since time_t's are
+**      just 32 bits, its a max of 32 iterations (even at 64 bits it
+**      would still be very reasonable).
+**
+** This code does handle "out of bounds" values in the way described
+** for "mktime" in the October, 1986 draft of the proposed ANSI C Standard;
+** though this is an accident of the implementation and *cannot* be made to
+** work correctly for the purposes there described.
+**
+** A warning applies if you try to use these functions with a version of
+** "localtime" that has overflow problems (such as System V Release 2.0
+** or 4.3 BSD localtime).
+** If you're not using GMT and feed a value to localtime
+** that's near the minimum (or maximum) possible time_t value, localtime
+** may return a struct that represents a time near the maximum (or minimum)
+** possible time_t value (because of overflow).  If such a returned struct tm
+** is fed to timelocal, it will not return the value originally feed to
+** localtime.
+*/
+
+/** includes above
+/**#include <sys/types.h>
+/**#include <time.h>
+/**#include "tzfile.h"
+**/
+
+#ifndef WRONG
+#define WRONG   (-1)
+#endif /* !WRONG */
+
+
+static time_t
+timemk(timeptr, funcp, offset)
+struct tm *     timeptr;
+struct tm * (*  funcp)();
+long            offset;
+{
+        register int    direction;
+        register int    bits;
+        time_t          t;
+        struct tm       yourtm, mytm;
+
+        yourtm = *timeptr;
+        /*
+        ** Correct the tm supplied, in case some of its values are
+        ** out of range.
+        */
+        while (yourtm.tm_sec >= SECS_PER_MIN)
+                ++yourtm.tm_min, yourtm.tm_sec -= SECS_PER_MIN;
+        while (yourtm.tm_sec < 0)
+                --yourtm.tm_min, yourtm.tm_sec += SECS_PER_MIN;
+        while (yourtm.tm_min >= MINS_PER_HOUR)
+                ++yourtm.tm_hour, yourtm.tm_min -= MINS_PER_HOUR;
+        while (yourtm.tm_min < 0)
+                --yourtm.tm_hour, yourtm.tm_min += MINS_PER_HOUR;
+        while (yourtm.tm_hour >= HOURS_PER_DAY)
+                ++yourtm.tm_mday, yourtm.tm_hour -= HOURS_PER_DAY;
+        while (yourtm.tm_hour < 0)
+                --yourtm.tm_mday, yourtm.tm_hour += HOURS_PER_DAY;
+        while (yourtm.tm_mday > 31)             /* trust me [kre] */
+                ++yourtm.tm_mon, yourtm.tm_mday -= 31;
+        while (yourtm.tm_mday <= 0)
+                --yourtm.tm_mon, yourtm.tm_mday += 31;
+        while (yourtm.tm_mon >= MONS_PER_YEAR)
+                ++yourtm.tm_year, yourtm.tm_mon -= MONS_PER_YEAR;
+        while (yourtm.tm_mon < 0)
+                --yourtm.tm_year, yourtm.tm_mon += MONS_PER_YEAR;
+        /*
+        ** Calcluate the number of magnitude bits in a time_t
+        ** (this works regardless of whether time_t is
+        ** signed or unsigned, though lint complains if unsigned).
+        */
+        for (bits = 0, t = 1; t > 0; ++bits, t <<= 1)
+                ;
+        /*
+        ** If time_t is signed, then 0 is the median value,
+        ** if time_t is unsigned, then 1 << bits is median.
+        */
+        t = (t < 0) ? 0 : ((time_t) 1 << bits);
+        for ( ; ; ) {
+                mytm = *((*funcp)(&t));
+                if ((direction = (mytm.tm_year - yourtm.tm_year)) == 0 &&
+                        (direction = (mytm.tm_mon - yourtm.tm_mon)) == 0 &&
+                        (direction = (mytm.tm_mday - yourtm.tm_mday)) == 0 &&
+                        (direction = (mytm.tm_hour - yourtm.tm_hour)) == 0 &&
+                        (direction = (mytm.tm_min - yourtm.tm_min)) == 0)
+                                direction = mytm.tm_sec - yourtm.tm_sec;
+                if (direction == 0) {
+                        *timeptr = mytm;
+                        return t;
+                }
+                if (bits-- < 0) {
+                        *timeptr = yourtm;      /* restore "original" value */
+                        if (yourtm.tm_mday == 31) {
+                                timeptr->tm_mday = 1;
+                                ++(timeptr->tm_mon);
+                                t = timemk(timeptr, funcp, offset);
+                                if (t != WRONG)
+                                        return t;
+                                *timeptr = yourtm;
+                        } else if (yourtm.tm_mon == TM_FEBRUARY &&
+                                yourtm.tm_mday > 28) {
+                                        timeptr->tm_mday -= 28;
+                                        ++(timeptr->tm_mon);
+                                        t = timemk(timeptr, funcp, offset);
+                                        if (t != WRONG)
+                                                return t;
+                                        *timeptr = yourtm;
+                        }
+                        return WRONG;
+                }
+                if (bits < 0)
+                        --t;
+                else if (direction > 0)
+                        t -= (time_t) 1 << bits;
+                else    t += (time_t) 1 << bits;
+        }
+}
+
+#ifdef FOO
+time_t
+timelocal(timeptr)
+struct tm *     timeptr;
+{
+        return timemk(timeptr, localtime, 0L);
+}
+#endif
+
+time_t
+timegm(timeptr)
+struct tm *     timeptr;
+{
+        return timemk(timeptr, gmtime, 0L);
+}
+
+/*--------------------------------------------------------
+ *==>	t1000 get local time
+ *--------------------------------------------------------
+ */
+long
+t1000_get_local_time()
+{
+	long			 calender_time;
+	struct tm		*tm_time;
+	char			 time_string[13];
+
+
+	calender_time = time(NULL);
+	tm_time = localtime(&calender_time);
+
+	return(timelocal(tm_time));
+}
+

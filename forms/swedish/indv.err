@@ -1,0 +1,44 @@
+{
+|***********************************************************************
+|                 RCS INFO
+|
+|  @(#)  $RCSfile: indv.per,v $
+|  @(#)  $Revision: 1.2 $
+|  @(#)  $Date: 1998/06/18 17:29:52 $
+|  @(#)  $Author: taxiadm $
+|  @(#)  $Source: /taxi-scan/taxi_proj/cvs/taxi-scan/src/forms/swedish/indv.per,v $
+|
+|  Copyright (c) 1994 - MobileSoft Consulting, Inc. Woodinville WA
+|
+|**********************************************************************/
+|ident "@(#) head:$RCSfile: indv.per,v $	$Revision: 1.2 $"
+}
+
+database mads
+screen
+{
+Konto
+    Bilpark Kontonr		 Passenger Nbr
+    [a]     [f000              ] [ b]
+
+    Passagerarnamn
+    [f001               ]
+}
+end
+tables
+indv
+fleet
+account
+attributes
+a = indv.indv_fleet,REQUIRED, UPSHIFT, COMMENTS="Bilpark ID", LOOKUP JOINING * fleet.fl_id;
+f000 = indv.indv_account,REQUIRED,UPSHIFT,COMMENTS="Ett konto eller kreditkortsnummer", PICTURE="##################", LOOKUP JOINING * account.ac_nbr;
+b = indv.indv_subacct,REQUIRED, COMMENTS="Number assigned to this passenger";
+f001 = indv.indv_passenger,REQUIRED,UPSHIFT,COMMENTS="Passagerarens namn";
+end
+instructions
+	delimiters "()";
+end
+#
+#      The column "ac_nbr" is a dominant column but it is not indexed.
+# Performance will be much improved by creating an index on the column.
+# See error number -2920. 

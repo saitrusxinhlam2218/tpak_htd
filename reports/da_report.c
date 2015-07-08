@@ -1,0 +1,620 @@
+static char sz__FILE__[]="@(#)da_report.c	10.1(ver) Date Release 12/2/94" ;
+ /****************************************************************************
+ *                                                                           *
+ *                           S C C S   I N F O                               *
+ *                                                                           *
+ * @(#)  da_report.c; Rel: 10.1.0.0; Get date: 4/18/95 at 17:00:41
+ * @(#)  Last delta: 12/2/94 at 11:18:03
+ * @(#)  SCCS File: /taxi/sccs/s.da_report.c
+ *                                                                           *
+ *****************************************************************************/
+
+#include <stdio.h>
+#include <time.h>
+#include <string.h>
+#include <ctype.h>
+#include <malloc.h>
+#include <isam.h>
+#include <sys/types.h>
+
+#include "mads_types.h"
+#include "key.h"
+#include "mad_error.h"
+#include "path.h"
+#define DECLARING
+#include "rep_strdefs.h"
+#include "comm_strdefs.h"
+#include "writer_strdefs.h"
+#include "language.h"
+
+#define MAXREPORTS 	18
+#define SECONDSPERDAY   86400
+#define BLANKS 		"                    "
+#define ROOT 		0
+#define BLANK 		' '
+#define PS_COLUMN  	46
+#define PROGRAM_NAME 	"da_report"
+
+extern long conversion();
+extern	char buf[];	/* for db put and get records       */
+extern	char req_buf[];	/* buffer to cast as call structure */
+extern	int db();
+extern  void local_date_time();
+
+extern int da_calls(), da_cabs(), da_usest(), da_drivers(), da_vehic(),
+        da_zones(), da_cabs_hr(), da_unzoned(), da_dr_mess(), da_emerge(),
+        da_manual(), da_sys_mes(), da_suspend(), da_charge(), da_calbak(),
+        da_credit(), da_autob();
+
+/* There are 15 unique proceedures. da_zones is repeated in the
+structure definition but is called to produce reports only once. */
+static int (*report_function[]) () = {
+	da_calls, da_cabs, da_usest, da_drivers, da_vehic, da_zones,
+	da_cabs_hr, da_zones, da_unzoned, da_dr_mess, da_emerge, da_manual,
+	da_sys_mes, da_suspend, da_charge, da_calbak, da_credit, da_autob};
+
+char sysbuff[120];
+
+/*====================================================================
+= main()
+=	Control program for daily report generation.
+=	Also daily manages the call, call history, and subscription call tables.
+=	da_report -1 	- schedules da_report for future running
+=	da_report  0 	- removes any pending da_report from the cron scheduler
+=	da_report  1  	- reschedules da_report and prompts before running da_report now.
+=	da_report  2  	- reschedules da_report and runs da_report now.
+=       da_report  3    - runs da_report with user defined dates and NO purge
+=	da_report  9    - schedules da_report to run with 10 option.
+=	da_report 10    - reschedules da_report and runs da_purge only.
+=====================================================================*/
+
+main(argc,argv)
+int argc;
+char *argv[];	
+{
+	char fleet_id[50];	/* plenty of fleets */
+	short fleet_num[9];
+	char *fleet_name[50];	/* will malloc room for each fleet name */
+	int goodfleets;
+	int option;              	/*-1 schedules da_report for future running */
+					/* 0 cancels da_report */
+					/* 1 prompts to run reports now  */
+					/* 2 schedules da_report and runs now */
+
+
+        /* initialize language environment */
+        init_locale();
+        REP_catd = init_catalog("da_report");
+        COMMON_m_catd = init_catalog("common");
+        WRITER_catd = init_catalog("writer");
+
+  	setuid(ROOT);	/* at will look in /usr/lib/cron/at.allow for the user id */
+
+
+	/* quit when called without paramters or as da_report 0 */
+	if ( (argc == 1) || (atoi(argv[1]) == 0) ) exit(0); 
+	option=atoi(argv[1]);	/*-1 schedules da_report for future running */
+
+	/* first any scheduled da_report process is dequeued */
+	if ( option != 3 )
+	  {
+	    sprintf(sysbuff,"at -r `grep -l da_report %s 2>/dev/null | sed 's/.*\\///'` 2>/dev/null", ATJOBS);
+	    system(sysbuff);
+	  }
+
+
+	/* mark all the choosen fleets, option 0 is silently */
+	goodfleets = choose_fleets(fleet_id,fleet_name,0,fleet_num);
+	daily_reports(option,goodfleets,fleet_id,fleet_name,fleet_num);
+
+        /* close language catalogues */
+        cleanup_catalog(REP_catd);
+        cleanup_catalog(COMMON_m_catd);
+        cleanup_catalog(WRITER_catd);
+}
+
+/*====================================================================
+= daily_reports() -
+=	Finds and reports on all active fleets.
+=====================================================================*/
+
+daily_reports(option,goodfleets,fleet_id,fleet_name,fleet_num)
+int option;
+int goodfleets;
+char *fleet_id, *fleet_name[];
+short *fleet_num;
+{
+	register int indx;
+	int 	sys_day_start, sys_day_end, sys_prod_start_time;
+	int  	(*prog_name)();			/* the program name for a report */
+	int	fl;
+	char 	reply[64];
+	char 	buff[133];
+	char 	sys_gen_rpt1_n[40],sys_print_rpt1_n[40];
+	char 	start_date[20];
+	char 	start_time[20];
+	char 	end_date[20];
+	char 	end_time[20];
+        char    start_date_time[40];
+        char    end_date_time[40];
+	char	*report_name;
+	char 	path_name[81];				/* Holds name of report file */
+	extern  char 	*get_rp_name();
+	long 	start_dt_tm, ending_dt_tm;	/* report start and stop time stamps */
+	long 	purge_upto_dt_tm;		/* purge calls to this time */
+	struct	cisam_syc *systemrec;
+	struct	cisam_syc sysbuf;
+	char	*c_flag,*p_flag;
+	int 	x;	
+	char    temp1[5],temp2[5];
+	char	flt[21];
+        long    sys_dt_tm;
+        char    sys_date_time[40];
+	char    user_defined_date[32];
+        char    dummy[20];
+	int	keep_data;			/* How many days to keep_data */
+
+	bzero( user_defined_date, sizeof(user_defined_date) );
+	  
+	systemrec = &sysbuf;
+	/* 
+		starting and ending times are from the system control file:
+	*/
+	get_syscntl(&sys_day_start,&sys_day_end,&sys_prod_start_time,sys_gen_rpt1_n,sys_print_rpt1_n,&keep_data);
+        if (keep_data < 2) /* Danger of removing SUBS nd TIMECALLS */
+                keep_data = 2;
+
+	memcpy(&sysbuf,req_buf,sizeof(struct cisam_syc));
+
+	/* schedule the next report if this report ran as a cron job, parameter -1 */
+	/* and the production start time is positive */
+	if(!sys_prod_start_time && option != 1) 			/* the production variable is off */
+		exit(0);
+
+	/* option 3 does not do the reschedule */
+	if ( option != 3 )
+	  next_report(option, sys_prod_start_time);	/* all options except 0 schedule the next report */
+
+	if(option < 0 || option == 9) 			/* option -1 does not run daily reports */
+		exit(0);				/* option 9 schedule da_purge only */
+
+	/* define the start and end dates and times */
+	if ( option == 3 )
+	  {
+	    printf("\nEnter date to report: ");
+	    fflush(stdout);
+	    fflush(stdin);
+	    gets( user_defined_date );
+	    set_dates(sys_day_end, sys_prod_start_time, start_date, start_time, &start_dt_tm, end_date, end_time, &ending_dt_tm, user_defined_date );
+	  }
+	else
+	  set_dates(sys_day_end, sys_prod_start_time, start_date, start_time, &start_dt_tm, end_date, end_time, &ending_dt_tm, user_defined_date );
+
+        /* localize start, end and current dates and times */ 
+        local_date_time(start_dt_tm, start_date, start_time, start_date_time);
+        local_date_time(ending_dt_tm, end_date, end_time, end_date_time);
+
+	if(option == 10) {				/* Run da_purge only */
+		purge_upto_dt_tm = ending_dt_tm - (SECONDSPERDAY * keep_data); /* step back keep_data days */
+/*TEST*/
+		/*sprintf(buff,"nohup da_purge %s %ld > /dev/null &", fleet_id, purge_upto_dt_tm);*/ 
+		sprintf(buff,"/usr/bin/nice -n 19 da_purge %s %ld &", fleet_id, purge_upto_dt_tm); 
+printf("%s\n",buff);
+/*TEST*/
+		system(buff);
+		exit(0);
+	}
+
+	/* lots of options, both implicit (system state) and explicit (parameters) */
+	if(is_unique(option)) {
+		/* already has one program running */
+		if(option == 1) {
+			printf(catgets(REP_catd, 1, 1, "\n%sThe Daily Report program is already running,"),BLANKS);
+			printf(catgets(REP_catd, 1, 2, "\n%sand cannot be restarted until it completes."),BLANKS);
+		}
+		exit(0);
+	}
+	else if(! goodfleets) {
+		if(option == 1)
+			printf(catgets(REP_catd, 1, 3, "\n%sDaily_report: NO fleets are active or will be reported.\n"),BLANKS);
+		exit(0);
+	}
+	else if(option == 1) { 					/* will prompt for confirmation to continue */
+		printf(catgets(REP_catd, 1, 4, "\n\n%sThis program will produce 21 daily reports.\n"),BLANKS);
+		printf(    catgets(REP_catd, 1, 5, "%sType Y if you wish to continue. (Y/N) N\b"),BLANKS);
+		fflush(stdout); 
+                fflush(stdin);
+		gets(reply);	/* get the reply */
+
+		/* if the reply is not yes then return */
+		if(strlen(reply) != 1) 
+			return(0); 
+		if(Toupper(reply[0]) != YES) 
+			return(0);
+	}
+
+	/* 
+		change the current working directory to /user/mads2/bin/reports 
+		Working files and tables, such as .dat and .idx tables, are in this directory.
+		Reports should be put into this directory.
+	*/
+
+	chdir(REP_DIR);
+
+	/* print information to the operator */
+	if(option == 1) {
+		printf(catgets(REP_catd, 1, 6, "\n\n%sTAXI SYSTEMS\n"),BLANKS);
+		printf(catgets(REP_catd, 1, 7, "\n\n%sDAILY FILE MAINTENANCE and REPORT GENERATION\n"),BLANKS);
+		printf(catgets(REP_catd, 1, 8, "\n\n%sThe total time for report production depends upon TAXI call volume.\n"),BLANKS);
+		printf(catgets(REP_catd, 1, 9, "%sPlease wait for the message TYPE RETURN\n"),BLANKS);
+		printf(catgets(REP_catd, 1, 10, "%sThis program will keep you informed of its progress.\n"),BLANKS);
+	}
+
+	/* DA_shift: Build the daily shift and shift history tables from the call and call history tables */
+
+	if(option == 1) {
+		printf(catgets(REP_catd, 1, 11, "\n\n%sThe time is: "),BLANKS); 
+                fflush(stdout);
+                /* get current date/time & localize */
+                sys_dt_tm = time( (long *) 0);
+                local_date_time(sys_dt_tm, dummy, dummy, sys_date_time);
+		printf("%s\n", sys_date_time);
+		printf(catgets(REP_catd, 1, 12, "%sNOTICE: Copying calls to a daily shift file requires a few minutes......\n"),BLANKS);
+	}
+	da_shift(fleet_id,start_date,start_time,start_dt_tm,end_date,end_time,ending_dt_tm,fleet_name, option);
+
+	/* da_subcall will: Schedule all subscription calls  */
+
+	if(option == 1) {
+		printf(catgets(REP_catd, 1, 11, "\n\n%sThe time is: "),BLANKS); 
+                fflush(stdout);
+                /* get current date/time & localize */
+                sys_dt_tm = time( (long *) 0);
+                local_date_time(sys_dt_tm, dummy, dummy, sys_date_time);
+		printf("%s\n", sys_date_time);
+		printf(catgets(REP_catd, 1, 13, "%sNOTICE: Scheduling tomorrow's subscription calls runs independendly.\n"),BLANKS);
+	}
+
+	/* The report production section of daily_reports: */
+
+	for(indx = 0; indx < MAXREPORTS; indx++) {
+		if(indx == 7) 		/* skip reports 9.1.3.8 and 9.4.1.[1,2,3] since these are produced by 9.1.3.6 */
+			continue;
+		for(x=0;x<8 && fleet_num[x] != 99;x++)
+		{
+                        sprintf(flt,"%s/FL%c",RUN_DIR,(char)fleet_num[x]+'0');
+			/*flt[18] = fleet_num[x] + '0';*/
+			/* get appro. flag for generation and printing for each ACTIVE fleet */
+			/*c_flag = p_flag = 'N';*/
+			switch((int)fleet_num[x]) {
+			case 0:
+				p_flag = &systemrec->print_rpt0_n[indx];	
+				c_flag = &systemrec->gen_rpt0_n[indx];	
+				break;
+			case 1:
+				p_flag = &systemrec->print_rpt1_n[indx];	
+				c_flag = &systemrec->gen_rpt1_n[indx];	
+				break;
+			case 2:
+				p_flag = &systemrec->print_rpt2_n[indx];	
+				c_flag = &systemrec->gen_rpt2_n[indx];	
+				break;
+			case 3:
+				p_flag = &systemrec->print_rpt3_n[indx];	
+				c_flag = &systemrec->gen_rpt3_n[indx];	
+				break;
+			case 4:
+				p_flag = &systemrec->print_rpt4_n[indx];	
+				c_flag = &systemrec->gen_rpt4_n[indx];	
+				break;
+			case 5:
+				p_flag = &systemrec->print_rpt5_n[indx];	
+				c_flag = &systemrec->gen_rpt5_n[indx];	
+				break;
+			case 6:
+				p_flag = &systemrec->print_rpt6_n[indx];	
+				c_flag = &systemrec->gen_rpt6_n[indx];	
+				break;
+			case 7:
+				p_flag = &systemrec->print_rpt7_n[indx];	
+				c_flag = &systemrec->gen_rpt7_n[indx];	
+				break;
+			}
+		if(indx == 2 ){
+			strncpy(temp1,start_time,5);
+			strncpy(temp2,end_time,5);
+			temp1[2] = temp1[3];
+			temp1[3]  = temp1[4];
+			temp2[2] = temp2[3];
+			temp2[3]  = temp2[4];
+			temp1[4] = temp2[4] = 0;
+		}
+			if(Toupper(*c_flag) != YES) {
+				if(indx == 2) {
+#ifdef FOO
+					sprintf(buff, "%s %d %s/%s %c %s %s %s %s",DO_STAT,3,REPORT_DATA,get_rp_name(fleet_id[x],indx+1,end_date), fleet_id[x],temp1,temp2,start_date,flt);
+					system(buff);
+#endif
+				}
+				else if (indx == 3){
+#ifdef FOO
+					sprintf(buff, "%s %d %s/%s %c %s %s %s %s",DO_STAT,4,REPORT_DATA,get_rp_name(fleet_id[x],indx+1,end_date), fleet_id[x],temp1,temp2,start_date,flt);
+					system(buff);
+#endif
+				}
+				continue;
+			}
+			prog_name = report_function[indx];
+			if(option == 1) {
+				printf(catgets(REP_catd, 1, 11, "\n\n%sThe time is: "),BLANKS); 
+                                fflush(stdout);
+                                /* get current date/time & localize */
+                                sys_dt_tm = time( (long *) 0);
+                                local_date_time(sys_dt_tm, dummy, dummy, sys_date_time);
+		                printf("%s\n", sys_date_time);
+
+                                /* rather than redo the general design of the report indexing at this late stage, to accomodate the screwiness */
+                                /* of handling da_zones' 5 reports, the index must be altered for reports with indices > 15 (report #s over 19) */
+                                if (indx == 5) {
+				   printf(catgets(REP_catd, 1, 14, "%sREPORT PRODUCTION: working on report %d\n"),BLANKS,6);
+				   printf(catgets(REP_catd, 1, 14, "%sREPORT PRODUCTION: working on report %d\n"),BLANKS,8);
+				   printf(catgets(REP_catd, 1, 14, "%sREPORT PRODUCTION: working on report %d\n"),BLANKS,17);
+				   printf(catgets(REP_catd, 1, 14, "%sREPORT PRODUCTION: working on report %d\n"),BLANKS,18);
+				   printf(catgets(REP_catd, 1, 14, "%sREPORT PRODUCTION: working on report %d\n"),BLANKS,19);
+                                }
+                                else if (indx > 15)
+				   printf(catgets(REP_catd, 1, 14, "%sREPORT PRODUCTION: working on report %d\n"),BLANKS,indx+4);
+                                else
+				   printf(catgets(REP_catd, 1, 14, "%sREPORT PRODUCTION: working on report %d\n"),BLANKS,indx+1);
+			}
+		(*prog_name)(fleet_id[x], start_date, start_time, start_dt_tm, end_date, end_time, ending_dt_tm, fleet_name[x]);
+		if(indx == 2 || indx == 3){
+			sprintf(buff, "%s %d %s/%s %c %s %s %s %s",DO_STAT,indx-1,REPORT_DATA,get_rp_name(fleet_id[x],indx+1,end_date),fleet_id[x],temp1, temp2,start_date,flt);
+			system(buff);
+		}
+			
+
+			if(Toupper(*p_flag) == YES) { 			/* will print this report */
+				if(option == 1) {
+                                    if (indx > 15)
+					printf(catgets(REP_catd, 1, 15, "%sREPORT PRODUCTION: printing report %d\n"),BLANKS,indx + 4);
+                                    else
+					printf(catgets(REP_catd, 1, 15, "%sREPORT PRODUCTION: printing report %d\n"),BLANKS,indx + 1);
+                                }
+
+                                /* rather than redo the general design of the report indexing at this late stage, to accomodate the screwiness */
+                                /* of handling da_zones' 5 reports, the index must be altered for reports with indices > 15 (report #s over 19) */
+                                if (indx > 15)
+				   report_name = get_rp_name(fleet_id[x], indx + 4, end_date);
+                                else
+				   report_name = get_rp_name(fleet_id[x], indx + 1, end_date);
+
+				sprintf(path_name, "%s/%s", REPORT_DATA, report_name);
+				sprintf(buff, "%s %s", PRINT_CMD, path_name);
+				system(buff);
+
+				if(indx == 5) {		/* Since report 6 creates 4  more reports see if syscntl file
+							   will allow printing */
+					if(Toupper(*(p_flag +2)) == YES) {
+						if(option == 1) 
+							printf(catgets(REP_catd, 1, 15, "%sREPORT PRODUCTION: printing report %d\n"),BLANKS,8);
+						report_name = get_rp_name(fleet_id[x],indx+3,end_date);
+						sprintf(path_name, "%s/%s", REPORT_DATA, report_name);
+						sprintf(buff, "%s %s", PRINT_CMD, path_name);
+						system(buff);
+					}
+					if(Toupper(*(p_flag +11)) == YES) {
+						if(option == 1) 
+							printf(catgets(REP_catd, 1, 15, "%sREPORT PRODUCTION: printing report %d\n"),BLANKS,17);
+						report_name = get_rp_name(fleet_id[x],indx+12,end_date);
+						sprintf(path_name, "%s/%s", REPORT_DATA, report_name);
+						sprintf(buff, "%s %s", PRINT_CMD, path_name);
+						system(buff);
+					}
+					if(Toupper(*(p_flag +12)) == YES) {
+						if(option == 1) 
+							printf(catgets(REP_catd, 1, 15, "%sREPORT PRODUCTION: printing report %d\n"),BLANKS,18);
+						report_name = get_rp_name(fleet_id[x],indx+13,end_date);
+						sprintf(path_name, "%s/%s", REPORT_DATA, report_name);
+						sprintf(buff, "%s %s", PRINT_CMD, path_name);
+						system(buff);
+					}
+					if(Toupper(*(p_flag +13)) == YES) {
+						if(option == 1) 
+							printf(catgets(REP_catd, 1, 15, "%sREPORT PRODUCTION: printing report %d\n"),BLANKS,19);
+						report_name = get_rp_name(fleet_id[x],indx+14,end_date);
+						sprintf(path_name, "%s/%s", REPORT_DATA, report_name);
+						sprintf(buff, "%s %s", PRINT_CMD, path_name);
+						system(buff);
+					}
+				}
+						
+			}
+		}
+	} 
+	
+	if(option != 1)
+	{
+		sprintf(buff,"cat %s/FL[0-7]>>%s/FL9 ;isql mads -<ld_stats",RUN_DIR,RUN_DIR);
+		system(buff);
+	}
+	sprintf(buff,"nohup sh %s %s>/dev/null&",DA_CLEAN_UP, RUN_DIR);
+	system(buff);
+
+	if(option == 1) {
+		printf(catgets(REP_catd, 1, 11, "\n\n%sThe time is: "),BLANKS); 
+                fflush(stdout);
+                /* get current date/time & localize */
+                sys_dt_tm = time( (long *) 0);
+                local_date_time(sys_dt_tm, dummy, dummy, sys_date_time);
+		printf("%s\n", sys_date_time);
+		printf(catgets(REP_catd, 1, 16, "%sDONE WITH REPORT PRODUCTION\n"),BLANKS);
+	}
+	/* da_purge will: Purge the call and callh tables. */
+
+	purge_upto_dt_tm = ending_dt_tm - (SECONDSPERDAY * keep_data); /* step back another 24 hours */
+	if(option == 1) {
+		printf(catgets(REP_catd, 1, 11, "\n\n%sThe time is: "),BLANKS); 
+                fflush(stdout);
+                /* get current date/time & localize */
+                sys_dt_tm = time( (long *) 0);
+                local_date_time(sys_dt_tm, dummy, dummy, sys_date_time);
+		printf("%s\n", sys_date_time);
+		printf(catgets(REP_catd, 1, 17, "%sNOTICE: Purging the previous shift's calls runs independendly.\n"),BLANKS);
+	}
+	if ( option != 3 )
+	  {
+	    sprintf(buff,"nohup /usr/bin/nice -n 19 da_purge %s %ld > /dev/null &", fleet_id, purge_upto_dt_tm); 
+	    system(buff);
+	  }
+	return(goodfleets);
+}
+
+/*====================================================================
+= next_report() -
+=	Schedules a report in nexthours, using at.
+=====================================================================*/
+next_report(option, next_time)
+int option;
+int next_time;
+{
+	char 	buff[133];
+	int	i;
+        struct tm *current_time;
+        long   calendar_time;
+        static char *day_of_week[]={"sun","mon","tue","wed","thu","fri","sat"};
+        char   tomorrow[4];
+
+        calendar_time = time(NULL);
+        current_time = localtime(&calendar_time);
+        if (current_time->tm_wday == 6)
+           strcpy(tomorrow, day_of_week[0]);
+        else
+           strcpy(tomorrow, day_of_week[current_time->tm_wday+1]);
+
+	if(option == -1 ) {				/* Schedule NOW */
+		sprintf(buff,"echo \"%s 2 \" | at %04d 2>/dev/null",DA_REPORT,next_time);
+ 		system(buff);
+		
+		i = (next_time / 10) % 10;		/* At job to sync non c-screen updates */
+		if(i == 0)
+			next_time -= 50;
+		else
+			next_time -= 10;
+	/*	sprintf(buff,"echo \"%s \" | at %04d 2>/dev/null",NITE_SYNC,next_time);
+ 		system(buff);*/
+	}
+	else if(option == 1 || option == 2) {		/* Schedule Tomorrow */
+		sprintf(buff,"echo \"%s 2 \" | at %04d %s 2>/dev/null",DA_REPORT,next_time, tomorrow);
+ 		system(buff);
+		
+		i = (next_time / 10) % 10;		/* At job to sync non c-screen updates */
+		if(i == 0)
+			next_time -= 50;
+		else
+			next_time -= 10;
+		/*sprintf(buff,"echo \"%s \" | at %04d %s 2>/dev/null", NITE_SYNC, next_time, tomorrow);
+ 		system(buff);*/
+	}
+	else if(option == 9) {				/* Schedule da_purge only NOW */
+		sprintf(buff,"echo \"%s 10 \" | at %04d 2>/dev/null",DA_REPORT,next_time);
+ 		system(buff);
+	}
+	else if(option == 10) {				/* Schedule da_purge only Tomorrow */
+		sprintf(buff,"echo \"%s 10 \" | at %04d %s 2>/dev/null",DA_REPORT,next_time,tomorrow);
+ 		system(buff);
+	}
+
+	return;
+}
+
+/*====================================================================
+= is_unique() -
+=	Returns the count >= 0 of other da_report processes running.
+=====================================================================*/
+is_unique(option)
+int option;
+{
+	return(0);	/* returns 0 if and only if this da_program running is unique */
+}
+
+/*====================================================================
+= set_dates() -
+=	Returns the starting and ending dates and times 
+=====================================================================*/
+set_dates(sys_day_end, sys_prod_start_time, start_date, start_time, start_dt_tm, end_date, end_time, ending_dt_tm, user_defined_date)
+int sys_day_end, sys_prod_start_time;
+char start_date[10];
+char start_time[10];
+char end_date[10];
+char end_time[10];
+long *start_dt_tm, *ending_dt_tm;		/* report start and stop time stamps */
+char user_defined_date[32];
+{
+	char dt_tm_buff[13];
+	struct tm *tt;
+
+	/* get the current time and date. format the time hh:mm:ss */
+	if ( strlen(user_defined_date) )
+	  user_defined_date_time( user_defined_date, end_time );
+	else
+	  date_time(end_date,end_time);
+
+	/* get the production time in ascii. */
+	/* This must be the current day and the ending day of the shift. */
+	sprintf(dt_tm_buff,"%04d",sys_day_end);
+	/* adjust the ending time */
+	end_time[0]=dt_tm_buff[0];	/* the production hour */
+	end_time[1]=dt_tm_buff[1];
+	end_time[3]=dt_tm_buff[2];	/* the production minutes */
+	end_time[4]=dt_tm_buff[3];
+	end_time[6]='0';		/* round seconds to zero */
+	end_time[7]='0';
+	end_time[8]='\0';
+	/* compact the date and time into a buffer */
+	if ( strlen(user_defined_date) )
+	  {
+	    map_dt_tm( user_defined_date, end_time, dt_tm_buff );
+	    strcpy( end_date, user_defined_date );
+	  }
+	else
+	  map_dt_tm(end_date,end_time,dt_tm_buff);
+	/* map the buffer into a time stamp integer */
+	*ending_dt_tm = conversion(dt_tm_buff);
+
+	/* compute the real ending time */
+	if ( strlen( user_defined_date ) )
+	  {
+	    *start_dt_tm = *ending_dt_tm - SECONDSPERDAY;
+	  }
+	else
+	  {
+	    if (sys_prod_start_time < sys_day_end)  *ending_dt_tm -= SECONDSPERDAY;
+	    *start_dt_tm  = *ending_dt_tm - SECONDSPERDAY;	/* shift starting time is one day (in seconds) earlier */
+	  }
+
+	/* this release produces reports up to the last shift */
+	/* -----|----- reporting for shift ------|----- previous 24 hour shift -----|----- time now	*/
+	/* ^^^^^^^^^^^^purging interval^^^^^^^^^^|<<<<<<<reporting interval>>>>>>>>>     		*/
+	/*                                       ^start_dt_tm                        ^ending_dt_tm	*/
+
+	/* use localtime to retrieve the ascii dates and times */
+	tt = localtime(ending_dt_tm);
+	sprintf(end_date,"%02d/%02d/%02d",tt->tm_mon+1,tt->tm_mday,tt->tm_year % 100);
+	sprintf(dt_tm_buff,"%04d",sys_day_end);
+
+	/* store the ending time */
+	end_time[0]=dt_tm_buff[0];	/* the production hour */
+	end_time[1]=dt_tm_buff[1];
+	end_time[3]=dt_tm_buff[2];	/* the production minutes */
+	end_time[4]=dt_tm_buff[3];
+	end_time[6]='0';		/* round seconds to zero */
+	end_time[7]='0';
+	end_time[8]='\0';
+
+	/* compute and store the starting time */
+	tt = localtime(start_dt_tm);
+	sprintf(start_date,"%02d/%02d/%02d",tt->tm_mon+1,tt->tm_mday,tt->tm_year % 100);
+	strcpy(start_time,end_time);
+	return;
+}

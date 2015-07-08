@@ -1,0 +1,171 @@
+$ /****************************************************************************
+$ *                                                                           *
+$ *                           S C C S   I N F O                               *
+$ *                                                                           *
+$ * @(#)  dr_maint.MSF.fin; Rel: 10.1.3.2; Get date: 8/9/95 at 11:08:03
+$ * @(#)  Last delta: 8/9/95 at 11:07:54
+$ * @(#)  SCCS File: /taxi/sccs/s.dr_maint.MSF.fin
+$ *                                                                           *
+$ * Copyright (c) 1990 - MDI Seattle                                          *
+$ *                                                                           *
+$ *****************************************************************************/
+$ #ident "@(#) head:dr_maint.MSF.fin/usr/taxi/enh_src/src/msf/fin	10.1.3.2"
+
+$ /*
+$  * Message file for PROGRAM: dr_maint
+$  * CATALOG:   dr_maint.cat
+$  * MNEMONICS: dr_m_strdefs.h
+$  */
+
+$quote "
+$set 1
+ 
+$ /*    NOTE TO THE TRANSLATOR                          */ 
+$ /*    Quoted text will be followed by a maximum string length if the  */ 
+$ /*    text length is different than the number of chars in the string.*/ 
+$ /*    If no string length is entered default to the current number of */
+$ /*    characters.  A comment about the string is also included where  */
+$ /*    necessary.                                                      */ 
+DR_MAINT_1	"Väärä yhtiön TN"		/* 70		*/
+DR_MAINT_2	"On annettava arvo"		/* 70		*/
+DR_MAINT_3	"00.00.00"
+DR_MAINT_4	"00.00"
+DR_MAINT_5	"00.00 "
+DR_MAINT_6	" "				/* translate to a space because we are using 24 hour time       */	
+DR_MAINT_7	"On annettava arvo"		/* 70		*/
+DR_MAINT_8	"Yhtiön tunniste"
+DR_MAINT_9	"Ajajan TN (1-99999)"
+DR_MAINT_10	"Ajajan luokitus 1-Tavall, 2-Tilap"
+DR_MAINT_11	"Ajajan nimi"
+DR_MAINT_12	"Ajajan kotiosoite"
+DR_MAINT_13	"Ajajan kotipaikka"
+DR_MAINT_14	"Ajajan postinumero"
+DR_MAINT_15	"   "
+DR_MAINT_16	"Ajajan kotinumero"
+DR_MAINT_17	"Ajajan ajokortin tunnus"
+DR_MAINT_18	"Ajajan taksin rekisterinro"
+DR_MAINT_19	"Merkintä ajajan luvalle 1"
+DR_MAINT_20	"Merkintä ajajan luvalle 2"
+DR_MAINT_21	"Merkintä ajajan luvalle 3"
+DR_MAINT_22	"Merkintä ajajan luvalle 4"
+DR_MAINT_23	"Merkintä ajajan luvalle 5"
+DR_MAINT_24	"Merkintä ajajan luvalle 6"
+DR_MAINT_25	"Merkintä ajajan luvalle 7"
+DR_MAINT_26	"Merkintä ajajan luvalle 8"
+DR_MAINT_27	"Merkintä ajajan luvalle 9"
+DR_MAINT_28	"Merkintä ajajan luvalle 10"
+DR_MAINT_29	"Merkintä ajajan luvalle 11"
+DR_MAINT_30	"Merkintä ajajan luvalle 12"
+DR_MAINT_31	"Merkintä ajajan luvalle 13"
+DR_MAINT_32	"Merkintä ajajan luvalle 14"
+DR_MAINT_33	"Merkintä ajajan luvalle 15"
+DR_MAINT_34	"Merkintä ajajan luvalle 16"
+DR_MAINT_35	"Merkintä ajajan ominaisuudelle 1"
+DR_MAINT_36	"Merkintä ajajan ominaisuudelle 2"
+DR_MAINT_37	"Merkintä ajajan ominaisuudelle 3"
+DR_MAINT_38	"Merkintä ajajan ominaisuudelle 4"
+DR_MAINT_39	"Merkintä ajajan ominaisuudelle 5"
+DR_MAINT_40	"Merkintä ajajan ominaisuudelle 6"
+DR_MAINT_41	"Merkintä ajajan ominaisuudelle 7"
+DR_MAINT_42	"Merkintä ajajan ominaisuudelle 8"
+DR_MAINT_43	"Ajajan ajokiellon pvm"
+DR_MAINT_44	"Ajajan ajokiellon kellonaika"
+DR_MAINT_45	"Pvm jolloin ajaja palaa palvelukseen"
+DR_MAINT_46	"Aika jolloin ajaja palaa palvelukseen"
+DR_MAINT_47	"Syy ajajan ajokieltoon"
+DR_MAINT_48	"Onko tällä ajajalla este matkustaja-ajoihin"
+DR_MAINT_49	"Onko tällä ajajalla este tavara-ajoihin"
+DR_MAINT_50	"Onko tällä ajajalla este x-tyypin ajoihin"
+DR_MAINT_51	"Ajajalla lähetettävä kieltoviesti"
+DR_MAINT_52	"Muita ajajakommentteja"
+DR_MAINT_53	"Ajajan ajokortinuusintapvm"
+DR_MAINT_54	"Ajajan taksiluvan uusintapvm"
+DR_MAINT_55	"Edell. pvm jolloin ajaja teki hälytyksen"
+DR_MAINT_56	"Edell. aika jolloin ajaja teki hälytyksen"
+DR_MAINT_57	"Edell. pvm jolloin ajajan hätätila hoidettiin"
+DR_MAINT_58	"Edell. aika jolloin ajajan hätätila hoidettiin"
+DR_MAINT_59	"Edell. pvm jolloin ajaja alkoi"
+DR_MAINT_60	"Edell. aika jolloin ajaja alkoi"
+DR_MAINT_61	"Ed. pvm jolloin ajaja lopetti"
+DR_MAINT_62	"Ed. aika jolloin ajaja lopetti"
+DR_MAINT_63	"Edell. auto jota ajaja ajoi"
+DR_MAINT_64	"Edell. ajo jonka ajaja ajoi"
+DR_MAINT_65	"Ajajan ruutuun tulojen määrä edellisellä vuorolla"
+DR_MAINT_66	"Ajajan ehdollisten ruutuun tulojen määrä edellisellä vuorolla"
+DR_MAINT_67	"Ajajan ruutuun tulojen määrä matkalla edellisellä vuorolla"
+DR_MAINT_68	"Ajajan Eihyvks-ajojen määrä edellisellä vuorolla"
+DR_MAINT_69	"Ajajan antamien hylkäysten määrä edellisellä vuorolla"
+DR_MAINT_70	"Ajajan antamien kutsujen määrä edellisellä vuorolla"
+DR_MAINT_71	"Ajajan saamien Eihyvks määrä edellisellä vuorolla"
+DR_MAINT_72	"Ajajan saamien käsipystyjen määrä edellisellä vuorolla"
+DR_MAINT_73	"Ajajan antamien ajopyyntöjen määrä edellisellä vuorolla"
+DR_MAINT_74	"Ajajan antamien puhepyyntöjen määrä edellisellä vuorolla"
+DR_MAINT_75	"Ajajan välittäjälle lähettämien viestien määrä edellisellä vuorolla"
+DR_MAINT_76	"Ajajan ottamien taukojen määrä edellisellä vuorolla"
+DR_MAINT_77	"Tälle ajajalle käsivälitystilausten määrä edellisellä vuorolla"
+DR_MAINT_78	"Tälle ajajalle välitettyjen tilausten määrä edellisellä vuorolla"
+DR_MAINT_79	"Ajajan yrittämien lyhyiden mittarien määrä edellisellä vuorolla"
+DR_MAINT_80	"Myöhäisten mittarien määrä tämän ajajan edellisellä vuorolla"
+DR_MAINT_81	"Ajajan kyselyiden määrä edellisellä vuorolla"
+DR_MAINT_82	"Tietuetta ei löydy, LISÄÄ ensin!"		/* 70	*/
+DR_MAINT_83	"Yhtiötiedoston avausvirhe"			/* 70	*/
+DR_MAINT_84	"Yhtiötiedoston sulkemisvirhe"		/* 70	*/
+DR_MAINT_85	"On annettava arvo"			/* 70   */
+DR_MAINT_86	"Paina ESC suorittaaksesi"			/* 70   */
+DR_MAINT_87	"Ajajan TN on jo olemassa"		/* 70   */
+DR_MAINT_88	"Ajajatiedoston lukuvirhe"		/* 70   */
+DR_MAINT_89	"Yhtiö"
+DR_MAINT_90	"TN"					/* 5	*/
+DR_MAINT_91	"Luokk"
+DR_MAINT_92	"Nimi"					/* 20	*/
+DR_MAINT_93	"Katuosoite"				/* 20	*/
+DR_MAINT_94	"Postipaikka"					/* 15	*/
+DR_MAINT_95	"Postinumero"					/* 6	*/
+DR_MAINT_96	"            "
+DR_MAINT_97	"Puhelin kot."					/* 10	*/
+DR_MAINT_98	"Matkapuhelin"
+DR_MAINT_99	"Taksilupa"
+DR_MAINT_100	"Luvat"
+DR_MAINT_101	"Ominaisuud"
+DR_MAINT_102	"Kieltopvm"
+DR_MAINT_103	"Paluupvm"
+DR_MAINT_104	"Kiellon syy"
+DR_MAINT_105	"M"					/* use constant for `P`assenger from language.h	*/
+DR_MAINT_106	"T"					/* use constant for 'D'elivery from language.h  */
+DR_MAINT_107	"X"					/* use constant for Type 'X' from language.h	*/
+DR_MAINT_108	"Kieltosanoma"			/* 30	*/
+DR_MAINT_109	"Ajajakommentit"			/* 30	*/
+DR_MAINT_110	"Rek.uus."
+DR_MAINT_111	"Taksiluvan uus"
+DR_MAINT_112	"Edell. häl.pvm."
+DR_MAINT_113	"Hätätila hoidettu"
+DR_MAINT_114	"Aloitus"				/* 13	*/
+DR_MAINT_115	"Lopetus"				/* 13	*/
+DR_MAINT_116	"Auto"
+DR_MAINT_117	"Ajo hoidettu"
+DR_MAINT_118	"RUUT"
+DR_MAINT_119	"ERUUT"
+DR_MAINT_120	"MRUUT"
+DR_MAINT_121	"EIHYVKS"
+DR_MAINT_122	"HYLK"
+DR_MAINT_123	"KUTSU"
+DR_MAINT_124	"JULLI"
+DR_MAINT_125	"KPST"
+DR_MAINT_126	"TRJ"
+DR_MAINT_127	"PUHE"
+DR_MAINT_128	"VIES"
+DR_MAINT_129	"TAUKO"
+DR_MAINT_130	"Välitk"
+DR_MAINT_131	"Ajoja"
+DR_MAINT_132	"Lyhyt M"				/* Short Meter	*/
+DR_MAINT_133	"Myöh M"				/* Late meter	8/
+DR_MAINT_134	"Kysely"
+DR_MAINT_135	"00.00.00"
+DR_MAINT_136	"00.00"
+DR_MAINT_137	" "					/* translate to a space because we are using 24 hour time	*/
+DR_MAINT_138	" "					/* translate to a space because we are using 24 hour time       */
+DR_MAINT_139	"("					/* translate to an opening parenthesis '('		        */
+DR_MAINT_140	")"					/* translate to a closing parenthesis ')'		        */
+DR_MAINT_141    "Väärä valinta - ole hyvä anna (L/U) lisätäksesi tai aloittaaksesi uuden"
+DR_MAINT_142    "ID Serial Nbr"
+

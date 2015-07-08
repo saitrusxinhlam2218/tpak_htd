@@ -1,0 +1,52 @@
+{
+|***********************************************************************
+|                 RCS INFO
+|
+|  @(#)  $RCSfile: card_type.per,v $
+|  @(#)  $Revision: 1.7 $
+|  @(#)  $Date: 1999/01/21 09:34:18 $
+|  @(#)  $Author: taxiadm $
+|  @(#)  $Source: /taxi-scan/taxi_proj/cvs/taxi-scan/src/forms/danish/card_type.per,v $
+|
+|  Copyright (c) 1994 - MobileSoft Consulting, Inc. Woodinville WA
+|
+|**********************************************************************/
+|ident "@(#) head:$RCSfile: card_type.per,v $	$Revision: 1.7 $"
+}
+
+
+database mads 
+screen
+{
+
+						KORT TYPE VEDLIGEHOLD
+
+Accepteret		Præfiks nedre grænse	 Præfiks øvre grænse	         Taxameter tekst
+[a]			[f001               ]   [f002               ]           [f003                                    ]
+
+Service kode index      Service kode
+[f004]                  [f005    ]
+
+Kort type index         Kort type
+[f006]                  [f007    ]
+
+Modulus 10
+[b]
+
+}
+end
+tables
+card_type
+attributes
+a=ct_accept_rej,UPSHIFT;
+f001=ct_card_low,REQUIRED,DEFAULT=0;
+f002=ct_card_high,REQUIRED,DEFAULT=0;
+f003=ct_comment,UPSHIFT;
+f004=ct_service_index,DEFAULT=0;
+f005=ct_service_nbr;
+f006=ct_type_index,REQUIRED,DEFAULT=0;
+f007=ct_type_nbr;
+b=ct_check_mod,UPSHIFT,DEFAULT='J';
+instructions
+	delimiters "()";
+end

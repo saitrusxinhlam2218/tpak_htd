@@ -1,0 +1,52 @@
+{
+|***********************************************************************
+|                 RCS INFO
+|
+|  @(#)  $RCSfile: placenm.per,v $
+|  @(#)  $Revision: 1.2 $
+|  @(#)  $Date: 1999/03/19 21:26:45 $
+|  @(#)  $Author: taxiadm $
+|  @(#)  $Source: /taxi-scan/taxi_proj/cvs/taxi-scan/src/forms/english/placenm.per,v $
+|
+|  Copyright (c) 1994 - MobileSoft Consulting, Inc. Woodinville WA
+|
+|**********************************************************************/
+|ident "@(#) head:$RCSfile: placenm.per,v $	$Revision: 1.2 $"
+}
+database mads
+screen
+{
+						PLACE NAME FILE DISPLAY
+
+Index                 Place Name              Street Number    Suf  Pre-dir Name                   Type   Post-dir City  Block Face
+[f002              ]  [f000                ]         [f003  ]  [b]  [a0]    [f001                ] [a1 ]  [a2]     [a3 ] [a]
+
+Zip Code   Subzone   X-coord                 Y-coord
+[f004 ]    [f005 ]   [f006                ]  [f007                ]
+
+Map Ref Page   Map Ref Block  Comment                           Local
+[f08]          [a4  ]         [f009                          ]  [c]
+}
+end
+tables
+placenm
+attributes
+f002 = placenm.pl_index, RIGHT, NOENTRY, NOUPDATE, COMMENTS="A system assigned number from the street name file";
+f000 = placenm.pl_name, NOENTRY, UPSHIFT,  COMMENTS="Place name";
+f003 = placenm.pl_street_nbr, RIGHT, NOENTRY,  COMMENTS="Street address number";
+b = placenm.pl_str_nbr_suf, NOENTRY, UPSHIFT,  COMMENTS="An alphabetic suffix";
+a0 = placenm.pl_str_pre_dir, NOENTRY, UPSHIFT,  COMMENTS="Street pre-direction";
+f001 = placenm.pl_str_name, NOENTRY, UPSHIFT,  COMMENTS="Street name";
+a1 = placenm.pl_str_type, NOENTRY, UPSHIFT,  COMMENTS="Street type";
+a2 = placenm.pl_str_post_dir, NOENTRY, UPSHIFT,  COMMENTS="Street post direction";
+a3 = placenm.pl_str_city, NOENTRY, UPSHIFT,  COMMENTS="City code";
+a = placenm.pl_odd_even, NOENTRY, UPSHIFT,  COMMENTS="E-even, O-odd, ' '-both";
+f004 = placenm.pl_str_zip, NOENTRY,  COMMENTS="Zip code associated with this place name";
+f005 = placenm.pl_str_subzone, NOENTRY,  COMMENTS="Subzone associated with this place name";
+f006 = placenm.pl_str_x_coord, RIGHT, NOENTRY,  COMMENTS="X-coordinate of the street";
+f007 = placenm.pl_str_y_coord, RIGHT, NOENTRY,  COMMENTS="Y-coordinate of the street";
+f08  = placenm.pl_map_ref_page, RIGHT, NOENTRY,  COMMENTS="Map reference page number";
+a4 = placenm.pl_map_ref_block, NOENTRY,  COMMENTS="Map block designation";
+f009 = placenm.pl_str_comment, NOENTRY, UPSHIFT,  COMMENTS="Location comment for this place name record";
+c = placenm.pl_local, NOENTRY, UPSHIFT,  COMMENTS="Does this address imply a local trip (Y/N)?";
+end

@@ -1,0 +1,43 @@
+database mads
+screen
+{
+						Fil för upprepat meddel. visning
+
+Nummer                        Upprepa    Bilpark    Till typ    Urval   Hur ofta  
+[f000                ]        [a]        [b]        [c ]        [f001 ] [f002  ]   
+
+Skapad:  Av      Datum        Tid        System Datum/Tid
+         [f003]  [f004    ]   [f005  ]   [f006              ]  
+
+Tills:           Datum        Tid        System Datum/Tid
+                 [f007    ]   [f008  ]   [f009              ]
+
+Meddelanderad 
+[f010                                              ][f011                                              ]
+[f012                                              ][f013                                              ]
+}
+end
+tables
+rptmsg
+attributes
+a = rptmsg.rm_repeat,include=(J,N),default="J",UPSHIFT,COMMENTS="J/N. Om detta meddelande är ett upprepat meddelande";
+b = rptmsg.rm_fleet,UPSHIFT,COMMENTS="Bilpark som associeras med detta meddelande";
+c = rptmsg.rm_to_type,UPSHIFT,COMMENTS="Typ av användare detta meddelande skickades till";
+f000 = rptmsg.rm_msg_nbr,NOENTRY,RIGHT,NOUPDATE,COMMENTS="Ett nummer tilldelat detta meddelande av systemet";
+f001 = rptmsg.rm_to_selection,UPSHIFT,COMMENTS="Vem meddelandet skickades till";
+f002 = rptmsg.rm_how_often,RIGHT,COMMENTS="Hur ofta detta meddelande ska skickas";
+f003 = rptmsg.rm_created_by,RIGHT,REQUIRED,COMMENTS="Användar ID (vem skapade detta upprepningsmeddelande)"; 
+f004 = rptmsg.rm_cr_date,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Datum då meddelandet skapades";
+f005 = rptmsg.rm_cr_time,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Klockslag då meddelandet skapades";
+f006 = rptmsg.rm_created_dt_tm,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Systemdatum och klockslag då meddelandet skapades";
+f007 = rptmsg.rm_until_date,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Datum då meddelandet utgår";
+f008 = rptmsg.rm_until_time,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Klockslag då meddelandet utgår";
+f009 = rptmsg.rm_until_dt_tm,RIGHT,NOENTRY,NOUPDATE,COMMENTS="System datum & klockslag då meddelandet utgår";
+f010 = rptmsg.rm_line_1[1,50],UPSHIFT,COMMENTS="Meddelandets första rad";
+f011 = rptmsg.rm_line_1[51,100],UPSHIFT,COMMENTS="Meddelandets första rad";
+f012 = rptmsg.rm_line_2[1,50],UPSHIFT,COMMENTS="Meddelandets andra rad";
+f013 = rptmsg.rm_line_2[51,100],UPSHIFT,COMMENTS="Meddelandets andra rad";
+end
+instructions
+   delimiters "()";
+end

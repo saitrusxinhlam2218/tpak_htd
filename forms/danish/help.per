@@ -1,0 +1,42 @@
+{
+|***********************************************************************
+|                 RCS INFO
+|
+|  @(#)  $RCSfile: help.per,v $
+|  @(#)  $Revision: 1.4 $
+|  @(#)  $Date: 1998/01/08 19:35:39 $
+|  @(#)  $Author: taxiadm $
+|  @(#)  $Source: /taxi-scan/taxi_proj/cvs/taxi-scan/src/forms/danish/help.per,v $
+|
+|  Copyright (c) 1994 - MobileSoft Consulting, Inc. Woodinville WA
+|
+|**********************************************************************/
+|ident "@(#) head:$RCSfile: help.per,v $	$Revision: 1.4 $"
+}
+
+database mads
+screen
+{
+						VEDLIGEH. AF Hjælp-FIL
+
+Nav streng  Feltnummer    Linienummer    Som nav streng    Feltnummer  
+[f00]       [f001]         [f002]             [f03]        [f004]
+
+Hjælpinformation
+[f005                                                             ]
+[f006                                                             ]
+}
+end
+tables
+help
+attributes
+f00  = help.hp_nav_string,RIGHT,REQUIRED,COMMENTS="Kommandostreng for tilgang til den skærm som hjælpinfo angår";
+f001 = help.hp_field_nbr,RIGHT,REQUIRED,COMMENTS="Feltnummer på det felt som hjælpinfo angår";
+f002 = help.hp_line_nbr,RIGHT,REQUIRED,COMMENTS="Dette linienummer med hjælptekst for dette felt";
+f03  = help.hp_like_nav_string,default=0,RIGHT,COMMENTS="Kommandostreng for et felt hvis hjælpinfo vil blive brugt";
+f004 = help.hp_like_field_nbr,default=0,RIGHT,COMMENTS="Feltnummer på feltet hvis hjælp vil blive brugt";
+f005 = help.hp_help_line[1,65],COMMENTS="Første del af hjælinformation";
+f006 = help.hp_help_line[66,130],COMMENTS="Anden del af hjælpinformation";
+instructions
+   delimiters "()";
+end

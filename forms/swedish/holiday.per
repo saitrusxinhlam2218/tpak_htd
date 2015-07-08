@@ -1,0 +1,19 @@
+database mads
+screen
+{
+                                            Helgfil underhåll
+Helg datum          Helg namn
+[f3]-[f1]-[f2]      [f001                ]
+}
+end
+tables
+holiday
+attributes
+f3   = holiday.hl_year,right,include=(0 to 99),REQUIRED,AUTONEXT,COMMENTS="Helg år";
+f1   = holiday.hl_mon,right,include=(1 to 12),REQUIRED,AUTONEXT,COMMENTS="Helg månad";
+f2   = holiday.hl_day,right,include=(1 to 31),REQUIRED,AUTONEXT,COMMENTS="Helg dag";
+f001 = holiday.hl_desc,UPSHIFT,COMMENTS="Helgbeskrivning";
+end
+instructions
+   delimiters "()";
+end

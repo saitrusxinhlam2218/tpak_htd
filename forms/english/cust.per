@@ -1,0 +1,52 @@
+{
+|***********************************************************************
+|                 RCS INFO
+|
+|  @(#)  $RCSfile: cust.per,v $
+|  @(#)  $Revision: 1.2 $
+|  @(#)  $Date: 1999/03/19 21:26:26 $
+|  @(#)  $Author: taxiadm $
+|  @(#)  $Source: /taxi-scan/taxi_proj/cvs/taxi-scan/src/forms/english/cust.per,v $
+|
+|  Copyright (c) 1994 - MobileSoft Consulting, Inc. Woodinville WA
+|
+|**********************************************************************/
+|ident "@(#) head:$RCSfile: cust.per,v $	$Revision: 1.2 $"
+}
+database mads
+screen
+{
+
+						CUSTOMER PROFILE MAINTENANCE
+
+Phone Number
+[f001    ]
+
+Pickup Address Information
+Street # Suffix Pre-dir Name                   Type   Post-dir  Apt/Room  City  Zone 
+[f007  ] [d]    [a0]    [f008                ] [a1 ]  [a2]      [f011 ]   [a6 ] [m  ]
+
+Passenger
+[f013               ]
+
+Number of Calls
+[f014    ]
+}
+end
+tables
+customer
+attributes
+f001 = customer.cust_phone_nbr, PICTURE = "XXX-XXXX",COMMENTS = "Customer's Local Phone Number";
+f007 = customer.cust_pckup_str_nbr,RIGHT,COMMENTS="Pickup street number";
+d = customer.cust_pckup_str_suf,UPSHIFT,COMMENTS="Alpha street number suffix";
+a0 = customer.cust_pckup_pre_dir,UPSHIFT,COMMENTS="Pickup address pre-direction";
+f008 = customer.cust_pckup_strname,UPSHIFT,COMMENTS="Pickup street name";
+a1 = customer.cust_pckup_str_typ,UPSHIFT,COMMENTS="Pickup street type(e.g. AVE)";
+a2 = customer.cust_pckup_postdir,NOENTRY,UPSHIFT,COMMENTS="Pickup address post-direction";
+f011 = customer.cust_pckup_apt,UPSHIFT,COMMENTS="Pickup apartment or room number";
+a6 = customer.cust_pckup_city,UPSHIFT,COMMENTS="Abbreviation of the pickup city";
+m = customer.cust_pckup_zone,include=(0 to 999),COMMENTS="User entered or computer generated pickup zone number (1-999)";
+f013 = customer.cust_pass_name,UPSHIFT,COMMENTS="Name of passenger";
+f014 = customer.cust_made_calls, COMMENTS="Number of calls made by this customer";
+
+end

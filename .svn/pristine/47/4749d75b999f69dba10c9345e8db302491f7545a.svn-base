@@ -1,0 +1,23 @@
+$ /****************************************************************************
+$ *                                                                           *
+$ *                           S C C S   I N F O                               *
+$ *                                                                           *
+$ * @(#)  cnvdttm.MSF.fin; Rel: 10.1.3.1; Get date: 5/18/95 at 10:17:21
+$ * @(#)  Last delta: 12/5/94 at 11:01:50
+$ * @(#)  SCCS File: /taxi/sccs/s.cnvdttm.MSF.fin
+$ *                                                                           *
+$ * Copyright (c) 1990 - MDI Seattle                                          *
+$ *                                                                           *
+$ *****************************************************************************/
+$ #ident "@(#) head:cnvdttm.MSF.fin	10.1.3.1"
+
+$quote "
+$set 3
+
+1	"V[[R[ MUOTO pvm:lle ajalle\n"
+2	"EI-NUMEERINEN pvm:n ajan merkki\n"
+3	"V[[R[ KUUKAUSI pvm:lle ajalle\n"
+4	"V[[R[ P[IV[ pvm:lle ajalle\n"
+5	"V[[R[ TUNTI pvm:lle ajalle\n"
+6	"V[[R[ MIN pvm:lle ajalle\n"
+7	"V[[R[ SEK pvm:lle ajalle\n"

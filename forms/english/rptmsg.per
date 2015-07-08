@@ -1,0 +1,55 @@
+{
+|***********************************************************************
+|                 RCS INFO
+|
+|  @(#)  $RCSfile: rptmsg.per,v $
+|  @(#)  $Revision: 1.2 $
+|  @(#)  $Date: 1999/03/19 21:26:49 $
+|  @(#)  $Author: taxiadm $
+|  @(#)  $Source: /taxi-scan/taxi_proj/cvs/taxi-scan/src/forms/english/rptmsg.per,v $
+|
+|  Copyright (c) 1994 - MobileSoft Consulting, Inc. Woodinville WA
+|
+|**********************************************************************/
+|ident "@(#) head:$RCSfile: rptmsg.per,v $	$Revision: 1.2 $"
+}
+database mads
+screen
+{
+						REPEAT MESSAGE FILE DISPLAY
+
+Number                               Repeat    Fleet  To Type  Selection   How Often  
+[f000                ]               [a]       [b]       [c ]  [f001 ]     [f002  ]   
+
+Created:  By      Date        Time          System Date/Time
+          [f003]  [f004    ]  [f005  ]      [f006              ]  
+
+Until:  Date        Time       System Date/Time
+        [f007    ]  [f008  ]   [f009              ]
+
+Message Line 
+[f010                                              ][f011                                              ]
+[f012                                              ][f013                                              ]
+}
+end
+tables
+rptmsg
+attributes
+a = rptmsg.rm_repeat,include=(Y,N),default="Y",UPSHIFT,COMMENTS="Y/N. Whether this message is repeat message";
+b = rptmsg.rm_fleet,UPSHIFT,COMMENTS="Fleet associated with this message";
+c = rptmsg.rm_to_type,UPSHIFT,COMMENTS="Type of user this message was sent to";
+f000 = rptmsg.rm_msg_nbr,NOENTRY,RIGHT,NOUPDATE,COMMENTS="A number assigned to this message by the system";
+f001 = rptmsg.rm_to_selection,UPSHIFT,COMMENTS="Who the message was sent to";
+f002 = rptmsg.rm_how_often,RIGHT,COMMENTS="How often this message supposed to be sent";
+f003 = rptmsg.rm_created_by,RIGHT,REQUIRED,COMMENTS="User ID (who created this repeat message)"; 
+f004 = rptmsg.rm_cr_date,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Date created";
+f005 = rptmsg.rm_cr_time,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Time created";
+f006 = rptmsg.rm_created_dt_tm,RIGHT,NOENTRY,NOUPDATE,COMMENTS="System date and time created";
+f007 = rptmsg.rm_until_date,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Message expiration date";
+f008 = rptmsg.rm_until_time,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Message expiration time";
+f009 = rptmsg.rm_until_dt_tm,RIGHT,NOENTRY,NOUPDATE,COMMENTS="System message expiration date & time";
+f010 = rptmsg.rm_line_1[1,50],UPSHIFT,COMMENTS="First line of message";
+f011 = rptmsg.rm_line_1[51,100],UPSHIFT,COMMENTS="First line of message";
+f012 = rptmsg.rm_line_2[1,50],UPSHIFT,COMMENTS="Second line of message";
+f013 = rptmsg.rm_line_2[51,100],UPSHIFT,COMMENTS="Second line of message";
+end

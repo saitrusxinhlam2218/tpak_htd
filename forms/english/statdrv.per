@@ -1,0 +1,56 @@
+{
+|***********************************************************************
+|                 RCS INFO
+|
+|  @(#)  $RCSfile: statdrv.per,v $
+|  @(#)  $Revision: 1.2 $
+|  @(#)  $Date: 1999/03/19 21:26:54 $
+|  @(#)  $Author: taxiadm $
+|  @(#)  $Source: /taxi-scan/taxi_proj/cvs/taxi-scan/src/forms/english/statdrv.per,v $
+|
+|  Copyright (c) 1994 - MobileSoft Consulting, Inc. Woodinville WA
+|
+|**********************************************************************/
+|ident "@(#) head:$RCSfile: statdrv.per,v $	$Revision: 1.2 $"
+}
+database mads
+screen
+{
+Fleet   ID       Veh #    Driver Statistical From    Driver statistical To
+[a]     [ f000]  [f001]   [f002      ]       	     [f003      ]
+
+Message Sent     Emergencies      Signed on          Signed off    Req-Talk
+[f020]           [f024]           [f025]             [f026]        [f019]
+
+BOOK     EBOOK   CBOOK    NO ACPT    REJCT    ADVARR   NO-TRIP   FLAG    BID      CALLS    BREAK    SHORT M   LATE M    CALLBACK
+[f011]   [f013]  [f012]   [f016]     [f017]   [f022]   [f023]    [f009]  [f010]   [f008]   [f018]   [f014]    [f015]    [f021]
+}
+end
+tables
+statdrv
+attributes
+a = statdrv.sd_fleet,REQUIRED,UPSHIFT,NOUPDATE,COMMENTS="Fleet ID";
+f000 = statdrv.sd_drv_id,REQUIRED,NOUPDATE,RIGHT,COMMENTS="Driver id";
+f001 = statdrv.sd_veh_nbr,REQUIRED,NOUPDATE,RIGHT,COMMENTS="Vehicle number";
+f002 = statdrv.sd_from_dt_tm,RIGHT,COMMENTS="Beginning of the time (C Format)";
+f003 = statdrv.sd_to_dt_tm,RIGHT,COMMENTS="Ending of the time (C Format)";
+f020 = statdrv.sd_messages,RIGHT,COMMENTS="Number of messages sent";
+f024 = statdrv.sd_emergencies,RIGHT,COMMENTS="Number of emergencies";
+f025 = statdrv.sd_sign_ins,RIGHT,COMMENTS="Number of signed on";
+f026 = statdrv.sd_sign_offs,RIGHT,COMMENTS="Number of signed off";
+f019 = statdrv.sd_req_to_talk,RIGHT,COMMENTS="Number of times this driver requested talk";
+f011 = statdrv.sd_posts,RIGHT,COMMENTS="Number of times this driver booked";
+f013 = statdrv.sd_enroute_posts,RIGHT,COMMENTS="Number of times this driver enroute booked";
+f012 = statdrv.sd_cond_posts,RIGHT,COMMENTS="Number of times this driver conditionally booked";
+f016 = statdrv.sd_no_accepts,RIGHT,COMMENTS="Number of No accepts";
+f017 = statdrv.sd_rejects,RIGHT,COMMENTS="Number of rejects";
+f022 = statdrv.sd_callouts,RIGHT,COMMENTS="Number of callouts";
+f023 = statdrv.sd_no_shows,RIGHT,COMMENTS="Number of no shows";
+f009 = statdrv.sd_flags,RIGHT,COMMENTS="Number of flags";
+f010 = statdrv.sd_bids,RIGHT,COMMENTS="Numbere of bids";
+f008 = statdrv.sd_calls,RIGHT,COMMENTS="Number of calls assigned this driver by the system or by a dispatcher";
+f018 = statdrv.sd_breaks,RIGHT,COMMENTS="Number of breaks taken";
+f014 = statdrv.sd_short_meters,RIGHT,COMMENTS="Number of short meter";
+f015 = statdrv.sd_late_meters,RIGHT,COMMENTS="Number of late meter";
+f021 = statdrv.sd_callbacks,RIGHT,COMMENTS="Number of callbacks";
+end

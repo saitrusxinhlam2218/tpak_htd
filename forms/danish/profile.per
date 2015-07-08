@@ -1,0 +1,119 @@
+{
+|***********************************************************************
+|                 RCS INFO
+|
+|  @(#)  $RCSfile: profile.per,v $
+|  @(#)  $Revision: 1.4 $
+|  @(#)  $Date: 1998/01/08 19:35:50 $
+|  @(#)  $Author: taxiadm $
+|  @(#)  $Source: /taxi-scan/taxi_proj/cvs/taxi-scan/src/forms/danish/profile.per,v $
+|
+|  Copyright (c) 1994 - MobileSoft Consulting, Inc. Woodinville WA
+|
+|**********************************************************************/
+|ident "@(#) head:$RCSfile: profile.per,v $	$Revision: 1.4 $"
+}
+
+database mads
+screen
+{
+					VISNING AF BRUGERPROFIL-FIL
+Brug-ID       Navn       Hilse-navn              Fulde navn          Vognpark-tilladelser
+     [f000]   [f001     ]  [f002        ]  [G001                  ]   [f004    ]
+
+Stdværdi   Vgnpk  Skærm Søgn.               Turtype    Kom    Højeste pri  Kan distbestm tur  Logo-fil
+	   [a]    [a01]  [a02]              [b]        [a0 ]  [a1]         [c]               [f025                ]
+Superdist.:
+    1       2       3       4       5       6       7       8       9       10      11      12      13      14      15      16
+    [f009 ] [f010 ] [f011 ] [f012 ] [f013 ] [f014 ] [f015 ] [f016 ] [f017 ] [f018 ] [f019 ] [f020 ] [f021 ] [f022 ] [f023 ] [f024 ]
+
+Undt.grupr: 1   2   3   4   5   6   7   8   9   10  11  12      Menu-tilladelser
+            [d] [e] [f] [g] [h] [i] [j] [k] [l] [m] [n] [o]      [f003                                                    ]
+
+Undt.1    2    3    4    5    6    7    8    9    10   11   12   13   14   15   16   
+type [f1] [a2] [a3] [a4] [a5] [a6] [a7] [a8] [a9] [b1] [b2] [b3] [b4] [b5] [b6] [b7]
+
+Undt.17   18   19   20   21   22   23   24   25   26   27   28   29   30   31   32 
+type [b8] [b9] [c1] [c2] [c3] [c4] [c5] [c6] [c7] [c8] [c9] [d1] [d2] [d3] [d4] [d5]
+}
+end
+tables
+profile
+attributes
+f000 = profile.up_user_id,RIGHT,COMMENTS="Bruger-ID. Vises på alle skærme og bruges til at notere transaktioner";
+f001 = profile.up_user_name,COMMENTS="Fulde bruger-navn";
+f002 = profile.up_greeting_name,UPSHIFT,COMMENTS="Hilse-navn som vises på hilse-linien";
+G001 = profile.up_fullname,UPSHIFT,COMMENTS="Brugers fulde navn";
+f004 = profile.up_fleet_perms,UPSHIFT,COMMENTS="Flag for hver vognpark denne bruger må arbejde med";
+a = profile.up_default_fleet,UPSHIFT,COMMENTS="Standardværdi-vognpark-ID";
+a01 = profile.up_default_screen,RIGHT,COMMENTS="Standardværdi-skærm for denne bruger i navigationsformat";
+a02 = profile.up_default_search,RIGHT,COMMENTS="Standardværdi-søgning for denne bruger i navigationsformat";
+b = profile.up_default_call_tp,UPSHIFT,COMMENTS="Standardværdi-bestillingstype";
+a0 = profile.up_default_city,UPSHIFT,COMMENTS="Standardværdi-kommune-kode";
+a1 = profile.up_high_call_pri,RIGHT,COMMENTS="1-62. Højeste prioritet denne bruger må tildele en tur";
+c = profile.up_can_zone_calls,UPSHIFT,COMMENTS="J/N. Kan denne bruger distriktsbestemme ture";
+f025 = profile.up_logo_file,UPSHIFT,COMMENTS="Et passagernavn i en ascii fil som afslutter TaxiPak system";
+f009 = profile.up_superzone_1,RIGHT,COMMENTS="Superdist 1 standardværdi-afsnit";
+f010 = profile.up_superzone_2,RIGHT,COMMENTS="Superdist 2 standardværdi-afsnit";
+f011 = profile.up_superzone_3,RIGHT,COMMENTS="Superdist 3 standardværdi-afsnit";
+f012 = profile.up_superzone_4,RIGHT,COMMENTS="Superdist 4 standardværdi-afsnit";
+f013 = profile.up_superzone_5,RIGHT,COMMENTS="Superdist 5 standardværdi-afsnit";
+f014 = profile.up_superzone_6,RIGHT,COMMENTS="Superdist 6 standardværdi-afsnit";
+f015 = profile.up_superzone_7,RIGHT,COMMENTS="Superdist 7 standardværdi-afsnit";
+f016 = profile.up_superzone_8,RIGHT,COMMENTS="Superdist 8 standardværdi-afsnit";
+f017 = profile.up_superzone_9,RIGHT,COMMENTS="Superdist 9 standardværdi-afsnit";
+f018 = profile.up_superzone_10,RIGHT,COMMENTS="Superdist 10 standardværdi-afsnit";
+f019 = profile.up_superzone_11,RIGHT,COMMENTS="Superdist 11 standardværdi-afsnit";
+f020 = profile.up_superzone_12,RIGHT,COMMENTS="Superdist 12 standardværdi-afsnit";
+f021 = profile.up_superzone_13,RIGHT,COMMENTS="Superdist 13 standardværdi-afsnit";
+f022 = profile.up_superzone_14,RIGHT,COMMENTS="Superdist 14 standardværdi-afsnit";
+f023 = profile.up_superzone_15,RIGHT,COMMENTS="Superdist 15 standardværdi-afsnit";
+f024 = profile.up_superzone_16,RIGHT,COMMENTS="Superdist 16 standardværdi-afsnit";
+d = profile.up_group_1,UPSHIFT,COMMENTS="J/N. om undtagelsesgruppe 1 inkluderes i denne brugers udvalg";
+e = profile.up_group_2,UPSHIFT,COMMENTS="J/N. om undtagelsesgruppe 2 inkluderes i denne brugers udvalg";
+f = profile.up_group_3,UPSHIFT,COMMENTS="J/N. om undtagelsesgruppe 3 inkluderes i denne brugers udvalg";
+g = profile.up_group_4,UPSHIFT,COMMENTS="J/N. om undtagelsesgruppe 4 inkluderes i denne brugers udvalg";
+h = profile.up_group_5,UPSHIFT,COMMENTS="J/N. om undtagelsesgruppe 5 inkluderes i denne brugers udvalg";
+i = profile.up_group_6,UPSHIFT,COMMENTS="J/N. om undtagelsesgruppe 6 inkluderes i denne brugers udvalg";
+j = profile.up_group_7,UPSHIFT,COMMENTS="J/N. om undtagelsesgruppe 7 inkluderes i denne brugers udvalg";
+k = profile.up_group_8,UPSHIFT,COMMENTS="J/N. om undtagelsesgruppe 8 inkluderes i denne brugers udvalg";
+l = profile.up_group_9,UPSHIFT,COMMENTS="J/N. om undtagelsesgruppe 9 inkluderes i denne brugers udvalg";
+m = profile.up_group_10,UPSHIFT,COMMENTS="J/N. om undtagelsesgruppe 10 inkluderes i denne brugers udvalg";
+n = profile.up_group_11,UPSHIFT,COMMENTS="J/N. om undtagelsesgruppe 11 inkluderes i denne brugers udvalg";
+o = profile.up_group_12,UPSHIFT,COMMENTS="J/N. om undtagelsesgruppe 12 inkluderes i denne brugers udvalg";
+f003 = profile.up_menu_perms,UPSHIFT,COMMENTS="Et flag for hvert menupunkt som kan vælges ";
+f1 = profile.up_type_1,UPSHIFT,COMMENTS="J/N. Om undtagelsestype 1 inkluderes i denne brugers udvalg";
+a2 = profile.up_type_2,UPSHIFT,COMMENTS="J/N. Om undtagelsestype 2 inkluderes i denne brugers udvalg";
+a3 = profile.up_type_3,UPSHIFT,COMMENTS="J/N. Om undtagelsestype 3 inkluderes i denne brugers udvalg";
+a4 = profile.up_type_4,UPSHIFT,COMMENTS="J/N. Om undtagelsestype 4 inkluderes i denne brugers udvalg";
+a5 = profile.up_type_5,UPSHIFT,COMMENTS="J/N. Om undtagelsestype 5 inkluderes i denne brugers udvalg";
+a6 = profile.up_type_6,UPSHIFT,COMMENTS="J/N. Om undtagelsestype 6 inkluderes i denne brugers udvalg";
+a7 = profile.up_type_7,UPSHIFT,COMMENTS="J/N. Om undtagelsestype 7 inkluderes i denne brugers udvalg";
+a8 = profile.up_type_8,UPSHIFT,COMMENTS="J/N. Om undtagelsestype 8 inkluderes i denne brugers udvalg";
+a9 = profile.up_type_9,UPSHIFT,COMMENTS="J/N. Om undtagelsestype 9 inkluderes i denne brugers udvalg";
+b1 = profile.up_type_10,UPSHIFT,COMMENTS="J/N. Om undtagelsestype 10 inkluderes i denne brugers udvalg";
+b2 = profile.up_type_11,UPSHIFT,COMMENTS="J/N. Om undtagelsestype 11 inkluderes i denne brugers udvalg";
+b3 = profile.up_type_12,UPSHIFT,COMMENTS="J/N. Om undtagelsestype 12 inkluderes i denne brugers udvalg";
+b4= profile.up_type_13,UPSHIFT,COMMENTS="J/N. Om undtagelsestype 13 inkluderes i denne brugers udvalg";
+b5 = profile.up_type_14,UPSHIFT,COMMENTS="J/N. Om undtagelsestype 14 inkluderes i denne brugers udvalg";
+b6 = profile.up_type_15,UPSHIFT,COMMENTS="J/N. Om undtagelsestype 15 inkluderes i denne brugers udvalg";
+b7 = profile.up_type_16,UPSHIFT,COMMENTS="J/N. Om undtagelsestype 16 inkluderes i denne brugers udvalg";
+b8 = profile.up_type_17,UPSHIFT,COMMENTS="J/N. Om undtagelsestype 17 inkluderes i denne brugers udvalg";
+b9 = profile.up_type_18,UPSHIFT,COMMENTS="J/N. Om undtagelsestype 18 inkluderes i denne brugers udvalg";
+c1 = profile.up_type_19,UPSHIFT,COMMENTS="J/N. Om undtagelsestype 19 inkluderes i denne brugers udvalg";
+c2 = profile.up_type_20,UPSHIFT,COMMENTS="J/N. Om undtagelsestype 20 inkluderes i denne brugers udvalg";
+c3 = profile.up_type_21,UPSHIFT,COMMENTS="J/N. Om undtagelsestype 21 inkluderes i denne brugers udvalg";
+c4 = profile.up_type_22,UPSHIFT,COMMENTS="J/N. Om undtagelsestype 22 inkluderes i denne brugers udvalg";
+c5 = profile.up_type_23,UPSHIFT,COMMENTS="J/N. Om undtagelsestype 23 inkluderes i denne brugers udvalg";
+c6 = profile.up_type_24,UPSHIFT,COMMENTS="J/N. Om undtagelsestype 24 inkluderes i denne brugers udvalg";
+c7 = profile.up_type_25,UPSHIFT,COMMENTS="J/N. Om undtagelsestype 25 inkluderes i denne brugers udvalg";
+c8 = profile.up_type_26,UPSHIFT,COMMENTS="J/N. Om undtagelsestype 26 inkluderes i denne brugers udvalg";
+c9 = profile.up_type_27,UPSHIFT,COMMENTS="J/N. Om undtagelsestype 27 inkluderes i denne brugers udvalg";
+d1 = profile.up_type_28,UPSHIFT,COMMENTS="J/N. Om undtagelsestype 28 inkluderes i denne brugers udvalg";
+d2 = profile.up_type_29,UPSHIFT,COMMENTS="J/N. Om undtagelsestype 29 inkluderes i denne brugers udvalg";
+d3 = profile.up_type_30,UPSHIFT,COMMENTS="J/N. Om undtagelsestype 30 inkluderes i denne brugers udvalg";
+d4 = profile.up_type_31,UPSHIFT,COMMENTS="J/N. Om undtagelsestype 31 inkluderes i denne brugers udvalg";
+d5 = profile.up_type_32,UPSHIFT,COMMENTS="J/N. Om undtagelsestype 32 inkluderes i denne brugers udvalg";
+instructions
+   delimiters "()";
+end

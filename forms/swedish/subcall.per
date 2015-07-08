@@ -1,0 +1,137 @@
+database mads
+screen
+{
+						Abonnemangsbeställningsfil visning
+
+Best.nummer            Bilpark  Typ   
+[f000                ] [a]      [f001 ] 
+
+Hämtningsgatunr             Namn                                   Uppgång  Kommun    Zon     Hämtn.adress kommentar
+     [f003  ]   [c]    [a0] [f004                ]  [a1 ]   [a2]   [f006 ]  [a6 ]     [f008]  [f002                          ]
+
+Korsning                    Namn                                   Passagerarnamn             Telefonnummer
+                       [a3] [f005                ]  [a4 ]   [a5]   [f007                ]     [f009              ] 
+ 
+Dest   Gatunr               Namn                                   Uppgång  Kommun    Zon     Destinationsadress kommentar
+     [f015  ]   [d]    [a8] [f016                ]  [a9 ]   [b0]   [f017 ]  [b1 ]     [f018]  [f014                          ]
+ 
+Allmän kommentar
+[f011                                                            ]
+                    Bil            Attribut             Förare         Attribut
+Personalkrav      Flagga     1  2  3  4  5  6  7  8     Flagga   1  2  3  4  5  6  7  8     Ant.bil  Prioritet    Medd ankomst 
+[f019]   [e]        [f]     [j][k][l][m][n][o][p][q]    [g]     [r][s][t][u][v][w][x][y]      [h]    [f022]       [z]
+}
+screen
+{
+						Abonnemangsbeställningsfil visning
+
+Kontokortsnr          Begärd av               Kontaktperson           Best.pris    Från datum    Till datum         Lokal
+[f023              ]  [f024                ]  [f025                ]  [f026   ]    [f027     ]   [f028     ]        [b]
+
+                   Måndag   Tisdag  Onsdag  Torsdag  Fredag   Lördag  Söndag                            Karta
+Schemalagd hämtn   [f029]   [f031]  [f033]  [f035]   [f037]   [f039]  [f041]          Hämtn.koord  [f055    ]
+En ändring         [f030]   [f032]  [f034]  [f036]   [f038]   [f040]  [f042]          Dest. koord  [f056    ]
+
+Dat.inskriv.  Tid inskriv.  Kvitto   Inskr.av  Juster. av    Best nr 1                Best nr 2        
+[f048     ]   [f049  ]      [i]      [f044]    [f045]        [f046                ]   [f047                ]
+
+Ytterligare information 1   Ytterligare information 2   Förarmedd                              Företagsnamn          
+[f050                     ] [f051                     ] [f054                                ] [f053                     ]
+}
+end
+tables
+subcall zone
+attributes
+f000 = subcall.sc_nbr,RIGHT,REQUIRED,NOENTRY,COMMENTS="Systemtilldelat abonnemangsnummer";
+a = subcall.sc_fleet = zone.zn_fleet,QUERYCLEAR,UPSHIFT,REQUIRED,NOENTRY,COMMENTS="Bilparksindikator";
+f001 = subcall.sc_extend_type,UPSHIFT,NOENTRY,COMMENTS="Abonnemangsbeställning";
+f003 = subcall.sc_pckup_str_nbr,RIGHT,NOENTRY,COMMENTS="Ett gatunummer";
+c = subcall.sc_pckup_str_suf,UPSHIFT,RIGHT,NOENTRY,COMMENTS="Fältet stöds inte";
+a0 = subcall.sc_pckup_pre_dir,UPSHIFT,NOENTRY,COMMENTS="Fältet stöds inte";
+f004 = subcall.sc_pckup_str_name,UPSHIFT,NOENTRY,COMMENTS="Gatunamn för hämtning";
+a1 = subcall.sc_pckup_str_type,UPSHIFT,NOENTRY,COMMENTS="Fältet stöds inte";
+a2 = subcall.sc_pckup_post_dir,UPSHIFT,NOENTRY,COMMENTS="Fältet stöds inte";
+f006 = subcall.sc_pckup_apt_room,UPSHIFT,NOENTRY,COMMENTS="Uppgång för hämtning";
+a6 = subcall.sc_pckup_city,UPSHIFT,NOENTRY,COMMENTS="Förkortning för hämtningskommun";
+f008 = subcall.sc_pckup_zone = zone.zn_nbr,QUERYCLEAR,RIGHT,include=(1 to 999),NOENTRY,COMMENTS="Användarinskrivet eller datorgenererat zonnummer för hämtning";
+f002 = subcall.sc_pckup_adr_cmnt,UPSHIFT,NOENTRY,COMMENTS="Kommentar för hämtningsadress från geografifilen";
+a3 = subcall.sc_intr_pre_dir,UPSHIFT,NOENTRY,COMMENTS="Fältet stöds inte";
+f005 = subcall.sc_intr_str_name,UPSHIFT,NOENTRY,COMMENTS="Gatunamn för korsning";
+a4 = subcall.sc_intr_str_type,UPSHIFT,NOENTRY,COMMENTS="Fältet stöds inte";
+a5 = subcall.sc_intr_post_dir,UPSHIFT,NOENTRY,COMMENTS="Fältet stöds inte";
+f007 = subcall.sc_passenger_name,UPSHIFT,NOENTRY,COMMENTS="Passagerarens namn";
+f009 = subcall.sc_phone_number,NOENTRY,COMMENTS="Telefonnummer";
+f015 = subcall.sc_dest_str_nbr,RIGHT,NOENTRY,COMMENTS="Ett gatunummer";
+d = subcall.sc_dest_str_suf,UPSHIFT,NOENTRY,COMMENTS="Fältet stöds inte";
+a8 = subcall.sc_dest_pre_dir,UPSHIFT,NOENTRY,COMMENTS="Fältet stöds inte";
+f016 = subcall.sc_dest_str_name,UPSHIFT,NOENTRY,COMMENTS="Gatunamn för destination";
+a9 = subcall.sc_dest_str_type,UPSHIFT,NOENTRY,COMMENTS="Fältet stöds inte";
+b0 = subcall.sc_dest_post_dir,UPSHIFT,NOENTRY,COMMENTS="Fältet stöds inte";
+f017 = subcall.sc_dest_apt_room,UPSHIFT,NOENTRY,COMMENTS="Uppgång för destination";
+b1 = subcall.sc_dest_city,UPSHIFT,NOENTRY,COMMENTS="Förkortning för destinationskommun";
+f018 = subcall.sc_dest_zone,RIGHT,include=(1 to 9999),NOENTRY,COMMENTS="Användarangivet eller datorgenererat destinationszonnummer";
+f014 = subcall.sc_dest_adr_cmnt,UPSHIFT,NOENTRY,COMMENTS="Kommentar för destinationsadress från geografifil";
+f011 = subcall.sc_general_cmnt,UPSHIFT,NOENTRY,COMMENTS="Kommentar";
+f019 = subcall.sc_personal_veh,RIGHT,include=(0 to 9999,NULL),NOENTRY,COMMENTS="Bilnummer för den bil som spec. begärts av kunden";
+e = subcall.sc_personal_rqst,UPSHIFT,include=(E,O,NULL),NOENTRY,COMMENTS="'E'ndast den begärda bilen får hämta kunden 'O'm tillgänglig";
+f = subcall.sc_veh_attr_flag,UPSHIFT,include=(J,N),NOENTRY,autonext,COMMENTS="J/N. Bilar med spec. egenskaper krävs för denna best.";
+j = subcall.sc_veh_attr[1,1],UPSHIFT,include=(J,N,NULL),NOENTRY,autonext,COMMENTS="J/N. Definierar bilattribut.";
+k = subcall.sc_veh_attr[2,2],UPSHIFT,include=(J,N," "),NOENTRY,autonext,COMMENTS="J/N. Definierar bilattribut.";
+l = subcall.sc_veh_attr[3,3],UPSHIFT,include=(J,N," "),NOENTRY,autonext,COMMENTS="J/N. Definierar bilattribut.";
+m = subcall.sc_veh_attr[4,4],UPSHIFT,include=(J,N," "),NOENTRY,autonext,COMMENTS="J/N. Definierar bilattribut.";
+n = subcall.sc_veh_attr[5,5],UPSHIFT,include=(J,N," "),NOENTRY,autonext,COMMENTS="J/N. Definierar bilattribut.";
+o = subcall.sc_veh_attr[6,6],UPSHIFT,include=(J,N," "),NOENTRY,autonext,COMMENTS="J/N. Definierar bilattribut.";
+p = subcall.sc_veh_attr[7,7],UPSHIFT,include=(J,N," "),NOENTRY,autonext,COMMENTS="J/N. Definierar bilattribut.";
+q = subcall.sc_veh_attr[8,8],UPSHIFT,include=(J,N," "),NOENTRY,autonext,COMMENTS="J/N. Definierar bilattribut.";
+g = subcall.sc_drv_attr_flag,UPSHIFT,include=(J,N),NOENTRY,autonext,COMMENTS="J/N. Förare med spec. egenskaper krävs för denna beställning";
+r = subcall.sc_drv_attr[1,1],UPSHIFT,include=(J,N,NULL),NOENTRY,COMMENTS="Definierar förarattribut som krävs för denna beställning";
+s = subcall.sc_drv_attr[2,2],UPSHIFT,include=(J,N," "),NOENTRY,COMMENTS="Definierar förarattribut som krävs för denna beställning";
+t = subcall.sc_drv_attr[3,3],UPSHIFT,include=(J,N," "),NOENTRY,COMMENTS="Definierar förarattribut som krävs för denna beställning";
+u = subcall.sc_drv_attr[4,4],UPSHIFT,include=(J,N," "),NOENTRY,COMMENTS="Definierar förarattribut som krävs för denna beställning";
+v = subcall.sc_drv_attr[5,5],UPSHIFT,include=(J,N," "),NOENTRY,COMMENTS="Definierar förarattribut som krävs för denna beställning";
+w = subcall.sc_drv_attr[6,6],UPSHIFT,include=(J,N," "),NOENTRY,COMMENTS="Definierar förarattribut som krävs för denna beställning";
+x = subcall.sc_drv_attr[7,7],UPSHIFT,include=(J,N," "),NOENTRY,COMMENTS="Definierar förarattribut som krävs för denna beställning";
+y = subcall.sc_drv_attr[8,8],UPSHIFT,include=(J,N," "),NOENTRY,COMMENTS="Definierar förarattribut som krävs för denna beställning";
+h = subcall.sc_nbr_of_vehs,include=(1 to 9),NOENTRY,COMMENTS="Antal bilar som krävs för att hantera beställningen";
+f022 = subcall.sc_priority,include=(1 to 63),RIGHT,NOENTRY,COMMENTS="Beställningsprioritet";
+z = subcall.sc_advise_arrival,NOENTRY,include=(J,N),default="N",UPSHIFT,COMMENTS="Skall föraren varsko trafikledare vid ankomst? (J,N)";
+f023 = subcall.sc_charge_nbr,NOENTRY,COMMENTS="Kundens kontonummer eller kontokortsnummer";
+f024 = subcall.sc_requested_by,UPSHIFT,NOENTRY,COMMENTS="Namn på person som begär tjänster";
+f025 = subcall.sc_person_to_see,UPSHIFT,NOENTRY,COMMENTS="Kontaktperson vid destinationsadressen";
+f026 = subcall.sc_call_rate,RIGHT,FORMAT="####.##",NOENTRY,COMMENTS="Fast pris för denna tjänst uteslut decimalkomma när pris anges";
+f027 = subcall.sc_from_date,NOENTRY,COMMENTS="Begynnelsedatum för abonnemang";
+f028 = subcall.sc_to_date,NOENTRY,COMMENTS="Slutdatum för abonnemang";
+b = subcall.sc_local,UPSHIFT,include=(J,N),NOENTRY,COMMENTS="J/N. Om denna beställning är en lokal körning eller inte";
+f029 = subcall.sc_mon_time,RIGHT,NOENTRY,COMMENTS="Hämtningstid för varje måndag i veckan";
+f030 = subcall.sc_mon_time_change,RIGHT,NOENTRY,COMMENTS="En gång tidsändring för måndag";
+f031 = subcall.sc_tue_time,RIGHT,NOENTRY,COMMENTS="Hämtningstid för varje tisdag i veckan";
+f032 = subcall.sc_tue_time_change,RIGHT,NOENTRY,COMMENTS="En gång tidsändring för tisdag";
+f033 = subcall.sc_wed_time,RIGHT,NOENTRY,COMMENTS="Hämtningstid för varje onsdag i veckan";
+f034 = subcall.sc_wed_time_change,RIGHT,NOENTRY,COMMENTS="En gång tidsändring för onsdag";
+f035 = subcall.sc_thu_time,RIGHT,NOENTRY,COMMENTS="Hämtningstid för varje torsdag i veckan";
+f036 = subcall.sc_thu_time_change,RIGHT,NOENTRY,COMMENTS="En gång tidsändring för torsdag";
+f037 = subcall.sc_fri_time,RIGHT,NOENTRY,COMMENTS="Hämtningstid för varje fredag i veckan";
+f038 = subcall.sc_fri_time_change,RIGHT,NOENTRY,COMMENTS="En gång tidsändring för fredag";
+f039 = subcall.sc_sat_time,RIGHT,NOENTRY,COMMENTS="Hämtningstid för varje lördag i veckan";
+f040 = subcall.sc_sat_time_change,RIGHT,NOENTRY,COMMENTS="En gång tidsändring för lördag";
+f041 = subcall.sc_sun_time,RIGHT,NOENTRY,COMMENTS="Hämtningstid för varje söndag i veckan";
+f042 = subcall.sc_sun_time_change,RIGHT,NOENTRY,COMMENTS="En gång tidsändring för söndag";
+f055 = subcall.sc_pckup_pmap,UPSHIFT,NOENTRY,COMMENTS="Formaterad hämtningsadress genom kartinfo för förare";
+f056 = subcall.sc_dest_dmap,UPSHIFT,NOENTRY,COMMENTS="Formated destinationsadress genom kartinfo för förare";
+f048 = subcall.sc_date_in,NOENTRY,NOUPDATE,COMMENTS="Datum denna beställning skrevs in";
+f049 = subcall.sc_time_in,NOENTRY,NOUPDATE,COMMENTS="Klockslag denna beställning skrevs in";
+i = subcall.sc_pod_required,UPSHIFT,include=(J,N),NOENTRY,COMMENTS="J/N. Om kvitto krävs";
+f044 = subcall.sc_enter_by,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Användar ID på den person som skrev in beställningen";
+f045 = subcall.sc_last_changed_by,RIGHT,NOENTRY,COMMENTS="Användar ID för den sista person som ändrade denna abonnemangsbest";
+f046 = subcall.sc_call_nbr1,RIGHT,NOENTRY,COMMENTS="Beställningsnummer för abonnemanget för nästföljande 24 timmar";
+f047 = subcall.sc_call_nbr2,RIGHT,NOENTRY,COMMENTS="Beställningsnumret som genererats från detta abonnemang för nästf. 25-48 tim";
+f050 = subcall.sc_ac_addt1_info1,UPSHIFT,NOENTRY,COMMENTS="Information som skrivits in som svar på meddelande från kontofilen";
+f051 = subcall.sc_ac_addt1_info2,UPSHIFT,NOENTRY,COMMENTS="Information som skrivits in som svar på meddelande från kontofilen";
+f054 = subcall.sc_driver_msg,UPSHIFT,NOENTRY,COMMENTS="Meddel. som ska skickas till förare från kontofilen om detta är en abng.best.";
+f053 = subcall.sc_company_name,UPSHIFT,NOENTRY,COMMENTS="Företagsnamn om detta är en beställning via kontokort";
+
+instructions
+   delimiters "()";
+   composites <subcall.sc_fleet, subcall.sc_pckup_zone>
+	*<zone.zn_fleet, zone.zn_nbr>
+end

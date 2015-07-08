@@ -1,0 +1,39 @@
+{
+|***********************************************************************
+|                 RCS INFO
+|
+|  @(#)  $RCSfile: help.per,v $
+|  @(#)  $Revision: 1.2 $
+|  @(#)  $Date: 1999/03/19 21:26:36 $
+|  @(#)  $Author: taxiadm $
+|  @(#)  $Source: /taxi-scan/taxi_proj/cvs/taxi-scan/src/forms/english/help.per,v $
+|
+|  Copyright (c) 1994 - MobileSoft Consulting, Inc. Woodinville WA
+|
+|**********************************************************************/
+|ident "@(#) head:$RCSfile: help.per,v $	$Revision: 1.2 $"
+}
+database mads
+screen
+{
+						HELP FILE MAINTENANCE
+
+Nav String  Field Number  Line Number    Like Nav String   Field Number
+[f00]       [f001]         [f002]             [f03]        [f004]
+
+Help Information
+[f005                                                             ]
+[f006                                                             ]
+}
+end
+tables
+help
+attributes
+f00  = help.hp_nav_string,RIGHT,REQUIRED,COMMENTS="Command string used to access the screen this help info pertains to";
+f001 = help.hp_field_nbr,RIGHT,REQUIRED,COMMENTS="Field number of the field this help info is for";
+f002 = help.hp_line_nbr,RIGHT,REQUIRED,COMMENTS="This line number of the help text for this field";
+f03  = help.hp_like_nav_string,default=0,RIGHT,COMMENTS="Command string of a field whose help info will be used";
+f004 = help.hp_like_field_nbr,default=0,RIGHT,COMMENTS="Field number of the field whose help info will be used";
+f005 = help.hp_help_line[1,65],COMMENTS="First part of help information";
+f006 = help.hp_help_line[66,130],COMMENTS="Second part of help information";
+end

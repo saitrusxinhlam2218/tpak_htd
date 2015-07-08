@@ -1,0 +1,94 @@
+{
+|***********************************************************************
+|                 RCS INFO
+|
+|  @(#)  $RCSfile: driver.per,v $
+|  @(#)  $Revision: 1.2 $
+|  @(#)  $Date: 1999/03/19 21:26:28 $
+|  @(#)  $Author: taxiadm $
+|  @(#)  $Source: /taxi-scan/taxi_proj/cvs/taxi-scan/src/forms/english/driver.per,v $
+|
+|  Copyright (c) 1994 - MobileSoft Consulting, Inc. Woodinville WA
+|
+|**********************************************************************/
+|ident "@(#) head:$RCSfile: driver.per,v $	$Revision: 1.2 $"
+}
+database mads
+screen
+{
+						DRIVER FILE DISPLAY
+Fleet  ID       Class   Name                         Address                      City                    Zip     Suffix
+[a]    [f000 ]  [b]     [f001                     ]  [f002                     ]  [f003                ]  [f004 ] [f005]
+
+Phone           License Number     Taxi Lic           Seals 
+[f006        ]  [f007           ]  [f008    ]         [f009            ]
+
+Attributes              Suspended From         Suspended To           Suspension Reason       "P"  "D"  "X"
+[f010            ]     [f011              ]   [f012              ]   [f013                ]  [c]  [d]  [e]
+[f010            ]
+
+Suspension Message
+[f014                            ][f015                            ][f016                            ]
+
+Driver Comments                                                                     Lic Renew    Taxi Lic Renew
+[f018                                    ][f019                                    ][f020     ]  [f021     ]
+Last Emergency On          Emergency Resolved       Signed On             Signed Off            Veh #   Call Serviced
+     [f022              ]  [f023              ]     [f024              ]  [f025              ]  [f026]  [f027              ]
+
+BOOK   CBOOK  EBOOK  no ACPT REJCT  ADVARR NTRIP  FLAG   BID    TALK   MSG    BREAK  Assigns Calls  Short M Late M Callback
+[f032] [f033] [f034] [f037]  [f038] [f043] [f044] [f030] [f031] [f040] [f041] [f039] [f029]  [f028] [f035]  [f036] [f042]
+}
+end
+tables
+driver
+attributes
+a = driver.dr_fleet,UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="Fleet indicator";
+f000 = driver.dr_id,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Driver ID (1-99999)";
+b = driver.dr_class,UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="Driver Classification 1-Regular, 2-Rookei";
+f001 = driver.dr_name,UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="Drivere name";
+f002 = driver.dr_address,UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="Driver home address";
+f003 = driver.dr_city,UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="Driver's home city";
+f004 = driver.dr_zip,NOENTRY,NOUPDATE,COMMENTS="Driver's home zip code";
+f005 = driver.dr_zip_suf,NOENTRY,NOUPDATE,COMMENTS="Driver's home zip code suffix";
+f006 = driver.dr_phone,NOENTRY,NOUPDATE,COMMENTS="Driver's home phone";
+f007 = driver.dr_license_nbr,UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="Driver's license number";
+f008 = driver.dr_taxi_license,UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="Driver's taxi license number";
+f009 = driver.dr_seals,UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="Sixteen flags for seals";
+f010 = driver.dr_attributes,UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="Eight flags for driver attributes";
+f011 = driver.dr_susp_from_dt_tm,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Date and time this driver suspended";
+f012 = driver.dr_susp_to_dt_tm,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Date and time this driver was restore to service";
+f013 = driver.dr_susp_reason,UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="Reason for driver suspension";
+c = driver.dr_susp_pass_call,UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="Whether driver is restricted from servicing passenger calls";
+d = driver.dr_susp_del_call,UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="Whether driver is restricted from delivery calls";
+e = driver.dr_susp_typex_call,UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="Whether driver is restricted from typex calls";
+f014 = driver.dr_susp_message[1,32],UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="Suspension message to be sent to the driver";
+f015 = driver.dr_susp_message[33,64],UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="Suspension message to be sent to the driver";
+f016 = driver.dr_susp_message[65,96],UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="Suspension message to be sent to the driver";
+f018 = driver.dr_comments[1,40],UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="General driver comment area";
+f019 = driver.dr_comments[41,80],UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="General driver comment area";
+f020 = driver.dr_lic_renew,NOENTRY,NOUPDATE,COMMENTS="Driver license renewal date";
+f021 = driver.dr_taxi_lic_renew,NOENTRY,NOUPDATE,COMMENTS="Driver's taxi license renewal date";
+f022 = driver.dr_emerg_on_dt_tm,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Last and time this driver invoked an emergency";
+f023 = driver.dr_emerg_of_dt_tm,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Last date and time this driver's last emergency was taken care of";
+f024 = driver.dr_signed_on_dt_tm,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Last date and time this driver was signed on";
+f025 = driver.dr_signed_of_dt_tm,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Last date and time this driver became idle";
+f026 = driver.dr_last_veh_nbr,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Last vehicle this driver drove";
+f027 = driver.dr_last_call,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Last call handled by this driver";
+f032 = driver.dr_posts,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Number of times this driver booked during his/her last shift";
+f033 = driver.dr_cond_posts,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Number of times this driver issued conditional books during his/her last shift";
+f034 = driver.dr_enroute_posts,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Number of times this driver issued enroute books during his/her last shift";
+f037 = driver.dr_no_accepts,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Number of times this driver issued no accepts during his/her last shift";
+f038 = driver.dr_rejects,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Number of times this driver issued rejects during his/her last shift";
+f043 = driver.dr_callouts,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Number of callouts this driver had during his/her last shift";
+f044 = driver.dr_no_shows,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Number of no shows this driver had during his/her last shift";
+f030 = driver.dr_flags,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Numbere of flags this driver had during his/her last shift";
+f031 = driver.dr_bids,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Number of bids this driver had during  his/her last shift";
+f040 = driver.dr_req_to_talk,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Number of request to talk this driver issued during his/her last shift";
+f041 = driver.dr_messages,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Number of messages this driver sent to the supervisor during his/her last shift";
+f039 = driver.dr_breaks,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Number of breaks this driver took during his/her last shift";
+f029 = driver.dr_assigns,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Number of calls manually assigned to this driver during his/her shift";
+f028 = driver.dr_calls,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Number of calls dispatched to this driver during his/her last shift";
+f035 = driver.dr_short_meters,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Number of short meters attempted by this driver during  his/her last shift";
+f036 = driver.dr_late_meters,RIGHT,NOENTRY,NOUPDATE,COMMENTS="number of late meters that occured during this driver last shift";
+f042 = driver.dr_callbacks,RIGHT,NOENTRY,NOUPDATE,COMMENTS="number of callbacks this driver had during his/her last shift";
+end

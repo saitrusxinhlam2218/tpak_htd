@@ -1,0 +1,246 @@
+static char sz__FILE__[]="@(#)fill_sd.c	10.1(ver) Date Release 12/2/94" ;
+ /****************************************************************************
+ *                                                                           *
+ *                           S C C S   I N F O                               *
+ *                                                                           *
+ * @(#)  fill_sd.c; Rel: 10.1.0.0; Get date: 4/18/95 at 16:38:14
+ * @(#)  Last delta: 12/2/94 at 11:32:28
+ * @(#)  SCCS File: /taxi/sccs/s.fill_sd.c
+ *                                                                           *
+ *****************************************************************************/
+
+#define KEY_SRC
+#include "Stats_drv_db.h"
+#include "taxi_db.h"
+
+void
+fill_sd_key(req_buf, buf)
+     char *req_buf;
+     char *buf;
+{
+	struct  cisam_sd  *sd;
+	register int  offset = 0;
+
+	sd = (struct cisam_sd*)req_buf;
+
+	stlong(sd->record_nbr,&buf[offset]);  /* driver ID */
+        offset += LONGSIZE;
+
+	stchar(&sd->fleet,&buf[offset],sizeof(sd->fleet)); /* fleet indicator */
+        offset += sizeof(sd->fleet)+1;
+
+	stlong(sd->drv_id,&buf[offset]);  /* driver ID */
+        offset += LONGSIZE;
+
+	stint(sd->veh_nbr,&buf[offset]);  /* Vehicle number */
+        
+}
+
+void
+fill_sd(req_buf, buf, action)
+     char *req_buf;
+     char *buf;
+     int  action;
+{
+	struct  cisam_sd  *sd;
+	register int  offset = 0;
+	int serial_nbr = 0;
+
+	sd = (struct cisam_sd*)req_buf;
+
+	if (action == ADD_REC)
+	  {
+	    isuniqueid(Db_files[STATDRV_FILE_ID].fd,&serial_nbr);
+	    sd->record_nbr = (int)serial_nbr;
+	  }
+
+	stlong(sd->record_nbr,&buf[offset]); 
+        offset += LONGSIZE;
+
+	stchar(&sd->fleet,&buf[offset],sizeof(sd->fleet));
+	offset += sizeof(sd->fleet);
+
+	stchar(&sd->pad,&buf[offset],sizeof(sd->pad));
+	offset += sizeof(sd->pad);
+
+	stlong(sd->drv_id,&buf[offset]);
+	offset += LONGSIZE;
+
+	stint(sd->veh_nbr,&buf[offset]);
+	offset += INTSIZE;
+
+	stlong(sd->from_dt_tm,&buf[offset]);
+	offset += LONGSIZE;
+
+	stlong(sd->to_dt_tm,&buf[offset]);
+	offset += LONGSIZE;
+
+	stchar(sd->from_date,&buf[offset],sizeof(sd->from_date)-1);
+	offset += sizeof(sd->from_date)-1;
+
+	stchar(sd->from_time,&buf[offset],sizeof(sd->from_time)-1);
+	offset += sizeof(sd->from_time)-1;
+
+	stchar(sd->to_date,&buf[offset],sizeof(sd->to_date)-1);
+	offset += sizeof(sd->to_date)-1;
+
+	stchar(sd->to_time,&buf[offset],sizeof(sd->to_time)-1);
+	offset += sizeof(sd->to_time)-1;
+
+	stint(sd->calls,&buf[offset]);
+	offset += INTSIZE;
+
+	stint(sd->flags,&buf[offset]);
+	offset += INTSIZE;
+
+	stint(sd->bids,&buf[offset]);
+	offset += INTSIZE;
+
+	stint(sd->posts,&buf[offset]);
+	offset += INTSIZE;
+
+	stint(sd->cond_posts,&buf[offset]);
+	offset += INTSIZE;
+
+	stint(sd->enroute_posts,&buf[offset]);
+	offset += INTSIZE;
+
+	stint(sd->short_meters,&buf[offset]);
+	offset += INTSIZE;
+
+	stint(sd->late_meters,&buf[offset]);
+	offset += INTSIZE;
+
+	stint(sd->no_accepts,&buf[offset]);
+	offset += INTSIZE;
+
+	stint(sd->rejects,&buf[offset]);
+	offset += INTSIZE;
+
+	stint(sd->breaks,&buf[offset]);
+	offset += INTSIZE;
+
+	stint(sd->req_to_talk,&buf[offset]);
+	offset += INTSIZE;
+
+	stint(sd->messages,&buf[offset]);
+	offset += INTSIZE;
+
+	stint(sd->callbacks,&buf[offset]);
+	offset += INTSIZE;
+
+	stint(sd->callouts,&buf[offset]);
+	offset += INTSIZE;
+
+	stint(sd->no_shows,&buf[offset]);
+	offset += INTSIZE;
+
+	stint(sd->emergencies,&buf[offset]);
+	offset += INTSIZE;
+
+	stint(sd->sign_ins,&buf[offset]);
+	offset += INTSIZE;
+
+	stint(sd->sign_offs,&buf[offset]);
+}
+
+/* Load program variables from C-ISAM data record */
+void
+unfill_sd(req_buf, buf)
+     char *req_buf;
+     char *buf;
+{
+	struct  cisam_sd  *sd;
+	register int  offset = 0;
+
+	sd = (struct cisam_sd*)req_buf;
+
+	sd->record_nbr = ldlong(&buf[offset]);
+	offset += LONGSIZE;
+
+	sd->fleet = buf[offset];
+	offset += sizeof(sd->fleet);
+
+	sd->pad= buf[offset];
+	offset += sizeof(sd->pad);
+
+	sd->drv_id = ldlong(&buf[offset]);
+	offset += LONGSIZE;
+
+	sd->veh_nbr = ldint(&buf[offset]);
+	offset += INTSIZE;
+
+	sd->from_dt_tm = ldlong(&buf[offset]);
+	offset += LONGSIZE;
+
+	sd->to_dt_tm= ldlong(&buf[offset]);
+	offset += LONGSIZE;
+
+	ldchar(&buf[offset],sizeof(sd->from_date)-1,sd->from_date);
+	offset += sizeof(sd->from_date)-1;
+
+	ldchar(&buf[offset],sizeof(sd->from_time)-1,sd->from_time);
+	offset += sizeof(sd->from_time)-1;
+
+	ldchar(&buf[offset],sizeof(sd->to_date)-1,sd->to_date);
+	offset += sizeof(sd->to_date)-1;
+
+	ldchar(&buf[offset],sizeof(sd->to_time)-1,sd->to_time);
+	offset += sizeof(sd->to_time)-1;
+
+	sd->calls = ldint(&buf[offset]);
+	offset += INTSIZE;
+
+	sd->flags = ldint(&buf[offset]);
+	offset += INTSIZE;
+
+	sd->bids = ldint(&buf[offset]);
+	offset += INTSIZE;
+
+	sd->posts = ldint(&buf[offset]);
+	offset += INTSIZE;
+
+	sd->cond_posts = ldint(&buf[offset]);
+	offset += INTSIZE;
+
+	sd->enroute_posts = ldint(&buf[offset]);
+	offset += INTSIZE;
+
+	sd->short_meters = ldint(&buf[offset]);
+	offset += INTSIZE;
+
+	sd->late_meters = ldint(&buf[offset]);
+	offset += INTSIZE;
+
+	sd->no_accepts = ldint(&buf[offset]);
+	offset += INTSIZE;
+
+	sd->rejects = ldint(&buf[offset]);
+	offset += INTSIZE;
+
+	sd->breaks = ldint(&buf[offset]);
+	offset += INTSIZE;
+
+	sd->req_to_talk = ldint(&buf[offset]);
+	offset += INTSIZE;
+
+	sd->messages = ldint(&buf[offset]);
+	offset += INTSIZE;
+
+	sd->callbacks = ldint(&buf[offset]);
+	offset += INTSIZE;
+
+	sd->callouts = ldint(&buf[offset]);
+	offset += INTSIZE;
+
+	sd->no_shows = ldint(&buf[offset]);
+	offset += INTSIZE;
+
+	sd->emergencies= ldint(&buf[offset]);
+	offset += INTSIZE;
+
+	sd->sign_ins = ldint(&buf[offset]);
+	offset += INTSIZE;
+
+	sd->sign_offs = ldint(&buf[offset]);
+}

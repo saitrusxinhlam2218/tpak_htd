@@ -1,0 +1,114 @@
+ /****************************************************************************
+ *                                                                           *
+ *                           S C C S   I N F O                               *
+ *                                                                           *
+ * @(#)  parman.h; Rel: 10.1.2.1; Get date: 4/20/95 at 11:48:32
+ * @(#)  Last delta: 12/2/94 at 18:20:22
+ * @(#)  SCCS File: /taxi/sccs/s.parman.h
+ *                                                                           *
+ *****************************************************************************/
+/* HEADER */
+/******************************************************************************
+NAME:
+	parman_h
+	===============
+DESCRIPTION:
+		This is the include file for all application code that uses
+Parameter Manager routines.
+INPUT DATA:
+OUTPUT DATA:
+NOTES:
+UPDATE HISTORY:
+	Darko N. Vranesic	March 03, 1987		Original.
+	Darko N. Vranesic	March 05, 1987		Add permissions.
+	Raymond Chau		June 16, 1987		Re-def Status flags.
+	Mischa Sandberg		Sept. 22, 1987		Added IMPORT procs.
+*******************************************************************************
+*
+*		Copyright (c), 1986
+*		All rights reserved
+*
+*	MOBILE DATA INTERNATIONAL, INC.
+*		RICHMOND, BRITISH COLUMBIA
+*		CANADA
+*
+******************************************************************************/
+/* END HEADER */
+#ifndef	parman_h
+#define	parman_h
+#include "std.h"
+/* Error Codes */
+#define	PM_ERR_INVARG	1	/* Invalid or unknown argument */
+#define	PM_ERR_BADPTR	2	/* Pointer to an illegal address */
+#define	PM_ERR_ACCESS	3	/* Permission denied */
+#define	PM_ERR_UNKSET	4	/* Unknown Parameter Set name */
+#define	PM_ERR_SETEXI	5	/* Parameter Set name already exists */
+#define	PM_ERR_UNKPAR	6	/* Unknown Parameter name */
+#define	PM_ERR_PAREXI	7	/* Parameter name already exists */
+#define	PM_ERR_TOOBIG	8	/* Output too big for specified buffer */
+#define	PM_ERR_SLIMIT	9	/* System limit would be exceeded */
+#define	PM_ERR_PLIMIT	10	/* PARMAN limit would be exceeded */
+#define	PM_ERR_GETPID	11	/* Could not identify the process */
+#define	PM_ERR_INTRPT	12	/* Caught signal interrupted the operation */
+#define	PM_ERR_INVSTS	13	/* Invalid Parameter Set status detected */
+#define	PM_ERR_STSACC	14	/* Can not access Parameter Set status area */
+#define	PM_ERR_NONPRI	15	/* Param. value contains non-printable ascii */
+#define	PM_ERR_LOCK	16	/* Parameter Set lock error */
+#define	PM_ERR_UNLOCK	17	/* Parameter Set unlock error */
+#define	PM_ERR_DEADLK	18	/* Deadlock would occur */
+#define PM_ERR_SALOCK	19	/* Status Area lock error */
+#define PM_ERR_SAULOCK	20	/* Status Area unlock error */
+#define	PM_ERR_NOTOPE	21	/* Parameter Set not opened */
+#define	PM_ERR_BUSY	22	/* Parameter Set operation being performed */
+#define	PM_ERR_CONFIG	23	/* Status Area or SA-Lock id undefined */
+#define	PM_ERR_DEFAULT	99	/* Default error, none of ones defined above */
+/* Return code (in std.h already)
+#define	ERROR	-1		* Error return code *
+#define	SUCCESS	0		* Success return code *
+*/
+/* Constants */
+#define	MAXLEN_PS_NAME	14 /* Maximum length of the Parameter Set name string */
+#define	MAXLEN_P_NAME	32    /* Maximum length of the Parameter name string */
+#define	MAXLEN_P_VALUE	32    /* Maxumum length of the Parameter value string */
+#define	MAXNUM_PARSET	50    /* Max # of Parameter Sets opened system wide */
+#define	MAXPROC_PERSET	20    /* Max # of procs on one Set simultaneously */
+#define	MAX_SET_OPENED	20    /* Max # of simultaneously opened Sets per proc */
+/* Status */
+#define FREE		0	/* Free table entry indicator */
+#define	PM_STAT_RESET	1	/* Parameter Set status RESET */
+#define	PM_STAT_SET	2	/* Parameter Set status SET */
+/* Access flags */
+#define	PM_FLG_UPDATE	2	/* Defines update access for the Set */
+#define	PM_FLG_READ	3	/* Defines readonly access for the Set */
+/* Flags */
+#define	PM_FLG_WAIT	0	/* Wait flag */
+#define	PM_FLG_NOWAIT	04000
+/* Permission */
+#define	PM_PERM_UW	0200	/* User write permission */
+#define	PM_PERM_UR	0400	/* User read permission */
+#define	PM_PERM_UALL	0600	/* User read & write permission */
+#define	PM_PERM_GW	0020	/* Group write permission */
+#define	PM_PERM_GR	0040	/* Group read permission */
+#define	PM_PERM_GALL	0060	/* Group read & write permission */
+#define	PM_PERM_OW	0002	/* Others write permission */
+#define	PM_PERM_OR	0004	/* Others read permission */
+#define	PM_PERM_OALL	0006	/* Others read & write permission */
+#define	PM_PERM_WALL	0222	/* Write permission for all */
+#define	PM_PERM_RALL	0444	/* Read permission for all */
+#define	PM_PERM_ALL	0666	/* Read & write permission for all */
+/* Typedefs */
+IMPORT	INT	par_errno;	/* Parameter Manager Error Number */
+IMPORT INT	parset_close();
+IMPORT INT	parset_create();
+IMPORT INT	parset_delete();
+IMPORT INT	parset_lock();
+IMPORT INT	parset_open();
+IMPORT INT	parset_unlock();
+IMPORT INT	parsts_check();
+IMPORT INT	parsts_reset();
+IMPORT INT	parsts_set();
+IMPORT INT	parval_create();
+IMPORT INT	parval_delete();
+IMPORT INT	parval_read();
+IMPORT INT	parval_write();
+#endif

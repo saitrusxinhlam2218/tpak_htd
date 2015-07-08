@@ -1,0 +1,36 @@
+
+database mads
+screen
+{
+						Hätätilaston hoito
+
+Yhtiö  Hätätilan numero        Poikkeusnumero          Tilausnumero            Auton TN  Ajajan TN   Ruutu nro
+[a]    [f000                ]  [f001                ]  [f002                ]  [f008]    [f009 ]     [f01]
+ 
+Tapahtumapv Aika        Selvityspvm    Aika          Selvittäjä
+[f004     ] [f005  ]    [f006     ]    [f007  ]      [f012]
+
+Huomautus
+[comment                                                                       ]
+}
+end
+tables
+emerg
+attributes
+a = emerg.em_fleet,UPSHIFT,REQUIRED,COMMENTS="Yhtiön tunnusnumero";
+f000 = emerg.em_nbr,REQUIRED,NOENTRY,NOUPDATE,RIGHT,COMMENTS="Systeemin antama hätätunnus";
+f001 = emerg.em_exc_nbr,RIGHT,COMMENTS="Poikkeusnumero vastaavalle poikkeukselle";
+f002 = emerg.em_call_nbr,RIGHT,COMMENTS="Tilauksen numero";
+f008 = emerg.em_veh_nbr,RIGHT,COMMENTS="Hälytyksen tehneen auton tunnus";
+f009 = emerg.em_drv_id,RIGHT,COMMENTS="Hälytyksen tehneen ajajan tunnus";
+f01 = emerg.em_zone_nbr,RIGHT,COMMENTS="Sen ruudun numero johon ajaja oli kirjattu tai tilauksen noutoruutu";
+f004 = emerg.em_event_date,NOENTRY,NOUPDATE,COMMENTS="Tapahtumapvm";
+f005 = emerg.em_event_time,NOENTRY,NOUPDATE,COMMENTS="Tapahtuma-aika";
+f006 = emerg.em_resolved_date,NOENTRY,NOUPDATE,COMMENTS="Hätätilan selvityspäivä";
+f007 = emerg.em_resolved_time,NOENTRY,NOUPDATE,COMMENTS="Hätätilan selvitysaika";
+f012 = emerg.em_resolved_by,RIGHT,COMMENTS="Hätätilan selvittäjän käyttötunnus";
+comment = emerg.em_comment, NOENTRY, NOUPDATE, COMMENTS="Hätätilan selvitykseen liittyvä huomautus";
+end
+instructions
+   delimiters "()";
+end

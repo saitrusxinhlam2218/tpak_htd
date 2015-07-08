@@ -1,0 +1,419 @@
+static char sz__FILE__[]="@(#)dr_maint.c	10.1(ver) Date Release 12/2/94" ;
+ /****************************************************************************
+ *                                                                           *
+ *                           S C C S   I N F O                               *
+ *                                                                           *
+ * @(#)  dr_maint.c; Rel: 5.5.0.0; Get date: 3/26/90 at 14:02:05
+ * @(#)  Last delta: 3/23/90 at 15:57:09
+ * @(#)  SCCS File: /taxi/sccs/s.dr_maint.c
+ *                                                                           *
+ *****************************************************************************/
+
+#include <stdio.h>
+#include <errno.h>
+#include <sys/types.h>
+#include <sys/ipc.h>
+#include <isam.h>
+#include <curses.h>
+#include <signal.h>
+#include <pwd.h>
+#include <grp.h>
+
+#define DECLARING
+#include "comm_strdefs.h"
+#include "dr_m_strdefs.h"
+#include "mad_error.h"
+#include "mads_types.h"
+#include "path.h"
+#include "df_maint.h"
+#include "Driver_db.h"
+#include "taxi_db.h"
+#include "dr_maint.h"
+#include "literals.h"
+#include "language.h"
+#include "Fleet_db.h"
+#include "fleet.h"
+#include "mad_ipc.h"
+#include "enhance.h"
+#include "switch_ext.h"
+
+/*  Declare an array of pointers to functions which check the field entered
+ *  for validity.  
+ */
+
+extern int (*check_field[])();	/* Array of pointers to routines to 
+				   validate the data input by the user */
+
+extern struct scr_flds dr_scr_flds[];
+extern int dr_cl_flds();
+extern int read_field();
+extern char buf[];		/* buffer used for interface to db routine */
+extern char req_buf[];		/* buffer used for interface to db routine */
+extern int iserrno;		/* C-isam error number */
+extern int errno;		/* Error number returned from system calls */
+
+char o_file[F_NAME_SIZE];	/* output file as specified by the user */
+char mode[2];			/* user specifies Append or Create */
+
+extern int prt_query_hdr(), prt_add_hdr();
+extern int prt_scr(), process_intr();
+extern void prt_hdr(), prt_labels();
+extern char read_request(), prompt_confirm();
+extern int prompt_fname(), prompt_mode();
+extern int prt_data(), process_input(), send_ipc();
+extern int prt_upd_hdr(), prt_error(), prt_cisam_err();
+extern int prt_unix_err(), clear_flds();
+extern int clear_err_line(), clear_hdr_line();
+extern int process_query(), process_next();
+extern int process_previous(), process_add();
+extern int process_update(), process_remove(), process_output();
+
+int ret_val;			/* return value  */
+int intr_allowed;		/* interrupts allowed */
+int saw_intr;			/* indicates an interrupt signal was entered */
+char intr_char;			/* interrupt character */
+int end_read_field;		/* flag, 0/1, set to end read_field function */
+short ipc_required;		/* Set if a field changed which is in shared memory */
+char read_buf[BUFFER_SIZE];	/* buffer for reading fields */
+int piu = 3;			/* field number to start reading input from */
+int field_entered;		/* field entered or not */
+int key_val;			/* value of key entered */
+int cur_list;			/* Indicates a row is in the current list */
+int record_nbr;			/* C-ISAM record number */
+int err_n_fld;			/* set if an error in field condition exists */
+int doing_add;			/* performing add operation */
+int fleet_flag = 0;
+int id_flag = 0;
+int file_open;
+struct df_maint df_maint_ipc;	/* structure for passing information 
+				   to dispatch  */
+struct cisam_dr *dr_ptr;	/* pointer to driver file structure */
+struct cisam_fl *fl_ptr;	/* pointer to driver file structure */
+struct cisam_dr *temp_dr_ptr;
+struct cisam_dr temp_dr_buf;
+
+struct offsets *offset;		/* shared menory offset for db redundant db */
+struct offsets *get_offsets();	/* offset routine returns an offset structure */
+
+struct fleets *fleet[FLEET_MAX];
+long glEnhSwitch;
+int MaxAttrs;
+
+#define	DRIVER_OPEN	1
+#define	FLEET_OPEN	2
+
+/*****************************************************************************
+*  dr_maint - main for the driver file maintenance program.
+*******************************************************************************/
+
+main(argc,argv)
+int argc;
+char **argv;
+{
+
+	char request;		/*  User request : Q, N, P, A, U, R, O, or E */
+        char nlspath[80];
+        static char put_nlspath[80];
+        int  putenv();
+
+	/*
+	 * Set up for internationalization by setting the locale and opening the catalog
+	 */
+	strcpy(nlspath, "/usr/taxi/catalogs/finnish/%N.cat");
+	sprintf(put_nlspath, "NLSPATH=%s", nlspath);
+	putenv(put_nlspath);	
+
+	setlocale(LC_ALL, "");
+	open_catalog(&COMMON_m_catd, "common", 0, 0);
+	open_catalog(&DR_MAINT_m_catd, "dr_maint", 0, 0);
+	open_catalog(&LITERAL_m_catd, "literals", 0, 0);
+
+	file_open = 0;
+
+	init();
+	//db_init();
+
+#ifdef DEBUG
+	sprintf(trace_str,"Entering dr_maint\n");
+	TRACE(trace_str);
+#endif
+	temp_dr_ptr = (struct cisam_dr *)req_buf;
+	temp_dr_ptr = &temp_dr_buf;
+	prt_hdr();
+	prt_labels();
+
+	/*  Get the first record from the driver file */
+
+	bzero(dr_ptr, sizeof(struct cisam_dr));
+
+	dr_ptr->fleet = ' ';
+	dr_ptr->id = 0;
+	if((db(DRIVER_FILE_ID,READ_KEYS,&dr_key1,ISGTEQ,0)) < 0)  {
+		prt_error(catgets(DR_MAINT_m_catd, DR_MAINT_SET, DR_MAINT_82, "No record found, ADD first !"));
+#ifdef DEBUG
+	sprintf(trace_str,"Leaving dr_maint - 1\n");
+	TRACE(trace_str);
+#endif
+	}
+	else  {
+
+	/*  Display the data from the first record */
+
+		prt_data();
+
+		record_nbr = isrecnum; 	/* save record number for future read */
+		cur_list = 1;		/* valid row in current list */
+	}
+
+	/*  Input the users request (Query, Next, Previous, Add, Update,
+	    Remove, Output, Exit).  					*/
+
+	 while(request = read_request())  {
+	        err_n_fld = 0;
+		ipc_required = 0;
+	    	switch(request)  {
+		        case M_QUERY:
+				clear_err_line();
+				process_query();
+				break;
+
+			case M_NEXT:
+				clear_err_line();
+				process_next();
+				break;
+
+			case M_PREVIOUS:
+				clear_err_line();
+				process_previous();
+				break;
+
+			case M_ADD:	/* Add */
+				if (AddUpdateDeleteAllowed())
+				  {
+				    clear_err_line();
+				    process_add();
+				    if (ipc_required)
+				      send_ipc();
+				  }
+				break;
+
+			case M_UPDATE:
+				if (AddUpdateDeleteAllowed())
+				  {
+				    clear_err_line();
+				    process_update();
+				    if (ipc_required)
+				      send_ipc();
+				  }
+				break;
+
+			case M_REMOVE:
+				if (AddUpdateDeleteAllowed())
+				  {
+				    clear_err_line();
+				    process_remove();
+				/* No need to tell dispatch that
+				   a driver has been removed */
+				  }
+				break;
+
+			case M_OUTPUT:
+				clear_err_line();
+				process_output();
+				break;
+		
+			case M_EXIT:
+#ifdef DEBUG
+	sprintf(trace_str,"Leaving dr_maint - 2\n");
+	TRACE(trace_str);
+#endif
+				cleanup();
+				break;
+
+			default:
+#ifdef DEBUG
+	sprintf(trace_str,"Leaving dr_maint - 3\n");
+	TRACE(trace_str);
+#endif
+				cleanup();
+				break;
+		}
+	    }
+
+#ifdef DEBUG
+	sprintf(trace_str,"Leaving dr_maint - 4\n");
+	TRACE(trace_str);
+#endif
+	    cleanup();
+
+
+}  /* End of main */
+
+
+/******************************************************************************
+* init - open files, initialize variables, setup signals, prepare curses.
+*******************************************************************************/
+
+init()
+{
+  int i;
+#ifdef DEBUG
+	if((trace_fp = fopen(TRACE_FILE,"w")) == NULL)  {
+		prt_error(TRACE_OPEN_ERR);
+		sleep(3);
+		ERROR(' ',DRIVER_FILE,TRACE_OPEN_ERR);
+		cleanup();
+	}
+
+	sprintf(trace_str,"Entering init\n");
+	TRACE(trace_str);
+#endif
+
+	intr_allowed = 0;	/* interrupts not allowed */
+	saw_intr = 0;		/* an interrupt signal has not been entered */
+	cur_list = 0;		/* no row in current list */
+	initscr();
+	noecho();
+/*
+        keypad(stdscr,TRUE);
+*/
+        term_setup(getenv("TERM"));
+        config_tty();
+ 
+	cbreak();
+
+	if ( enh(&glEnhSwitch) < 0 )
+	  {
+	    cleanup();
+	  }
+	
+	if (1)
+	  MaxAttrs = 32;
+	else
+	  MaxAttrs = 8;
+
+#ifdef FOO
+	if((offset = get_offsets()) == 0)  {	/* attach shared memory */
+		prt_error(NO_ATTACH);
+		sleep(3);
+		cleanup();
+	}
+
+	fleet[0] = offset->fleet;
+	for ( i = 1; i < FLEET_MAX; i++ )
+	  fleet[i] = fleet[0] + i;
+#endif
+	signal(SIGQUIT,SIG_IGN);
+	signal(SIGINT,process_intr);
+	signal(SIGTERM,cleanup);
+	signal(SIGHUP,cleanup);
+	signal(SIGPIPE,cleanup);
+	signal(SIGTSTP, SIG_IGN);
+
+	dr_ptr = (struct cisam_dr *) req_buf;
+	fl_ptr = (struct cisam_fl *) req_buf;
+
+	if((db(DRIVER_FILE_ID,OPEN,&dr_key1,ISINOUT+ISMANULOCK,0)) < 0)  {   
+		prt_error(DRIVER_OPEN_ERR);
+		sleep(3);
+		prt_cisam_err(iserrno,DRIVER_OPEN_ERR);
+		ERROR(' ',DRIVER_FILE,DRIVER_OPEN_ERR);
+#ifdef DEBUG
+	sprintf(trace_str,"Leaving init - 1\n");
+	TRACE(trace_str);
+#endif
+		cleanup();
+	} else
+		file_open = DRIVER_OPEN;
+
+#ifdef DEBUG
+	sprintf(trace_str,"Leaving init - 2\n");
+	TRACE(trace_str);
+#endif
+	if((db(FLEET_FILE_ID,OPEN,&fl_key1,ISINOUT+ISMANULOCK,0)) < 0)  {   
+		prt_error(catgets(DR_MAINT_m_catd, DR_MAINT_SET, DR_MAINT_83, "Fleet file open error"));
+		sleep(3);
+		cleanup();
+	} else
+		file_open |= FLEET_OPEN;
+	return;
+
+}  /*  End of init()  */
+
+int
+AddUpdateDeleteAllowed()
+{
+  struct passwd *PasswordEntry;
+  struct group  *ManagerGroupEntry;
+  char   **pGroupNames;
+  uid_t  UserUID;
+  short  done = FALSE;
+
+  return( TRUE );
+  UserUID = getuid();
+  PasswordEntry = getpwuid(UserUID);
+  ManagerGroupEntry = getgrgid((gid_t)500);
+  pGroupNames = (char **)ManagerGroupEntry->gr_mem;
+  done = FALSE;
+  while ((*pGroupNames != NULL) && (!done))
+    {
+      if (!strcmp(PasswordEntry->pw_name, *pGroupNames))
+	{
+	  done = TRUE;
+	}
+      else
+	pGroupNames++;
+
+    }
+  return (done);
+}
+
+/******************************************************************************
+* cleanup - if an error has occured, close files and terminate curses.
+*******************************************************************************/
+
+cleanup()
+{
+#ifdef DEBUG
+	sprintf(trace_str,"Entering cleanup\n");
+	TRACE(trace_str);
+#endif
+
+	if (file_open & DRIVER_OPEN)
+		if((db(DRIVER_FILE_ID,CLOSE,&dr_key1,ISEQUAL,0)) < 0)  {
+			prt_error(DRIVER_CLOSE_ERR);
+			prt_cisam_err(iserrno,DRIVER_CLOSE_ERR);
+			ERROR(' ',DRIVER_FILE,DRIVER_CLOSE_ERR);
+		}
+
+#ifdef DEBUG
+	sprintf(trace_str,"Leaving cleanup\n");
+	TRACE(trace_str);
+
+	if (file_open & FLEET_OPEN)
+		if((db(FLEET_FILE_ID,CLOSE,&fl_key1,ISEQUAL,0)) < 0)  {
+			prt_error(catgets(DR_MAINT_m_catd, DR_MAINT_SET, DR_MAINT_84, "fleet file closes error"));
+		}
+
+	if(fclose(trace_fp) == -1)   {
+		prt_error(TRACE_CLOSE_ERR);
+		sleep(3);
+		ERROR(' ',DRIVER_FILE,TRACE_CLOSE_ERR);
+	}
+#endif
+	shmdt(offset);		/* detach shared memory  */
+
+	nocbreak();
+	echo();
+	erase();
+	refresh();
+	endwin();
+
+	catclose(COMMON_m_catd);
+	catclose(DR_MAINT_m_catd);
+	catclose(LITERAL_m_catd);
+
+	exit(0);
+
+}  /*  End of cleanup()  */
+

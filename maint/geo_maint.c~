@@ -1,0 +1,542 @@
+static char sz__FILE__[]="@(#)geo_maint.c	10.1(ver) Date Release 12/2/94" ;
+ /****************************************************************************
+ *                                                                           *
+ *                           S C C S   I N F O                               *
+ *                                                                           *
+ * @(#)  geo_maint.c; Rel: 10.1.0.0; Get date: 4/18/95 at 16:47:48
+ * @(#)  Last delta: 12/2/94 at 11:45:22
+ * @(#)  SCCS File: /taxi/sccs/s.geo_maint.c
+ *                                                                           *
+ *****************************************************************************/
+
+#include <stdio.h>
+#include <errno.h>
+#include <sys/types.h>
+#include <sys/ipc.h>
+#include <isam.h>
+#include <cursesX.h>
+#include <signal.h>
+
+#define DECLARING
+#include "comm_strdefs.h"
+#include "geo_m_strdefs.h"
+#include "mad_error.h"
+#include "mads_types.h"
+#include "mad_ipc.h"
+#include "key.h"
+#include "geo_scr.h"
+#include "geo_msg.h"
+#include "path.h"
+#include "ui_def.h"
+#include "ui_error.h"
+#include "user.h"
+#include "func_keys.h"
+#include "language.h"
+
+int     bAttrSelect;
+#define   SIZE    1024
+#define	STRNAME_OPEN	1   
+#define	ADDRESS_OPEN	2   
+#define	PLACENM_OPEN	4   
+#define	LOCALTY_OPEN	8   
+#define	SUBZONE_OPEN	16   
+
+/*  Declare an array of pointers to functions which check the field entered
+ *  for validity.  
+ */
+struct offsets *offset;
+extern struct offsets *get_offsets();
+
+
+
+extern int (*check_field[])();	/* Array of pointers to routines to 
+				   validate the data input by the user */
+
+extern int geo_cl_flds();
+extern int read_field();
+extern char buf[];		/* buffer used for interface to db routine */
+extern char req_buf[];		/* buffer used for interface to db routine */
+extern int iserrno;		/* C-isam error number */
+extern int errno;		/* Error number returned from system calls */
+
+char o_file[F_NAME_SIZE];	/* output file as specified by the user */
+char mode[2];			/* user specifies Append or Create */
+extern int prt_query_hdr(), prt_add_hdr();
+extern int prt_scr(), process_intr();
+extern void prt_hdr(), prt_labels();
+extern char read_request(), prompt_confirm();
+extern int prompt_fname(), prompt_mode();
+extern int prt_data(), process_input(), send_ipc();
+extern int prt_upd_hdr(), prt_error(), prt_cisam_err();
+extern int prt_unix_err(), clear_flds();
+extern int clear_err_line(), clear_hdr_line();
+extern int process_query(), process_next();
+extern int process_previous(), process_add();
+extern int process_update(), process_remove(), process_output();
+int pre_flag = 1,post_flag = 1,city_flag = 1,oe_flag = 1,nbr_flag = 1;
+int suf_flag = 1,zip_flag = 1,subzone_flag = 1,x_flag = 1,y_flag = 1;
+int high_flag = 1,low_flag = 1,map_flag = 1,loc_flag = 1;
+int temp_flag1 = 0;
+int  temp_index,counter,counter1;
+char current_street_type[3];
+char current_street_name[20];
+int  abb[SIZE],als[SIZE],plc[SIZE],adr[SIZE],high[SIZE],low[SIZE];
+int  abb_count, als_count, plc_count, adr_count;
+int  ab_ctr = 0;
+int  al_ctr = 0;
+int  pl_ctr = 0;
+int  ad_ctr = 0;
+int  index_flag = 0;
+int  name_flag = 0;
+int  type_flag = 0;
+int  ab_flags_1,ab_flags_2,al_flags_1,al_flags_2;
+int  pl_flags_1,pl_flags_2,pl_flags_3;
+int  pl_name,pl_pre,pl_post,pl_city,pl_oe;
+int  pl_street,pl_suf,pl_zip,pl_subzone;
+int  pl_comment,pl_x,pl_y,pl_map; 
+int  pl_pb,pl_loc;
+int  ad_flags_1,ad_flags_2,ad_flags_3,ad_flags_4,ad_flags_5;
+int  ad_flags_6,ad_flags_7,ad_flags_8,ad_flags_9;
+int  ad_pre = 0,ad_post = 0,ad_city = 0,ad_oe = 0,ad_high = 0;
+int  ad_low = 0,ad_zip = 0,ad_subzone = 0,ad_comment = 0,ad_x = 0;
+int  ad_y = 0,ad_map = 0,ad_pb = 0;
+int  loop1 = 0;
+int  loop2 = 0;
+int  loop3 = 0;
+int  loop4 = 0;
+int ret_val;			/* return value  */
+int intr_allowed;		/* interrupts allowed */
+int saw_intr;			/* indicates an interrupt signal was entered */
+char intr_char;			/* interrupt character */
+int end_read_field;		/* flag, 0/1, set to end read_field function */
+short ipc_required;		/* Set if a field changed which is in shared memory */
+char read_buf[BUFFER_SIZE];	/* buffer for reading fields */
+int piu; 			/* field number to start reading input from */
+int field_entered;		/* field entered or not */
+int key_val;			/* value of key entered */
+int cur_list = 1;			/* Indicates a row is in the current list */
+int err_n_fld;			/* set if an error in field condition exists */
+int file_open;			/* set the appropriate value based on each open file and check in cleanup */
+
+struct df_maint df_maint_ipc;	/* structure for passing information 
+				   to dispatch  */
+struct cisam_ad *ad_ptr;	/* pointer to address file structure */
+struct cisam_pl *pl_ptr;	/* pointer to place name file structure */
+struct cisam_sn *sn_ptr;	/* pointer to street name file structure */
+struct cisam_sz *sz_ptr;	/* pointer to subzone file structure */
+struct cisam_lo *lo_ptr;	/* pointer to locality file structure */
+struct cisam_sn  sn_buf;
+struct cisam_pl  pl_buf;
+struct cisam_ad  ad_buf;
+struct cisam_sz  sz_buf;
+struct cisam_lo  lo_buf;
+struct cisam_sn *temp_sn_ptr;
+struct cisam_pl *temp_pl_ptr;
+struct cisam_ad *temp_ad_ptr;
+struct cisam_lo *temp_lo_ptr;
+struct cisam_sz *temp_sz_ptr;
+/*****************************************************************************
+*  maint - main for the geo file file maintenance program.
+*******************************************************************************/
+
+main(argc,argv)
+int argc;
+char **argv;
+{
+
+	char request;		/*  User request : Q, N, P, A, U, R, O, or E */
+
+       /*
+        * Set up for internationalization by setting the locale and opening the catalog
+        */
+        setlocale(LC_ALL, "");
+        open_catalog(&COMMON_m_catd, "common", 0, 0);
+        open_catalog(&GEO_MAINT_m_catd, "geo_maint", 0, 0);
+
+	file_open = 0;
+
+	init();
+	prt_hdr();
+	prt_labels();
+	offset = get_offsets();
+	temp_sn_ptr = (struct cisam_sn *)req_buf;
+	temp_pl_ptr = (struct cisam_pl *)req_buf;
+	temp_ad_ptr = (struct cisam_ad *)req_buf;
+	temp_lo_ptr = (struct cisam_lo *)req_buf;
+	temp_sz_ptr = (struct cisam_sz *)req_buf;
+	sn_ptr = &sn_buf;
+	pl_ptr = &pl_buf;
+	ad_ptr = &ad_buf;
+	lo_ptr = &lo_buf;
+	sz_ptr = &sz_buf;
+
+	/* open street name file, Place name file, Address file */
+	if((db(STRNAME_FILE_ID,OPEN,&sn_key1,ISINOUT+ISMANULOCK,0)) < 0)  {
+		prt_error(catgets(GEO_MAINT_m_catd, GEO_MAINT_SET, GEO_MAINT_31, "Street name file open error"));
+		prt_cisam_err(iserrno,catgets(GEO_MAINT_m_catd, GEO_MAINT_SET, GEO_MAINT_31, "Street name file open error"));
+		sleep(3);
+		cleanup();
+	} else
+		file_open |= STRNAME_OPEN;
+
+
+	if((db(ADDRESS_FILE_ID,OPEN,&ad_key1,ISINOUT+ISMANULOCK,0)) < 0)  {
+		prt_error(catgets(GEO_MAINT_m_catd, GEO_MAINT_SET, GEO_MAINT_32, "Address file open error"));
+		prt_cisam_err(iserrno,catgets(GEO_MAINT_m_catd, GEO_MAINT_SET, GEO_MAINT_32, "Address file open error"));
+		sleep(3);
+		cleanup();
+	} else
+		file_open |= ADDRESS_OPEN;
+
+	if((db(PLACENM_FILE_ID,OPEN,&pl_key1,ISINOUT+ISMANULOCK,0)) < 0)  {
+		prt_error(catgets(GEO_MAINT_m_catd, GEO_MAINT_SET, GEO_MAINT_33, "Place name file open error"));
+		prt_cisam_err(iserrno,catgets(GEO_MAINT_m_catd, GEO_MAINT_SET, GEO_MAINT_33, "Place name file open error"));
+		sleep(3);
+		cleanup();
+	} else
+		file_open |= PLACENM_OPEN;
+
+	if((db(LOCALTY_FILE_ID,OPEN,&lo_key1,ISINOUT+ISMANULOCK,0)) < 0)  {
+		prt_error(catgets(GEO_MAINT_m_catd, GEO_MAINT_SET, GEO_MAINT_34, "Localty file open error"));
+		prt_cisam_err(iserrno,catgets(GEO_MAINT_m_catd, GEO_MAINT_SET, GEO_MAINT_35, "Localty name file open error"));
+		sleep(3);
+		cleanup();
+	} else
+		file_open |= LOCALTY_OPEN;
+
+	if((db(SUBZONE_FILE_ID,OPEN,&sz_key1,ISINOUT+ISMANULOCK,0)) < 0)  {
+		prt_error(catgets(GEO_MAINT_m_catd, GEO_MAINT_SET, GEO_MAINT_36, "Subzone file open error"));
+		prt_cisam_err(iserrno,catgets(GEO_MAINT_m_catd, GEO_MAINT_SET, GEO_MAINT_37, "Subzone name file open error"));
+		sleep(3);
+		cleanup();
+	} else
+		file_open |= SUBZONE_OPEN;
+
+	/* Search first record */
+	temp_sn_ptr->index = 1;
+if((db(STRNAME_FILE_ID,READ_KEYS,&sn_key1,ISGTEQ,0)) < 0)  {
+		prt_error(catgets(GEO_MAINT_m_catd, GEO_MAINT_SET, GEO_MAINT_38, "No record available"));
+}
+else	{
+	cur_list = 1;
+	mvprintw(1,1,"%18d",temp_sn_ptr->index); /* Display index in first field */
+	refresh();
+	temp_index = temp_sn_ptr->index;
+	if((db(STRNAME_FILE_ID,READ_KEYS,&sn_key1,ISGTEQ,0)) < 0)  {
+		prt_error(catgets(GEO_MAINT_m_catd, GEO_MAINT_SET, GEO_MAINT_38, "No record available"));
+	}
+	else
+		search_qur();
+}
+	/*  Input the users request (Query, Next, Previous, Add, Update,
+	    Remove, Output, Exit).  					*/
+
+	 while(request = read_request())  {
+		clear_err_line();
+		init_flags();
+	    	switch(request)  {
+			case M_QUERY:
+				process_query();
+				break;
+
+			case M_NEXT:
+				process_next();
+				break;
+
+			case M_PREVIOUS:
+				process_previous();
+				break;
+
+			case M_ADD:
+				process_add();
+				break;
+
+			case M_UPDATE:
+				process_update();
+				break;
+
+			case M_REMOVE:
+				process_remove();
+				break;
+
+			case M_OUTPUT:
+				process_output();
+				break;
+		
+			case M_EXIT:
+				cleanup();
+				break;
+
+			default:
+				cleanup();
+				break;
+		}
+	   }
+
+	    cleanup();
+
+
+}  /* End of main */
+
+search_qur()	
+{
+	if (temp_sn_ptr->rec_type != '1')	{	
+		prt_error(catgets(GEO_MAINT_m_catd, GEO_MAINT_SET, GEO_MAINT_39, "Street name file read error"));
+		return(-1);
+	}
+	mvprintw(D_ST_NAME_ROW,D_ST_NAME_COL,"%s",temp_sn_ptr->name); /* Display street name */
+	mvprintw(D_ST_NAME_ROW,D_TYPE_COL,"%s",temp_sn_ptr->str_type);/* Display street type */
+	refresh();
+
+	strcpy(current_street_type, temp_sn_ptr->str_type);
+	strcpy(current_street_name,temp_sn_ptr->name);
+
+	/* Display abbreviation */
+		abb_count = 0;
+		als_count = 0;
+while(1)	{	
+	if((db(STRNAME_FILE_ID,READ_KEYS,&sn_key1,ISNEXT,0)) < 0)	{  
+		break;
+	}
+	if(temp_index == temp_sn_ptr->index)	{
+		if(temp_sn_ptr->rec_type == '2')   	{
+			abb[abb_count] = temp_sn_ptr->record_nbr; 
+			if (abb_count <= 1)	{
+				mvprintw(D_ST_NAME_ROW + abb_count,
+					 D_ABBRV_1_COL,"%s",temp_sn_ptr->name);/* Display first abbreviation */
+				refresh();
+			}
+			abb_count++;
+		}
+		else if(temp_sn_ptr->rec_type == '3')  	{
+			als[als_count] = temp_sn_ptr->record_nbr;
+			if (als_count <= 1)	{
+				mvprintw(D_ST_NAME_ROW + als_count,
+					 D_ALIAS_1_COL,"%s",temp_sn_ptr->name); /* First alises */
+				refresh();
+			}
+			als_count++;
+		    }
+	}
+	else
+		break;
+
+} /* while */
+
+
+
+
+/* Place name file */
+bzero(temp_pl_ptr, sizeof(struct cisam_pl));
+temp_pl_ptr->index = temp_index;
+plc_count = 0;
+if ((db(PLACENM_FILE_ID,READ_KEYS,&pl_key2,ISGTEQ,0)) < 0)	{
+;
+}
+else	{
+	while(1){
+		if (temp_index == temp_pl_ptr->index) 	{
+			plc[plc_count] = temp_pl_ptr->record_nbr;
+			if ( plc_count <= 2)
+				prt_dt1(plc_count);
+			plc_count++;
+			if ((db(PLACENM_FILE_ID,READ_KEYS,&pl_key2,ISNEXT,0)) < 0)	{	
+				break;
+			}
+				continue;
+		}
+			break;
+	} /* while */	
+}	
+
+/* Address file */
+temp_ad_ptr->str_index = temp_index;
+temp_ad_ptr->high_nbr = 0;
+adr_count = 0;
+if ((db(ADDRESS_FILE_ID,READ_KEYS,&ad_key2,ISGTEQ,0)) < 0)	{
+;
+}
+else	{
+	while(1){
+		if (temp_index == temp_ad_ptr->str_index) 	{
+			adr[adr_count] = temp_ad_ptr->record_nbr;
+			high[adr_count] = temp_ad_ptr->high_nbr;
+			low[adr_count] = temp_ad_ptr->low_nbr;
+			if (adr_count <= 8)
+				prt_dt2(adr_count);
+			adr_count++;
+			if ((db(ADDRESS_FILE_ID,READ_KEYS,&ad_key2,ISNEXT,0)) < 0)	{
+				break;
+			}
+				continue;
+		}
+			break;
+	} /* while */	
+}	
+	
+} /* search_qur() */
+
+/******************************************************************************
+* init - open files, initialize variables, setup signals, prepare curses.
+*******************************************************************************/
+
+init()
+{
+#ifdef DEBUG
+	if((trace_fp = fopen(TRACE_FILE,"w")) == NULL)  {
+		prt_error(TRACE_OPEN_ERR);
+		sleep(3);
+		ERROR(' ',ZONE_FILE,TRACE_OPEN_ERR);
+		cleanup();
+	}
+
+	sprintf(trace_str,"Entering init\n");
+	TRACE(trace_str);
+#endif
+
+	intr_allowed = 0;	/* interrupts not allowed */
+	saw_intr = 0;		/* an interrupt signal has not been entered */
+	cur_list = 0;		/* no row in current list */
+	initscr();
+	noecho();
+/*
+        keypad(stdscr,TRUE);
+*/
+        term_setup(getenv("TERM"));
+        config_tty();
+ 
+
+	cbreak();
+
+	signal(SIGQUIT,SIG_IGN);
+	signal(SIGINT,process_intr);
+	signal(SIGTERM,cleanup);
+	signal(SIGHUP,cleanup);
+	signal(SIGTSTP, SIG_IGN);
+	signal(SIGPIPE,cleanup);
+
+}  /*  End of init()  */
+
+/******************************************************************************
+* prt_dt1 - Print place name file data (3 records).
+*******************************************************************************/
+prt_dt1(r1)
+int	r1;
+{
+	memcpy((char *)pl_ptr,req_buf,sizeof(struct cisam_pl));
+	mvprintw(D_PL_NAME_1_ROW+r1,D_PL_NAME_COL,"%s",pl_ptr->name);
+	//	mvprintw(D_PL_NAME_1_ROW+r1,D_PL_PRE_COL,"%s",pl_ptr->str_pre_dir);
+	//	mvprintw(D_PL_NAME_1_ROW+r1,D_PL_POST_COL,"%s",pl_ptr->str_post_dir);
+	mvprintw(D_PL_NAME_1_ROW+r1,D_PL_CITY_COL,"%s",pl_ptr->str_city);
+	mvprintw(D_PL_NAME_1_ROW+r1,D_PL_OE_COL,"%c",pl_ptr->odd_even);
+	mvprintw(D_PL_NAME_1_ROW+r1,D_ST_NBR_COL,"%6d",pl_ptr->street_nbr);
+	//	mvprintw(D_PL_NAME_1_ROW+r1,D_SUF_COL,"%c",pl_ptr->str_nbr_suf);
+	mvprintw(D_PL_NAME_1_ROW+r1,D_PL_ZIP_COL,"%5d",pl_ptr->str_zip);
+	mvprintw(D_PL_NAME_1_ROW+r1,D_PL_SBZ_COL,"%s",pl_ptr->str_subzone);
+	mvprintw(D_PL_NAME_1_ROW+r1,D_PL_CMNT_COL,"%s",pl_ptr->str_comment);
+	//	mvprintw(D_PL_NAME_1_ROW+r1,D_PL_X_CD_COL,"%8d",pl_ptr->str_x_coord);
+	//	mvprintw(D_PL_NAME_1_ROW+r1,D_PL_Y_CD_COL,"%8d",pl_ptr->str_y_coord);
+	mvprintw(D_PL_NAME_1_ROW+r1,D_PL_MAP_COL,"%3d",pl_ptr->map_ref_page);
+	mvprintw(D_PL_NAME_1_ROW+r1,D_PL_PB_COL,"%s",pl_ptr->map_ref_block);
+	mvprintw(D_PL_NAME_1_ROW+r1,D_LOC_COL,"%c",pl_ptr->local);
+	refresh();
+}
+
+/******************************************************************************
+* prt_dt2 - Print address name file records (9 records).
+*******************************************************************************/
+prt_dt2(r2)
+int	r2;
+{
+	memcpy((char *)ad_ptr,req_buf,sizeof(struct cisam_ad));
+	mvprintw(D_ADD_ROW_1+r2,D_AD_PRE_COL,"%s",ad_ptr->str_pre_dir);
+	mvprintw(D_ADD_ROW_1+r2,D_AD_POST_COL,"%s",ad_ptr->str_post_dir);
+	mvprintw(D_ADD_ROW_1+r2,D_AD_CITY_COL,"%s",ad_ptr->str_city);
+	mvprintw(D_ADD_ROW_1+r2,D_AD_OE_COL,"%c",ad_ptr->odd_even);
+	mvprintw(D_ADD_ROW_1+r2,D_LO_NBR_COL,"%6d",ad_ptr->low_nbr);
+	mvprintw(D_ADD_ROW_1+r2,D_HI_NBR_COL,"%6d",ad_ptr->high_nbr);
+	mvprintw(D_ADD_ROW_1+r2,D_AD_ZIP_COL,"%5d",ad_ptr->str_zip);
+	mvprintw(D_ADD_ROW_1+r2,D_AD_SBZ_COL,"%s",ad_ptr->str_subzone);
+	mvprintw(D_ADD_ROW_1+r2,D_AD_CMNT_COL,"%s",ad_ptr->str_comment);
+	mvprintw(D_ADD_ROW_1+r2,D_AD_X_CD_COL,"%8d",ad_ptr->str_x_coord);
+	mvprintw(D_ADD_ROW_1+r2,D_AD_Y_CD_COL,"%8d",ad_ptr->str_y_coord);
+	mvprintw(D_ADD_ROW_1+r2,D_AD_MAP_COL,"%3d",ad_ptr->map_ref_page);
+	mvprintw(D_ADD_ROW_1+r2,D_AD_PB_COL,"%s",ad_ptr->map_ref_block);
+	refresh();
+}
+
+/******************************************************************************
+* cleanup - if an error has occured, close files and terminate curses.
+*******************************************************************************/
+
+cleanup()
+{
+	if (file_open & STRNAME_OPEN)
+		if((db(STRNAME_FILE_ID,CLOSE,&sn_key1,0,0)) < 0)  {
+			prt_error(UI_DSKREAD,"<%s %d>",catgets(GEO_MAINT_m_catd, GEO_MAINT_SET, GEO_MAINT_40, "Street name file close error ="), iserrno);
+		}
+	if (file_open & PLACENM_OPEN)
+		if((db(PLACENM_FILE_ID,CLOSE,&pl_key1,0,0)) < 0)  {
+			prt_error(UI_DSKREAD,"<%s %d>", catgets(GEO_MAINT_m_catd, GEO_MAINT_SET, GEO_MAINT_41, "Place name file close error ="), iserrno);
+		}
+	if (file_open & ADDRESS_OPEN)
+		if((db(ADDRESS_FILE_ID,CLOSE,&ad_key1,0,0)) < 0)  {
+			prt_error(UI_DSKREAD,"<%s %d>",catgets(GEO_MAINT_m_catd, GEO_MAINT_SET, GEO_MAINT_42, "Address name file close error ="), iserrno);
+		}
+	if (file_open & LOCALTY_OPEN)
+		if((db(LOCALTY_FILE_ID,CLOSE,&lo_key1,0,0)) < 0)  {
+			prt_error(UI_DSKREAD,"<%s %d>",catgets(GEO_MAINT_m_catd, GEO_MAINT_SET, GEO_MAINT_43, "Localty file close error ="), iserrno);
+		}
+	if (file_open & SUBZONE_OPEN)
+		if((db(SUBZONE_FILE_ID,CLOSE,&sz_key1,0,0)) < 0)  {
+			prt_error(UI_DSKREAD,"<%s %d>",catgets(GEO_MAINT_m_catd, GEO_MAINT_SET, GEO_MAINT_44, "Subzone file close error ="), iserrno);
+		}
+	nocbreak();
+	echo();
+	erase();
+	refresh();
+	endwin();
+
+	catclose(COMMON_m_catd);
+	catclose(GEO_MAINT_m_catd);
+	exit(0);
+
+}  /*  End of cleanup()  */
+
+
+
+init_flags()
+{
+		pl_name = 0;
+		pl_pre = 0;
+		pl_post = 0;
+		pl_city = 0;
+		pl_oe = 0;
+		 pl_street = 0;
+		pl_suf = 0;
+		pl_zip = 0;
+		pl_subzone = 0;
+		pl_comment = 0;
+		pl_x = 0;
+		pl_y = 0;
+		pl_map = 0;
+		pl_pb = 0;
+		pl_loc = 0;
+		type_flag = 0;
+		ab_flags_1 = 0;
+		ab_flags_2 = 0;
+		al_flags_1 = 0;
+		al_flags_2 = 0;
+		pl_flags_1 = 0;
+		pl_flags_2 = 0;
+		pl_flags_3 = 0;
+		ad_flags_1 = 0;
+		ad_flags_2 = 0;
+		ad_flags_3 = 0;
+		ad_flags_4 = 0;
+		ad_flags_5 = 0;
+		ad_flags_6 = 0;
+		ad_flags_7 = 0;
+		ad_flags_8 = 0;
+		ad_flags_9 = 0;
+}

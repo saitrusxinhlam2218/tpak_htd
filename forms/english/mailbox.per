@@ -1,0 +1,49 @@
+{
+|***********************************************************************
+|                 RCS INFO
+|
+|  @(#)  $RCSfile: mailbox.per,v $
+|  @(#)  $Revision: 1.2 $
+|  @(#)  $Date: 1999/03/19 21:26:41 $
+|  @(#)  $Author: taxiadm $
+|  @(#)  $Source: /taxi-scan/taxi_proj/cvs/taxi-scan/src/forms/english/mailbox.per,v $
+|
+|  Copyright (c) 1994 - MobileSoft Consulting, Inc. Woodinville WA
+|
+|**********************************************************************/
+|ident "@(#) head:$RCSfile: mailbox.per,v $	$Revision: 1.2 $"
+}
+database mads
+screen
+{
+						MAILBOX FILE MAINTENANCE
+
+Addressee ID  Msg Number              Sender ID    Status   Date Sent    Time Sent
+[f000  ]      [f001                ]  [f002]       [a]      [f004    ]   [f005  ]
+
+Fleet     To  Type  Selection         Message Type
+[b]           [c]   [f003 ]           [f006    ]
+
+Message
+[f007                                              ][f008                                              ]
+[f009                                              ][f010                                              ]
+}
+end
+tables
+mailbox
+attributes
+f000 = mailbox.mb_address,include=(1 to 29999),RIGHT,REQUIRED,COMMENTS="Addressee's user number";
+f001 = mailbox.mb_msg_nbr,REQUIRED,NOENTRY,NOUPDATE,COMMENTS="A number assigned to this message by the system";
+f002 = mailbox.mb_from,include=(1 to 9999),RIGHT,COMMENTS="Sender's user number";
+a = mailbox.mb_status,include=(N,O),UPSHIFT,REQUIRED,COMMENTS="Whether this message is 'N'ew or is it 'O'ld";
+f004 = mailbox.mb_date_sent,COMMENTS="Date message sent";
+f005 = mailbox.mb_time_sent,COMMENTS="Time message sent";
+b = mailbox.mb_fleet,UPSHIFT,REQUIRED,COMMENTS="Fleet ID";
+c = mailbox.mb_to_type,include=("*",F,S,C,M,T,D,Z," "),UPSHIFT,COMMENTS="Select receivers of message (*,F,S,C,M,T,D,Z)";
+f003 = mailbox.mb_to_selection,UPSHIFT,COMMENTS="Narrows selection of receivers";
+f006 = mailbox.mb_msgtype,RIGHT,COMMENTS="Type of MDT terminal command";
+f007 = mailbox.mb_msg_line1[1,50],UPSHIFT,COMMENTS="First line of message";
+f008 = mailbox.mb_msg_line1[51,100],UPSHIFT,COMMENTS="First line of message";
+f009 = mailbox.mb_msg_line2[1,50],UPSHIFT,COMMENTS="Second line of message";
+f010 = mailbox.mb_msg_line2[51,100],UPSHIFT,COMMENTS="Second line of message";
+end

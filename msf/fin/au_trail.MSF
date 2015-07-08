@@ -1,0 +1,32 @@
+$ /****************************************************************************
+$ *                                                                           *
+$ *                           S C C S   I N F O                               *
+$ *                                                                           *
+$ * @(#)  au_trail.MSF.fin; Rel: 10.1.3.1; Get date: 5/18/95 at 10:17:09
+$ * @(#)  Last delta: 12/5/94 at 11:01:15
+$ * @(#)  SCCS File: /taxi/sccs/s.au_trail.MSF.fin
+$ *                                                                           *
+$ * Copyright (c) 1990 - MDI Seattle                                          *
+$ *                                                                           *
+$ *****************************************************************************/
+$ #ident "@(#) head:au_trail.MSF.fin/usr/users/brian/enh_src/src/msf/fin	10.1.3.1"
+
+$quote "
+$set 1
+
+1	"Tiedoston AVAUSVIRHE %s iserrno %d\n"
+2	"Tiedoston LUKUVIRHE %s iserrno %d\n"
+3	"Nykyinen tietue on %d "
+4	"Tilaustietueella %d EI ole yhtiön tn.\n"
+5	"%sTILAUSTEN JÄLJITYSRAPORTTI -ohjelman loppu, systeeminhoitajan aloitettava uudelleen.\n"
+6	"\n======================================================= TILAUSTEN JÄLJITYSRAPORTTI=================================================\n"
+7	"TYYPPI...NOUTOAIKA.. RUUTUALUE ...........NOUTO-OSOITE.............  AS. .......MATKUSTAJA.... ...PUH. NUMERO... TP AU YH  TILAUS\n"
+8	"     ..TAKSA.. TI1.2.3.4.5.6.7.8      ......RISTEYSKATU.....      PV1.2.3.4.5.6.7.8  KUITT....ALLEKIRJ ...... .AIKA. .YRIT.\n"
+9	"     ..TAKSA. TYYPPI RUUTUALUE .........PÄÄMÄÄRÄOSOITE..........  AS.  ....TILAAJA.... ....YHTEYSHENKILÖ ..... ODOTA PAIK\n"
+10	"     ..SYÖTTÖAIKA.. .HNK. VAIHTO ..ARV.. ..VÄLITYSAIKA. .HNK. ...NOUTOAIKA.. ...SULK.AIKA... AUTO AJAJA .TILA. TILAUSNRO.\n"
+11	"     ......LASKUTNRO...... UMPEEN. .HYVKSKOODI .HNK. ....YRITYS.... ...KÄYTTÄJÄ SYÖT1... ...KÄYTTÄJÄ SYÖT2...\n"
+12	"     .............................................HUOMAUTUSRIVI. .............................................................\n"
+13	"     ......... AJAJAVIESTI ..............\n"
+14	"Tiedoston SULKEMISVIRHE %d iserrno %d\n"
+15	"\n%skirjoitin yhtiölle %c ei ole päällä.\n\n"
+16	"ei voi avata /etc/printcap\n"

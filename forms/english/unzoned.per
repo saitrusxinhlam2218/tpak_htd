@@ -1,0 +1,52 @@
+{
+|***********************************************************************
+|                 RCS INFO
+|
+|  @(#)  $RCSfile: unzoned.per,v $
+|  @(#)  $Revision: 1.2 $
+|  @(#)  $Date: 1999/03/19 21:27:05 $
+|  @(#)  $Author: taxiadm $
+|  @(#)  $Source: /taxi-scan/taxi_proj/cvs/taxi-scan/src/forms/english/unzoned.per,v $
+|
+|  Copyright (c) 1994 - MobileSoft Consulting, Inc. Woodinville WA
+|
+|**********************************************************************/
+|ident "@(#) head:$RCSfile: unzoned.per,v $	$Revision: 1.2 $"
+}
+database mads
+screen
+{
+						UNZONED ADDRESS FILE MAINTENANCE
+
+Call Number             Call Date    Call Time  Entered By  Zone #    Zoned By   Call Type  Charge Number
+[f000                ]  [f001     ]  [f002  ]   [f003]      [f04]      [f005]     [a]        [f007              ]
+
+Street Number     Pre-dir   Name                   Type     Post-dir    City
+       [f006  ]   [a6]      [f008                ] [a0 ]    [a1]        [a5 ]
+
+Intersecting      Pre-dir   Name                   Type     Post-dir
+                  [a2]      [f010                ] [a3 ]    [a4]   
+}
+end
+tables
+unzoned
+attributes
+f000 = unzoned.uz_call_nbr,RIGHT,REQUIRED,NOUPDATE,COMMENTS="Call number this address is associated with";
+f001 = unzoned.uz_call_date,COMMENTS="Date this call was placed";
+f002 = unzoned.uz_call_time,RIGHT,COMMENTS="Time this call was placed";
+f003 = unzoned.uz_entered_by,RIGHT,COMMENTS="User ID of the call taker who entered it";
+f04  = unzoned.uz_zoned_as,RIGHT,COMMENTS="Zone number assigned to this address";
+f005 = unzoned.uz_zoned_by,RIGHT,COMMENTS="User ID of the person who zoned this call";
+a = unzoned.uz_type_of_service,UPSHIFT,COMMENTS="Call type (e.g. 'P'assenger)";
+f007 = unzoned.uz_charge_nbr,COMMENTS="Charge account number";
+f006 = unzoned.uz_street_nbr,RIGHT,COMMENTS="Street number";
+a6 = unzoned.uz_pre_dir1,UPSHIFT,COMMENTS="Street pre_direction";
+f008 = unzoned.uz_str_place_name1,UPSHIFT,REQUIRED,COMMENTS="Street name, place name, alias etc.";
+a0 = unzoned.uz_str_type1,UPSHIFT,REQUIRED,COMMENTS="Street type";
+a1 = unzoned.uz_post_dir1,UPSHIFT,COMMENTS="Street post_direction" ;
+a5 = unzoned.uz_city,UPSHIFT,COMMENTS="City name";
+a2 = unzoned.uz_pre_dir2,UPSHIFT,COMMENTS="Intersecting street pre_direction";
+f010 = unzoned.uz_str_place_name2,UPSHIFT,COMMENTS="Intersecting street name";
+a3 = unzoned.uz_str_type2,UPSHIFT,COMMENTS="Intersecting street type";
+a4 = unzoned.uz_post_dir2,UPSHIFT,COMMENTS="Intersecting street post_direction";
+end

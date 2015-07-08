@@ -1,0 +1,158 @@
+static char sz__FILE__[]="@(#)ui_emerg.c	10.1.2.1(ver) Date Release 12/2/94" ;
+/****************************************************************************
+*                                                                           *
+*                           S C C S   I N F O                               *
+*                                                                           *
+* @(#)  ui_emerg.c; Rel: 10.1.2.1; Get date: 4/19/95 at 08:50:21
+* @(#)  Last delta: 12/2/94 at 18:15:40
+* @(#)  SCCS File: /taxi/sccs/s.ui_emerg.c
+*                                                                           *
+* Copyright (c) 1990 - MDI Seattle                                          *
+*                                                                           *
+*****************************************************************************/
+#include <cursesX.h>
+#include <string.h>
+#include <sys/types.h>
+
+#include "taxipak.h"
+#include "Object.h"
+#include "mad_ipc.h"
+#include "except.h"
+#include "screens.h"
+#include "sp_ary.h"
+#include "ui_strdefs.h"
+#include "path.h"
+
+extern struct offsets *offset;				/* pointer to offsets struct in shared memory */
+extern int scr_name;					/* name of screen on display */
+int emerg_in_progress = 0;
+
+/*
+  Put a message in the center of a window.
+  */
+void
+center_msg(wind, y, msg)
+WINDOW *wind;
+int    y;
+char   *msg;
+{
+  int  x;
+
+  x = (wind->_maxx - strlen(msg)) / 2;
+  if (x < 0)
+    x = 0;
+  mvwprintw(wind, y, x, msg);
+}
+
+
+void
+emergency_notify()
+{
+  struct excepts *first_except;
+  WINDOW *emerg_wind;
+  char msg[100];
+  int  resolved;
+  int  c;
+  char EmergVehNumBuff[8];
+  FILE *fpEmergVehNum;
+  int  EmergVehNum = 0;
+  char EmergFleet;
+  static struct scr_flds except_fld[] = {
+    {0, 0, 1, 0},
+    {3, 9, 2, 1}
+  };
+
+  flush_input(stdscr);
+  emerg_wind = newwin(9, 100, 7, 17);
+
+  emerg_in_progress = 1;
+  wclear(emerg_wind);
+  wrefresh(emerg_wind);
+
+  wattrset(emerg_wind, A_REVERSE | A_BLINK);
+  tpak_box(emerg_wind, 0, 0);
+  center_msg(emerg_wind, 2, catgets(UI_m_catd, UI_1, UI_TEXT_15, "E M E R G E N C Y   A L E R T !"));
+
+  wattrset(emerg_wind, A_NORMAL);
+
+  sprintf(msg, catgets(UI_m_catd, UI_1, UI_TEXT_16, "A driver in a vehicle has pressed the emergency button."));
+  center_msg(emerg_wind, 4, msg);
+
+  if (scr_name == EXCEPTIONS_SCR)
+    center_msg(emerg_wind, 5, catgets(UI_m_catd, UI_1, UI_TEXT_17, "Please refresh the exceptions screen to see the emergency."));
+  else
+    center_msg(emerg_wind, 5, catgets(UI_m_catd, UI_1, UI_TEXT_18, "Please go to the exceptions screen to see the emergency."));
+
+  if ( ( fpEmergVehNum = fopen( EMERG_VEH_FILE, "r" )) != NULL )
+    {
+      fscanf(fpEmergVehNum, "%d\t%c", &EmergVehNum, &EmergFleet);
+      fclose(fpEmergVehNum);
+      if (EmergVehNum > 0)
+	{
+	  sprintf(EmergVehNumBuff, "%s: %d (%c) ", catgets(UI_m_catd, UI_1, UI_SP_DISP_2, "Vehicle #"), EmergVehNum, EmergFleet);
+	  center_msg(emerg_wind, 6, EmergVehNumBuff);
+	}
+    }
+  
+  center_msg(emerg_wind, 7, catgets(UI_m_catd, UI_1, UI_TEXT_19, "Enter <RETURN> to continue"));
+  wrefresh(emerg_wind);
+
+  display_time();
+  beep();
+  sleep(3);
+  flush_input(emerg_wind);
+
+  resolved = 0;
+  do
+    {
+      beep();
+
+      if (!resolved)
+	{
+	  /* Wait one second, or until input */
+	  c = wgetsh_or_wait(emerg_wind, 1000);
+
+	  /* Emergencies will always be first in the exception list */
+	  first_except = offset->first_except;
+	  if (first_except == NULL ||
+	      first_except->type != EMERGENCY)
+	    {
+	      wattrset(emerg_wind, A_REVERSE);
+	      center_msg(emerg_wind, 6,
+			 catgets(UI_m_catd, UI_1, UI_TEXT_20, "The emergency has been approved by another dispatcher."));
+	      wrefresh(emerg_wind);
+	      resolved = 1;
+	    }
+	}
+      else
+	/* Just wait for input (no more beeping every second) */
+	c = wgetch(emerg_wind);
+
+    }
+  while (c != '\r' && c != '\n');
+
+  emerg_in_progress = 0;
+#ifdef FOO  
+  if (scr_name == EXCEPTIONS_SCR)
+    {
+      disp_except_scr();
+      attrset(A_REVERSE);
+      clear_field(stdscr, except_fld, 1);
+    }
+  switch (scr_name)
+    {
+    case EXCEPTIONS_SCR:
+      exceptions();
+      break;
+    case ALL_CALLS_SCR:
+      all_calls();
+      break;
+    default:
+      break;
+    }
+#endif
+  delwin(emerg_wind);
+  touchwin(stdscr);
+  refresh();
+  display_time();
+}

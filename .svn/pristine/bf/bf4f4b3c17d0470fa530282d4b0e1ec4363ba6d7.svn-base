@@ -1,0 +1,17 @@
+$ /****************************************************************************
+$ *                                                                           *
+$ *                           S C C S   I N F O                               *
+$ *                                                                           *
+$ * @(#)  da_charge.MSF.fin; Rel: 10.1.3.1; Get date: 5/18/95 at 10:17:48
+$ * @(#)  Last delta: 12/5/94 at 11:02:09
+$ * @(#)  SCCS File: /taxi/sccs/s.da_charge.MSF.fin
+$ *                                                                           *
+$ * Copyright (c) 1990 - MDI Seattle                                          *
+$ *                                                                           *
+$ *****************************************************************************/
+$ #ident "@(#) head:da_charge.MSF.fi/usr/users/brian/enh_src/src/msf/fin	10.1.3.1"
+
+$quote "
+$set 1
+
+1	"Tiedoston AVAUSVIRHE %d iserrno %d\n"

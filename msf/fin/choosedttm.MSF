@@ -1,0 +1,30 @@
+$ /****************************************************************************
+$ *                                                                           *
+$ *                           S C C S   I N F O                               *
+$ *                                                                           *
+$ * @(#)  choosedttm.MSF.fin; Rel: 10.1.3.1; Get date: 5/18/95 at 10:17:13
+$ * @(#)  Last delta: 12/5/94 at 10:29:04
+$ * @(#)  SCCS File: /taxi/sccs/s.choosedttm.MSF.fin
+$ *                                                                           *
+$ *  Copyright (c) 1990 - MDI Seattle                                          *
+$ *                                                                           *
+$ *****************************************************************************/
+$ #ident "@(#) head:choosedttm.MSF.f/usr/users/brian/enh_src/src/msf/fin	10.1.3.1"
+
+$quote "
+$set 11
+
+1	"\n%sAnna aloituspvm (i.e., %s) or <CR> t‰lle p‰iv‰lle:"
+2	"\n%sValitse aloitusaika TT:MM  tai <CR> ensimm‰iselle tietueelle:"
+3	"\n%sAnna lopetuspvm (esim., %s) tai <CR> kaikille nykyisille p‰iville:"
+4	"\n%sAnna lopetusaika TT:MM. tai <CR> kaikille tietueille:"
+5	"\n%sAnna aloitusaika  (esim., %s) tai paina <CR> t‰lle p‰iv‰lle:"
+6	"\n%sAnna aloitusaika TT:MM. tai paina <CR> 60 minuuttia taaksep‰in:"
+7	"\n%sAnna lopetuspvm (esim., %s) tai paina <CR> t‰lle p‰iv‰lle:"
+8	"\n%sAnna aloitusaika TT:MM. tai paina <CR> NYT:"
+9	"\n%sAnna aloitusaika TT:MM. tai <CR> ensimm‰iselle tietueelle:"
+10	"\n%sAnna lopetuspvm (esim., %s) tai <CR> ‰‰retˆn:"
+11	"\n%sAnna lopetusaika TT:MM. tai paina <CR> kaikille tietueille:"
+12	"Annettu v‰‰r‰ pvm"
+13	"Annettu v‰‰r‰ aika"
+14	"The enviroment variable LANG is not set. It must be set to run this report."

@@ -1,0 +1,51 @@
+{
+|***********************************************************************
+|                 RCS INFO
+|
+|  @(#)  $RCSfile: statusr.per,v $
+|  @(#)  $Revision: 1.4 $
+|  @(#)  $Date: 1998/01/08 19:36:01 $
+|  @(#)  $Author: taxiadm $
+|  @(#)  $Source: /taxi-scan/taxi_proj/cvs/taxi-scan/src/forms/danish/statusr.per,v $
+|
+|  Copyright (c) 1994 - MobileSoft Consulting, Inc. Woodinville WA
+|
+|**********************************************************************/
+|ident "@(#) head:$RCSfile: statusr.per,v $	$Revision: 1.4 $"
+}
+
+database mads
+screen
+{
+Vognpark  IDNR        Bruger-statist.  Fra      Bruger-statist.     til
+[a]       [f000]      [f001              ]      [f002              ]  
+
+Best.   Passager     Budkørsel    Type "X"     Vækning      Afbrudt    Rykkere     
+        [f007]       [f008]       [f009]       [f010]       [f011]     [f012]
+
+Best.   Ikdistbestm  Annull       Besked      Man-tild.      Tilsides.     Undtagelser
+        [f013]       [f014]       [f015]       [f016]        [f017]        [f018]
+}
+end
+tables
+statusr
+attributes
+a = statusr.su_fleet,REQUIRED,UPSHIFT,NOUPDATE,COMMENTS="Vognpark-ID";
+f000 = statusr.su_user_id,REQUIRED,RIGHT,NOUPDATE,COMMENTS="Bruger-ID" ;
+f001 = statusr.su_from_dt_tm,RIGHT,COMMENTS="Start på tidsperiode"; 
+f002 = statusr.su_to_dt_tm,RIGHT,COMMENTS="Slut på tidsperiode"; 
+f007 = statusr.su_pass_calls,RIGHT,COMMENTS="Antal passagerture";
+f008 = statusr.su_del_calls,RIGHT,COMMENTS="Antal budkørsler";
+f009 = statusr.su_typex_calls,RIGHT,COMMENTS="Antal type 'X' ture" ;
+f010 = statusr.su_wkup_calls,RIGHT,COMMENTS="Antal vækninger";
+f011 = statusr.su_killed,RIGHT,COMMENTS="Antal ture afbrudt af denne bruger i ovenn. tidsperiode";
+f012 = statusr.su_callbacks,RIGHT,COMMENTS="Antal rykkere denne bruger har behandlet i ovenn. tidsperiode";
+f013 = statusr.su_unzoned,RIGHT,COMMENTS="Antal ikke dist.bestemte ture denne bruger har indskr. i denne tidsperiode";
+f014 = statusr.su_cancelled,RIGHT,COMMENTS="Antal ture annulleret af denne bruger i denne tidsperiode";
+f015 = statusr.su_messages,RIGHT,COMMENTS="Antal meddelelser sendt af denne bruger i oven. tidsperiode";
+f016 = statusr.su_man_assigns,RIGHT,COMMENTS="Antal ture manuelt tildelt af bruger i denne tidsperiode";
+f017 = statusr.su_overrides,RIGHT,COMMENTS="Antal tvungne ture tildelt af en trafikleder";
+f018 = statusr.su_exceptions,RIGHT,COMMENTS="Antal undtagelser behandlet af en trafikleder";
+instructions
+   delimiters "()";
+end

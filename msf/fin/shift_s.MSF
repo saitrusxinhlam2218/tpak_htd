@@ -1,0 +1,106 @@
+$ /****************************************************************************
+$ *                                                                           *
+$ *                           S C C S   I N F O                               *
+$ *                                                                           *
+$ * @(#)  shift_s.MSF.fin; Rel: 6.3.0.0; Get date: 2/26/92 at 16:33:19
+$ * @(#)  Last delta: 12/7/90 at 09:53:10
+$ * @(#)  SCCS File: /taxi/sccs/s.shift_s.MSF.fin
+$ *                                                                           *
+$ * Copyright (c) 1990 - MDI Seattle                                          *
+$ *                                                                           *
+$ *****************************************************************************/
+$ #ident "@(#) head:shift_s.MSF.fin	6.3.0.0"
+
+$quote "
+$set 1
+
+SS_MAIN_MENU_TEXT	"Vuorolistausten päävalikko"		/*max 40 */
+SS_STATUS_MENU_TEXT	"Vuorolistauksen tilanne"			/*max 40 */
+SS_REPORTS_MENU_TEXT	"Vuorolistauksen raportit"	/*max 40 */
+SS_01_FORM_TEXT	"Vuorolistauksen hoito"			/*max 40 */
+SS_02_FORM_TEXT	"Listaa käyttötilanne"			/*max 40 */
+SS_03_FORM_TEXT	"Listaa autot"				/*max 40 */
+SS_06_FORM_TEXT	"Listaa autotilanne"			/*max 40 */
+SS_04_FORM_TEXT	"Tulosta vuorolistaus"				/*max 40 */
+SS_05_FORM_TEXT	"Tulosta autolistaus"			/*max 40 */
+SS_FLEET_TEXT	"Yhtiö:"							/*max 6 */
+SS_MONTH_TEXT	"Kuukausi:"							/*max 6 */
+SS_SCHEDULE_TEXT	"Listausnro:"					/*max 11 */
+SS_DAY_TEXT	"Pv"									/*max 3 */
+SS_START_TIME_TEXT	"Al.aika"					/*max 10 */
+SS_END_TIME_TEXT	"Lop.aika"						/*max 8 */
+SS_ACTIVE_SCHEDULE_TEXT	"Listaus"					/*max 8 */
+SS_ACTIVE_TEXT	"Ajossa"							/*max 6 */
+SS_INACTIVE_TEXT	"Jouten"						/*max 8 */
+SS_VEHICLE_TEXT	"autoja"							/*max 8 */
+SS_ACTIVE_NOT_SCHED_TEXT	"Autot käytössä ei listattu"		/*max 30 */
+SS_NOT_SCHED_TEXT	"Ei listattu"					/*max 14 */
+SS_VEHICLE_NUM_TEXT	"Autonro"						/*max 9 */
+SS_ACTIVE_VEHICLE_TEXT	"Autot käytössä"			/*max 16 */
+SS_INACTIVE_VEHICLE_TEXT	"Autot ei käytössä"		/*max 18 */
+SS_SCHEDULE_STRUCT_TEXT	"listausrakenne"		/*max 25   memory structure that stores schedule information */
+SS_STATUS_STRUCT_TEXT	"listaustilan rakenne"	/*max 35   memory structure that stores status information */
+SS_VEHICLE_STRUCT_TEXT	"autorakenne"			/*max 25   memory structure that stores vehicle information */
+SS_NON_EXIST_SCHED_TEXT	"Listausta ei ole - paina <päivitä> luodaksesi tai syöttääksesi listauksia"		/*max 80 */
+SS_ENOUGH_DATA_TEXT	"Anna yhtiö, kuukausi ja listauksen numero"		/*max 80 */
+SS_UPDATING_SCHED_TEXT	"Aikataululistauksen päivitys ..."		/*max 80   saving changes to database */
+SS_SCHED_UPDATED_TEXT	"Listauksen päivitys tehty"		/*max 80 */
+SS_STATUS_TIME_TEXT	"Tilanne:"					/*max 10 */
+SS_SHIFT_SCHED_TEXT	"Vuoroaikataulu"				/*max 14 */
+SS_JAN_TEXT	"Tammikuu"								/*max 10 */
+SS_FEB_TEXT	"Helmikuu"								/*max 10 */
+SS_MAR_TEXT	"Maaliskuu"									/*max 10 */
+SS_APR_TEXT	"Huhtikuu"									/*max 10 */
+SS_TOUKOKUU_TEXT	"Toukokuu"									/*max 10 */
+SS_JUN_TEXT	"Kesäkuu"									/*max 10 */
+SS_JUL_TEXT	"Heinäkuu"									/*max 10 */
+SS_AUG_TEXT	"Elokuu"								/*max 10 */
+SS_SEP_TEXT "Syyskuu"								/*max 10 */
+SS_OCT_TEXT	"Lokakuu"								/*max 10 */
+SS_NOV_TEXT	"Marraskuu"								/*max 10 */
+SS_DEC_TEXT	"Joulukuu"								/*max 10 */
+SS_PRINT_SUCCESS_TEXT	"Raportin lähettäminen kirjoittimelle onnistui"		/*max 80 */
+SS_PRINT_UNSUCCESS_TEXT	"Virhe - raporttitiedostoa ei luotu"		/*max 80 */
+SS_PRINT_NA_TEXT	"VAPAA"						/*max 5    taxi not scheduled that day i.e. VAPAA */
+SS_PREV_DAY_TEXT	"Edell. päivä:"					/*max 13 */
+SS_CURR_DAY_TEXT	"Tämä päivä:"					/*max 13 */
+SS_SCHED_VEH_TEXT	"Listatut autot"			/*max 18 */
+SS_ASSIGNED_VEH_TEXT	"Aikatauluun sijoitetut autot"		/*max 30 */
+SS_PRINT_ALL_TEXT	"Anna listauksen nro: 0 tulostaa kaikki "		/*max 40 */
+SS_COMMAND_TEXT	"Komento: "							/*max 9 */
+SS_NO_OPEN_FILE_TEXT	"Virhe - ei voi avata tulostustiedostoa"		/*max 80 */
+SS_MIN_ACTIVE_TIME_TEXT	"Maksimiväli kirjauksille ajossa pysymiseen:"		/*max 43 */
+SS_ALLOCATION_ERROR	"Muistinjakovirhe:"		/*max 30 */
+SS_DB_ACCESS_ERROR	"Tietokannan pääsyvirhe:"		/*max 30 */
+SS_CREATE_SCHED_ERROR	"Listauksen luontivirhe:"	/*max 30 */
+SS_UPDATE_SHIFT_ERROR	"Vuoron päivitysvirhe:"		/*max 30 */
+SS_CREATE_SHIFT_ERROR	"Vuoron luontivirhe:"		/*max 30 */
+SS_SCHED_EXISTS_ERROR	"listaus on jo olemassa"	/*max 30 */
+SS_INVALID_SCHED_NUM_ERROR	"Väärä listauksen numero"		/*max 30 */
+SS_INVALID_FLEET_ERROR	"Väärä yhtiö"				/*max 30 */
+SS_NOT_ACTIVE_FLEET_ERROR	"Yhtiö ei käytössä"		/*max 30 */
+SS_NO_FLEET_PERMISSION_ERROR	"Käyttäjällä ei ole yhtiön käyttämislupaa"		/*max 60 */
+SS_INVALID_MONTH_ERROR	"Väärä kuukausi"				/*max 30 */
+SS_INVALID_TIME_ERROR	"Väärä aika"				/*max 30 */
+SS_CONNECT_SHMEM_ERROR	"Virhe liittymisessä jaettuun muistiin"		/*max 80 */
+SS_NO_USER_SHMEM_ERROR "Käyttäjätietuetta ei löydy jaetusta muistista"		/*max 80 */
+SS_DIGITS_ONLY_ERROR	"Väärä merkki - vain numeroita"		/*max 50 */
+SS_START_1_FIRST_ERROR	"Ensimmäisen vuoron aloitusaika on täytettävä ennen kuin muita aikoja annetaan sille päivälle"		/*max 100 */
+SS_START_NEEDS_END_ERROR	"On annettava lopetusaika jokaista annettua aloitusaikaa kohtaan"		/*max 80 */
+SS_END_NEEDS_START_ERROR	"On annettava aloitusaika jokaista lopetusaikaa kohtaan"		/*max 80 */
+SS_SHIFT_1_CANNOT_SPAN_ERROR	"Jos annetaan kaksi vuoroa, ensimmäinen vuoro ei saa kattaa kahta päivää"		/*max 80 */
+SS_OVERLAP_PREVIOUS_DAY_ERROR	"Ensimm. vuoron aloitusaika on limittäin edell. päivän vuoron kanssa"		/*max 80 */
+SS_OVERLAP_1_NEXT_DAY_ERROR	"Ensimm. vuoron lopetusaika on limittäin seur.äivän vuoron kanssa"		/*max 80 */
+SS_OVERLAP_2_NEXT_DAY_ERROR	"Toisen vuoron lopetusaika on limittäin seuraavan päivän vuoron kanssa"		/*max 80 */
+SS_OVERLAP_SHIFTS_ERROR	"Toisen vuoron aloitusaika on limittäin ensimmäisen vuoron lopetusajan kanssa"		/*max 80 */
+SS_NO_MORE_ROWS_ERROR	"Annetussa suunnassa ei ole enempää autoja"		/*max 80 */
+SS_FILE_NOT_FOUND_ERROR	"Tulostustiedosto ei löydy - luo se ennen tulostusta"		/*max 80 */
+SS_INVALID_COMMAND_ERROR	"Väärä komento"		/*max 20 */
+SS_SYSTEM_NAME	"MDI Tietokoneohjattu taksivälitys"		/*max 80 */
+SS_MENU_HELP_1	"Käytä välilyöntiä, nuolinäppäimiä tai anna numero valitaksesi"		/*max 80    make all three help lines */
+SS_MENU_HELP_2	"Anna 'e' palataksesi edelliseen valikkoon tai lopettaaksesi.              "		/*max 80    the same length using */
+SS_MENU_HELP_3	"Anna <CR> valinnan suorittamiseksi:                "		/*max 80    spaces  */
+SS_INVALID_FUNCTION	"Väärä toimintonäppäin"		/*max 80 */
+SS_SCREEN_PRINT	"Näyttö lähetetty kirjoittimelle"		/*max 80 */
+SS_SELECT_SCHED	"Valitse ensin oikea listaus, ennen kuin valitset <YKSITYISKOHTA>"		/*max 80 */
+SS_PRESS_SEND	"Paina <LÄHETÄ> raportin tulostamiseksi"		/*max 40 */

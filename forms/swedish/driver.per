@@ -1,0 +1,81 @@
+database mads
+screen
+{
+						Förarfil visning
+Bilpark  ID       Klass   Namn                         Adress        Kommun                  Postnr 
+[a]      [f000 ]  [b]     [f001                     ]  [f002      ]  [f003                ]  [f004 ] [f005]
+
+Tel           Körkorts.nr    Taxitillst           Tillstånd 
+[f006      ]  [f007       ]  [f008    ]           [f009            ]
+
+Attribut      Avstängd från          Avstängd till          Avstängsningsorsak      "P"  "L"  "X"
+[f010    ]    [f011              ]   [f012              ]   [f013                ]  [c]  [d]  [e]
+
+Avstängningsmeddelande
+[f014                            ][f015                            ][f016                            ]
+
+Förarkommentar                                                                  Körk.förn    Taxitills. förn
+[f018                                    ][f019                                    ][f020     ]  [f021     ]
+Sista nödläge den          Nödläge uppklarat       Inloggad             Utloggad              Bilnr   Utförd beställn
+     [f022              ]  [f023              ]    [f024              ] [f025              ]  [f026]  [f027              ]
+
+Bokn   Vbokn  SL      Ej acpt Avvisn  Utrop  Bom    Lift   Fr v   Tal    Medd   Rast   Tilldeln Best  Kort m Sen m  Retursamt
+[f032] [f033] [f034]  [f037]  [f038]  [f043] [f044] [f030] [f031] [f040] [f041] [f039] [f029]   [f028][f035] [f036] [f042]
+}
+end
+tables
+driver
+attributes
+a = driver.dr_fleet,UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="Bilparksindikator";
+f000 = driver.dr_id,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Förare ID(1-99999)";
+b = driver.dr_class,UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="Klassifikation för förare 1-Reguljär, 2-Aspir";
+f001 = driver.dr_name,UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="Förarens namn";
+f002 = driver.dr_address,UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="Förarens bostadsadress";
+f003 = driver.dr_city,UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="Förarens bostadsort";
+f004 = driver.dr_zip,NOENTRY,NOUPDATE,COMMENTS="Förarens postnummer";
+f005 = driver.dr_zip_suf,NOENTRY,NOUPDATE,COMMENTS="Fältet stöds inte";
+f006 = driver.dr_phone,NOENTRY,NOUPDATE,COMMENTS="Förarens bostadstelefon";
+f007 = driver.dr_license_nbr,UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="Förarens körkortsnummer";
+f008 = driver.dr_taxi_license,UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="Förarens taxitillståndsnr";
+f009 = driver.dr_seals,UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="Sexton flaggor för tillstånd";
+f010 = driver.dr_attributes,UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="]tta flaggor för förarattribut";
+f011 = driver.dr_susp_from_dt_tm,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Datum och klockslag då denne förare avstängdes";
+f012 = driver.dr_susp_to_dt_tm,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Datum och klockslag då denne förare återinträdde i tjänst";
+f013 = driver.dr_susp_reason,UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="Orsak till förarens avstängning";
+c = driver.dr_susp_pass_call,UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="Om föraren inte får utföra passagerarbeställningar";
+d = driver.dr_susp_del_call,UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="Om föraren inte får utföra leveransbeställningar";
+e = driver.dr_susp_typex_call,UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="Om föraren inte får utföra extra beställningar";
+f014 = driver.dr_susp_message[1,32],UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="Avstängningsmeddelande som ska skickas till föraren";
+f015 = driver.dr_susp_message[33,64],UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="Avstängningsmeddelande som ska skickas till föraren";
+f016 = driver.dr_susp_message[65,96],UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="Avstängningsmeddelande som ska skickas till föraren";
+f018 = driver.dr_comments[1,40],UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="Område för allmän förarkommentar";
+f019 = driver.dr_comments[41,80],UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="Område för allmän förarkommentar";
+f020 = driver.dr_lic_renew,NOENTRY,NOUPDATE,COMMENTS="Datum för förnyelse av körkort";
+f021 = driver.dr_taxi_lic_renew,NOENTRY,NOUPDATE,COMMENTS="Datum för förnyelse av förarens taxitillstånd";
+f022 = driver.dr_emerg_on_dt_tm,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Senaste datum och klockslag denne förare förorsakade nödläge";
+f023 = driver.dr_emerg_of_dt_tm,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Senaste datum och kl. denne förares senaste nödläge omhändertogs";
+f024 = driver.dr_signed_on_dt_tm,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Senaste datum och klockslag denne förare loggade in";
+f025 = driver.dr_signed_of_dt_tm,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Senaste datum ock klockslag denne förare blev sysslolös";
+f026 = driver.dr_last_veh_nbr,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Senaste bil denne förare körde";
+f027 = driver.dr_last_call,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Senaste beställningsuppdrag utfört av denne förare";
+f032 = driver.dr_posts,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Antal gånger denne förare bokade under sitt senaste skift";
+f033 = driver.dr_cond_posts,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Antal ggr denne förare gjorde villkorl. bokningar under senaste skift";
+f034 = driver.dr_enroute_posts,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Antal gånger denne förare bokade på väg under sitt senaste skift";
+f037 = driver.dr_no_accepts,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Antal gånger denne förare ej accept.körning under sitt senaste skift";
+f038 = driver.dr_rejects,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Antal gånger denne förare avvisat under sitt senaste skift";
+f043 = driver.dr_callouts,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Antal utrop denne förare hade under sitt senaste skift";
+f044 = driver.dr_no_shows,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Antal bomkörningar denne förare hade under sitt senaste skift";
+f030 = driver.dr_flags,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Antal liftkunder denne förare hade under sitt senaste skift";
+f031 = driver.dr_bids,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Antal fria val denne förare hade under sitt senaste skift";
+f040 = driver.dr_req_to_talk,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Antal talbeg. denne förarförare tfärdade under sitt senaste skift";
+f041 = driver.dr_messages,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Antal meddel. förare skickade till trafikled. under senaste skiftet";
+f039 = driver.dr_breaks,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Antal raster denne förare hade under sitt senaste skift";
+f029 = driver.dr_assigns,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Antal best. som manuellt tilldelades denne förare under skiftet";
+f028 = driver.dr_calls,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Antal best. som utsändes till denne förare under dennes senaste skift";
+f035 = driver.dr_short_meters,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Antal för kort meter som försöktes av denne förare under senaste skiftet";
+f036 = driver.dr_late_meters,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Antal sen meter som inträffade under förarens senaste skift";
+f042 = driver.dr_callbacks,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Antal retursamtal denne förare hade under sitt senaste skift";
+end
+instructions
+   delimiters "()";
+end

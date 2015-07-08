@@ -1,0 +1,1128 @@
+static char sz__FILE__[]="@(#)da_purge.c	10.1.1.1(ver) Date Release 12/2/94" ;
+ /****************************************************************************
+ *                                                                           *
+ *                           S C C S   I N F O                               *
+ *                                                                           *
+ * @(#)  da_purge.c; Rel: 6.7.0.0; Get date: 1/1/93 at 16:25:55
+ * @(#)  Last delta: 1/3/92 at 12:45:21
+ * @(#)  SCCS File: /taxi/sccs/s.da_purge.c
+ *                                                                           *
+ * Copyright (c) 1990 - MDI Seattle                                          *
+ *                                                                           *
+ *****************************************************************************/
+
+#include <stdio.h>
+#include <fcntl.h>
+#include <time.h>
+#include <string.h>
+#include <ctype.h>
+#include <malloc.h>
+#include <isam.h>
+#include <sys/types.h>
+#include <sys/param.h>		/* for the statfs call */
+#include <sys/mount.h>		/* for the statfs call */
+#include <string.h>
+
+#include "mads_types.h"
+#include "Fleet_db.h"
+#include "Hist_cmt_private.h"
+#include "Tracking_Layer_private.h"
+#include "Tracking_Layer_db.h"
+#include "taxi_db.h"
+#include "key.h"
+#include "dr_maint.h"
+#include "mad_ipc.h"
+#include "mad_error.h"
+#include "path.h"
+#define DECLARING
+#include "rep_strdefs.h"
+#include "comm_strdefs.h"
+#include "disk_usage.h"
+#include "language.h"
+
+
+#define ROOT 		0
+
+char sysbuf[120];
+char * pathbuf = REP_DEV;       	/* Device which has the report files on it 				*/
+extern char 	req_buf[];		/* buffer to cast as call structure */
+extern char     el_req_buf[];
+long get_internal_time();
+
+/*====================================================================
+= da_purge
+=	After all calls are moved to the SHIFT file, then these calls are purged from the CALL file.
+=====================================================================*/
+
+/* There was an attempt to keep track of the records purged in the call file
+   to make the purging of the records in call history and unzoned quicker. But
+   since there seems to be inconsistancies in what is stored in the call file
+   and what is stored elsewhere, this ability is turned off for now by setting
+   Keeping_array to 0
+*/
+int Keeping_array = 1;
+int Num_calls_purged = 0;
+int Purge_array_size = 0;
+int *Purge_array = NULL;
+int Purge_point;
+
+FILE *sys_mgr_mail_file;
+
+#define PURGE_ARRAY_INCREASE 1000
+
+void
+mark_call_purged(call_num)
+int call_num;
+{
+  if (!Keeping_array)
+    return;
+
+  /* Allocate or reallocate space as needed */
+  if (Num_calls_purged == Purge_array_size)
+  {
+    Purge_array_size += PURGE_ARRAY_INCREASE;
+
+    /* First time through, we need allocation */
+    if (Purge_array == NULL)
+    {
+      Purge_array = (int *) malloc(Purge_array_size * sizeof(int));
+    }
+
+    /* Othewise, reallocate some extra space */
+    else
+    {
+      Purge_array = (int *) realloc(Purge_array, Purge_array_size * sizeof(int));
+#ifdef DEBUG
+      printf("Space for %d purged call numbers allocated\n", Purge_array_size);
+#endif
+    }
+
+    /* Allocation failed ? */
+    if (Purge_array == NULL)
+    {
+#ifdef DEBUG
+      printf("Allocation failed for purge array. Will use backup method instead\n");
+#endif
+      Keeping_array = 0;
+      return;
+    }
+  }
+
+  Purge_array[Num_calls_purged] = call_num;
+  Num_calls_purged++;
+}
+
+
+int
+int_compare(num1, num2)
+int *num1, *num2;
+{
+  if (*num1 < *num2)
+    return(-1);
+  else if (*num1 > *num2)
+    return(1);
+  else
+    return(0);
+}
+
+void
+sort_purge_array()
+{
+  if (Keeping_array && Purge_array)
+  {
+    qsort(Purge_array, Num_calls_purged, sizeof(int), int_compare);
+  }
+}
+
+
+void
+free_purge_array()
+{
+  if (Purge_array)
+    free(Purge_array);
+}
+
+void
+reset_purge_point()
+{
+  Purge_point = 0;
+}
+
+call_purged(call_num)
+int call_num;
+{
+  struct cisam_cl *callptr;
+  int *result;
+
+  if (Keeping_array)
+  {
+    /* Since we're reading call history in call number order, we can do a forward
+       search on the sorted purged call numbers until we find what we want. */
+
+    while (Purge_point < Num_calls_purged && Purge_array[Purge_point] < call_num)
+      Purge_point ++;
+    
+    if (Purge_point < Num_calls_purged && Purge_array[Purge_point] == call_num)
+      return(1);
+    
+    else
+      return(0);
+  }
+
+  /* If for some reasone the allocation of the purge array fails,
+     use the old slow method of seeing if a call is purged by
+     seeeing if it is missing from the database CALL file */
+
+  /* CALL file must be open. This function will wipe out what is
+     stored in req_buf, so save anything in there you need before
+     calling this function */
+
+  callptr = (struct cisam_cl *) req_buf;
+
+  callptr->nbr = call_num;
+
+  if (db(CALL_FILE_ID, READ_KEYS, &cl_key1, ISEQUAL, 0) < 0)
+    return(1);
+  else
+    return(0);
+}
+
+main(argc, argv)
+int 	argc;
+char 	*argv[];
+{
+	extern int 	db();
+
+	register int	call_number;
+	register int 	indx;
+	register int 	ccode;
+
+	struct cisam_cl *callrec;
+	struct cisam_ch *histrec;
+	struct cisam_sd *stdvrec;
+	struct cisam_su *stusrec;
+	struct cisam_ml *msglrec;
+	struct cisam_rm *rptmsgrec;
+	struct cisam_em *emergrec;
+	struct cisam_el *errorec;
+	struct cisam_uz *unznrec;
+	struct cisam_mb *mailrec;
+        HIST_CMT_REC    *histcmtrec;
+	struct cisam_cust       *custrec;
+	RECEIPT_DATA_REC        *receipt;
+	TL_STRUCT  tl_struct;	
+
+	long due_date_time;
+	long CustLastAccessAllowed;
+	char fleet;
+	char ending_date[10], tmp_ending_date[10];
+	char ending_time[10];
+	char unzone_date[10], err_date[10];
+	char errorstr[128];
+	int  date_diff, time_diff;
+	int  done;
+
+        long    ending_dt_tm;
+        int     fleets;
+        int     type;                           /* stores status of read */
+        char    iobuffer[132];
+        char    *fleet_id;
+	int     purge_call_history;
+	int	call_hist_purged = 0;
+	int     hist_cmt_purged = 0;
+	int	purge_count = 0, times_thru = 0;
+	int 	del_count = 0;
+	int     recs_purged = 0;
+	int     rc = 0;
+	char    send_mail;
+	char    system_mgr[16];
+	struct cisam_syc *systemrec;
+	char    spaces1[32];
+	char    spaces2[32];
+
+	long start_time, start, end_time, total_time, hours, minutes, seconds;
+	
+
+	start_time = time(0);
+
+        /* initialize language environment */
+        init_locale();
+        REP_catd = init_catalog("da_purge");
+
+	if (argc != 3)
+	{
+	  fprintf(stderr, "Invalid arguments: da_purge  fleets  ending_date_time(in UNIX seconds)\n");
+	  exit(-1);
+	}
+
+	ending_dt_tm = atol(argv[2]);
+	fleets = strlen(argv[1]);
+	fleet_id = argv[1];
+
+	get_srch_date(ending_dt_tm, tmp_ending_date);
+	get_simple_date(tmp_ending_date, ending_date);
+	get_srch_time(ending_dt_tm, ending_time);
+
+	/* for testing only */ 
+        if ((*fleet_id == 't') || (*fleet_id == 'T')) {
+                daily_cleanup();
+                return(0);                                 
+        }
+	
+	systemrec=(struct cisam_syc*)req_buf;
+	if (db(SYSCNTL_FILE_ID, OPEN, &fl_key2, ISINPUT | ISMANULOCK, 0) < 0)
+	  {
+	    ERROR(' ', SYSCNTL_FILE, "Error opening System Control File");
+	    exit(-1);
+	  }
+	if (db_read(SYSCNTL_FILE_ID, systemrec, ISFIRST) < 0)
+	  {
+	    ERROR(' ', SYSCNTL_FILE, "Error reading System Control File");
+	    exit(-1);
+	  }
+
+	CustLastAccessAllowed = start_time - (systemrec->keep_cust_days * 86400);
+	send_mail = systemrec->send_mail;
+	strcpy(system_mgr, systemrec->system_mgr);
+	db(SYSCNTL_FILE_ID, CLOSE, &fl_key2, 0, 0);
+	
+	system("rm /tmp/purgestatus");
+	if ((sys_mgr_mail_file = fopen("/tmp/purgestatus", "w+")) == NULL) {
+	  fprintf(stderr, "ERROR opening SYS_MGR_MAIL_FILE\n");
+	}
+
+	if (db(CALL_FILE_ID, OPEN, 0, ISINOUT | ISMANULOCK, 0) < 0)
+	{
+	  ERROR(' ', CALL_FILE, "Error OPENing call file");
+	  exit(-1);
+	}
+
+	if (db(CALLH_FILE_ID, OPEN, 0, ISINOUT | ISMANULOCK, 0) < 0)
+	{
+	  ERROR(' ', CALLH_FILE, "Error OPENing");
+	  exit(-1);
+	}
+	if (db(HIST_CMT_FILE_ID, OPEN, 0, ISINOUT | ISMANULOCK, 0) < 0)
+	  {
+	    ERROR(' ', HIST_CMT_FILE, "Error Opening");
+	    exit(-1);
+	  }
+	if (db(CUSTOMER_FILE_ID, OPEN, 0, ISINOUT | ISMANULOCK, 0) < 0)
+	  {
+	    ERROR(' ', CUSTOMER_FILE, "Error opening");
+	    exit(-1);
+	  }
+
+	if (db(RECEIPT_DATA_FILE_ID, OPEN, 0, ISINOUT | ISMANULOCK, 0) < 0)
+	  {
+	    ERROR(' ', RECEIPT_DATA_FILE, "Error opening");
+	    exit(-1);
+	  }	
+
+	/* cast the buffers as the request buffer */
+	callrec = (struct cisam_cl *)req_buf;
+	histrec = (struct cisam_ch *)req_buf;
+	strcpy(spaces1, "                             ");
+	strcpy(spaces2, "                           ");
+	fprintf(sys_mgr_mail_file, "Purging fleets: %s\n", argv[1]);
+	fprintf(sys_mgr_mail_file, "Purge cutoff date-time: %s\n",asctime(localtime(&ending_dt_tm))); 
+	fprintf(sys_mgr_mail_file, "Table                          Duration(secs)            Records Purged\n");
+	fprintf(sys_mgr_mail_file, "-----                          --------                  --------------\n");
+	fprintf(sys_mgr_mail_file, "CALLS  ");
+	fflush(sys_mgr_mail_file);
+	start = time(0);
+
+	/* For each fleet requested, delete all calls
+	   before the given end date-time */
+	for (indx = 0; indx < fleets; indx++)
+	{
+	  /* Get the first call for current fleet */
+	  callrec->fleet = fleet_id[indx]; 
+	  callrec->due_date_time = 0;
+
+	  if (db(CALL_FILE_ID, READ_KEYS, &cl_key3, ISGTEQ, 0) < 0)
+	  {
+	    if ( iserrno != ENOREC )
+	      ERROR(' ', CALL_FILE, "call: error reading");
+
+	    /* Try next fleet */
+	    continue;
+	  }
+
+	  fleet = fleet_id[indx];
+	  due_date_time = callrec->due_date_time;
+	  ccode = 0;	  
+          while(ccode >= 0 && callrec->fleet == fleet_id[indx] && callrec->due_date_time < ending_dt_tm) {
+                    if (db(CALL_FILE_ID,DELETE,&cl_key3,0,0) < 0)           /* cannot delete record from the call file */
+                            ERROR(' ', CALL_FILE, "call: error deleting");
+		    mark_call_purged(callrec->nbr);
+		    ++del_count;
+
+                    ccode=db(CALL_FILE_ID,READ_KEYS,&cl_key3,ISNEXT,0);
+          }
+
+	} /* for */
+	    
+
+
+	/***********
+	  CALL HISTORY
+	 **********/
+
+	fprintf(sys_mgr_mail_file, "%s%d", spaces1, time(0) - start);
+	fprintf(sys_mgr_mail_file, "%s%d\n", spaces2, del_count);
+	fprintf(sys_mgr_mail_file, "CALLH  ");
+	fflush(sys_mgr_mail_file);
+	start = time(0);
+
+	sort_purge_array();
+	reset_purge_point();
+
+	if (Purge_array != NULL)
+	  {
+	    while (Purge_point <= Num_calls_purged)
+	      {
+		histrec->call_nbr = Purge_array[Purge_point];
+		histrec->status_dt_tm = 0;
+		if (db(CALLH_FILE_ID, READ_KEYS, &ch_key3, ISGTEQ, 0) < 0)
+		  {
+		    ERROR(' ', CALLH_FILE, "call history: error reading");
+		  }
+		else
+		  {
+		    done = 0;
+		    while (!done)
+		      {
+			if (histrec->call_nbr == Purge_array[Purge_point])
+			  {
+			    if (db(CALLH_FILE_ID, DELETE, 0, 0, 0) < 0)
+			      ERROR(' ', CALLH_FILE, "call history: error deleting");
+			    call_hist_purged++;
+			    if (db(CALLH_FILE_ID, READ_KEYS, &ch_key3, ISNEXT, 0) < 0)
+			      {
+				if (iserrno != EENDFILE)
+				  ERROR(' ', CALLH_FILE, "call history: error reading");
+				done = 1;
+			      }
+			  }
+			else
+			  done = 1;
+		      }
+		  }
+		Purge_point++;
+	      }
+	  }
+
+	db(CALLH_FILE_ID, CLOSE, 0, 0 , 0);
+	reset_purge_point();
+
+	/****************
+	  HISTORY COMMENTS
+	 ***************/
+	fprintf(sys_mgr_mail_file, "%s%d", spaces1, time(0) - start);
+	fprintf(sys_mgr_mail_file, "%s%d\n", spaces2, call_hist_purged);
+	fprintf(sys_mgr_mail_file, "HISTCMT");
+	fflush(sys_mgr_mail_file);
+	start = time(0);
+	
+	histcmtrec = (HIST_CMT_REC *)req_buf;
+	if (Purge_array != NULL)
+	  {
+	    while (Purge_point <= Num_calls_purged)
+	      {
+		histcmtrec->call_nbr = Purge_array[Purge_point];
+		histcmtrec->dt_tm = 0;
+		if (db(HIST_CMT_FILE_ID, READ_KEYS, &hc_key2, ISGTEQ, 0) < 0)
+		  {
+
+		  }
+		else
+		  {
+		    done = 0;
+		    while (!done)
+		      {
+			if (histcmtrec->call_nbr == Purge_array[Purge_point])
+			  {
+			    if (db(HIST_CMT_FILE_ID, DELETE, 0, 0, 0) < 0)
+			      {
+				/** error here **/
+			      }
+			    hist_cmt_purged++;
+			    if (db(HIST_CMT_FILE_ID, READ_KEYS, &hc_key2, ISNEXT, 0) < 0)
+			      {
+				if (iserrno != EENDFILE)
+				  ERROR(' ', HIST_CMT_FILE, "history comment: error reading");
+				done = 1;
+			      }
+			  }
+			else
+			  done = 1;
+		      }
+		  }
+		Purge_point++;
+	      }
+	  }
+	db(HIST_CMT_FILE_ID, CLOSE, 0, 0, 0);
+	reset_purge_point();
+
+	/*****************
+	  UNZONED call file
+	 *****************/
+	fprintf(sys_mgr_mail_file, "%s%d", spaces1, time(0) - start);
+	fprintf(sys_mgr_mail_file, "%s%d\n", spaces2, hist_cmt_purged);
+	fprintf(sys_mgr_mail_file, "UNZONED");
+	fflush(sys_mgr_mail_file);
+	start = time(0);
+
+	recs_purged = 0;
+
+	unznrec = (struct cisam_uz *)req_buf;
+	if (db(UNZONE_FILE_ID, OPEN, 0, ISINOUT | ISMANULOCK, 0) < 0)
+	{
+	  ERROR(' ', UNZONE_FILE, "Error OPENing");
+	}
+
+	else
+	{
+	  
+	  /* Go through each unzoned call to see if its call number has
+	     already been purged */
+	  type = ISFIRST;
+	  while (db(UNZONE_FILE_ID, READ_KEYS, &uz_key1, type, 0) >= 0)
+	  {
+	    /* If call number is not in in CALL file than we need to
+	       delete it from call history */
+	    if (call_purged(unznrec->call_nbr))
+	    {
+	      recs_purged++;
+	      if (db(UNZONE_FILE_ID, DELETE, 0, 0, 0) < 0) 
+		ERROR(' ', ERROR_FILE, "error deleting");
+	    }
+
+	    type = ISNEXT;
+
+	  } /* while */
+
+	  db(UNZONE_FILE_ID, CLOSE, 0, 0, 0);
+
+	} /* else */
+
+	db(CALL_FILE_ID, CLOSE, 0, 0, 0);
+	free_purge_array();
+
+	/***************
+	  MAILBOX file
+	 ***************/
+
+	fprintf(sys_mgr_mail_file,"%s%d%s%d\n",
+		spaces1, time(0) - start, spaces2, recs_purged);
+	fprintf(sys_mgr_mail_file,"MAILBOX");
+	fflush(sys_mgr_mail_file);
+	start = time(0);
+	recs_purged = 0;
+
+	mailrec = (struct cisam_mb *)req_buf;
+	if (db(MAILBOX_FILE_ID, OPEN, 0, ISINOUT + ISMANULOCK, 0) < 0)
+	{
+	  ERROR(' ',MAILBOX_FILE,"Error opening file");
+        }
+	else
+	{
+	  /* mb_key3 is on the unique serial field which will be in
+	     order created. date_time_sent will therefore be in
+	     ascending order for mb_key3 */
+	  type = ISFIRST;
+	  db(MAILBOX_FILE_ID, START, &mb_key3, type, 0);
+	  while (db(MAILBOX_FILE_ID, READ_KEYS, &mb_key3, type, 0) >= 0)
+	  {
+	    if (mailrec->date_time_sent < ending_dt_tm)
+	    {
+	      recs_purged++;
+	      if (db(MAILBOX_FILE_ID, DELETE, 0, 0, 0) < 0) 
+		ERROR(' ', MAILBOX_FILE, "mailbox: error deleting");
+	    }
+	    else
+	      break;
+	    type = ISNEXT;
+	  } 
+	  db(MAILBOX_FILE_ID, CLOSE, 0, 0, 0);
+	}
+
+	/************
+	  DRIVER STATISTICS file
+	 ***********/
+
+	fprintf(sys_mgr_mail_file,"%s%d%s%d\n",
+		spaces1, time(0) - start, spaces2, recs_purged);
+	fprintf(sys_mgr_mail_file,"STATDRV");
+	fflush(sys_mgr_mail_file);
+	start = time(0);
+	recs_purged = 0;
+
+	stdvrec = (struct cisam_sd *)req_buf;
+	if (db(STATDRV_FILE_ID, OPEN, 0, ISINOUT | ISMANULOCK, 0) < 0)
+	{
+	  ERROR(' ', STATDRV_FILE, "Error OPENing");
+	}
+
+	else
+	{
+	  /* sd_key3 is on the unique serial record_nbr field since this file
+	     is only added to the to_dt_tm will always be in ascending order
+	     for sd_key3 (check out drv_stat.c to see) */
+	  type = ISFIRST;
+	  db(STATDRV_FILE_ID, START, &sd_key3, type, 0);
+	  while(db(STATDRV_FILE_ID, READ_KEYS, &sd_key3, type, 0) >= 0)
+	  {
+	    if(stdvrec->to_dt_tm < ending_dt_tm)
+	    {
+	      recs_purged++;
+	      if (db(STATDRV_FILE_ID, DELETE, 0, 0, 0) < 0)
+		ERROR(' ', STATDRV_FILE, "statdrv: error deleting");
+	    }
+	    else
+	      break;
+	    type = ISNEXT;
+	  }
+	  db(STATDRV_FILE_ID, CLOSE, 0, 0, 0);
+	}
+
+
+	/*************
+	  USER STATISTICS file
+	 ************/
+
+	fprintf(sys_mgr_mail_file,"%s%d%s%d\n",
+		spaces1,time(0) - start, spaces2,recs_purged);
+	fprintf(sys_mgr_mail_file,"STATUSR");
+	fflush(sys_mgr_mail_file);
+	start = time(0);
+	recs_purged = 0;
+
+	stusrec = (struct cisam_su *)req_buf;
+	if (db(STATUSR_FILE_ID, OPEN, 0, ISINOUT | ISMANULOCK, 0) < 0)
+	{
+	  ERROR(' ', STATUSR_FILE, "Error OPENing");
+	}
+	else
+	{
+	  /* su_key2 is on the serial record_nbr field. to_dt_tm
+	     will be in asceding order with su_key2 (see ui_stat.c) */
+	  type = ISFIRST;
+	  db(STATUSR_FILE_ID, START, &su_key2, type, 0);
+	  while (db(STATUSR_FILE_ID, READ_KEYS, &su_key2, type, 0) >= 0)
+	  {
+	    if(stusrec->to_dt_tm < ending_dt_tm)
+	    {
+	      recs_purged++;
+	      if(db(STATUSR_FILE_ID, DELETE, &su_key1, 0, 0) < 0) 
+		ERROR(' ', STATUSR_FILE, "error deleting");
+	    }
+	    else
+	      break;
+	    type = ISNEXT;
+	  }
+	  db(STATUSR_FILE_ID, CLOSE, 0, 0, 0);
+	}
+
+
+
+	/*************
+	  MESSAGE LOG file
+	 *************/
+
+	fprintf(sys_mgr_mail_file,"%s%d%s%d\n",
+		spaces1,time(0) - start,spaces2, recs_purged);
+	fprintf(sys_mgr_mail_file,"MSGLOG ");
+	fflush(sys_mgr_mail_file);
+	start = time(0);
+	recs_purged = 0;
+
+	msglrec = (struct cisam_ml *)req_buf;
+	if (db(MSGLOG_FILE_ID, OPEN, 0, ISINOUT | ISMANULOCK, 0) < 0)
+	{
+	  ERROR(' ', MSGLOG_FILE, "Error OPENing");
+	}
+	else
+	{
+	  /* ml_key2 is on dt_time_sent */
+	  
+	  type = ISFIRST;
+	  db(MSGLOG_FILE_ID, START, &ml_key2, type, 0);
+	  while (db(MSGLOG_FILE_ID, READ_KEYS, &ml_key2, type, 0) >= 0)
+	  {
+	    if(msglrec->date_time_sent < ending_dt_tm)
+	    {
+	      recs_purged++;
+	      if(db(MSGLOG_FILE_ID, DELETE, 0, 0, 0) < 0) 
+		ERROR(' ', MSGLOG_FILE, "error deleting");
+	    }
+	    else
+	      break;
+	    type = ISNEXT;
+	  }
+
+	  db(MSGLOG_FILE_ID, CLOSE, 0, 0, 0);
+	}
+
+
+
+	/***********
+	  REPEAT MESSAGE file
+	 **********/
+
+	fprintf(sys_mgr_mail_file, "%s%d%s%d\n",
+		spaces1,time(0) - start,spaces2, recs_purged);
+	fprintf(sys_mgr_mail_file, "RPTMSG ");
+	fflush(sys_mgr_mail_file);
+	start = time(0);
+	recs_purged = 0;
+
+	rptmsgrec = (struct cisam_rm *)req_buf;
+	if (db(RPTMSG_FILE_ID, OPEN, 0, ISINOUT | ISMANULOCK, 0) < 0)
+	{
+	  ERROR(' ', RPTMSG_FILE, "Error OPENing");
+	}
+	else
+	{
+	  /* There is no key that will track until_dt_tm in ascending order.
+	     All repeat messages must be looked at to determine which ones
+	     to delete. Luckily, this should always be a small file */
+	  type = ISFIRST;
+	  db(RPTMSG_FILE_ID, START, &rm_key1, type, 0);
+	  while (db(RPTMSG_FILE_ID, READ_KEYS, &rm_key1, type, 0) >= 0)
+	  {
+	    if(rptmsgrec->until_dt_tm < ending_dt_tm)
+	    {
+	      recs_purged++;
+	      if(db(RPTMSG_FILE_ID, DELETE, &rm_key1, 0, 0) < 0) 
+		ERROR(' ', RPTMSG_FILE, "error deleting");
+	    }
+	    type = ISNEXT;
+	  }
+	  db(RPTMSG_FILE_ID, CLOSE, 0, 0, 0);
+	}
+
+	fprintf(sys_mgr_mail_file,"%s%d%s%d\n",
+		spaces1, time(0) - start, spaces2, recs_purged);
+	fprintf(sys_mgr_mail_file,"CUSTOMER");
+	fflush(sys_mgr_mail_file);
+	start = time(0);
+	recs_purged = 0;
+	type = ISFIRST;
+
+#ifdef FOO
+	custrec = (struct cisam_cust *) req_buf;
+	db(CUSTOMER_FILE_ID, START, &cust_key1, type, 0);
+
+	
+	while (db(CUSTOMER_FILE_ID, READ_KEYS, &cust_key1, type, 0) >= 0)
+	  {
+	    if (custrec->access_date_time < CustLastAccessAllowed)
+	      {
+		recs_purged++;
+		if (db(CUSTOMER_FILE_ID, DELETE, &cust_key1, 0, 0) < 0)
+		  ERROR(' ', CUSTOMER_FILE, "error deleting");
+	      }
+	    type = ISNEXT;
+	  }
+#endif
+	db(CUSTOMER_FILE_ID, CLOSE, 0, 0, 0);
+	
+        
+	/***********
+	  ERROR LOG file
+	 **********/
+
+	fprintf(sys_mgr_mail_file,"%s%d%s%d\n",
+		spaces1, time(0) - start, spaces2, recs_purged);
+	fprintf(sys_mgr_mail_file,"ERROR  ");
+	fflush(sys_mgr_mail_file);
+	start = time(0);
+	recs_purged = 0;
+	
+	errorec = (struct cisam_el *) el_req_buf;
+	if (db(ERROR_FILE_ID, OPEN, 0, ISINOUT | ISMANULOCK, 0) < 0)
+	{
+	  ERROR(' ', ERROR_FILE, "Error OPENing");
+	}
+
+	else
+	{
+	  /* el_key1 is for serial nbr column. date and time
+	     will be in ascending order */
+	  type = ISFIRST;
+	  db(ERROR_FILE_ID, START, &el_key1, type, 0);
+	  while (db(ERROR_FILE_ID, READ_KEYS, &el_key1, type, 0) >= 0)
+	  {
+	    if ( get_internal_time(errorec->date, errorec->time) < ending_dt_tm )
+	    {
+	      recs_purged++;
+	      if (db(ERROR_FILE_ID, DELETE, 0, 0, 0) < 0) 
+		ERROR(' ', ERROR_FILE, "error deleting");
+	    }
+	    else
+	      break;
+
+	    type = ISNEXT;
+	  }
+
+	  db(ERROR_FILE_ID, CLOSE, 0, 0, 0);
+	}
+
+
+
+	/***********
+	  EMERGENCY LOG file
+	 ***********/
+
+	fprintf(sys_mgr_mail_file,"%s%d%s%d\n",
+		spaces1,time(0) - start,spaces2, recs_purged);
+	fprintf(sys_mgr_mail_file,"EMERG  ");
+	fflush(sys_mgr_mail_file);
+	start = time(0);
+	recs_purged = 0;
+
+	emergrec = (struct cisam_em *)req_buf;
+	if (db(EMERG_FILE_ID, OPEN, 0, ISINOUT | ISMANULOCK, 0) < 0)
+	{
+	  ERROR(' ', EMERG_FILE, "Error OPENing");
+	}
+	else
+	{
+	  /* Delete the old emergencies for the given fleets */
+	  for (indx = 0; indx < fleets; indx++)
+	  {
+	    /* Get the first emergency for current fleet */
+	    emergrec->fleet = fleet_id[indx]; 
+	    emergrec->resolved_dt_tm = 0;
+
+	    /* em_key1 is (fleet, resolved_dt_tm) */
+	    if (db(EMERG_FILE_ID, READ_KEYS, &em_key1, ISGTEQ, 0) < 0)
+	    {
+	      if (iserrno != ENOREC)
+		ERROR(' ', EMERG_FILE, "emerg: error reading");
+	      
+	      /* Try next fleet */
+	      continue;
+	    }
+	    
+	    while (emergrec->fleet == fleet_id[indx])
+	    {
+	      if (emergrec->resolved_dt_tm <= ending_dt_tm)
+	      {
+		recs_purged++;
+		if (db(EMERG_FILE_ID, DELETE, 0, 0, 0) < 0) 
+		  ERROR(' ', EMERG_FILE, "error deleting");
+	      }
+	      else
+		break;
+	      
+	      if (db(EMERG_FILE_ID, READ_KEYS, &em_key1, ISNEXT, 0) < 0)
+	      {
+		/* Most likely we just ran past end of file (no problem).
+		   Otherwise, an error */
+		if (iserrno != EENDFILE)
+		  ERROR(' ', EMERG_FILE, "emerg: error reading");
+		break;
+	      }
+	      
+	    } /* while */
+
+	  } /* for */
+
+	  db(EMERG_FILE_ID, CLOSE, 0, 0, 0);
+	}
+	  
+
+	fprintf(sys_mgr_mail_file,"%s%d%s%d\n",
+		spaces1,time(0) - start,spaces2, recs_purged);
+
+	fprintf(sys_mgr_mail_file,"RECEIPTS");
+	fflush(sys_mgr_mail_file);
+	start = time(0);
+	recs_purged = 0;
+	type = ISFIRST;
+	
+	receipt = (RECEIPT_DATA_REC *) req_buf;
+	db(RECEIPT_DATA_FILE_ID, START, &rd_key1, type, 0);
+
+	while (db(RECEIPT_DATA_FILE_ID, READ_KEYS, &rd_key1, type, 0 ) >= 0)
+	  {
+	    if ( ( receipt->processed == YES ) || ( receipt->trans_dt_tm <= ending_dt_tm ) )
+	      {
+		recs_purged++;
+		if ( db(RECEIPT_DATA_FILE_ID, DELETE, &rd_key1, 0, 0 ) < 0 )
+		  ERROR(' ', RECEIPT_DATA_FILE, "error deleting" );
+	      }
+	    type = ISNEXT;
+	  }
+	db(RECEIPT_DATA_FILE_ID, CLOSE, 0, 0, 0);
+	fprintf(sys_mgr_mail_file,"%s%d%s%d\n",
+		spaces1, time(0) - start, spaces2, recs_purged);
+
+
+	if (db_open( TL_FILE_ID, ISINOUT | ISMANULOCK ) == SUCCESS )
+	  {
+	    fprintf(sys_mgr_mail_file,"TLAYER");
+	    fflush(sys_mgr_mail_file);
+	    start = time(0);
+	    recs_purged = 0;
+	    tl_struct.date_time = 0;
+	    type = ISFIRST;
+	    done = 0;
+	    
+	    while ( !done )
+	      {
+		rc = db_read_key( TL_FILE_ID, &tl_struct, &tl_key1, type );
+		type = ISNEXT;
+		if ( ( rc == 0 ) && ( tl_struct.date_time < ending_dt_tm ) )
+		  {
+		    db_delete( TL_FILE_ID, &tl_struct );
+		    ++recs_purged;
+		  }
+		else if ( rc != 0 )
+		  done = 1;
+	      }
+	    db_close(TL_FILE_ID);
+	    fprintf(sys_mgr_mail_file,"%s%d%s%d\n",
+		    spaces1, time(0) - start, spaces2, recs_purged);	
+	  }
+	
+	end_time = time(0);
+	total_time = end_time - start_time;
+	hours = total_time / 3600;
+	minutes = (total_time - hours * 3600) / 60;
+	seconds = total_time - hours * 3600 - minutes * 60;
+	fprintf(sys_mgr_mail_file, "\nStart: %s", asctime(localtime(&start_time)));
+	fprintf(sys_mgr_mail_file, "End:   %s", asctime(localtime(&end_time)));
+	fprintf(sys_mgr_mail_file, "Elapsed time = %d secs total\n%d hours, %d minutes, %d seconds\n",
+		total_time, hours, minutes, seconds);
+
+
+	daily_cleanup();
+
+        /* close language catalogues */
+        cleanup_catalog(REP_catd);
+	fclose(sys_mgr_mail_file);
+	if (send_mail == YES)
+#ifndef __alpha
+	  sprintf(sysbuf, "/usr/ucb/mail -s 'Purge Status: %s' %s < %s", asctime(localtime(&end_time)), system_mgr, "/tmp/purgestatus");
+#else
+	  sprintf(sysbuf, "/usr/bin/mail -r root  %s < %s", system_mgr, "/tmp/purgestatus");
+#endif
+	system(sysbuf);
+	return(0);
+}
+/*=================================================================
+=       purge_rpts(number of days)
+=		Remove the report output files from the sudirectory
+=
+===================================================================*/
+purge_rpts(num_of_days)
+int num_of_days;
+
+{
+        sprintf(sysbuf, "find %s -name '*.[1-9,0]*' -mtime +%d -exec rm {} \\;",
+                REPORT_DATA,num_of_days);
+	system(sysbuf); 
+	return(0);
+}
+
+
+/*==================================================================
+=	daily_cleanup()
+=		Remove files.
+=		Remove old reports, system files, core dumps.
+==================================================================*/
+daily_cleanup()
+{
+
+	struct fs_data *buf;
+ 	int days = MAX_RPT_DAYS;
+        float avail_blocks, total_blocks, percent_free;
+        int return_code;  
+
+  	setuid(ROOT);
+	sprintf(sysbuf,"/bin/mv %s %s 2> %s", 
+                KDT_STATS_OUT, KDT_STATS_OLD, KDT_STATS_OLD);
+        system(sysbuf);
+	sprintf(sysbuf,"/bin/rm -f %s 2>/dev/null", SULOG);
+        system(sysbuf);
+        sprintf(sysbuf, "chmod 777 %s 2>/dev/null", MAIL);
+        system(sysbuf);
+        sprintf(sysbuf, "/bin/rm -f %s 2>/dev/null", MAIL);
+        system(sysbuf);
+/*
+	sprintf(sysbuf, "/bin/rm -f %s 2>/dev/null", WTMP);  
+        system(sysbuf);
+	sprintf(sysbuf,"/bin/rm -f %s 2>/dev/null", CRON_LOG);
+        system(sysbuf);
+*/
+	/* system("find /user/mads2 -name 'core' -atime +2 -exec rm {} \\;");*/
+
+#ifdef FOO
+        /* allocate space for file status data */
+        buf = (struct fs_data *) malloc(sizeof(struct fs_data));
+
+        /* get file system status */
+        return_code = statfs(pathbuf,buf);
+        if ( return_code == 0 ) {
+           ERROR(' ',"","file system not mounted");       	
+           return;
+        }
+        if ( return_code < 0 ) {
+           ERROR(' ',"","error in statfs call");       	
+           return;
+        }
+
+        avail_blocks  = (float)buf->fd_req.bfreen;
+        total_blocks = (float)buf->fd_req.btot;
+        percent_free = (avail_blocks/total_blocks)*100;
+
+        fprintf(sys_mgr_mail_file, "Total blocks on disk: %d  Available blocks: %d  Percent Free: %6.2f\n",
+		buf->fd_req.btot, buf->fd_req.bfreen, percent_free);
+
+#endif
+	purge_rpts(MAX_RPT_DAYS); /* only allow MAX_RPT_DAYS on system regardless of disk space */
+
+}
+
+/*
+  Convert date from local format to YYMMDD so we can
+  sort by date.
+*/
+int
+get_simple_date(in, out)
+char *in, *out;
+{
+  /* xx/xx/xx
+     01234567 */
+
+  /* Proper input dates are 8 chars long */
+  if (strlen(in) != 8)
+    return;
+
+  if (DATE_FORMAT == DAY_FIRST_IN_DATE)
+  {
+    /* Year */
+    out[0] = in[6];
+    out[1] = in[7];
+
+    /* Month */
+    out[2] = in[3];
+    out[3] = in[4];
+
+    /* Day */
+    out[4] = in[0];
+    out[5] = in[1];
+  }
+
+  else if (DATE_FORMAT == YEAR_FIRST_IN_DATE)
+  {
+    /* Year */
+    out[0] = in[0];
+    out[1] = in[1];
+
+    /* Month */
+    out[2] = in[3];
+    out[3] = in[4];
+
+    /* Day */
+    out[4] = in[6];
+    out[5] = in[7];
+  }
+
+  else
+  {
+    /* Year */
+    out[0] = in[6];
+    out[1] = in[7];
+
+    /* Month */
+    out[2] = in[0];
+    out[3] = in[1];
+
+    /* Day */
+    out[4] = in[3];
+    out[5] = in[4];
+  }
+
+  out[6] = '\0';
+
+  return(0);
+}
+
+/**************************************************************************************/
+/* get_internal_time: gets the time in internal C format; from the display formats    */
+/*	of date & time								      */
+/*	Returns 	0  if invalid date/time arg is passed to function	      */
+/*			time in unix format 					      */
+/**************************************************************************************/
+long get_internal_time(date_copy,time_copy)
+	char *date_copy;			/* assumed to be in mm/dd/yy format */
+	char *time_copy;			/* assumed to be in 24hr or 12hr format; hh:mm{a/p} */
+{
+	char date_time[13];			/* date & time formatted in YYMMDDhhmmss format */
+	char scratch_ptr[3];			/* scratch area */
+	int hours=0;
+
+	if (DATE_FORMAT == YEAR_FIRST_IN_DATE)
+	{
+		date_time[0] = date_copy[0];
+		date_time[1] = date_copy[1];
+		date_time[2] = date_copy[3];
+		date_time[3] = date_copy[4];
+		date_time[4] = date_copy[6];
+		date_time[5] = date_copy[7];
+	} else
+	{
+		date_time[0] = date_copy[6]; 			/* copy year from date */
+		date_time[1] = date_copy[7];
+
+		if (DATE_FORMAT == DAY_FIRST_IN_DATE) {
+	    	date_time[4] = date_copy[0]; 			/* copy the day */
+	    	date_time[5] = date_copy[1];
+
+	    	date_time[2] = date_copy[3]; 			/* copy month from date */
+	    	date_time[3] = date_copy[4];
+		}
+		else {
+	    	date_time[2] = date_copy[0]; 			/* copy month from date */
+	    	date_time[3] = date_copy[1];
+	    
+	    	date_time[4] = date_copy[3]; 			/* copy the day */
+	    	date_time[5] = date_copy[4];
+		}
+	}
+
+	/* copy the hour */
+	date_time[6] = time_copy[0];
+	date_time[7] = time_copy[1];
+
+#ifdef HR12
+	strncpy(scratch_ptr,time_copy,2);			/* extract just the hours */
+	scratch_ptr[2] = '\0';					/* null terminate it */
+	hours = atoi(scratch_ptr);				/* convert to integer hours */
+	if (time_copy[5] == 'p' || time_copy[5] == 'P'){	/* PM time; take care of 1:00p - 11:59p */
+		if(hours < 12)
+			hours += 12;
+	}
+	else							/* AM time; take care of 12:01a - 12:59a */
+		if(hours == 12)
+			hours -= 12;
+	sprintf(scratch_ptr, "%02d", hours);			/* convert back to ascii format */
+	date_time[6] = scratch_ptr[0];
+	date_time[7] = scratch_ptr[1];
+#endif
+
+	date_time[8] = time_copy[3]; 			/* copy the min from time */
+	date_time[9] = time_copy[4];
+	
+	date_time[10] = '0'; 				/* copy sec's to be 0 secs */
+	date_time[11] = '0';
+	date_time[12] = '\0';
+	
+	return(conversion(date_time)); 			/* now get the internal time */
+
+}  							/* end get_internal_time() */

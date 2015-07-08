@@ -1,0 +1,39 @@
+{
+|***********************************************************************
+|                 RCS INFO
+|
+|  @(#)  $RCSfile: indv.per,v $
+|  @(#)  $Revision: 1.2 $
+|  @(#)  $Date: 1998/06/18 17:31:35 $
+|  @(#)  $Author: taxiadm $
+|  @(#)  $Source: /taxi-scan/taxi_proj/cvs/taxi-scan/src/forms/finnish/indv.per,v $
+|
+|  Copyright (c) 1994 - MobileSoft Consulting, Inc. Woodinville WA
+|
+|**********************************************************************/
+|ident "@(#) head:$RCSfile: indv.per,v $	$Revision: 1.2 $"
+}
+database mads
+screen
+{
+Tili
+    Yhtiö   Tilin numero	 Passenger Nbr
+    [a]     [f000              ] [ b]
+
+    Matkustaja    
+    [f001               ]
+}
+end
+tables
+indv
+fleet
+account
+attributes
+a = indv.indv_fleet,REQUIRED, UPSHIFT, COMMENTS="Yhtiön tunnus", LOOKUP JOINING * fleet.fl_id;
+f000 = indv.indv_account,REQUIRED,UPSHIFT,COMMENTS="Tilin tai luottokortin numero", PICTURE="##################", LOOKUP JOINING * account.ac_nbr;
+b = indv.indv_subacct,REQUIRED, COMMENTS="Number assigned to this passenger";
+f001 = indv.indv_passenger,REQUIRED,UPSHIFT,COMMENTS="Matkustajan nimi";
+end
+instructions
+	delimiters "()";
+end

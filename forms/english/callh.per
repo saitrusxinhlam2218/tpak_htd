@@ -1,0 +1,51 @@
+{
+|***********************************************************************
+|                 RCS INFO
+|
+|  @(#)  $RCSfile: callh.per,v $
+|  @(#)  $Revision: 1.2 $
+|  @(#)  $Date: 1999/03/19 21:26:23 $
+|  @(#)  $Author: taxiadm $
+|  @(#)  $Source: /taxi-scan/taxi_proj/cvs/taxi-scan/src/forms/english/callh.per,v $
+|
+|  Copyright (c) 1994 - MobileSoft Consulting, Inc. Woodinville WA
+|
+|**********************************************************************/
+|ident "@(#) head:$RCSfile: callh.per,v $	$Revision: 1.2 $"
+}
+database mads
+screen
+{
+						CALL HISTORY MAINTENANCE
+
+Call Number               Exception Code         Fleet       Event Type
+[f000                ]    [c ]                   [a]         [b]
+
+
+ Event Desc       Date        Time      Veh #    Driver ID   User ID
+       [f005    ] [f003     ] [f004  ]  [f006]   [f007 ]     [f008]
+
+Action Taken      Date        Time     Veh #     Driver ID   User ID
+       [f009    ] [f010     ] [f011  ] [f013]    [f014 ]     [f015]
+}
+end
+tables
+callh
+attributes
+f000 = callh.ch_call_nbr,NOENTRY,NOUPDATE,RIGHT,COMMENTS="Call number of this call";
+c = callh.ch_exception_nbr,NOENTRY,RIGHT,COMMENTS="Exception code.  Corresponds to number in the exception type file";
+a = callh.ch_fleet,NOENTRY,UPSHIFT,COMMENTS="Fleet ID";
+b = callh.ch_event_type,NOENTRY,UPSHIFT,include=(R,E),default="R",COMMENTS="'R'egular system functions or 'E'mulating a kdt terminal";
+f005 = callh.ch_event_desc,NOENTRY,UPSHIFT,COMMENTS="Event that took place";
+f003 = callh.ch_status_date,NOENTRY,NOENTRY,NOUPDATE,COMMENTS="Event occurence date";
+f004 = callh.ch_status_time,NOENTRY,NOENTRY,NOUPDATE,COMMENTS="Event occurence time";
+f006 = callh.ch_veh_nbr,NOENTRY,RIGHT,COMMENTS="Vehicle number that serviced this call";
+f007 = callh.ch_drv_id,NOENTRY,RIGHT,COMMENTS="Driver id who caused this event";
+f008 = callh.ch_user_id,NOENTRY,RIGHT,COMMENTS="User id who caused this event";
+f009 = callh.ch_action_taken,NOENTRY,UPSHIFT,COMMENTS="Action taken by a driver/user to resolve this event";
+f010 = callh.ch_action_date,NOENTRY,NOENTRY,NOUPDATE,COMMENTS="Date of action taken";
+f011 = callh.ch_action_time,NOENTRY,NOENTRY,NOUPDATE,COMMENTS="Time of action taken";
+f013 = callh.ch_action_veh_nbr,NOENTRY,RIGHT,COMMENTS="Vehicle number of the vehicle taking this action";
+f014 = callh.ch_action_drv_id,NOENTRY,RIGHT,COMMENTS="Driver id of the driver taking this action";
+f015 = callh.ch_action_user_id,NOENTRY,RIGHT,COMMENTS="User ID of the user taking this action";
+end

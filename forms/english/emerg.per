@@ -1,0 +1,49 @@
+{
+|***********************************************************************
+|                 RCS INFO
+|
+|  @(#)  $RCSfile: emerg.per,v $
+|  @(#)  $Revision: 1.2 $
+|  @(#)  $Date: 1999/03/19 21:26:29 $
+|  @(#)  $Author: taxiadm $
+|  @(#)  $Source: /taxi-scan/taxi_proj/cvs/taxi-scan/src/forms/english/emerg.per,v $
+|
+|  Copyright (c) 1994 - MobileSoft Consulting, Inc. Woodinville WA
+|
+|**********************************************************************/
+|ident "@(#) head:$RCSfile: emerg.per,v $	$Revision: 1.2 $"
+}
+
+database mads
+screen
+{
+						EMERGENCY LOG FILE MAINTENANCE
+
+Fleet  Emergency Number        Exception Number        Call Number             Veh #     Driver ID   Zone #
+[a]    [f000                ]  [f001                ]  [f002                ]  [f008]    [f009 ]     [f01]
+ 
+Event Date  Time        Resolved Date  Time          Resolved By
+[f004     ] [f005  ]    [f006     ]    [f007  ]      [f012]
+
+Comment
+[comment                                                                       ]
+}
+end
+tables
+emerg
+attributes
+a = emerg.em_fleet,UPSHIFT,REQUIRED,COMMENTS="Fleet ID";
+f000 = emerg.em_nbr,REQUIRED,NOENTRY,NOUPDATE,RIGHT,COMMENTS="A system assigned emergency id";
+f001 = emerg.em_exc_nbr,RIGHT,COMMENTS="Exception number of the corresponding exception";
+f002 = emerg.em_call_nbr,RIGHT,COMMENTS="Call number";
+f008 = emerg.em_veh_nbr,RIGHT,COMMENTS="Vehicle number that invoked this emergency";
+f009 = emerg.em_drv_id,RIGHT,COMMENTS="Driver ID that invoked this emergency";
+f01 = emerg.em_zone_nbr,RIGHT,COMMENTS="Zone number of the zone the driver was posted into or zone of call pickup";
+f004 = emerg.em_event_date,NOENTRY,NOUPDATE,COMMENTS="Event date";
+f005 = emerg.em_event_time,NOENTRY,NOUPDATE,COMMENTS="Event time";
+f006 = emerg.em_resolved_date,NOENTRY,NOUPDATE,COMMENTS="Date this emergency was resolved";
+f007 = emerg.em_resolved_time,NOENTRY,NOUPDATE,COMMENTS="Time this emergency was resolved";
+f012 = emerg.em_resolved_by,RIGHT,COMMENTS="User ID of user that resolved this emergency";
+comment = emerg.em_comment, NOENTRY, NOUPDATE, COMMENTS="Comment entered when the emergency was resolved";
+end
+

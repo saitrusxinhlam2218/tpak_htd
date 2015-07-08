@@ -1,0 +1,21 @@
+database mads
+screen
+{
+						Taksatiedoston hoito
+
+Yhtiö    Alueelta         Alueelle           Kiinteä taksa 
+[a]      [f000     ]      [f001     ]        [f002   ]    
+}
+end
+tables
+rate
+attributes
+a = rate.rt_fleet,REQUIRED,UPSHIFT,COMMENTS="Yhtiön tunnusnumero";
+f000 = rate.rt_zone_zip_nbr1,RIGHT,REQUIRED,COMMENTS="Alueen numero tai postinumero";
+f001 = rate.rt_zone_zip_nbr2,RIGHT,REQUIRED,COMMENTS="Alueen numero tai postinumero";
+f002 = rate.rt_flat_rat,FORMAT="####.##",RIGHT,INCLUDE=(0.00 to 9999.999),
+	COMMENTS="Tämän palvelun summa. Enintään 9999.99 (piste pakollinen desimaalierottimena)";
+end
+instructions
+   delimiters "()";
+end

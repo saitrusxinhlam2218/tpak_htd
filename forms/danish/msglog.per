@@ -1,0 +1,77 @@
+{
+|***********************************************************************
+|                 RCS INFO
+|
+|  @(#)  $RCSfile: msglog.per,v $
+|  @(#)  $Revision: 1.5 $
+|  @(#)  $Date: 2000/03/02 19:41:15 $
+|  @(#)  $Author: taxiadm $
+|  @(#)  $Source: /taxi-scan/taxi_proj/cvs/taxi-scan/src/forms/danish/msglog.per,v $
+|
+|  Copyright (c) 1994 - MobileSoft Consulting, Inc. Woodinville WA
+|
+|**********************************************************************/
+|ident "@(#) head:$RCSfile: msglog.per,v $	$Revision: 1.5 $"
+}
+database mads
+screen
+{
+						VEDLIGEH. AF BESKEDSPOST-FIL
+
+Nummer                Afsender-ID     Dato sendt   Tid sendt 
+[f000                ]  [f001]        [f004     ]  [f005  ]   
+
+Trafikleder-ID    Udført       Gentaget  Vognpk     Til Type Udvalg
+[f003]            [a]          [b]       [c]            [d]  [ f006]
+
+Besked
+[f007                                              ] [f008                                              ]
+[f009                                              ] [f010                                              ]
+
+Attribute Filters  1-3      4-6      7-9     10-12    13-15   16-18   19-21   22-24   25-27   28-30   31-32
+  Vognattr	   [j1 ]    [j2 ]    [j3 ]    [j4 ]    [j5 ]   [j6 ]   [j7 ]   [j8 ]   [j9 ]   [j10]   [l1]
+  Chaufførattr     [k1 ]    [k2 ]    [k3 ]    [k4 ]    [k5 ]   [k6 ]   [k7 ]   [k8 ]   [k9 ]   [k10]   [l2]
+}
+end
+tables
+msglog
+attributes
+f000 = msglog.ml_nbr,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Et nummer systemet tildeler beskeden";
+f001 = msglog.ml_from,include=(1 to 9999),RIGHT,COMMENTS="Beskedsafsenderens bruger-ID";
+f004 = msglog.ml_date_sent,COMMENTS="Dato besked blev sendt";
+f005 = msglog.ml_time_sent,COMMENTS="Tid besked blev sendt";
+f003 = msglog.ml_supervisor_id,include=(1 to 9999),RIGHT,COMMENTS="Trafikleder-ID";
+a = msglog.ml_supervisor_saw,include=(A,D,S,I),UPSHIFT,COMMENTS="Besked er 'G'odkendt, 'A'fvist, 'U'nder udførelse";
+b = msglog.ml_repeat,include=(J,N),UPSHIFT,COMMENTS="Gentaget besked (J/N)";
+c = msglog.ml_fleet,UPSHIFT,REQUIRED,COMMENTS="Vognpark associeret med denne besked";
+d = msglog.ml_to_type,include=("*",P,S,T,L,V,C,D," "),UPSHIFT,COMMENTS="Brugertype som denne besked blev sendt til";
+f006 = msglog.ml_to_selection,UPSHIFT,COMMENTS="Hvem beskeden blev sendt til";
+f007 = msglog.ml_msg_line1[1,50],UPSHIFT,COMMENTS="Første linie af besked";
+f008 = msglog.ml_msg_line1[51,100],UPSHIFT,COMMENTS="Første linie af besked"; 
+f009 = msglog.ml_msg_line2[1,50],UPSHIFT,COMMENTS="Anden linie af besked"; 
+f010 = msglog.ml_msg_line2[51,100],UPSHIFT,COMMENTS="Anden linie af besked";
+j1 = msglog.ml_vehattr[1, 3], UPSHIFT, COMMENTS="vognattributter (J/N)", DEFAULT = "NNN";
+j2 = msglog.ml_vehattr[4, 6], UPSHIFT, COMMENTS="vognattributter (J/N)", DEFAULT = "NNN";
+j3 = msglog.ml_vehattr[7, 9], UPSHIFT, COMMENTS="vognattributter (J/N)", DEFAULT = "NNN";
+j4 = msglog.ml_vehattr[10, 12], UPSHIFT, COMMENTS="vognattributter (J/N)", DEFAULT = "NNN";
+j5 = msglog.ml_vehattr[13, 15], UPSHIFT, COMMENTS="vognattributter (J/N)", DEFAULT = "NNN";
+j6 = msglog.ml_vehattr[16, 18], UPSHIFT, COMMENTS="vognattributter (J/N)", DEFAULT = "NNN";
+j7 = msglog.ml_vehattr[19, 21 ], UPSHIFT, COMMENTS="vognattributter (J/N)", DEFAULT = "NNN";
+j8 = msglog.ml_vehattr[22, 24], UPSHIFT, COMMENTS="vognattributter (J/N)", DEFAULT = "NNN";
+j9  = msglog.ml_vehattr[25, 27], UPSHIFT, COMMENTS="vognattributter (J/N)", DEFAULT = "NNN";
+j10  = msglog.ml_vehattr[28, 30], UPSHIFT, COMMENTS="vognattributter (J/N)", DEFAULT = "NNN";
+l1  = msglog.ml_vehattr[31, 32], UPSHIFT, COMMENTS="vognattributter (J/N)", DEFAULT = "NNN";
+k1 = msglog.ml_drvattr[1, 3], UPSHIFT, COMMENTS="chaufførattributter (J/N)", DEFAULT = "NNN";
+k2 = msglog.ml_drvattr[4, 6], UPSHIFT, COMMENTS="chaufførattributter (J/N)", DEFAULT = "NNN";
+k3 = msglog.ml_drvattr[7, 9], UPSHIFT, COMMENTS="chaufførattributter (J/N)", DEFAULT = "NNN";
+k4 = msglog.ml_drvattr[10, 12], UPSHIFT, COMMENTS="chaufførattributter (J/N)", DEFAULT = "NNN";
+k5 = msglog.ml_drvattr[13, 15], UPSHIFT, COMMENTS="chaufførattributter (J/N)", DEFAULT = "NNN";
+k6 = msglog.ml_drvattr[16, 18], UPSHIFT, COMMENTS="chaufførattributter (J/N)", DEFAULT = "NNN";
+k7 = msglog.ml_drvattr[19, 21], UPSHIFT, COMMENTS="chaufførattributter (J/N)", DEFAULT = "NNN";
+k8 = msglog.ml_drvattr[22, 24], UPSHIFT, COMMENTS="chaufførattributter (J/N)", DEFAULT = "NNN";
+k9 = msglog.ml_drvattr[25, 27], UPSHIFT, COMMENTS="chaufførattributter (J/N)", DEFAULT = "NNN";
+k10 = msglog.ml_drvattr[28, 30], UPSHIFT, COMMENTS="chaufførattributter (J/N)", DEFAULT = "NNN";
+l2 = msglog.ml_drvattr[31, 32], UPSHIFT, COMMENTS="chaufførattributter (J/N)", DEFAULT = "NNN";
+instructions
+   delimiters "()";
+end

@@ -1,0 +1,160 @@
+database mads
+screen
+{
+						Beställningsfil underhåll 
+
+Beställn.nr             Grupperat med            Bilpark  Typ      Begäran 
+[f000                ]  [f001                ]   [c]      [f002 ]  [a]/[b]
+
+Hämtning  Gatunr                Namn                                   Uppgång   Kommun  Zon   Kommentar                        
+          [f007  ] [d]   [a0]    [f008                ] [a1 ]  [a2]     [f011 ]   [a6 ]   [m  ] [f003                          ]
+
+Korsning                        Namn                                   Passagerarnamn          Telefonnummer
+	                [a3]    [f010                ] [a4 ]  [a5]     [f013                ]  [f014              ]
+
+Dest      Gatunr                Namn                                   Uppgång   Kommun  Zon   Kommentar                     
+          [f017  ] [e]   [a8]    [f018                ] [a9 ]  [b0]     [f019 ]   [b1 ]   [n  ] [f016                          ]
+Allmän kommentar
+[f004                                                            ]
+
+Personal beg     Bilflagga   Attribut    Förarflagga    Attribut       Bilnr   Prioritet   Medd ankomst 
+[f021]   [f]          [g]   [f022    ]            [h]   [f023    ]     [i]     [o ]        [p] 
+}
+screen
+{
+						Beställningsfil underhåll
+
+Kontokortsnr         Begärd av               Kontaktperson    Kvitterat av     Kvitterat tid  Lokal  Håll ankn
+[f027              ] [f028                ]  [f029         ]  [f030         ]  [f033  ]       [j]    [f026]
+
+Pris        Inskrvn.datum  Inskrivn.tid  Kvitto  Inskr. av  ändrad av  Förfallodatum    Förfallotid   Beräkn väntetid
+[f034   ]   [f031     ]    [f032  ]      [k]     [f038]     [f039]     [f037     ]      [f042  ]      [f036   ]
+
+Utsänd datum  Utsänd tid  Hämtingsdatum  Hämtningstid  Avlämnad datum  Avlämnad tid  Belopp     Abonnemangsnummer 
+[f043     ]   [f044  ]    [f045     ]    [f046  ]      [f050     ]     [f051  ]      [f053    ] [f054                ]
+
+Bilnr   Förare   Utsänd av  Gäller t o m  Bifallskod      Datum/Tid          Av      Prioritetsstatus   
+[f055 ] [f056 ]  [f057]     [f058    ]    [f052      ]    [f059            ] [f060]  [b2]
+
+Lägg till info 1                   Lägg till info 2         Medd till förare                            Företagsnamn
+[f061                     ]        [f062                 ]  [f063                               ]       [f047                     ]
+
+Kart-koord  D Kart-koord  Zonbeskrivning        Skärmtyp  Status	
+[f064    ]    [f065    ]    [f067              ]  [l]       [f068    ]	
+
+}
+screen
+{
+
+						Beställningsfil underhåll
+
+Via-adress	Faktura ref					Moms
+[q]		[f069    ] [f070    ] [f071   ] [f072    ]	[f073  ]
+
+Call Taker Address Comment
+[f074                          ]
+}
+
+end
+tables
+calls
+attributes
+f000 = calls.cl_nbr,NOENTRY,NOUPDATE,COMMENTS="Beställningsnummer som tilldelats av systemet";
+f001 = calls.cl_grouped_with,NOENTRY,UPSHIFT,COMMENTS="Beställn.nr på den beställning som denna beställning grupperats med";
+c = calls.cl_fleet,NOENTRY,UPSHIFT,COMMENTS="Bilparksindikator ";
+f002 = calls.cl_extended_type,NOENTRY,UPSHIFT,COMMENTS="En komb. av beställn.typer som avgör hur denna beställn. ska visas";
+a = calls.cl_pos_in_group,include=(0 to 9),default=0,NOENTRY,UPSHIFT,COMMENTS="Beställningsposition om flera bilar begärts";
+b = calls.cl_nbr_in_group,include=(0 to 9),default=0,NOENTRY,UPSHIFT,COMMENTS="Antal beställningar som grupperats tills. för flera bilar";
+f007 = calls.cl_pckup_str_nbr,NOENTRY,RIGHT,COMMENTS="Gatunummer för hämting";
+d = calls.cl_pckup_str_suf,NOENTRY,UPSHIFT,COMMENTS="Fältet stöds inte";
+a0 = calls.cl_pckup_pre_dir,NOENTRY,UPSHIFT,COMMENTS="Fältet stöds inte";
+f008 = calls.cl_pckup_str_name,NOENTRY,UPSHIFT,COMMENTS="Gatunamn för hämtning";
+a1 = calls.cl_pckup_str_type,NOENTRY,UPSHIFT,COMMENTS="Fältet stöds inte";
+a2 = calls.cl_pckup_post_dir,NOENTRY,UPSHIFT,COMMENTS="Fältet stöds inte";
+f011 = calls.cl_pckup_apt_room,NOENTRY,UPSHIFT,COMMENTS="Uppgång för för hämtning";
+A6 = calls.cl_pckup_city,NOENTRY,UPSHIFT,COMMENTS="Förkortning av kommun för hämtning";
+m = calls.cl_pckup_zone,NOENTRY,include=(0 to 999),COMMENTS="Zonnummer för hämtning inskriven av användare eller datorgenererad (1-999)";
+f003 = calls.cl_pckup_adr_cmnt,NOENTRY,UPSHIFT,COMMENTS="Adresskommentar för hämtning från geografifilen";
+a3 = calls.cl_intr_pre_dir,NOENTRY,UPSHIFT,COMMENTS="Fältet stöds inte";
+f010 = calls.cl_intr_str_name,NOENTRY,UPSHIFT,COMMENTS="Gatunamn för korsning";
+a4 = calls.cl_intr_str_type,NOENTRY,UPSHIFT,COMMENTS="Fältet stöds inte";
+a5 = calls.cl_intr_post_dir,NOENTRY,UPSHIFT,COMMENTS="Fältet stöds inte";
+f013 = calls.cl_passenger_name,NOENTRY,UPSHIFT,COMMENTS="Passagerarens namn";
+f014 = calls.cl_phone_number,NOENTRY,COMMENTS="Telefonnummer";
+f017 = calls.cl_dest_str_nbr,NOENTRY,RIGHT,COMMENTS="Gatunummer för destination";
+e = calls.cl_dest_str_suf,NOENTRY,UPSHIFT,COMMENTS="Fältet stöds inte";
+a8 = calls.cl_dest_pre_dir,NOENTRY,UPSHIFT,COMMENTS="Fältet stöds inte";
+f018 = calls.cl_dest_str_name,NOENTRY,UPSHIFT,COMMENTS="Gatunamn för destination";
+a9 = calls.cl_dest_str_type,NOENTRY,UPSHIFT,COMMENTS="Fältet stöds inte";
+b0 = calls.cl_dest_post_dir,NOENTRY,UPSHIFT,COMMENTS="Fältet stöds inte";
+f019 = calls.cl_dest_apt_room,NOENTRY,UPSHIFT,COMMENTS="Uppgång för destination";
+b1 = calls.cl_dest_city,NOENTRY,UPSHIFT,COMMENTS="Förkortning för destinationskommun";
+n = calls.cl_dest_zone,NOENTRY,include=(0 to 999),default=0,COMMENTS="Zonnummer inskrivet av användare eller datorgenererat (1-999)";
+f016 = calls.cl_dest_adr_cmnt,NOENTRY,UPSHIFT,COMMENTS="Kommentar om destinationsadress från geografifilen";
+f004 = calls.cl_general_cmnt,NOENTRY,UPSHIFT,COMMENTS="Kommentarrad";
+f021 = calls.cl_personal_veh,NOENTRY,include=(0 to 9999),default=0,COMMENTS="Bilnummer för den bil som speciellt begärts av kunden (1-9999)";
+f = calls.cl_personal_rqst,NOENTRY,include=(" ",E,O),UPSHIFT,COMMENTS="Skicka 'E'ndast den angivna bilen eller skicka den 'O'm den är tillgänglig";
+g = calls.cl_veh_attr_flag,NOENTRY,include=(J,N),default="N",UPSHIFT,COMMENTS="Om en bil med speciella egenskaper krävs för denna beställning (J,N)";
+f022 = calls.cl_veh_attr,NOENTRY,default="NNNNNNNN",UPSHIFT,COMMENTS="Anger speciella attribut som krävs för denna beställning";
+h = calls.cl_drv_attr_flag,NOENTRY,include=(J,N),default="N",UPSHIFT,COMMENTS="Om en förare med speciella egenskaper krävs för denna beställning (J,N)";
+f023 = calls.cl_drv_attr,NOENTRY,default="NNNNNNNN",UPSHIFT,COMMENTS="Anger speciella attribut som krävs för denna beställning";
+i = calls.cl_nbr_of_vehs,NOENTRY,include=(1 to 9),default=1,COMMENTS="Antal bilar som behövs för denna beställning";
+o = calls.cl_priority,NOENTRY,include=(1 to 63),default=25,COMMENTS="Beställningsprioritet";
+p = calls.cl_advise_arrival,NOENTRY,include=(J,N),default="N",UPSHIFT,COMMENTS="Skall föraren varsko trafikledare vid ankomst? (J,N)";
+f027 = calls.cl_charge_nbr,NOENTRY,UPSHIFT,COMMENTS="Kundens kontonummer eller kontokortsnummer";
+f028 = calls.cl_requested_by,NOENTRY,UPSHIFT,COMMENTS="Namn på den person som beställde tjänsten";
+f029 = calls.cl_person_to_see,NOENTRY,UPSHIFT,COMMENTS="Den person som ska kontaktas på destinationsadressen";
+f030 = calls.cl_pod_name,NOENTRY,UPSHIFT,COMMENTS=" Namn på den person som ska kvittera leveransen";
+f033 = calls.cl_pod_time,NOENTRY,RIGHT,COMMENTS="Klockslag då leveransen kvitterades";
+j = calls.cl_local,NOENTRY,include=(J,N),default="N",UPSHIFT,COMMENTS="Om denna beställning är en lokal körning eller inte (J,N)";
+f026 = calls.cl_hold_line,NOENTRY,COMMENTS="Anknytningsnumret på den linje där kunden väntar";
+f034 = calls.cl_call_rate,NOENTRY,RIGHT,FORMAT="####.##",COMMENTS="Pris från tabellen som angivits till kunden";
+f031 = calls.cl_date_in,UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="Datum då denna beställning skrevs in";
+f032 = calls.cl_time_in,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Klockslag då denna beställning skrevs in";
+k = calls.cl_pod_required,NOENTRY,include=(J,N),default="N",UPSHIFT,COMMENTS="Om kvitto krävs (J,N)";
+f038 = calls.cl_entered_by,NOENTRY,RIGHT,COMMENTS="Användar-ID för den person som skrev in denna beställning";
+f039 = calls.cl_last_changed_by,NOENTRY,RIGHT,COMMENTS="Användar-ID för den person som sist ändrade denna abonnemangsbest.";
+f037 = calls.cl_due_date,NOENTRY,NOUPDATE,COMMENTS="Datum då beställningen ska utföras";
+f042 = calls.cl_due_time,NOENTRY,NOUPDATE,COMMENTS="Klockslag då beställningen ska utföras";
+f036 = calls.cl_est_wait_time,NOENTRY,UPSHIFT,COMMENTS="Beräknad väntetid som uppgivits till kunden";
+f043 = calls.cl_dispd_date,NOENTRY,NOUPDATE,COMMENTS="Datum då denna beställning utsändes";
+f044 = calls.cl_dispd_time,NOENTRY,NOUPDATE,COMMENTS="Klockslag då denna beställning utsändes";
+f045 = calls.cl_pckup_date,NOUPDATE,NOENTRY,NOUPDATE,COMMENTS="Datum då kunden hämtades";
+f046 = calls.cl_pckup_time,NOUPDATE,NOENTRY,NOUPDATE,COMMENTS="Klockslag då kunden hämtades";
+f050 = calls.cl_close_date,NOENTRY,NOUPDATE,COMMENTS="Datum då kunden avlämnades";
+f051 = calls.cl_close_time,NOENTRY,NOUPDATE,COMMENTS="Klockslag då kunden avlämnades";
+f053 = calls.cl_fare_amount,NOENTRY,RIGHT,COMMENTS="Debiterat belopp";
+f054 = calls.cl_subsc_call_nbr,NOENTRY,RIGHT,COMMENTS="Abonnemangsnummer";
+f055 = calls.cl_veh_nbr,NOENTRY,RIGHT,COMMENTS="Bil som utförde denna beställning";
+f056 = calls.cl_drv_id,NOENTRY,RIGHT,COMMENTS="Förare som utförde denna beställning";
+f057 = calls.cl_dispatched_by,NOENTRY,include=(-1,1 to 9999),RIGHT,COMMENTS="Användar-ID för den person som manuellt utsände denna beställning";
+f058 = calls.cl_expire_date,NOENTRY,COMMENTS="Sista giltighetsdag för kreditkort";
+f052 = calls.cl_approve_code,NOENTRY,UPSHIFT,COMMENTS="Bifallskod för kreditkort";
+f059 = calls.cl_approve_date,NOENTRY,RIGHT,COMMENTS="Bifallsdatum";
+f060 = calls.cl_approve_by,NOENTRY,RIGHT,COMMENTS="Nummer för beställningsmottagare som godkände detta konto";
+b2=calls.cl_pri_status,NOENTRY,RIGHT,COMMENTS="Best.prioritet om best. är öppen; 64 om denna best. avslutats";
+f061 = calls.cl_ac_addt1_info1,NOENTRY,UPSHIFT,COMMENTS="Information som angivits som svar på meddelandet från kontofilen ";
+f062 = calls.cl_ac_addt1_info2,NOENTRY,UPSHIFT,COMMENTS="Information som angivits som svar på meddelandet från kontofilen ";
+f063 = calls.cl_driver_msg,NOENTRY,UPSHIFT,COMMENTS="Ett meddelande som skickats från beställningsmottagaren till föraren";
+f047 = calls.cl_company_name,NOENTRY,UPSHIFT,COMMENTS="Företagsnamn om detta är en en kontobeställning";
+f064 = calls.cl_pckup_pmap,NOENTRY,UPSHIFT,COMMENTS="Kartkod för hämtning";
+f065 = calls.cl_dest_dmap,NOENTRY,UPSHIFT,COMMENTS="Kartkod för destination";
+f067 = calls.cl_zone_desc,NOENTRY,UPSHIFT,COMMENTS="Zonbeskrivning";
+l = calls.cl_screen_type,NOENTRY,include=(G,U),UPSHIFT,COMMENTS="Skärmtyp : 'G'rundskärm eller 'A'bonemangsskärm";
+f068 = calls.cl_status,NOENTRY,UPSHIFT,COMMENTS="Beställningsstatus (t ex Komplett)";
+q = calls.cl_via_address,NOENTRY,UPSHIFT,COMMENTS="Number of addresses to visit enroute to destination";
+f069= calls.cl_invoice_nbr1,NOENTRY,UPSHIFT;
+f070=calls.cl_invoice_nbr2,NOENTRY;
+f071=calls.cl_invoice_nbr3,NOENTRY;
+f072=calls.cl_invoice_nbr4,NOENTRY;
+f073=calls.cl_vat,NOENTRY,FORMAT="###.##";
+f074=calls.cl_ct_adr_cmnt,NOENTRY;
+end
+instructions
+   delimiters "()";
+
+   before editadd editupdate of calls
+       abort
+   before remove of calls
+       abort
+end

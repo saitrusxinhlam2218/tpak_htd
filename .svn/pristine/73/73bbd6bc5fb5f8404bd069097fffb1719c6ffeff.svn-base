@@ -1,0 +1,85 @@
+$ /****************************************************************************
+$ *                                                                           *
+$ *                           S C C S   I N F O                               *
+$ *                                                                           *
+$ * @(#)  menu_maint.MSF.fin; Rel: 10.1.3.1; Get date: 5/18/95 at 10:19:44
+$ * @(#)  Last delta: 12/5/94 at 11:01:37
+$ * @(#)  SCCS File: /taxi/sccs/s.menu_maint.MSF.fin
+$ *                                                                           *
+$ * Copyright (c) 1990 - MDI Seattle                                          *
+$ *                                                                           *
+$ *****************************************************************************/
+$ #ident "@(#) head:menu_maint.MSF.f/usr/users/brian/enh_src/src/msf/fin	10.1.3.1"
+
+$ /*
+$  * Message file for PROGRAM: mf_maint
+$  * CATALOG:   mf_maint.cat
+$  * MNEMONICS: menu_m_strdefs.h
+$  */
+
+$quote "
+$delset 1
+$set 1
+
+$ /*    NOTE TO THE TRANSLATOR                          */
+$ /*    Quoted text will be followed by a maximum string length if the  */
+$ /*    text length is different than the number of chars in the string.*/
+$ /*    If no string length is entered default to the current number of */
+$ /*    characters.  A comment about the string is also included where  */
+$ /*    necessary.                                                      */
+1	"Virhe kentässä"					/* 40	*/
+2	"On annettava arvo"					/* 40	*/
+3	"Tietuetta ei löydy, LISÄÄ ensin!"				/* 40   */
+4	"Paina ESC suorittaaksesi"					/* 40   */
+5	"Ei rivejä jotka täyttävät ehdot"
+6	"Ei voi luke valikkotiedostoa"				/* 40   */
+7	"Nykyisessä listassa ei ole rivejä"			/* 40   */
+8	"Menosuunnassa ei ole enää rivejä"
+9	"Ei voi lukea seur. vlkk.tied. tietuetta"			/* 40   */
+10	"Ei voi lukea ed. valikkotied. tietuetta"
+11	"Ei voi luka ed. valikkotied. tietuetta"
+12	"Valikkotiedoston lukuvirhe"					/* 40   */
+13	"Ei voi lukita nykyistä tietuetta"				/* 40   */
+14	"Ei voi päiv. uutta tiet. val.tiedostoon"		/* 40   */
+15	"Tietue päivitetty"					/* 40   */
+16	"Ei voi päästää nykyistä tietuetta"			/* 40   */
+17	"Ei voi avata tulostustiedostoa \n"				/* 40, keep \n in string    */
+18	"Ei voi avata tulostustiedostoa"				/* 40   */
+19	"Numero"
+20	"Komento"
+21	"Edell. valinta"
+22	"Tyyp"							/* noun */
+23	"Kuvaus"						/* 20	*/
+24	"UNIX-komento"						/* 20	*/
+25	"Edell. näyttö"
+26	"Valikkotiedstn hoidon viestihaku epäonnistui"			/* 40	*/
+27	"Valikkotiedstn hoidon viestihaku epäonnistui"				/* 40   */
+28	"Valikkotiedstn hoidon viestiläh epäonnistui"			/* 40   */
+29	"Valikkotiedstn hoidon viestiläh epäonnistui"				/* 40   */
+30	"KYSELY: Anna komento suorittaaksesi, CTRL-X=kesk. "	/* INTERRUPT key	*/
+31    "Query Next Previous Update Output Exit"
+32	"VALIKKOTIEDOSTON HOITO"
+33	"PÄIVITÄ: ESC=suorita, CTRL-X=keskeytä."		/* 40, ESCAPE key, INTERRUPT key   */
+34	"Anna tulostustiedosto (oletus menu_scr.out): "		/* Do not translate filename menu_scr.out	*/
+35	"Tulostustiedosto"						/* 20, Output file XXXX Append or Create	*/
+36	"Lisää tai Uusi (oletus : U) ?"			/* 40, Output file XXXX Append or Create	*/
+37	"C-isam-virhe numero ="					/* c- Indexed sequential access method	*/
+38	"Unix-virhe numero ="
+39	"Ei voi avata jäljitystiedostoa "				/* 40   */
+40	"Ei voi avata jäljitystiedostoa "				/* 40   */
+41	"Ei voi liittää jaettua muistia"			/* 40   */
+42	"Ei voi avata valikkotiedostoa"				/* 40   */
+43	"Ei voi sulkea valikkotiedostoa"				/* 40   */
+44	"Ei voi sulkea valikkotiedostoa"				/* 40   */
+45	"Ei voi sulkea jäljitystiedostoa"				/* 40   */
+46	"Järjestysnumero lupaviitteelle"
+47	"Komentomerkkijono annettu valinnalle"
+48	"K/E.  Onko valinta valikon viimeinen vai ei"
+49	"Valinta voi olla \'V\'alikko, \'U\'ulkoinen suor.kelp., \'S\'isäinen suor.kelp."
+$			/* check constants for appropriate language for `M`, `E`, `I`	*/
+50	"Valikossa näkyvä varsinainen kirjainyhdistelmä"
+51	"UNIX-komento joka suoritetaan jos valinta on ulkoinen suor.kelp"
+52	"Edellisen näytön merkintä"					/* 40   */
+53	"("					/* translate to opening parenthesis (   */
+54	")"					/* translate to closing parenthesis )   */
+55	"Väärä valinta - ole hyvä anna (L/U) lisätäksesi tai aloittaaksesi uuden"

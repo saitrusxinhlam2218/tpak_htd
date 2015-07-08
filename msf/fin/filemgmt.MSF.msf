@@ -1,0 +1,86 @@
+$ /****************************************************************************
+$ *                                                                           *
+$ *                           S C C S   I N F O                               *
+$ *                                                                           *
+$ * @(#)  filemgmt.MSF.fin; Rel: 10.1.3.1; Get date: 5/18/95 at 10:19:11
+$ * @(#)  Last delta: 12/5/94 at 11:03:50
+$ * @(#)  SCCS File: /taxi/sccs/s.filemgmt.MSF.fin
+$ *                                                                           *
+$ * Copyright (c) 1990 - MDI Seattle                                          *
+$ *                                                                           *
+$ *****************************************************************************/
+$ #ident "@(#) head:filemgmt.MSF.fin/usr/users/brian/enh_src/src/msf/fin	10.1.3.1"
+
+$ /*
+$  * Message file for PROGRAM: file_mgmt
+$  * CATALOG:   file_mgmt.cat
+$  * MNEMONICS: fmgmt_strdefs.h
+$  */
+
+$quote "
+$delset 1
+$set 1
+
+$ /*    NOTE TO THE TRANSLATOR                          */
+$ /*    Quoted text will be followed by a maximum string length if the  */
+$ /*    text length is different than the number of chars in the string.*/
+$ /*    If no string length is entered default to the current number of */
+$ /*    characters.  A comment about the string is also included where  */
+$ /*    necessary.                                                      */
+1		"VIRHE tiedostossa statfs\n"					/* 50 	*/
+2		"VIRHE levynk‰yttˆtiedoston avaamisessa\n"			/* 50	*/
+3		"Ei tarpeeksi levytilaa raporttien uusimiseen. Odota p‰ivitt. puhdistusta."
+4		"Anna \'e\' palataksesi edell. valikk. tai lopeta."	/* 50	*/
+5		"Tiedosto"						/* 10, The file XXX was restored	*/
+6		"entistettiin."						/* 15, The file XXX was restored	*/
+7		"Jos haluat varakopion TAKSISYSTEEMIN tiedostoista, "		/* 50		*/
+8		"aseta paikoilleen ensimm‰inen nauhakasetti ja anna K ja <CR>."	/* 50	*/
+9		"TAKSISYSTEEMIN varmistus menossa, kest‰‰ useita minuutteja."		/* 50	*/
+10	"Saat ilmoituksen kun on valmista."			/* 50	*/
+11	"TAKSISYSTEEMIN varmistus on valmis."			/* 50	*/
+12	"Poista nauha ja merkitse siihen t‰m‰ p‰iv‰m‰‰r‰."	
+13	"Paina <CR> kun haluat jatkaa.... "				/* 50	*/
+14	"Jos haluat entist‰‰ TAKSI-tiedostot, "			/* 50	*/
+15	"aseta paikoilleen ensimm‰inen nauhakasetti ja anna K ja <CR>."
+16	"Entist‰mme TAKSISYSTEEMIN. Se kest‰‰ useita minuutteja."
+17	"Saat ilmoituksen kun systeemi on entistetty."
+18	"TAKSISYSTEEMI on entistetty."				/* 50	*/
+19	"Poista nauha."				/* 50	*/
+20	"Paina <CR> kun haluat jatkaa....."				/* 50	*/
+21	"Jos haluat varmistaa seitsem‰n p‰iv‰n TAKSI-raporttitiedostot, "
+22	"pane paikoilleen ensimm‰inen nauhakasetti ja anna K ja <CR>."
+23	"TAKSI-raportin varmistus tekeill‰, kest‰‰ useita minuutteja."
+24	"EI yhtiˆit‰ ajossa eik‰ varmistettavia raportteja."
+25	"Raportinvarmistus on valmis."			/* 50	*/
+26	"Poista nauha ja merkitse siihen Taksiraportti ja t‰m‰ p‰iv‰m‰‰r‰."
+27	"Jos haluat entist‰‰ raporttitiedostoja, "		/* 50	*/
+28	"aseta paikoilleen ensimm‰inen raporttikasetti ja anna K ja <CR>."
+29	"Odota kun nauhan p‰iv‰m‰‰ri‰ tarkistetaan."	/* 50	*/
+30	"N‰m‰ ovat nauhan raporttip‰iv‰m‰‰ri‰"		/* 50	*/
+31	"Anna rivin numero ja sitten <CR> "	/* 50	*/
+32	"katsellaksesi valitun pvm:n raportteja."		/* 50	*/
+33	"N‰m‰ ovat valitun pvm:n raportteja. "
+34	"Paina <CR> kun haluat jatkaa raporttien nimien katselemista"
+35	"Nauhalla ei ole raportteja sille p‰iv‰lle."
+36	"raportin entist‰miseksi tai * kaikkien raporttien entist. valitulle pvm:lle."
+37	"Odota kun nauhaa luetaan"				/* 50 	*/
+38	"               NƒITƒ TIEDOSTOJA HOIDETAAN"
+39	"Anna tied. numero "
+40	"tietyn tied. entist‰miseksi"
+41	"Anna \'e\' palataksesi edell. valikk. tai * on kaikki tied"
+42	"Vastaus EI kelpaa"				/* 50	*/
+43	"<CR> kun haluat jatkaa .... "				/* 50	*/
+44	"  TAKSIEN VALVONTA"
+45	"   TIEDOSTON HOITO"
+46	"1  Varmista Taksisysteemin tiedostoja \n"
+47	"2  Varmista Taksiraporttitiedostoja \n"
+48	"3  Entist‰ Taksisysteemin tiedostoja \n"
+49	"4  Entist‰ Taksiraporttitiedostoja \n"
+50	"5  Uudista datatiedostot     \n"				/* 33	*/
+51	"Anna \'e\' palataksesi edell. valikk. tai lopeta."
+52	"Anna numero ja <CR> "
+53	"valinnan suorittamiseksi: "				/* 40	*/
+54	"Vastaus EI ole v‰lill‰ 1-7. Uudestaan."
+55	"6  Lis‰‰, p‰ivit‰ tai entist‰ katteettomien luottokorttien tiedostoa\n"
+56	"7  Varmista katteettomien luottokorttien tiedosto\n"
+57	"Valittua taulukkoa ei voi avata."

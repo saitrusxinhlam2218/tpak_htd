@@ -1,0 +1,21 @@
+database mads
+screen
+{
+						Paikkatiedoston hoito
+					
+Lyhenne  Yleinen   Koko nimi                     Alaruutu  Postinumero
+[a0 ]    [a1 ]     [f000                     ]   [f001 ]   [f002    ]
+}
+end
+tables
+localty
+attributes
+a0 = localty.lo_code,UPSHIFT,REQUIRED,NOUPDATE,COMMENTS="Paikan koodi tai lyhenne (esim. ES on Espoo)";
+a1 = localty.lo_act_city_code,UPSHIFT,REQUIRED,COMMENTS="Yleinen paikan koodi (esim Esp on Espoo)";
+f000 = localty.lo_full_name,UPSHIFT,COMMENTS="Paikan koko nimi";
+f001 = localty.lo_subzone,UPSHIFT,COMMENTS="Anna alaruutu, jos yksittäisiä osoitteita ei kirjata tälle paikalle";
+f002 = localty.lo_zip,RIGHT,COMMENTS="Anna postinumero, jos yksittäisiä osoitteita ei kirjata tälle paikalle";
+end
+instructions
+   delimiters "()";
+end

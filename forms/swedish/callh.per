@@ -1,0 +1,39 @@
+database mads
+screen
+{
+						Beställningshistorik underh}ll 
+
+Beställn.nr               Undantagskod         Bilpark       Händelsetyp
+[f000                ]    [c ]                 [a]           [b]
+
+
+Händelsebeskr.     Datum        Tid       Bilnr    Förare ID   Användare ID
+       [f005    ]  [f003     ]  [f004  ]  [f006]   [f007 ]     [f008]
+
+Vidt. åtgärd       Datum        Tid       Bilnr    Förare ID   Användare ID
+       [f009    ]  [f010     ]  [f011  ]  [f013]   [f014 ]     [f015]
+}
+end
+tables
+callh
+attributes
+f000 = callh.ch_call_nbr,NOENTRY,NOUPDATE,RIGHT,COMMENTS="Beställningsnumret för detta uppdrag";
+c = callh.ch_exception_nbr,NOENTRY,RIGHT,COMMENTS="Undantagskod. Motsvarar numret i filen för undantagstyp";
+a = callh.ch_fleet,NOENTRY,UPSHIFT,COMMENTS="Bilpark ID ";
+b = callh.ch_event_type,NOENTRY,UPSHIFT,include=(R,E),default="R",COMMENTS="'R'eguljära systemfunktioner eller 'E'mulering av MDT-terminal";
+f005 = callh.ch_event_desc,NOENTRY,UPSHIFT,COMMENTS="Händelse som inträffade";
+f003 = callh.ch_status_date,NOENTRY,NOENTRY,NOUPDATE,COMMENTS="Datum för händelsen";
+f004 = callh.ch_status_time,NOENTRY,NOENTRY,NOUPDATE,COMMENTS="Klockslag för händelsen";
+f006 = callh.ch_veh_nbr,NOENTRY,RIGHT,COMMENTS="Nummer på den bil som hanterade denna beställning";
+f007 = callh.ch_drv_id,NOENTRY,RIGHT,COMMENTS="ID för den förare som förorsakade händelsen";
+f008 = callh.ch_user_id,NOENTRY,RIGHT,COMMENTS="ID för den användare som förorsakade denna händelse";
+f009 = callh.ch_action_taken,NOENTRY,UPSHIFT,COMMENTS="åtgärd som vidtagits av förareör/användare för att lösa problemet";
+f010 = callh.ch_action_date,NOENTRY,NOENTRY,NOUPDATE,COMMENTS="Datum för åtgärd";
+f011 = callh.ch_action_time,NOENTRY,NOENTRY,NOUPDATE,COMMENTS="Klockslag för åtgärd";
+f013 = callh.ch_action_veh_nbr,NOENTRY,RIGHT,COMMENTS="Bilnummer för den bil som vidtog denna åtgärd";
+f014 = callh.ch_action_drv_id,NOENTRY,RIGHT,COMMENTS="ID för den förare som vidtog denna åtgärd";
+f015 = callh.ch_action_user_id,NOENTRY,RIGHT,COMMENTS="ID för den användre som vidtog denna åtgärd";
+end
+instructions
+   delimiters "()";
+end

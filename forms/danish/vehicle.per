@@ -1,0 +1,93 @@
+{
+|***********************************************************************
+|                 RCS INFO
+|
+|  @(#)  $RCSfile: vehicle.per,v $
+|  @(#)  $Revision: 1.4 $
+|  @(#)  $Date: 1998/01/08 19:36:12 $
+|  @(#)  $Author: taxiadm $
+|  @(#)  $Source: /taxi-scan/taxi_proj/cvs/taxi-scan/src/forms/danish/vehicle.per,v $
+|
+|  Copyright (c) 1994 - MobileSoft Consulting, Inc. Woodinville WA
+|
+|**********************************************************************/
+|ident "@(#) head:$RCSfile: vehicle.per,v $	$Revision: 1.4 $"
+}
+
+database mads
+screen
+{
+						VEDLIGEH. AF VOGN-FIL
+Vgnpknr      Vgnnr   MID      Reg.nr       Mærke         Model         Color        Tele        MDT OK  Meter OK  Skema   
+[a]   [g]   [f000]  [f001 ]  [f002      ]  [f003      ]  [f004      ]  [f040      ] [f041      ][b]     [f]       [ss]
+
+Bevillinger         Attributter   Suspenderet fra        Suspenderet til        Suspenderingsårsag        "P"  "B"  "X"
+[f005            ]  [f013    ]    [f006              ]   [f007              ]   [f008                  ]  [c]  [d]  [e]
+
+Suspenderingsbesked
+[f009                            ][f010                            ][f011                            ]
+
+Chaufførbemærkning                                                                  
+[f038                                    ][f039                                    ]
+
+Sidste nødopkald      Nødopkald afklaret       Tilmeldt               Frameldt              Chauffør  Ture udført 
+[f014              ]  [f015              ]     [f016              ]  [f017              ]  [f018 ]  [f019              ]
+
+IDIST  BDIST  SL     IK ACPT AFVST  OPKLD  FEJLT  GADET  FRVLG  TALE   BESK   PAUSE  Tildeln Ture   Kortmet Sentmet Rykkere 
+[f024] [f025] [f026] [f029]  [f030] [f035] [f036] [f022] [f023] [f032] [f033] [f031] [f020]  [f021] [f027]  [f028] [f034]
+}
+end
+tables
+vehicle
+attributes
+a = vehicle.vh_fleet,UPSHIFT,COMMENTS="Vognparkindikator";
+g = vehicle.vh_fleet_nbr,RIGHT,COMMENTS="Vognparknummer svarende til denne vogns vognpark";
+f000 = vehicle.vh_nbr,RIGHT,COMMENTS="Vognnummer";
+f001 = vehicle.vh_mobile_rf_id,include=(1 to 3839), UPSHIFT,COMMENTS="MID på MDT terminalen i denne vogn";
+f002 = vehicle.vh_license_nbr,COMMENTS="Vognens registreringsnummer";
+f003 = vehicle.vh_make,UPSHIFT,COMMENTS="Vognmærke";
+f004 = vehicle.vh_model,UPSHIFT,COMMENTS="Vognmodel";
+f040 = vehicle.vh_color, UPSHIFT, COMMENTS="Color";
+f041 = vehicle.vh_tele, UPSHIFT, COMMENTS="Telephone Number";
+b = vehicle.vh_kdt_working,UPSHIFT,COMMENTS="J/N. om MDT terminalen fungerer i denne vogn eller ej";
+f = vehicle.vh_meter_working,UPSHIFT,COMMENTS="J/N. om denne vogns taxameter fungerer eller ej";
+ss = vehicle.vh_schedule_num,RIGHT,COMMENTS="Skemanummer (1..25) som denne vogn hører til";
+f005 = vehicle.vh_seals,UPSHIFT,COMMENTS="Definerer hvilke bevillinger denne vogn har";
+f013 = vehicle.vh_attr,UPSHIFT,COMMENTS="8 flag. Definerer denne vogns specielle attributter";
+f006 = vehicle.vh_susp_from_dt_tm,RIGHT,COMMENTS="Dato & tid denne vogn sidst var suspenderet";
+f007 = vehicle.vh_susp_to_dt_tm,RIGHT,COMMENTS="Dato & tid denne vogns suspendering sidst blev hævet";
+f008 = vehicle.vh_susp_reason,UPSHIFT,COMMENTS="]rsag til vognens suspendering (intern)";
+c = vehicle.vh_susp_pass_call,UPSHIFT,COMMENTS="J/N. om vognen er suspenderet fra passagerture";
+d = vehicle.vh_susp_del_call,UPSHIFT,COMMENTS="J/N. om vognen er suspenderet fra budkørsler";
+e = vehicle.vh_susp_typex_call,UPSHIFT,COMMENTS="J/N. om vognen er suspenderet fra type X ture";
+f009 = vehicle.vh_susp_message[1,32],UPSHIFT,COMMENTS="Suspenderingsbesked som sendes til vognen";
+f010 = vehicle.vh_susp_message[33,64],UPSHIFT,COMMENTS="Suspenderingsbesked som sendes til vognen";
+f011 = vehicle.vh_susp_message[65,96],UPSHIFT,COMMENTS="Suspenderinsbesked som sendes til vognen";
+f038 = vehicle.vh_comments[1,40],UPSHIFT,COMMENTS="Bemærkninger vedrørende denne vogn";
+f039 = vehicle.vh_comments[41,80],UPSHIFT,COMMENTS="Bemærkninger vedrørende denne vogn";
+f014 = vehicle.vh_last_emerg_on,RIGHT,COMMENTS="Sidste dato & tid denne vogn foretog nødopkald";
+f015 = vehicle.vh_last_emerg_off,RIGHT,COMMENTS="Dato & tid sidste nødopkald blev afklaret";
+f016 = vehicle.vh_last_signed_on,RIGHT,COMMENTS="Sidste dato & tid denne vogn var på gaden";
+f017 = vehicle.vh_last_signed_off,RIGHT,COMMENTS="Sidste dato & tid denne vogn blev inaktiv";
+f018 = vehicle.vh_last_driver,RIGHT,COMMENTS="Sidste chauffør på denne vogn";
+f019 = vehicle.vh_last_call,RIGHT,COMMENTS="Sidste tur kørt i denne vogn";
+f024 = vehicle.vh_posts,RIGHT,COMMENTS="Antal gange denne vogn meldte i dist.";
+f025 = vehicle.vh_cond_posts,RIGHT,COMMENTS="Antal gange denne vogn meldte betinget i dist.";
+f026 = vehicle.vh_enroute_posts,RIGHT,COMMENTS="Antal gange denne vogn meldte snart-ledig";
+f029 = vehicle.vh_no_accepts,RIGHT,COMMENTS="Antal ikke-acpt";
+f030 = vehicle.vh_rejects,RIGHT,COMMENTS="Antal afvisninger";
+f035 = vehicle.vh_callouts,RIGHT,COMMENTS="Antal af opkald t/kunder";
+f036 = vehicle.vh_no_shows,RIGHT,COMMENTS="Antal fejlture";
+f022 = vehicle.vh_flags,RIGHT,COMMENTS="Antal gadeture";
+f023 = vehicle.vh_bids,RIGHT,COMMENTS="Antal frit-valg ture sendt til denne vogn";
+f032 = vehicle.vh_req_to_talk,RIGHT,COMMENTS="Antal gange denne vogn sendte taleønske";
+f033 = vehicle.vh_messages,RIGHT,COMMENTS="Antal meddelelser sendt til trafikleder";
+f031 = vehicle.vh_breaks,RIGHT,COMMENTS="Antal pauser";
+f020 = vehicle.vh_assigns,RIGHT,COMMENTS="Antal ture manuelt tildelt denne vogn på sidste vagt";
+f021 = vehicle.vh_calls,RIGHT,COMMENTS="Antal afsendte ture";
+f027 = vehicle.vh_short_meters,RIGHT,COMMENTS="Antal kort-meter";
+f028 = vehicle.vh_late_meters,RIGHT,COMMENTS="Antal sent-meter";
+f034 = vehicle.vh_callbacks,RIGHT,COMMENTS="Antal rykkere";
+instructions
+   delimiters "()";
+end

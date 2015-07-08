@@ -1,0 +1,37 @@
+database mads
+screen
+{
+						Postilokerotiedoston hoito
+
+Saajan TN     Viesti nro              Antajan TN   Tila     Lähetyspvm   Lähetysaika
+[f000  ]      [f001                ]  [f002]       [a]      [f004    ]   [f005  ]
+
+Yhtiö     Saajatyyppi   Valinta           Viestityyppi
+[b]           [c]       [f003 ]           [f006    ]
+
+Viesti
+[f007                                              ][f008                                              ]
+[f009                                              ][f010                                              ]
+}
+end
+tables
+mailbox
+attributes
+f000 = mailbox.mb_address,include=(1 to 29999),RIGHT,REQUIRED,COMMENTS="Saajan käyttäjänumero";
+f001 = mailbox.mb_msg_nbr,REQUIRED,NOENTRY,NOUPDATE,COMMENTS="Systeemin tälle viestille antama numero";
+f002 = mailbox.mb_from,include=(1 to 9999),RIGHT,COMMENTS="Viestin lähettäjän käyttäjänumero";
+a = mailbox.mb_status,include=(U,V),UPSHIFT,REQUIRED,COMMENTS="Onko viesti 'U'usi vai 'V'anha";
+f004 = mailbox.mb_date_sent,COMMENTS="Viestin lähetyspvm";
+f005 = mailbox.mb_time_sent,COMMENTS="Viestin lähetysaika";
+b = mailbox.mb_fleet,UPSHIFT,REQUIRED,COMMENTS="Yhtiön TN";
+c = mailbox.mb_to_type,include=("*",Y,V,O,J,T,A,R," "),UPSHIFT,COMMENTS="Valitse viestin vastaanottajat (*,Y,V,O,J,T,A,R)";
+f003 = mailbox.mb_to_selection,UPSHIFT,COMMENTS="Kaventaa vastaanottajavalintaa";
+f006 = mailbox.mb_msgtype,RIGHT,COMMENTS="MDT-terminaalin komentotyyppi";
+f007 = mailbox.mb_msg_line1[1,50],UPSHIFT,COMMENTS="Viestin ensimmäinen rivi";
+f008 = mailbox.mb_msg_line1[51,100],UPSHIFT,COMMENTS="Viestin ensimmäinen rivi";
+f009 = mailbox.mb_msg_line2[1,50],UPSHIFT,COMMENTS="Viestin toinen rivi";
+f010 = mailbox.mb_msg_line2[51,100],UPSHIFT,COMMENTS="Viestin toinen rivi";
+end
+instructions
+   delimiters "()";
+end

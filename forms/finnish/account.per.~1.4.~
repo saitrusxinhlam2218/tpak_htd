@@ -1,0 +1,79 @@
+database mads
+screen
+{
+						Tilitiedoston hoito
+Tili   
+    Yhtiö  Tilin numero          Nimi                         Tärkeys    Automaattitilaus voimassa  Laskutus voimassa  Factor Val
+    [a]    [f000              ]  [f001                     ]   [a6]      [d]                          [e]              [f019 ]
+
+Nouto-osoite   
+    Katunumero             Kadun nimi                           Huoneisto Kunta        Postinro            Näytä osoite
+    [f002  ]               [f003                ]               [f004 ]   [a3 ]        [f005 ]             [c]
+Yhteys 
+    Puhelinkontakti       Tilikontakti          Huomautus                                      Numero              
+    [f009              ]  [f010              ]  [f011                                    ]     [f007              ]
+
+                	1-3      4-6      7-9     10-12    13-15   16-18   19-21   22-24   25-27   28-30   31-32
+Auton ominaisuus        [j1 ]    [j2 ]    [j3 ]    [j4 ]    [j5 ]   [j6 ]   [j7 ]   [j8 ]   [j9 ]   [j10]   [l1]
+Ajajan ominaisuus       [k1 ]    [k2 ]    [k3 ]    [k4 ]    [k5 ]   [k6 ]   [k7 ]   [k8 ]   [k9 ]   [k10]   [l2]
+Viestit
+    Otsikko 1                         Otsikko 2                         Otsikko 3          Otsikko 4
+    [f012                          ]  [f014                          ]  [f016           ]  [f017           ]
+    Ajajaviesti
+    [f018                               ]
+}
+
+end
+tables
+account
+fleet
+attributes
+a = account.ac_fleet,REQUIRED,NOUPDATE,UPSHIFT,COMMENTS="Yhtiön tunnusnumero", LOOKUP JOINING * fleet.fl_id;
+f000 = account.ac_nbr,REQUIRED,NOUPDATE,UPSHIFT,COMMENTS="Tilin tai luottokortin numero", PICTURE="##################";
+f001 = account.ac_name,COMMENTS="Yritys tai henkilö joka omistaa tilin";
+a6 = account.ac_priority,include=(1 to 63),REQUIRED,RIGHT,COMMENTS="Oletustärkeys joka ohjataan kaikille tämän tilin tilauksille";
+d = account.ac_autobook_enable,include=(K,E),default="E",UPSHIFT,COMMENTS="Saako tämä tili käyttää automaattista tilausta (K/E)?";
+e = account.ac_acc_chrg_enable,include=(K,E),default="K",UPSHIFT,COMMENTS="Saako tämä tili laskuttaa (K/E)?";
+f019 = account.ac_factor_val,noentry, default=0.0;
+f002 = account.ac_str_nbr,RIGHT,COMMENTS="Asiakasosoitteen katunumero";
+f003 = account.ac_str_name,UPSHIFT,COMMENTS="Kadun nimi";
+f004 = account.ac_apt_room, UPSHIFT, COMMENTS="Huoneiston numero";
+a3 = account.ac_city,UPSHIFT,COMMENTS="Kaupunki";
+f005 = account.ac_zip,COMMENTS="Postinumero";
+c = account.ac_show_pckup_adr,include=(K,E),default="K",UPSHIFT,COMMENTS="Syöttää automaattisesti tilin noutoosoitteen hakukenttiin (K/E)?";
+f009 = account.ac_phone_contact,COMMENTS="Yhteyshenkilö jolle soitetaan";
+f010 = account.ac_attention,COMMENTS="Yhteyshenkilö joka hoitaa tilejä";
+f011 = account.ac_comment,COMMENTS="Kommentti";
+f007 = account.ac_phone_number, UPSHIFT, COMMENTS="Puhelinnumero";
+j1 = account.ac_veh_attr[1, 3], UPSHIFT, COMMENTS="Ominaisuus (K/E)", DEFAULT = "EEE";
+j2 = account.ac_veh_attr[4, 6], UPSHIFT, COMMENTS="Ominaisuus (K/E)", DEFAULT = "EEE";
+j3 = account.ac_veh_attr[7, 9], UPSHIFT, COMMENTS="Ominaisuus (K/E)", DEFAULT = "EEE";
+j4 = account.ac_veh_attr[10, 12], UPSHIFT, COMMENTS="Ominaisuus (K/E)", DEFAULT = "EEE";
+j5 = account.ac_veh_attr[13, 15], UPSHIFT, COMMENTS="Ominaisuus (K/E)", DEFAULT = "EEE";
+j6 = account.ac_veh_attr[16, 18], UPSHIFT, COMMENTS="Ominaisuus (K/E)", DEFAULT = "EEE";
+j7 = account.ac_veh_attr[19, 21 ], UPSHIFT, COMMENTS="Ominaisuus (K/E)", DEFAULT = "EEE";
+j8 = account.ac_veh_attr[22, 24], UPSHIFT, COMMENTS="Ominaisuus (K/E)", DEFAULT = "EEE";
+j9  = account.ac_veh_attr[25, 27], UPSHIFT, COMMENTS="Ominaisuus (K/E)", DEFAULT = "EEE";
+j10  = account.ac_veh_attr[28, 30], UPSHIFT, COMMENTS="Ominaisuus (K/E)", DEFAULT = "EEE";
+l1  = account.ac_veh_attr[31, 32], UPSHIFT, COMMENTS="Ominaisuus (K/E)", DEFAULT = "EEE";
+k1 = account.ac_drv_attr[1, 3], UPSHIFT, COMMENTS="Ominaisuus (K/E)", DEFAULT = "EEE";
+k2 = account.ac_drv_attr[4, 6], UPSHIFT, COMMENTS="Ominaisuus (K/E)", DEFAULT = "EEE";
+k3 = account.ac_drv_attr[7, 9], UPSHIFT, COMMENTS="Ominaisuus (K/E)", DEFAULT = "EEE";
+k4 = account.ac_drv_attr[10, 12], UPSHIFT, COMMENTS="Ominaisuus (K/E)", DEFAULT = "EEE";
+k5 = account.ac_drv_attr[13, 15], UPSHIFT, COMMENTS="Ominaisuus (K/E)", DEFAULT = "EEE";
+k6 = account.ac_drv_attr[16, 18], UPSHIFT, COMMENTS="Ominaisuus (K/E)", DEFAULT = "EEE";
+k7 = account.ac_drv_attr[19, 21], UPSHIFT, COMMENTS="Ominaisuus (K/E)", DEFAULT = "EEE";
+k8 = account.ac_drv_attr[22, 24], UPSHIFT, COMMENTS="Ominaisuus (K/E)", DEFAULT = "EEE";
+k9 = account.ac_drv_attr[25, 27], UPSHIFT, COMMENTS="Ominaisuus (K/E)", DEFAULT = "EEE";
+k10 = account.ac_drv_attr[28, 30], UPSHIFT, COMMENTS="Ominaisuus (K/E)", DEFAULT = "EEE";
+l2 = account.ac_drv_attr[31, 32], UPSHIFT, COMMENTS="Ominaisuus (K/E)", DEFAULT = "EEE";
+f012 = account.ac_header_1,COMMENTS="Otsikko ensimmäiselle kentälle joka näkyy tilauksen syöttönäytöllä";
+f014 = account.ac_header_2,COMMENTS="Otsikko toiselle kentälle joka näkyy tilauksen syöttönäytöllä";
+f016 = account.ac_header_3,COMMENTS="Kehote ensimmäiselle syöttökentälle";
+f017 = account.ac_header_4,COMMENTS="Kehote toiselle syöttökentälle";
+f018 = account.ac_driver_msg,UPSHIFT,COMMENTS="Viesti joka välitetään ajajalle";
+
+end
+instructions
+   delimiters "()";
+end

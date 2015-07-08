@@ -1,0 +1,27 @@
+database mads
+screen
+{
+						Hjälpfil underhåll
+
+Flyttn.sträng  Fältnummer  Radnummer    Som flyttn.sträng    Fältnummer
+[f00]          [f001]      [f002]       [f03]                [f004]
+
+Hjälpinformation
+[f005                                                             ]
+[f006                                                             ]
+}
+end
+tables
+help
+attributes
+f00  = help.hp_nav_string,RIGHT,REQUIRED,COMMENTS="Kommandosträng använd för åtkomst av den skärm denna hjälpinfo gäller";
+f001 = help.hp_field_nbr,RIGHT,REQUIRED,COMMENTS="Fältnummer för det fält som denna hjälpinfo gäller";
+f002 = help.hp_line_nbr,RIGHT,REQUIRED,COMMENTS="Detta radnummer av hjälptext för detta fält";
+f03  = help.hp_like_nav_string,default=0,RIGHT,COMMENTS="Kommandosträng för ett fält vars hjälpinfo ska användas";
+f004 = help.hp_like_field_nbr,default=0,RIGHT,COMMENTS="Fältnummer för det fält vars hjälpinfo ska användas";
+f005 = help.hp_help_line[1,65],COMMENTS="Första delen av hjälpinformationen";
+f006 = help.hp_help_line[66,130],COMMENTS="Andra delen av hjälpinformationen";
+end
+instructions
+   delimiters "()";
+end

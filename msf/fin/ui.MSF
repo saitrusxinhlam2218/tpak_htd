@@ -1,0 +1,971 @@
+$ /****************************************************************************
+$ *                                                                           *
+$ *                           S C C S   I N F O                               *
+$ *                                                                           *
+$ * @(#)  ui.MSF.fin; Rel: 10.1.3.3; Get date: 8/9/95 at 11:10:32
+$ * @(#)  Last delta: 8/9/95 at 11:10:20
+$ * @(#)  SCCS File: /taxi/sccs/s.ui.MSF.fin
+$ *                                                                           *
+$ * Copyright (c) 1990 - MDI Seattle                                          *
+$ *                                                                           *
+$ *****************************************************************************/
+$ #ident "@(#) head:ui.MSF.fin	10.1.3.3"
+$ /*
+$  * Message file for PROGRAM: ui.new
+$  * CATALOG:   ui.cat
+$  * MNEMONICS: ui_strdefs.h
+$  */
+
+$quote "
+$set 1
+
+$ /* 	NOTES TO THE TRANSLATOR ...							*/
+$ /*    Most phrases are followed by a comment containing a number that specifies the   */
+$ /*    maximium length the phrase can be and in some cases an explanation of the       */
+$ /*    phrase.                                                                         */
+$ /*	ALL LENGTHS FOR PHRASES ARE 38 UNLESS NOTED OTHERWISE.				*/
+$ /*	Any phrases containing "<" and ">" need to keep these symbols after translation.*/
+$ /* 	They are considered part of the phrase.	The phrases containing "<" and ">"	*/
+$ /*	are the second half of an error message. Where necessary, the first half of 	*/
+$ /*	the error message is listed at the end of the line.  The first half of		*/
+$ /*	the error message is followed by ...					 	*/
+$ /*	Any phrases followed by "()" refer to a function name.  The function name 	*/
+$ /*	does not need to be transalated.  An example of this is :			*/
+$ /*	UI_CHECK_FLD_16 "<check_st_no() called>". check_st_no is the function name.	*/
+UI_CHECK_FLD_1	"MC"				/* 2,	Mastercard 	*/
+UI_CHECK_FLD_2	"VI"				/* 2, 	VISA		*/
+UI_CHECK_FLD_3	"DS"				/* 2, 	Discover	*/
+UI_CHECK_FLD_4	"AE"				/* 2,	American Express*/
+UI_CHECK_FLD_5	"DC"				/* 2, 	Diner's Club	*/
+UI_CHECK_FLD_6	"CB"				/* 2,	Carte Blanche	*/
+UI_CHECK_FLD_7	"<yhtiön tn>"			/* 38, fleet identification 	*/
+UI_CHECK_FLD_8	"<väärä oletusyhtiö>"		/* 38			*/
+UI_CHECK_FLD_9	"yhtiö"				/* 36			*/
+UI_CHECK_FLD_10	"<yhtiö>"			/* 38			*/
+UI_CHECK_FLD_11	"Päivää!"			/* 10			*/
+UI_CHECK_FLD_12	"täällä"			/* 10			*/
+UI_CHECK_FLD_13	"Voinko auttaa?"		/* 20			*/
+UI_CHECK_FLD_14	"<tilaustyyppi>"			/* 38			*/
+UI_CHECK_FLD_15	"<tilaustyyppi1>"                  /* 38                   */
+UI_CHECK_FLD_16	"<check_st_no() kutsu>"	/* 38			*/
+UI_CHECK_FLD_17	"<katunumero>"		/* 38			*/
+UI_CHECK_FLD_18	"<check_pre_dir kutsu>"	/* 38			*/	
+UI_CHECK_FLD_19	"<katuohje>"		/* 38			*/
+UI_CHECK_FLD_20	"<check_str_name kutsu>"	/* 38			*/
+UI_CHECK_FLD_21	"<noutokadun nimi>"		/* 38			*/
+UI_CHECK_FLD_22	"<check_str_type kutsu>"	/* 38			*/
+UI_CHECK_FLD_23	"<kadun tyyppi>"			/* 38			*/
+UI_CHECK_FLD_24	"<check_apt_no() kutsu>"	/* 38			*/
+UI_CHECK_FLD_25	"<check_city() kutsu>"		/* 38			*/
+UI_CHECK_FLD_26	"<kunta>"			/* 38			*/
+UI_CHECK_FLD_27	"<check_zone() kutsu>"		/* 38			*/
+UI_CHECK_FLD_28	"<ruudutettavat tilaukset>"		/* 38			*/
+UI_CHECK_FLD_29	"<ruutu no.>"			/* 38			*/
+UI_CHECK_FLD_30	"<check_passenger()kutsu>"	/* 38			*/
+UI_CHECK_FLD_31	"<check_phone()kutsu>"		/* 38 			*/
+UI_CHECK_FLD_32	"<puhelinnumero>"			/* 38 			*/
+UI_CHECK_FLD_33	"<    >" /*	38 */
+UI_CHECK_FLD_34	"<check_date() kutsu>"		/* 38			*/
+UI_CHECK_FLD_35	"<pvm>"			/* 38			*/
+UI_CHECK_FLD_36	"<pvm-kenttä>"			/* 38			*/
+UI_CHECK_FLD_37	"NYT"				/* 3			*/
+UI_CHECK_FLD_38	"<annettu pvm on vanha>"	/* 38			*/
+UI_CHECK_FLD_39	"<annettu pvm liian kaukana edessä>"	/* 38	*/
+UI_CHECK_FLD_40	"<check_time() kutsu>"		/* 38			*/
+UI_CHECK_FLD_41	"<aikakenttä>"			/* 38			*/
+UI_CHECK_FLD_42	"<pvm/aika on vanha>"	/* 38			*/
+UI_CHECK_FLD_43	"<ajajan ominaisuuksia ei sallita>"	/* 38		*/
+UI_CHECK_FLD_44	"<käytetty oletusarvo = EI>"	/* 38			*/
+UI_CHECK_FLD_45	"liian monta ajajan ominaisuutta"	/* 38			*/
+UI_CHECK_FLD_46	"liian monta auton ominaisuutta"	/* 38			*/
+UI_CHECK_FLD_47	"<1. merkin pitää olla 'U'>"	/* 38 			*/
+UI_CHECK_FLD_48	"<pitää olla numero>"		/* 38			*/
+UI_CHECK_FLD_49	"<vain numeroita>"			/* 38			*/
+UI_CHECK_FLD_50	"<oletusarvo EI on käytetty>"	/* 38			*/
+UI_CHECK_FLD_51	"<check_subs_time() kutsu>"	/* 38			*/
+UI_CHECK_FLD_52	"<check_subs_begin_date() kutsu>"	/* 38		*/
+UI_CHECK_FLD_53	"<aloituspvm>"			/* 38			*/
+UI_CHECK_FLD_54	"<check_subs_end_date() kutsu>"	/* 38		*/
+UI_CHECK_FLD_55	"<saakka pvm>"			/* 38, ending date	*/
+UI_CHECK_FLD_56	"<Erik.pyyntöjen syöttö ei sallittu>"	/* 38	*/
+UI_CHECK_FLD_57	"<vain kirjaimia>"			/* 38			*/
+UI_CHECK_FLD_58	"autonroa ei ole "		/* 22			*/
+UI_CHECK_FLD_59	"<väärä syöttö;käytetty oletusta 'J'>"	/* 38 change 'I' to C_PERSONAL_IF constant in language.h	*/
+UI_CHECK_FLD_60	"<laskutus>"			/* 38			*/
+UI_CHECK_FLD_61	"<check_podtime() kutsu>"	/* 38			*/
+UI_CHECK_FLD_62	"<tarvitaan oikea tilaustärkeys>"	/* 38			*/
+UI_CHECK_FLD_63	"tärkeys täytyy olla välillä"	/* 20			*/
+UI_CHECK_FLD_64	"ja 63"			/* 8			*/
+UI_CHECK_FLD_65	"Selvyyden vuoksi älä kirjoita KESKIYÖ vaan 23:59"
+UI_CK_LN_NO_1	"<menosuunnassa>"	/* 38, no more rows ...	*/
+UI_CK_LN_NO_2	"<ei mitään merkittyä tilausta>"		/* 38			*/
+UI_CK_LN_NO_3	"<ruuduttaa tilauksia>"		/* 38, not allowed to...*/
+UI_CK_LN_NO_4	"<käsin välittää autoja>"	/* 38, not allowed to...*/
+UI_CK_LN_NO_5	"<väärä tilausnro merkitty>"  /* 38			*/
+UI_CK_LN_NO_6	"TILA=KÄS_RUUD"			/* 13 			*/
+UI_CK_LN_NO_7	"TILA=KÄS_AUT"			/* 13 			*/
+UI_CK_LN_NO_8	"<vain numeroita>"			/* 38			*/
+UI_CK_LN_NO_9	"ruutu"				/* 6			*/
+UI_CK_LN_NO_10	"auto"				/* 6, vehicle		*/
+UI_CK_LN_NO_11	"väärä"			/* 10, invalid veh # entered	*/
+UI_CK_LN_NO_12	"nro syötetty"			/* 13, invalid veh # entered	*/
+UI_CK_LN_NO_13	"<ruutu nro"			/* 38, zone number	*/
+UI_CK_LN_NO_14	"<superruutuja ei sallita>"	/* 38			*/
+UI_CK_LN_NO_15	"<auto nro>"			/* 38			*/
+UI_CK_LN_NO_16	"<syötetty väärä rivinumero>"	/* 38			*/
+UI_CK_LN_NO_17	"<merkitty väärä tilausnumero>"	/* 38			*/
+UI_CK_LN_NO_18	"<ensin on poistuttava KÄS_AUT tai KÄS_RUUD -tilasta>"	/* 38, manual vehicle, manual zone mode 	*/
+UI_CK_LN_NO_19	"<kutsuu tiedostoa; ei LUK tilausta>"	/* 38, unable to read from...	*/
+UI_CK_LN_NO_20	"<virhe jatk.til.tiet.päivit..PAHA VIRHE>"	/* 38	*/
+UI_CK_LN_NO_21	"<jatk.til.tiet. lukon vapautt.virhe>"	/* 38	*/
+UI_CK_LN_NO_22	"<poikk.tietue FIFO:on>"		/* 38, unable to write exception record to FIFO	*/
+UI_CK_LN_NO_23	"<jatk.tilaustied .... PAHA VIRHE>"	/* 38, unable to read from...	*/
+UI_CK_LN_NO_24	"<erikoisvararuutuja ei sallita>"
+UI_CK_USLN_NO_1	"SYÖTETTY VÄÄRÄ RIVINUMERO"	/* 79			*/
+UI_CK_USLN_NO_2	"<menosuunnassa"	/* 38		*/
+UI_CL_SEARCH_1	"JATKUVIEN TILAUSTEN TIETUETTA EI LÖYDY"		/* 79			*/
+UI_CL_SEARCH_2	"EI LÖYDY TIETUETTA JOLLA ON SAMA AVAIN KUIN  SIVUN ALAREUNASSA"	/* 79	*/
+UI_CL_SEARCH_3	"SIVUN ALAREUNASTA EI LÖYDY TIETUETTA"	/* 79	*/
+UI_CL_SEARCH_4	"LEVYLTÄ EI SAA ENEMPÄÄ TIETUEITA"	/* 79	*/
+UI_CL_SEARCH_5	"EI ENEMPÄÄ TILAUSTIETUEITA"	/* 79			*/
+UI_CL_SEARCH_6	"tilaustietueita ei löydy"		/* 38			*/
+UI_CRIT_ALL_1	"Yhtiö:"			/* 6			*/
+UI_CRIT_ALL_2	"Aloituspvm:"		/* 14 			*/
+UI_CRIT_ALL_3	"Aloitusaika:"		/* 14 			*/
+UI_CRIT_ALL_4	"Noutokadun nimi:"		/* 19 			*/
+UI_CRIT_ALL_5	"Matkust. nimi:"		/* 15 			*/
+UI_CRIT_ALL_6	"Laskutusnro:"		/* 14 			*/
+UI_CRIT_ALL_7	"Puh.nro:         "		/* 19, modify for appropriate language	*/
+UI_CRIT_ALL_8	"Tilausnumero:"			/* 12 			*/
+UI_CRIT_ALL_9	"<yhtiö tn>"			/* 38			*/
+UI_CRIT_ALL_10	"<yhtiö>"			/* 38			*/
+UI_CRIT_ALL_11	"<muoto on pp.kk.vv>"		/* 38, modify for appropriate language	*/
+UI_CRIT_ALL_12	"<muoto on TT:MM>"		/* 38			*/
+UI_CRIT_ASGN_1	"Yhtiö:"			/* 6 			*/
+UI_CRIT_ASGN_2	"Aloituspvm:"		/* 14 			*/
+UI_CRIT_ASGN_3	"Aloitusaika"			/* 14			*/
+UI_CRIT_ASGN_4	"<yhtiö tn>"			/* 38			*/
+UI_CRIT_ASGN_5	"<yhtiö>"			/* 38			*/
+UI_CRIT_ASGN_6	"<muoto on pp.kk.vv>"		/* 38, modify for appropriate language 		*/
+UI_CRIT_ASGN_7	"<muoto on TT:MM>"		/* 38 			*/
+UI_CRIT_DR_1	"Yhtiö:"			/* 6, 			*/
+UI_CRIT_DR_2	"Ajajan TN:"			/* 10, 			*/
+UI_CRIT_DR_3	"Ajajan nimi:"			/* 12, 		 	*/
+UI_CRIT_DR_4	"<yhtiö tn>"			/* 38			*/
+UI_CRIT_DR_5	"<yhtiö>"			/* 38                   */
+UI_CRIT_SF_1	"Yhtiö:"			/* 6, 			*/			
+UI_CRIT_SF_2	"Noutokadun nimi:"		/* 19, 			*/
+UI_CRIT_SF_3	"Matkust. nimi:"		/* 15, 			*/
+UI_CRIT_SF_4	"Laskutusnro:"		/* 14, 			*/
+UI_CRIT_SF_5	"Puh.nro:      "		/* 19, modify for appropriate language 		*/
+UI_CRIT_SF_6	"Tilausnro:"			/* 12,	 		*/
+UI_CRIT_SF_7	"<yhtiö tn>"			/* 38                   */
+UI_CRIT_SF_8	"<yhtiö>"			/* 38                   */
+UI_CRIT_UN_1	"<yhtiö tn>"			/* 38                   */
+UI_CRIT_UN_2	"<yhtiö>"			/* 38                   */
+UI_CRIT_UN_3	"<muoto on pp.kk.vv>"		/* 38, modify for appropriate language		*/
+UI_CRIT_UN_4	"<muoto on tt:mm>"		/* 38			*/
+UI_CRIT_US_1	"Käytt TN:"			/* 8 			*/
+UI_CRIT_VH_1	"Yhtiö:"			/* 6 			*/
+UI_CRIT_VH_2	"Auto nro:"			/* 10 			*/
+UI_CRIT_VH_3	"<yhtiö tn>"			/* 38                   */
+UI_CRIT_VH_4	"<yhtiö>"			/* 38                   */
+UI_CRIT_VHDR_1	"Yhtiö:"			/* 6		          */
+UI_CRIT_VHDR_2	"Aloituspvm:"		/* 14			*/
+UI_CRIT_VHDR_3	"Aloitusaika:"		/* 14			*/
+UI_CRIT_VHDR_4	"Auto nro:"			/* 10			*/
+UI_CRIT_VHDR_5	"Ajajan TN:"			/* 10			*/
+UI_CRIT_VHDR_6	"<yhtiö tn>"			/* 38                   */
+UI_CRIT_VHDR_7	"<yhtiö>"			/* 38                   */
+UI_CRIT_VHDR_8	"<muoto on pp.kk.vv>"		/* 38, modify for appropriate language 		*/
+UI_CRIT_VHDR_9	"<muoto on tt:mm>"		/* 38, */
+UI_DETAIL_KEY_1	"<tilaustiedosto>"			/* 38, unable to read...*/
+UI_DETAIL_KEY_2	"<tilaustiedoston vapautt.virhe>"	/* 38			*/
+UI_DETAIL_KEY_3	"<poikk.tied. FIFO:on>"		/* 38, unable to write exception record to FIFO */
+UI_DETAIL_KEY_4	"                                                          DETALJI                                                                   "
+$						/* 131, The phrase for DETAIL should be centered in 131 spaces	*/
+UI_DETAIL_KEY_5	"                                                          PÄIVITÄ                                                                   "
+$                                                /* 131, The phrase for UPDATE should be centered in 131 spaces  */
+UI_DETAIL_KEY_6	"Yhtiö"				/* 12			*/
+UI_DETAIL_KEY_7	"Tyyp"				/* 4			*/
+UI_DETAIL_KEY_8	"Laskutusnro"			/* 12, charger number	*/
+UI_DETAIL_KEY_9	"Yritys"			/* 8, company name	*/
+UI_DETAIL_KEY_10	"Ajaja"		/* 12			*/
+UI_DETAIL_KEY_11	"Osoite"		/* 12                   */
+UI_DETAIL_KEY_12	"As./Huon"		/* 12			*/
+UI_DETAIL_KEY_13	"Kunta"			/* 12                   */
+UI_DETAIL_KEY_14	"Ruut"			/* 4			*/
+UI_DETAIL_KEY_15	"Matkustaja"		/* 12                   */
+UI_DETAIL_KEY_16	"Pyytäjä"		/* 12                   */
+UI_DETAIL_KEY_17	"Puh."			/* 12                   */
+UI_DETAIL_KEY_18	"           /vaihde"	/* modify for appropriate language - telephone extension*/
+UI_DETAIL_KEY_19	"Noutopv/aika"		/* 12                   */
+UI_DETAIL_KEY_20	"Huomautus"		/* 12                   */
+UI_DETAIL_KEY_21	"Tilaus"		/* 6, call number	*/
+UI_DETAIL_KEY_22	"Tyyppi"		/* 12                   */
+UI_DETAIL_KEY_23	"Autovaatim"		/* 12                   */
+UI_DETAIL_KEY_24	"Ajajavaatim"		/* 12                   */
+UI_DETAIL_KEY_25	"autoja"		/* 12                   */
+UI_DETAIL_KEY_26	"Kohdeosoite"		/* 12                   */
+UI_DETAIL_KEY_27	"Yht.henkilö"			/* 12, person to see    */
+UI_DETAIL_KEY_28	"KUITTAUS?"		/* 12, Proof of delivery*/
+UI_DETAIL_KEY_29	"Tärkeys"		/* 12                   */
+UI_DETAIL_KEY_30	"Taksa"			/* 12                   */
+UI_DETAIL_KEY_31	"Pidä"		/* 9			*/
+UI_DETAIL_KEY_32	"Paikl"			/* 5, pickup and dest. addresses in same zone*/
+UI_DETAIL_KEY_33    "Ilmoita saapum"   /* 14 */	
+UI_DP_AL_SCRN_1	" Aika Lähet  Auto Nouto  Sulj   Tärk  Pvm      Omin  "
+$						/* Count chars.  Lengths must be the equal to or less than but */
+$						/* phrases must start at same position in string	*/
+UI_DP_AL_SCRN_2	"    Yht Tila      Aika  Tyyp  Auto Ruu Kunta           Nouto-osoite                      Matkustaja       Paikka/Osoite Huomaut     \0"
+$                                                /* Count chars.  Lengths must be the equal to or less than but */ 
+$                                                /* phrases must start at same position in string       */ 
+
+UI_DP_AL_SCRN_3	" Rivi:    "			/* 6, keep leading space*/
+UI_DP_US_SCRN_1	"    KÄYTT         KÄYTT NIMI        TERVEHDYSNIMI  .....YHTIÖT....                                                                  "
+$                                                /* Count chars.  Lengths must be the equal to or less than but */ 
+$                                                /* phrases must start at same position in string       */ 
+UI_DP_US_SCRN_2	" Rivi:    "			/* 6, keep leading space	*/
+UI_DP_US_SCRN_3	" ..............OLETUKSET............................ "	/* 51, center phrase in 51 spaces*/
+UI_DP_US_SCRN_4	" ..................VALINNAT JOTKA KÄYTTÄJÄLLE SALLITAAN.................... "
+$						/* 70, center phrases in 70 spaces	*/
+UI_DP_US_SCRN_5	" Näyttö "			/* 8, keep leading and trailing space	*/
+UI_DP_US_SCRN_6	" Ruud. til "			/* 11, keep leading and trailing space	*/
+UI_DP_US_SCRN_7	" Yhtiö "			/* 7, keep leading and trailing space  */
+UI_DP_US_SCRN_8	" Kunta "			/* 6, keep leading and trailing space  */
+UI_DP_US_SCRN_9	" Etsintä "			/* 8, keep leading and trailing space  */
+UI_DP_US_SCRN_10	" Suurin tärk "		/* 13, keep leading and trailing space  */
+UI_DP_US_SCRN_11	" Tilaustyyp "		/* 11, keep leading and trailing space  */
+UI_DSP_CL_DTL_1	"LASK\0"			/* 6, include \0			*/
+UI_DSP_CL_DTL_2	"KÄT\0"			/* 6, include \0			*/
+UI_DSP_CL_DTL_3	"eri:"				/* 4			*/
+UI_DSP_CL_DTL_4	"auto:"				/* 5, number of vehicles	*/
+UI_DSP_CL_DTL_5	"mks:"				/* 4			*/
+UI_DSP_CL_DTL_6	"lsk:"				/* 4			*/
+UI_DSP_CL_DTL_7	"L"				/* 1, modify for appropriate language	*/
+UI_DSP_CL_DTL_8	"opr:"				/* 4, operator		*/
+UI_DSP_CL_DTL_9	" JAKO:"			/* 6, keep leading space*/
+UI_HELP_1	"opastied: virhe ="		/* 20			*/
+UI_KDT_CK_FLD_1	"<väärä yhtiö/auto -yhdistelmä"	
+UI_KDT_CK_FLD_2	"väär yhtiö/auto -yhdistelmä"
+UI_KDT_CK_FLD_3	"Autonro,Tilikoodi,Ruutunro,Tärk täytä kaikki kentät"	/* 62, unable to write to file...*/.
+UI_KDT_CK_FLD_4	"Autonro,Tilikoodi,Ruutunro täytä kaikki kentät"	/* 54	*/
+UI_KDT_CK_FLD_5	"Autonro,Tilikoodi,Ajajatn täytä kaikki kentät"	/* 55	*/
+UI_KDT_CK_FLD_6	"Autonro,Tilikoodi täytä molemmat kentät"	/* 47	*/
+UI_KDT_CK_FLD_7	"RUUT"				/* 4, to book or post	*/
+UI_KDT_CK_FLD_8	"ERUUT"				/* 5, conditional book	*/
+UI_KDT_CK_FLD_9	"KVILM"				/* 5, enroute book	*/
+UI_KDT_CK_FLD_10	"ALOITUS"		/* 7			*/
+UI_KDT_CK_FLD_11	"LOPETUS"		/* 8			*/
+UI_KDT_CK_FLD_12	"ASETA MDT"		/* 9, mdt = mobile data terminal*/
+UI_KDT_CK_FLD_13	"MDT LATAA"		/* 12			*/
+UI_KDT_CK_FLD_14	" Tiedostonavausvirhe"	/* 50			*/
+UI_KDT_CK_FLD_15	"Auton numero:"	/* 15			*/
+UI_KDT_CK_FLD_16	"Toimin:"		/* 7			*/
+UI_KDT_CK_FLD_17	"Ruutunumero:"		/* 12			*/
+UI_KDT_CK_FLD_18	"Tärkeys autojonossa:"	/* 20			*/
+UI_KDT_CK_FLD_19	"Ajajan TN"		/* 9			*/
+UI_KDT_CK_FLD_20	"Virhe tietueen lisäämisessä   tiedostoon"	/* 50		*/
+UI_KDT_CK_FLD_21	"Tiedoston sulkemisvirhe"	/* 50			*/
+UI_KDT_CK_FLD_22        "HYVÄKSY AJO"   /* 12 */
+UI_KDT_CK_FLD_23        "HYLKÄÄ AJO"   /* 12 */
+UI_KDT_CK_FLD_24        "MITT PÄÄLLÄ"           /*  12 */
+UI_KDT_CK_FLD_25        "MITT POIS"             /* 12 */
+UI_KDT_CK_FLD_26        "JULLIKKA"              /* 12 */
+UI_KDT_CK_FLD_27        "KÄSIPYSTY"             /* 12 */
+UI_KDT_DISP_1	"MDT EMULOINTI-IKKUNA"		/* 50			*/
+UI_KDT_DISP_2	"Yhtiön TN: "			/* 10, keep trailing space	*/
+UI_KDT_DISP_3	"Auton numero: "		/* 16, keep trailing space      */
+UI_KDT_DISP_4	"Toim.koodi: "			/* 13, keep trailing space      */
+UI_KDT_DISP_5	"Ruutunumero: "			/* 13, keep trailing space      */
+UI_KDT_DISP_6	"Ajajan   TN: "			/* 13, keep trailing space      */
+UI_KDT_DISP_7	"Tärkeys autojonossa: "		/* 21, keep trailing space      */
+UI_KDT_DISP_8	"TOIMINTOKOOD: 1=RUUT 2=ERUUT 3=KVILM 4=ALOI 5=LOPET 6=RUUDSTA 7=MDT OIKEUTUS 8=AJO HYVKS 9=AJO HYLÄTTY 10=MITT PÄÄL 11=MITT POIS"              /* 131 chars */
+UI_MESG_FUNCS_1	"Tiedoston avausvirhe"		/* 50			*/
+UI_MESG_FUNCS_2	"Virhe tietueen lisäämisessä tiedostoon"	/* 50			*/
+UI_MESG_FUNCS_3	"Tiedoston sulkemisvirhe"		/* 50			*/
+UI_MESG_FUNCS_4	"Väärä toistokenttä"		/* 45			*/
+UI_MESG_FUNCS_5	"Käyttäjiä ei löydy"		/* 50			*/
+UI_MESG_FUNCS_6	"Virhe postilaatikkotietueen lisäämisessä"	/* 50                   */
+UI_MESG_FUNCS_7	"Virhe toisiokomennon kirjoittamisessa"		/* 50                   */
+UI_MESG_FUNCS_8	"yhtiö ei löydy"		/* 45			*/
+UI_MESG_FUNCS_9	"välittäjää ei löydy"		/* 40			*/
+UI_MESG_FUNCS_10	"tilauksen ottajaa ei löydy"	/* 40			*/
+UI_MESG_FUNCS_11	"systeeminhoitajaa ei löydy"	/* 40			*/
+UI_MESG_FUNCS_12	"Yritys lähettää viesti kaik. takseille valintakentän avulla, yritä Yhtiö=* Tyyp=T Valinta= "
+$						/* count chars */
+UI_MESG_FUNCS_13	"taksi ei löydy"	/* 40			*/
+UI_MESG_FUNCS_14	"Viestin lähetys * ajajille valintakentän avulla, yritä Yhtiö=* Tyyp=A Valinta= "
+$                                               /* count chars        */ 
+UI_MESG_FUNCS_15	"ajajaa ei löydy"	/* 40			*/
+UI_MESG_FUNCS_16	"ruutua ei löydy"	/* 40			*/
+UI_MESG_FUNCS_17	"käyttäjää ei löydy"	/* 40			*/
+UI_MESG_FUNCS_18	"Virhe toistoviestitiedoston avaamisessa"	/* 50	*/
+UI_MESG_FUNCS_19	"Virhe postilaatikkotiedoston avaamisessa"	/* 50 		*/
+UI_MESG_FUNCS_20	"Postilaatikkotietueen tila ei kelpaa"	/* 50	*/
+UI_MESG_FUNCS_21	"Virhe edellisen toistotietueen poistamisessa"	/* 50	*/
+UI_MESG_FUNCS_22	"Virhe edellisen tietueen poistamisessa"	/* 50	*/
+UI_MESG_FUNCS_23	"Virhe lukitun tiet. uudelleen lukemisessa"	/* 50	*/
+UI_MESG_FUNCS_24	"Saman avaintietueen vapautt.virhe"	/* 50	*/
+UI_MESG_FUNCS_25	"Ei seuraavaa tietuetta joka vastaa avainta -virhe"	/* 50	*/
+UI_MESG_FUNCS_26	"Virhe vanhan viestin tietueen päivittämisessä"	/* 50	*/
+UI_MESG_FUNCS_27	"Sama tietue ei enää löydy -virhe"	/* 50	*/
+UI_MESG_FUNCS_28	"Viimeksi luetun tietueen vapautt.virhe"	/* 50	*/
+UI_MESG_FUNCS_29	"Virhe toistoviestitiedoston sulkemisessa"	/* 50	*/
+UI_MESG_FUNCS_30	"Virhe postilaatikkotiedoston sulkemisessa"		/* 50	*/
+UI_MESG_FUNCS_31	"Virhe säästetyn tiet. poistamisessa, ei nyk. tiet."	/* 50	*/
+UI_MESG_FUNCS_32	"Virhe tietueen säästämisessä, ei nyk. tietuetta"	/* 50	*/
+UI_MESG_FUNCS_33	"Virhe tiet. lukemisessa annetusta sanoman nrosta"	/* 50	*/
+UI_MESG_FUNCS_34	"Tietueen päivitysvirhe"			/* 50	*/
+UI_MESG_FUNCS_35	"Tietueen vapautt.virhe"		/* 50	*/
+UI_MESG_FUNCS_36	"Virhe, ei voi päivittää tietuetta, ei ent. tiet."	/* 50	*/
+UI_MESG_FUNCS_37	"Virhe lukitun tiet. uud.lukemisessa"	/* 50	*/
+UI_MESG_FUNCS_38	"Virhe, tietue eri kuin aiemmin luettu"	/* 50	*/
+UI_MESG_FUNCS_39	"<laskin fifo>"			/* 38, Unable to write to file... */
+UI_MUL_KEY_1	"<tilausta ei merkitty"
+UI_MUL_KEY_2	"<jakotilausten välitys>"
+UI_MUL_KEY_3	"<on jo jakotilaus>"
+UI_MUL_KEY_4	"<tyyppipyynnön liittäm>"
+UI_MUL_KEY_5	"<tilaustiet>"
+UI_MUL_KEY_6	"Ei voi lukea"		/*	50		*/
+UI_MUL_KEY_7	"Ei voi päivittää"		/*      50              */
+UI_MUL_KEY_8	"<lukitun tilaustiet. vapautt.virhe>"	
+UI_MUL_KEY_9	"Eri yhtiö"
+UI_MUL_KEY_10	"FIFO"				/* 50, log error to disk...	*/
+UI_MUL_KEY_11	"<historiatietue>"
+UI_SCANTERM_1	"Päätetyypin kuvausta ei löydy"	/* 45	*/
+UI_SCANTERM_2	"  "				/* 10		*/
+UI_SP_CK_FLD_1	"<autolle>"
+UI_SP_CK_FLD_2	"<ajajan tn:lle>"
+UI_SP_CK_FLD_3	"<muoto on PP.KK.VV>"		/* modify for appropriate language	*/
+UI_SP_CK_FLD_4	"<muoto on TT:MM>"		/* modify for appropriate language	*/
+UI_SP_CK_FLD_5	"31.12.99"			/* modify for appropriate language      */
+UI_SP_CK_FLD_6	"MIDN"				/* 4, modify for appropriate language	*/
+UI_SP_CK_FLD_7	"PALAUTETTU"			/* 20			*/
+UI_SP_DISP_1	"Yhtiö"				/* 9			*/
+UI_SP_DISP_2	"Autonro"			/* 9			*/
+UI_SP_DISP_3	"Ajajan TN"			/* 9                    */
+UI_SP_DISP_4	"Peruuta poistam (K/E)"	/* 22, check language.h for Yes and No constants*/
+UI_SP_DISP_5	"Poistojakso"		/* 17			*/
+UI_SP_DISP_6	"Alkupvm"			/* 9			*/
+UI_SP_DISP_7	"Kellonaik"			/* 9			*/
+UI_SP_DISP_8	"Loppupv"			/* 7			*/
+UI_SP_DISP_9	"Aikaan"			/* 7			*/
+UI_SP_DISP_10	"Anna ajokielto matkustaja-ajoihin (K/E)"	/* 46, check language.h for Yes and No constants*/
+UI_SP_DISP_11	"Anna ajokielto tavara-ajoihin     (K/E)" /* 46, check language.h for Yes and No constants */
+UI_SP_DISP_12	"Anna ajokielto X-tyypin ajoihin   (K/E)" /* 46,  check language.h for Yes and No constants*/
+UI_SP_DISP_13	"Työpäällikön syy ajokieltoon (ei näy ajajalle)"	/* 53	*/
+UI_SP_DISP_14	"Ajajalle läh. viesti"	/* 22	*/
+UI_SP_DISP_15   "M"     /* 1    */
+UI_SP_DISP_16   "T"     /* 1    */
+UI_SP_DISP_17   "X"     /* 1    */
+UI_SP_SCR_1	"31.12.19"			/* 8, modify for appropriate language      */
+UI_SP_SCR_2	"23:59"			/* 5, modify for appropriate language, should be 24 hr time      */
+UI_ALTRN_1	"<vaihtoehdoille>"
+UI_ALTRN_2	"Vaihtoehtoinen os.tietue ei löydy"
+UI_ALTRN_3	"<vaihtoeht. os.avain tältä näytöltä>"
+UI_BAS_SCR_1	"Päivää!"			/* 10			*/
+UI_BAS_SCR_2	"täällä"			/* 10			*/
+UI_BAS_SCR_3	"Voinko auttaa?"		/* 20			*/
+UI_BAS_SCR_4	"anna tilaustyyppi"
+UI_BAS_SCR_5	"<tilitiedosto>"
+UI_CALL_H_1	"<historiatietue>"
+UI_CALL_H_2	"TUNTEMAT"			/* 8			*/
+UI_CALL_H_3	"<ei voi vapauttaa historiatiedost lukkoa>"
+UI_UI_DISP_M_1	" MDI Tietokoneohjattu taksivälitys "	/* 36 		*/
+UI_UI_DISP_M_2	"Käytä valintaan välilyöntiä, nuolia tai kirjoita numero"	/* 79	*/
+UI_UI_DISP_M_3	"Anna 'e' palataksesi edelliseen ruutuun tai poistu."	/* 79	*/
+UI_UI_DISP_M_4	"Paina syöttönäppäintä valinnan suorittamiseksi:  " /* 43	*/
+UI_UI_DISP_S_1	"Päivää!"			/* 10		*/
+UI_UI_DISP_S_2	"täällä"			/* 10		*/
+UI_UI_DISP_S_3	"Voinko auttaa?"		/* 20		*/
+UI_UI_DISP_S_4	"Yhtiö"				/* 9		*/
+UI_UI_DISP_S_5	"Tyyp"				/* 4		*/
+UI_UI_DISP_S_6	"Osoite"			/* 12		*/
+UI_UI_DISP_S_7	"As/Huon."			/* 12           */
+UI_UI_DISP_S_8	"Kunta"				/* 12           */
+UI_UI_DISP_S_9	"Ruut"				/* 4		*/
+UI_UI_DISP_S_10	"Matkust"			/* 12           */
+UI_UI_DISP_S_11	"Puhelin"				/* 12           */
+UI_UI_DISP_S_12	"          /vaihde"		/* modify for appropriate language	*/
+UI_UI_DISP_S_13	"Noutopv/aika"			/* 12           */
+UI_UI_DISP_S_14	"Syöttöpvm"			/* 12           */
+UI_UI_DISP_S_15	"Kirjaaja"			/* 10		*/
+UI_UI_DISP_S_16	"Pääm.osoite"			/* 12		*/
+UI_UI_DISP_S_17	"Tyyppipyyntö"			/* 12           */
+UI_UI_DISP_S_18	"Ominaisuudet"			/* 12           */
+UI_UI_DISP_S_19	"Ajajavaatim"			/* 12           */
+UI_UI_DISP_S_20	"Autoja"			/* 12           */
+UI_UI_DISP_S_21	"Tärkeys"			/* 12           */
+UI_UI_DISP_S_22	"Taksa"				/* 12           */
+UI_UI_DISP_S_23	"Pidä"			/* 9		*/
+UI_UI_DISP_S_24	"Paikl"				/* 5, pickup and dest addr. in same zone*/
+UI_UI_DISP_S_25	"Huomaut"			/* 7		*/
+UI_UI_DISP_S_26	"Päivä"				/* 15		*/
+UI_UI_DISP_S_27	"Ma"				/* 3, Monday	*/
+UI_UI_DISP_S_28	"Ti"				/* 3, Tuesday	*/
+UI_UI_DISP_S_29	"Ke"				/* 3		*/
+UI_UI_DISP_S_30	"To"                           /* 3            */
+UI_UI_DISP_S_31	"Pe"                           /* 3            */
+UI_UI_DISP_S_32	"La"                           /* 3            */
+UI_UI_DISP_S_33	"Su"                           /* 3            */
+UI_UI_DISP_S_34	"Aika"				/* 15		*/
+UI_UI_DISP_S_35	"Aloit.aika"		/* 14		*/
+UI_UI_DISP_S_36	"Yksi muutos"		/* 15		*/
+UI_UI_DISP_S_37	"Loppupvm"			/* 14		*/
+UI_UI_DISP_S_38	"Päivää!"			/* 10		*/
+UI_UI_DISP_S_39	"Nimi"				/* 9		*/
+UI_UI_DISP_S_40	"Pvm/Aika"			/* 9		*/
+UI_UI_DISP_S_41	"Laskutusnro"			/* 12		*/
+UI_UI_DISP_S_42	"Yritys"			/* 7, Company name	*/
+UI_UI_DISP_S_43	"Ajaja"			/* 8		*/
+UI_UI_DISP_S_44	"Pyytäjä"			/* 12, Requested by	*/
+UI_UI_DISP_S_45	"Yhteyshenk."				/* 12, person to see	*/
+UI_UI_DISP_S_46	"KUITT?"			/* 12, proof of delivery*/
+UI_UI_DISP_S_47	"Ilmoita saapum" /* 14 */
+UI_ERROR_1	"Ei voi avata tiedostoa"
+UI_ERROR_2	"Ei voi saada viestijonon tunnusta"
+UI_ERROR_3	"Ei voi saada jaetun muistin tunnusta"
+UI_ERROR_4	"Ei voi liittää jaettua muistia"
+UI_ERROR_5	"Ei voi saada semafoorin tunnusta"
+UI_ERROR_6	"Ei voi saada käyttäjän kirjausnumeroa"
+UI_ERROR_7	"Ei voi saada tty-numeroa"
+UI_ERROR_8	"Ei voi lukea cisam-tietuetta levyltä"
+UI_ERROR_9	"Ei voi näyttää ruutua"
+UI_ERROR_10	"Ei voi suorittaa"
+UI_ERROR_11	"Väärä valikkohakemisto"
+UI_ERROR_12	"Määrittelemätön kohta"
+UI_ERROR_13	"Annettu väärä numero"
+UI_ERROR_14	"Annettu väärä tty-numero"
+UI_ERROR_15	"Ei voi saada semafoorin tunnusta"
+UI_ERROR_16	"Sbrk epäonnistui"
+UI_ERROR_17	"Ei voi sulkea tiedostoa"
+UI_ERROR_18	"Ei voi suorittaa"
+UI_ERROR_19	"Väärä viestiosoite"
+UI_ERROR_20	"Annettu väärä yhtiötunnus"
+UI_ERROR_21	"Väärä syöttö kenttään"
+UI_ERROR_22	"Vaadittua kenttää ei syötetty"
+UI_ERROR_23	"Ei voi päivittää tietuetta levylle"
+UI_ERROR_24	"Tapahtunut paha virhe"
+UI_ERROR_25	"Ei voi ruuduttaa tätä tilausta"
+UI_ERROR_26	"Ei voi kirjoittaa tiedostoon"
+UI_ERROR_27	"Ei voi löytää poikkeuksia"
+UI_ERROR_28	"Ei löydy lisää tietueita"
+UI_ERROR_29	"Detaljirivin numeroa ei saatavana"
+UI_ERROR_30	"Syötetty väärä numero"
+UI_ERROR_31	"Syötetty väärä pvm tai aika"
+UI_ERROR_32	"On annettava arvo"
+UI_ERROR_33	"Tämä poikkeus on jo hoidettu"
+UI_ERROR_34	"Tietue on päivitetty"
+UI_ERROR_35	"Annettu taksimäärä on suurempi kuin suurin sallittu"
+UI_ERROR_36	"Annettu yhtiö ei ole aktiivinen"
+UI_ERROR_37	"Tässä poikkeuksessa ei ole detaljia"
+UI_ERROR_38	"Aikaisempaa riviä ei ole saatavana"
+UI_ERROR_39	"Opastusriviä ei ole saatavana"
+UI_ERROR_40	"Väärä toimintonäppäin"
+UI_ERROR_41	"Tilaus siirretty välitykseen"
+UI_ERROR_42	"Näyttö lähetetty kirjoittimelle, jatka"
+UI_ERROR_43	"Tämä ei ole enn.tilaus"
+UI_ERROR_44	"Annettu väärä pvm"
+UI_ERROR_45	"Annettu väärä aika"
+UI_ERROR_46	"Historiaa ei ole saatavana"
+UI_ERROR_47	"Tilaus siirretty välittäjän hyväksyttäväksi"
+UI_ERROR_48	"TILAUS KESKEYTETTY"
+UI_ERROR_49	"Kyselytoiminto suoritettu"
+UI_ERROR_50	"Tilaus välitetty"
+UI_ERROR_51	"Tilaus peruutettu"
+UI_ERROR_52	"Tilaus välitetty"
+UI_ERROR_53	"Tilaus liitetty"
+UI_ERROR_54	"Til.liitt. peruutettu"
+UI_ERROR_55	"Autotiedoston hoidon viestiläh epäonnistui"
+UI_ERROR_56	"Ajajatiedoston hoidon viestiläh epäonnistui"
+UI_ERROR_57	"SYSTEEMI KAATUNUT"
+UI_ERROR_58     "Vehicle not idle or signed on"
+UI_ERROR_59     "Felaktig beställningstyp!"
+UI_ERROR_60     "FASTPRIS:"
+UI_UI_EXCEPTS_1	"<täyttää valintakrit.>"
+UI_UI_EXCEPTS_2	" Rivi:   "			/* 8, keep leading space*/
+UI_UI_EXCEPTS_3	" Aika Lähet  Auto Nouto  Sulj   Tärk   Pvm      Tunn "	/* count chars. */
+$			/* Phrases must start in same positions as current words 	*/
+UI_UI_EXCEPTS_4	"Yh"				/* 2, Fleet		*/
+UI_UI_EXCEPTS_5	"Tila"			/* 6			*/
+UI_UI_EXCEPTS_6	"Nouto"				/* 6			*/
+UI_UI_EXCEPTS_7	"Tyyp"				/* 4			*/
+UI_UI_EXCEPTS_8	"Auto"				/* 4, vehicle number	*/
+UI_UI_EXCEPTS_9	"Ruu"				/* 3, zone		*/
+UI_UI_EXCEPTS_10	"Kta"			/* 3, city		*/
+UI_UI_EXCEPTS_11	"Nouto-osoite"	/* 14			*/
+UI_UI_EXCEPTS_12	"Matkustaja"		/* 14			*/
+UI_UI_EXCEPTS_13	"Paikka/Osoite huomautus"	/* 21			*/
+UI_UI_EXCEPTS_14	"MINUUTIT"		/* 15			*/
+UI_UI_EXCEPTS_15	"<vain numer>"
+UI_UI_EXCEPTS_16	"<syötetty väär rivinro>"
+UI_UI_EXCEPTS_17	"<mitään poikkeusta ei valittu >"
+UI_UI_EXCEPTS_18	"<ei valintaa vastaavia poikkeuksia>"
+UI_UI_EXCEPTS_19	"<mitään poikkeusta ei valittu >"
+UI_UI_EXCEPTS_20	"<historia sallittu vain tilaukseen liittyville poikkeuksille>"	/* count chars	*/
+UI_UI_EXCEPTS_21	"<ruuduttaa tilauksia>"
+UI_UI_EXCEPTS_22	"<HYVKS ei sall. ruuduttamattomille poikkeuksille>"	/* count chars	*/
+UI_UI_EXCEPTS_23	"DEBUG MSG: tätä poikk. ei vielä koodattu!!!" /* count chars	*/
+UI_UI_EXCEPTS_24	"<HYLK ei sallittu ruuduttamattomille poikk.>" /* count chars	*/
+UI_UI_EXCEPTS_25	"<pito sallittu vain tilaukseen liittyville poikkeuksille>"	/* count chars	*/
+UI_UI_EXCEPTS_26	"pitp ei sall. tilauksille joissa"	/* 30	*/
+UI_UI_EXCEPTS_27	"tila"		/* 10			*/
+UI_UI_EXCEPTS_28	"<pito ei sallittu jakotil>"
+UI_UI_EXCEPTS_29	"<kysely sallittu vain tilaukseen liittyville poikkeuksille>"	/* count chars	*/
+UI_UI_EXCEPTS_30	"<uud.väl. sallittu vain tilaukseen liittyville poikkeuksille>"	/* count chars  */
+UI_UI_EXCEPTS_31	"<välitys sallittu vain tilaukseen liittyville poikkeuksille>"	/* count chars  */
+UI_UI_EXCEPTS_32	"<välitys ei sallittu jakotil.>"
+UI_UI_EXCEPTS_33	"<peruutus sallittu vain tilaukseen liittyville poikkeuksille>"	/* count chars  */
+UI_UI_EXCEPTS_34	"<detalji sallittu vain tilaukseen liittyville poikkeuksille>"	/* count chars  */
+UI_UI_EXCEPTS_35	"<JAKO vain jakotilauksille>"		/* invalid field entered..KYSPITOV = call taker hold.	*/
+UI_UI_EXCEPTS_36	"TILA=KÄS_RUUD"				/* 13, mode = manual zone	*/
+UI_UI_EXCEPTS_37	"TILA=KÄS_AUT"				/* 12, mode = manual vehicle	*/
+UI_UI_EXCEPTS_38	"ruut"					/* 6			*/
+UI_UI_EXCEPTS_39	"aut"					/* 6			*/
+UI_UI_EXCEPTS_40	"<käsinruud/auto poikkeuksille jotka eivät liity tilaukseen>"	/* count chars	*/
+UI_UI_EXCEPTS_41	"väärä"				/* 15, invalid zone # entered	*/
+UI_UI_EXCEPTS_42	"nro syötetty"				/* 15, invalid zone # entered	*/
+UI_UI_EXCEPTS_43	"<ruutnr>"
+UI_UI_EXCEPTS_44	"<superruut. ei sallita>"
+UI_UI_EXCEPTS_45	"<autonro>"
+UI_UI_EXCEPTS_46	"<poistu ensin KÄS_AUT tai KÄS_RUUD -tilasta>"
+UI_UI_EXCEPTS_47	"<HYVKS/HYLK ei sallittu käsinruudutus/autonjako -tilassa>"	/* count chars	*/
+UI_UI_EXCEPTS_48	"poikk.rivi ="				/* 30, exception line = */
+UI_UI_EXCEPTS_49	"<tilaustiet.>"
+UI_UI_EXCEPTS_50	"FIFO"
+UI_UI_EXCEPTS_51	"<tilaustied..... PAHA VIRHE>"
+UI_UI_EXCEPTS_52	"<poikk.tiet. FIFO:on>"
+UI_UI_EXCEPTS_53	"<Jakotilaus>"
+UI_UI_EXCEPTS_54	"<virhe tilauks.päivityks. PAHA VIRHE>"
+UI_UI_EXCEPTS_55	"<lukitt. tilaustietueiden vapauttamisvirhe>"
+UI_UI_EXCEPTS_56	"<jatka>"
+UI_UI_EXCEPTS_57	"<tilaustietueitt. päiv.virhe.... PAHA VIRHE>"
+UI_UI_EXCEPTS_58	"<tilaustietueen lukon vapauttamisvirhe>"
+UI_UI_EXCEPTS_59	"<autotietueen päivitysvirhe.... poikkeus hoidettu>"
+UI_UI_EXCEPTS_60	"<väärä auton numero>"
+UI_UI_EXCEPTS_61	"<autotietueen päivitysvirhe>"
+UI_UI_EXCEPTS_62	"<autotietueen lukon vapautt.virhe>"
+UI_UI_EXCEPTS_63	"<pulmia MSGLOG tiedostossa>"
+UI_UI_EXCEPTS_64	"Lähtien"				/* 7, From 10/29/90 at 1:00 to 10/31/90 */
+UI_UI_EXCEPTS_65	"  "				/* 7, From 10/29/90 at 1:00 to 10/31/90 */
+UI_UI_EXCEPTS_66	"Saakka:"				/* 7, From 10/29/90 at 1:00 to 10/31/90 */
+UI_UI_EXCEPTS_67	"<poikk.kriteeriot muutumattomia>"
+UI_UI_EXCEPTS_68	"Ei voi hyväksyä jakotilauksena" /* 80 */
+UI_UI_EXCEPTS_69        "<erikoisvararuutuja ei sallita>"
+UI_UI_EXEC_P_1	"tilaustiedosto"				/* 20, name/type of file	*/
+UI_UI_EXEC_P_2	"tilaustiedosto"				/* 20, name/type of file     */
+UI_UI_EXEC_P_3	"historiatiedosto"			/* 20, name/type of file     */
+UI_UI_EXEC_P_4	"alaruututiedosto"				/* 20, name/type of file     */
+UI_UI_EXEC_P_5	"kadunnimitiedosto"				/* 20, name/type of file     */
+UI_UI_EXEC_P_6	"katutyyppitiedosto"				/* 20, name/type of file     */
+UI_UI_EXEC_P_7	"risteystiedosto"			/* 20, name/type of file     */
+UI_UI_EXEC_P_8	"ruututiedosto"				/* 20, name/type of file     */
+UI_UI_EXEC_P_9	"autotiedosto"				/* 20, name/type of file     */
+UI_UI_EXEC_P_10	"ajajatiedosto"				/* 20, name/type of file     */
+UI_UI_EXEC_P_11	"tilarivi"				/* 20, name/type of file - user status	*/
+UI_UI_FTNKEY_1	"<väärä toimintonäppäin>"
+UI_UI_FTNKEY_2	" Komento: "				/* 10, keep beg and trailing spaces */
+UI_UI_FTNKEY_3	"(tulee loppua  <SEND> tai <CR> )"
+UI_UI_FTNKEY_4	"<vain numer>"
+UI_UI_FTNKEY_5	"<pvm/aika on vanha; tarkista ja syötä uudelleen>"	/* count chars	*/
+UI_UI_FTNKEY_6	"<noutokadun nimi>"
+UI_UI_FTNKEY_7	"<tilaus>"				/* unable to zone call <call>	*/
+UI_UI_FTNKEY_8	"<läh/läh_uud -näppäin tästä näytöstä>"
+UI_UI_FTNKEY_9	"<kutsu send()>"
+UI_UI_FTNKEY_10	"<lp:n 'pipe' ei avaudu>"		/* 'pipe' and 'ep' are technical terms for unix.	*/
+UI_UI_FTNKEY_11	"kirjoittimella"				/* 20, printing on printer xyz	*/
+UI_UI_FTNKEY_12	"<aikaisempaa näyttöä ei säästetty>"
+UI_UI_FTNKEY_13	"<katkaisunäppäintä ei tästä näytöstä>"
+UI_UI_FTNKEY_14	"<autojen käsinvälitys>"
+UI_UI_FTNKEY_15	"<välitys ei sallittu jakotilaukselle>"
+UI_UI_FTNKEY_16	"<tilaustietue>"				/* Unable to read record from disk ... 	*/
+UI_UI_FTNKEY_17	"<ei voi vapauttaa tilaustietueen lukkoa>"
+UI_UI_FTNKEY_18	"<poikk.tiet. to FIFO:on>"
+UI_UI_FTNKEY_19	"<pito-näpp. tästä näytöstä>"		/* Invalid field entered ... 	*/
+UI_UI_FTNKEY_20	"<pito-näpp>"				/* Not allowed to execute ...	*/
+UI_UI_FTNKEY_21	"pito ei sallittu tilauksille joilla"	/* 31, hold not allowed for calls with assigned status */
+UI_UI_FTNKEY_22	"tila"				/* 10, hold not allowed for calls with assigned status */
+UI_UI_FTNKEY_23	"<pito ei sallittu jakotilauksille>"
+UI_UI_FTNKEY_24	"<kyselynäpp. tästä näytöstä>"	/* Not allowed to execute ...	*/
+UI_UI_FTNKEY_25	"<tilausta ei merkitty>"
+UI_UI_FTNKEY_26	"<jatka>"				/* Call sent for dispatcher approval	*/
+UI_UI_FTNKEY_27	"<peruutusnäpp. tästä näytöstä>"		/* Not allowed to execute ...	*/
+UI_UI_FTNKEY_28	"<lähetä keskuks. -näpp. tästä näytöstä>"	/* Not allowed to execute ...	*/
+UI_UI_FTNKEY_29 "Ingen bil finns tillgänglig för närvarande. OK?"
+UI_UI_FTNKEY_30 "Beställningen måste zonas"
+UI_UI_INIT_1	"Ei voi saada tty-numeroa\n"		/* 79, tty = terminal		*/
+UI_UI_INIT_2	"VIRHETIEDOSTO"				/* 30, Unable to open file ...	*/
+UI_UI_INIT_3	"KÄYTTÄJÄTIEDOSTO"				/* 30, Unable to open file ...  */
+UI_UI_INIT_4	"TILAUSTIEDOSTO"				/* 30, Unable to open file ...  */
+UI_UI_INIT_5	"TILAUSLISTATIEDOSTO"				/* 30, Unable to open file ...  */
+UI_UI_INIT_6	"OSOITETIEDOSTO"				/* 30, Unable to open file ...  */
+UI_UI_INIT_7	"ALARUUTUTIEDOSTO"				/* 30, Unable to open file ...  */
+UI_UI_INIT_8	"KADUNNIMITIEDOSTO"				/* 30, Unable to open file street name file  */
+UI_UI_INIT_9	"KATUTYYPPITIEDOSTO"				/* 30, Unable to open file street type file  */
+UI_UI_INIT_10	"PAIKKATIEDOSTO"				/* 30, Unable to open file ...  */
+UI_UI_INIT_11	"PAIKANNIMITIEDOSTO"				/* 30, Unable to open file place/name file  */
+UI_UI_INIT_12	"RISTEYSTIEDOSTO"				/* 30, Unable to open file intersection file  */
+UI_UI_INIT_13	"RUUTUTIEDOSTO"				/* 30, Unable to open file ...  */
+UI_UI_INIT_14	"AUTOTIEDOSTO"				/* 30, Unable to open file ...  */
+UI_UI_INIT_15	"AJAJATIEDOSTO"				/* 30, Unable to open file ...  */
+UI_UI_INIT_16	"TILARIVITIEDOSTO"				/* 30, Unable to open file user status file  */
+UI_UI_INIT_17	"VALMISSANOMATIEDOSTO"				/* 30, Unable to open file canned message  */
+UI_UI_INIT_18	"Valmissanoman nro ei sovi"
+UI_UI_INIT_19	"LUPATIEDOSTO"				/* 30, Unable to open file ...  */
+UI_UI_INIT_20	"<laskin-fifo>"			/* Unable to write to file ... */
+UI_UI_INIT_21	"Kuvauksessa annettu väärä oletusyhtiö"
+UI_UI_INIT_22	"Ota yhteys systeeminhoitajaan pulman selvittämiseksi."
+UI_UI_INIT_23	"Antamasi oletusyhtiö ei ole käytössä."
+UI_UI_INIT_24	"Sinulla ei ole lupaa käyttää oletusyhtiötä."
+UI_UI_INIT_25	"VIRHE: Käyttömuistissa ristiriita. Aloita uudelleen."
+UI_UI_INIT_26	"Sinulla on käyttäjätiedostossa väärä oletusnäyttö."
+UI_UI_INIT_27	"Sinulla on käyttäjätiedostossa väärä oletusetsintänäyttö."
+UI_UI_MESG_1	"<toistoviestejä voi lähettää vain keskus>"	/* count chars	*/
+UI_UI_MESG_2	"<viesti lähetetty>"			/* Record updated ... 	*/
+UI_UI_MESG_3	"Toista (K/E)"				/* See language.h for Y/N conversion */
+UI_UI_MESG_4	"Yhtiö"					/* count chars		*/
+UI_UI_MESG_5	"Kelle"					/* count chars          */
+UI_UI_MESG_6	"Valm.san."				/* count chars          */
+UI_UI_MESG_7	"Taajuus"				/* count chars          */
+UI_UI_MESG_8	"Voim"					/* count chars          */
+UI_UI_MESG_9	"Pvm"					/* count chars          */
+UI_UI_MESG_10	"Aika"					/* count chars          */
+UI_UI_MESG_11	"Viestiteksti"				/* count chars          */
+UI_UI_MESG_12	"<muoto on pp.kk.vv>"			/* modify for approp. language	*/
+UI_UI_MESG_13	"<muoto on TT:MM>"			/* modify for approp. language	*/
+UI_UI_MESG_14	"Toista"				/* 20, Invalid field entered, Repeat key stroke */
+UI_UI_MESG_15	"Valmissanoma nro"				/* 20				*/
+UI_UI_MESG_16	"Ei voi lukea valmissanomaa nro"		/* 30				*/
+UI_UI_MESG_17	" <Usein>"				/* Invalid field entered ...	*/
+UI_UI_MESG_18	"Läht"					/* 10, From Monday at 10:00 12/31/90 	*/
+UI_UI_MESG_19	"   "					/* 10, From Monday at 10:00 12/31/90    */
+UI_UI_MESG_20	"Ei enempää postiviestejä"
+UI_UI_MESG_21	"Aikaisemp. postiviest. ei säästetty"
+UI_UI_MESG_22	"<viesti säästetty>"
+UI_UI_MESG_23	"<viesti poistettu>"
+UI_UI_MESG_24	"Ei postiviestejä"			/* 30			*/
+UI_UI_MESG_25	"<toistoviestitiedosto>"			/* Unable to update record on file ... 	*/
+UI_UI_MESG_26	"Ei lisää toistoviestejä"
+UI_UI_MESG_27	"<muokkaa_toistoviest -näytöstä>"
+UI_UI_MESG_28	"Ei toistoviestejä"
+UI_UI_MESG_29	"Saajat: *=kaikki, V=välitt, O=ottaja, J=ohj., K=Käyttäjä, T=taksi, A=ajaja, R=ruud. olevat ajajat"
+UI_UI_MESG_30	"'Saaja'-kenttä"
+UI_UI_MESG_31	"On annettava numero tai '*'"
+UI_UI_MISC_1	"VIESTIT ="				/* 10			*/
+UI_UI_MISC_2	"Väärä TTY-numero:"			/* 30, TTY = terminal	*/
+UI_UI_MISC_3	"MINUUTIT"				/* 7			*/
+UI_UI_MISC_4	"<ei tarpeeksi ennakkoa ennakkotilaukselle>"
+UI_UI_MISC_5	"<annettu aika on liian kaukana edessä>"
+UI_UI_MISC_6	"väärä syöttö jaetussa muistissa taksan laskemiseen"	/* 32	*/
+UI_UI_MISC_7	"<taksatied.>"				/* Unable to open file ...	*/
+UI_UI_MISC_8	"<TILITIEDOSTO>"			/* Unable to open file ...      */
+UI_UI_MISC_9	"<laskutusnro>"				/* Invalid field entered charge number	*/
+UI_UI_MISC_10	"<tilitiedosto>"			/* Unable to open file ...      */
+UI_UI_MISC_11	"<kunta>"				/* Invalid field entered...	*/
+UI_UI_MISC_12	"KOMMENTTI:"
+UI_UI_PRT_DEF_1	"<väärä oletusyhtiö>"
+UI_UI_PRT_DEF_2	"L"					/* 1, Char for Cars. See new constant in language.h	*/
+UI_UI_PRT_DEF_3	"MINUUTIT"				/* 7				*/
+UI_RESP_1	"KAIKK. TIL. ETS."			/* count chars			*/
+UI_RESP_2	"RUUTUTILAUSKOMENTO"			/* count chars                  */
+UI_RESP_3	"HYVKS/HYLK POIKKEUS"		/* count chars                  */
+UI_RESP_4	"TIL.KIRJAUS"				/* count chars                  */
+UI_RESP_5	" EI MITÄÄN"				/* count chars                  */
+UI_RESP_6	"response time stat will not be reported"	/* count chars                  */
+UI_RESP_7	"KÄYT TN"				/* count chars                  */
+UI_RESP_8	"ALOITUSPVM"				/* count chars                  */
+UI_RESP_9	"ALOIT.AIKA"				/* count chars                  */
+UI_RESP_10	"LOP.PVM"				/* count chars                  */
+UI_RESP_11	"LOP.AIKA"				/* count chars                  */
+UI_RESP_12	"KOMENNON NIMI"			/* count chars                  */
+UI_RESP_13	"KOMENTOMÄÄRÄ"			/* count chars                  */
+UI_RESP_14	"KESKIM. VASTAUSAIKA"			/* count chars                  */
+UI_RESP_15	"PISIN VASTAUSAIKA"			/* count chars                  */
+UI_RESP_16	"PISIN VASTAUKSEN KESTO"		/* count chars                  */
+UI_UI_SSTAT_1	" Yhtiö  "				/* 8, keep leading and trailing space	*/
+UI_UI_SSTAT_2	"   Autonro "				/* 13, keep leading and trailing space  */
+UI_UI_SSTAT_3	"  Ajajan TN "				/* 11, keep leading and trailing space  */
+UI_UI_SSTAT_4	" Lyhyt Mitt "				/* 13, keep leading and trailing space  */
+UI_UI_SSTAT_5	" Puhepyyntö "				/* 13, keep leading and trailing space  */
+UI_UI_SSTAT_6	" MID "	  				/* 7, keep leading and trailing space, radio frequency id */
+UI_UI_SSTAT_7	" Ajajan nimi "				/* 13, keep leading and trailing space  */
+UI_UI_SSTAT_8	" Nykyinen tila "			/* 16, keep leading and trailing space  */
+UI_UI_SSTAT_9	" Myöh mitt  "				/* 13, keep leading and trailing space  */
+UI_UI_SSTAT_10	" Viestit    "				/* 13, keep leading and trailing space  */
+UI_UI_SSTAT_11	" Auton ominais. "			/* 16, keep leading and trailing space  */
+UI_UI_SSTAT_12	" Aloitus aika "				/* 11, keep leading and trailing space  */
+UI_UI_SSTAT_13	" Tilauks "				/* 7, keep leading and trailing space  */
+UI_UI_SSTAT_14	" Ruutuun krt    "				/* 12, keep leading and trailing space */
+UI_UI_SSTAT_15	" Ei-hyvks  "				/* 13, keep leading and trailing space  */
+UI_UI_SSTAT_16	" Kyselyitä   "				/* 13, keep leading and trailing space  */
+UI_UI_SSTAT_17	" Ajajaominais "			/* 15, keep leading and trailing space  */
+UI_UI_SSTAT_18	" Lop. aika "				/* 11, keep leading and trailing space  */
+UI_UI_SSTAT_19	" Käsip "				/* 7, keep leading and trailing space  */
+UI_UI_SSTAT_20	" Ehd.ruutuun "				/* 12, keep leading and trailing space */
+UI_UI_SSTAT_21	" Hylkäyks    "				/* 13, keep leading and trailing space  */
+UI_UI_SSTAT_22	" Kutsut    "				/* 13, keep leading and trailing space  */
+UI_UI_SSTAT_23	" Hätätila "			/* 14, keep leading and trailing space  */
+UI_UI_SSTAT_24	" Pois "					/* 5, keep leading and trailing space  */
+UI_UI_SSTAT_25	" Välitks   "				/* 11, keep leading and trailing space  */
+UI_UI_SSTAT_26	" Tarj  "				/* 7, keep leading and trailing space  */
+UI_UI_SSTAT_27	" KV ilmoit. "				/* 12, keep leading and trailing space */
+UI_UI_SSTAT_28	" Taukoja     "				/* 13, keep leading and trailing space  */
+UI_UI_SSTAT_29	" Jullikat   "				/* 13, keep leading and trailing space  */
+UI_UI_SSTAT_30	"-----------------------------------------Y H T I Ö N K A T T A V A  Y H T E E N V E T O---------------------------------------------"
+$					/* 131 chars, center text	*/
+UI_UI_SSTAT_31	"              Nyt   Tänään                   Nyt   Tänään                                                                    "
+$					/* 131 chars, phrases must line up with current columns	*/	
+UI_UI_SSTAT_32	"Hätätilat"		/* 11, See attached sheet for descriptions of the following.*/
+UI_UI_SSTAT_33	"Aloitus"		/* 11           */
+UI_UI_SSTAT_34	"Lopetus"		/* 11           */
+UI_UI_SSTAT_35	"Käsipysty"		/* 11           */
+UI_UI_SSTAT_36	"Tarj til"		/* 11           */
+UI_UI_SSTAT_37	"Ruudussa"		/* 11           */
+UI_UI_SSTAT_38	"Ehd ruutuun"		/* 11           */
+UI_UI_SSTAT_39	"KV ilmoitus"		/* 11           */
+UI_UI_SSTAT_40	"Lyhyt mitt"		/* 11 		*/
+UI_UI_SSTAT_41	"Myöh mitt"		/* 11		*/
+UI_UI_SSTAT_42	"Herätyksiä"		/* 11		*/
+UI_UI_SSTAT_43	"Eihyvks"		/* 11		*/
+UI_UI_SSTAT_44	"Hylkäyks"		/* 11		*/
+UI_UI_SSTAT_45	"Taukoja"		/* 11           */
+UI_UI_SSTAT_46	"Puhepyyntö"		/* 11           */
+UI_UI_SSTAT_47	"Viestejä"		/* 11           */
+UI_UI_SSTAT_48	"Kyselyjä"		/* 11           */
+UI_UI_SSTAT_49	"Kutsuja"		/* 11           */
+UI_UI_SSTAT_50	"Jullikat"		/* 11           */
+UI_UI_SSTAT_51	"Jouten"			/* 11           */
+UI_UI_SSTAT_52	"Kiellossa"		/* 11           */
+UI_UI_SSTAT_53	"Tilauksia"			/* 11           */
+UI_UI_SSTAT_54	"Käyt YHT"		/* 10, ipc = interprocess communication	*/
+UI_UI_SSTAT_55	"Virhe viestin lähettämisessä KESKUKS"	/* 60, ipc = interprocess communication	*/
+UI_UI_SSTAT_56	"Virhe viestin lukemisessa KESKUKS"	/* 60, ipc = interprocess communication	*/
+UI_UI_SSTAT_57	"VIKA/ "		/* 6		*/
+UI_UI_SSTAT_58	"RUUTU  "		/* count chars	*/
+UI_UI_SSTAT_59	"KVILM   "		/* count chars  */
+UI_UI_SSTAT_60	"TAUKO/"		/* count chars  */
+UI_UI_SSTAT_61	"NOUTO/ "		/* count chars  */
+UI_UI_SSTAT_62	"HYVKS/ "		/* count chars  */
+UI_UI_SSTAT_63	"AJOTR/"		/* count chars  */
+UI_UI_SSTAT_64	"JOUT/"			/* count chars  */
+UI_UI_SSTAT_65	"<Ajaja ei löydy >"
+UI_UI_SSTAT_66	"LOPET"			/* 5, signed out*/
+UI_UI_SSTAT_67	"<yhtiö tn>"
+UI_UI_SSTAT_68	"yhtiö"
+UI_UI_SSTAT_69	"<yhtiö>"
+UI_UI_SSTAT_70	"<Yhtiötä ei vielä valittu>"
+UI_UI_SSTAT_71	"Autoa ei löydy"
+UI_UI_SSTAT_72	"Ajajaa ei löydy"
+UI_UI_SSTAT_73	"<Ajajatietuetta ei löydy"
+UI_UI_SSTAT_74	"Keskukselta tulevan sanoman lukuvirhe (msgrcv)."
+UI_UI_SSTAT_75  " Meter Status"    /* Can not be longer than 17 chars and must start with a space */
+UI_UI_SSTAT_76	"ON "
+UI_UI_SSTAT_77	"OFF"
+UI_UI_SSTAT_78	" Taksamittari"
+UI_UI_SSTAT_79  "-------- B I L A T T R I B U T       ------------------------------------ F ö R A R E  A T T R I B U T     -------------"
+UI_UI_SSTAT_80  "              Nu    Idag                     Nu    Idag  "
+UI_UI_STAT_1	"tilarivitiedosto"		/* 25, unable to write to file ... ( user status file )	*/
+UI_UI_SUBS_1	"tilaajatiedosto"	/* 25, unable to write to file ...	*/
+UI_UI_SUBS_2	"<tilaajatiedosto>"	/* unable to write to file ...	*/
+UI_UI_SUBS_3	"<läh/läh_toistonäp tästä näytöstä>"		/* Not allowed to execute ...	*/
+UI_UI_SUBS_4	"<kutsu send()>"
+UI_UI_SUBS_5	"<noutokadun nimi>"
+UI_UI_SUBS_6	"<tilaus>"		/* Unable to zone call ...	*/
+UI_UI_SUBS_7	"<noutoaikaa ei annettu>"
+UI_UI_SUBS_8	"jatk.til.tied."		/* 25, unable to write to file ...  */
+UI_UI_SUBS_9	"jatk.til.tied."	/* Unable to read record from disk...	*/
+UI_UI_SUBS_10	"ei voi vapauttaa jatk.til.tied. lukkoa"
+UI_UI_SUBS_11   "Jatkuva tilaus on päivitetty.  Odottava tilaus %d täytyy mahdollisesti päivittää."
+UI_UI_SUBS_12   "Jatkuva tilaus on päivitetty.  Odottava tilaus %d ja %d täytyy mahdollisesti päivittää."
+UI_SYSERR_1     "COMM LINK TO ACC"      /* do not translate */
+UI_SYSERR_2     "ACC-KISS INTERFACE"    /* do not translate */
+UI_SYSERR_3     "NAK ON CALL ASSIGN"/* do not translate */
+UI_SYSERR_4     "VEHICLE REG/DEREG"/* do not translate */
+UI_SYSERR_5     "BID LIST IS FULL"/* do not translate */
+UI_SYSERR_6     "ACC ALARM"             /* do not translate */
+UI_SYSERR_7     "INACTIVE ACC ALARM"    /* do not translate */
+UI_UI_UNZONED_1	"ruuduttam. osoitetied"	/* Unable to open ...	*/
+UI_UI_UUD_1	"---------------------------------------------- Käyttäjäoletukset ------------------------------------------------------------------"
+$					/* Center text in 131 spaces	*/
+UI_UI_UUD_2	"Yhtiö:"		/* count chars			*/
+UI_UI_UUD_3	"Til.tyyp:"		/* count chars                  */
+UI_UI_UUD_4	"Kunta:"			/* count chars                  */
+UI_UI_UUD_5	"Näyttö:"		/* count chars                  */
+UI_UI_UUD_6	"Etsi:"		/* count chars                  */
+UI_UI_UUD_7	"-------------------------------------------- Poikkeuks./etsintäkriteerit -----------------------------------------------"
+$					/* 131, center text in 131 chars	*/
+UI_UI_UUD_8	"Yhtiö(t):"		/* count chars                  */
+UI_UI_UUD_9	"Ruud./Superruud:"	/* count chars                  */
+UI_UI_UUD_10	"Oletusennakkoaika %:"	/* count chars                  */
+UI_UI_UUD_11	"Muutoks. aika-arv:"	/* count chars                  */
+UI_UI_UUD_12	"..Poikk.ryhmät..     .................................................Poikkeustyypit........................................."
+$					/* 131, center text in 131 chars	*/
+UI_UI_UUD_13	"Kaikk ryhm"		/* count chars                  */
+UI_UI_UUD_14	"<uud_ck_fleet() kutsu>"
+UI_UI_UUD_15	"<kunta>"		/* invalid field entered...     */
+UI_UI_UUD_16	"<til.tyyp>"		/* invalid field entered...	*/
+UI_UI_UUD_17	"<vain numer>"		/* invalid field entered...     */
+UI_UI_UUD_18	"<näytön nimi>"		/* invalid field entered...     */
+UI_UI_UUD_19	"<ets.nimi>"		/* invalid field entered...     */
+UI_UI_UUD_20	"<käyt. oletusarvo '1' >"	/* invalid field entered... */
+UI_UI_UUD_21	"<ruutu/sup.rt nro>"	/* invalid field entered...     */
+UI_UI_UUD_22	"<uud_ck_group() kutsu>"
+UI_UI_UUD_23	"<ennakkoprosentti>"	/* invalid field entered...     */
+UI_UI_UUD_24	"<ajan arvio käsin>"	/* invalid field entered...     */
+UI_UI_UUD_25	"<oletusyhtiö muuttumaton>"	/* invalid field entered...     */
+UI_UI_UUD_26	"yhtiö"
+UI_UI_UUD_27	"<käytetty oletusta EI>"	/* modify for new value for NO	*/
+UI_UI_UUD_28	"<poikk.ryhmätiedosto>"	/* Unable to open file ...	*/
+UI_UI_ZSTAT_1	" Yhtiö  "			/* count chars			*/
+UI_UI_ZSTAT_2	" Vararuudut:    ruut ti au kv ruut ti au kv ruut ti au kv ruut ti au kv "
+$		/* count chars. Positions must line up with current positions	*/
+$		/* cl = call, vh = vehicle, en = enroute			*/
+UI_UI_ZSTAT_3	" Avoimet tilauks. "		/* count chars	*/
+UI_UI_ZSTAT_4	" Aikarajatil. "		/* count chars  */
+UI_UI_ZSTAT_5	" Kirjat. aut.: "		/* count chars  */
+UI_UI_ZSTAT_6	" KV autoja: "		/* count chars  */
+UI_UI_ZSTAT_7	"   Ruutu"			/* count chars, Keep leading and trailing spaces  */
+UI_UI_ZSTAT_8 " ruut ti au kv et"
+$				/* Positions must remain constant. cl = call, vh = vehicle, en = enroute	*/
+UI_UI_ZSTAT_9	"<Ei lisäsivuja siinä suunnassa>"
+UI_UI_ZSTAT_10	"ruutudetaljia ei löydy"
+UI_UI_ZSTAT_11	"<yhtiö tn>"
+UI_UI_ZSTAT_12	"yhtiö"				/* 30		*/
+UI_UI_ZSTAT_13	"<yhtiö>"
+UI_UI_ZSTAT_14	"<ruutu ei RUUTU-tiedostossa>"
+UI_UI_ZSTAT_15	"ruutu"
+UI_UI_ZSTAT_16	" Ennakkotilaus "
+UI_US_CL_1	"käyttäjätiedosto"
+UI_VH_DR_NO_1	"<menosuunnassa>"
+UI_VH_DR_NO_2	" Aloitus  "			/* count chars, keep leading and trailing space	*/
+UI_VH_DR_NO_3	" Lopetus "			/* count chars, keep leading and trailing space */
+UI_VH_DR_NO_4	" Hätätila  "			/* count chars, keep leading and trailing space */
+UI_VH_DR_NO_5	" Hätä pois "			/* count chars, keep leading and trailing space */
+UI_VH_DR_NO_6	" Poistopvm "		/* count chars, keep leading and trailing space */
+UI_VH_DR_NO_7	" Paluupvm   "		/* count chars, keep leading and trailing space */
+UI_VH_DR_NO_8	" Poiston syy "		/* count chars, keep leading and trailing space */
+UI_VH_DR_NO_9	" Matk "			/* count chars, keep leading and trailing space, passenger */
+UI_VH_DR_NO_10	" Toi "				/* count chars, keep leading and trailing space, delivery  */
+UI_VH_DR_NO_11	"X-tyyp"			/* count chars, keep leading and trailing space */
+UI_VH_DR_NO_12	" Rivi:    "			/* count chars, keep leading and trailing space */
+UI_VH_DR_SCRN_1	"    Yh AUTO  AJAJ  MID    REKIST NRO    MERKKI     MALLI     VÄRI      PUHELIN    MDT MITT ......OMINAISUUDET.....                  "
+$				/* Text positions must remain constant.	*/
+UI_VH_DR_SCRN_2	"    Yh AJAJ  AUTO         AJAJAN NIMI            REKIST. NRO     UUSINT   TAKSILUP    UUSINT   ......OMINAISUUDET.....  TILAP       "
+$				/* Text positions must remain constant. */
+UI_VH_DR_SCRN_3	" Rivi:    "			/* count chars		*/
+UI_ZONE_ADDR_1	"(NOUTO:"			/* 7          */
+UI_ZONE_ADDR_2	"(PÄÄM:"			/* 7          */
+
+UI_RESTRICT_TC_1	"Pyydetty noutoaika ei ole vapaana.  Valitse toinen:"		/* max 65 */
+UI_RESTRICT_TC_2	"Aika"					/* max 6 */
+UI_RESTRICT_TC_3	"Vapaana"				/* max 10 */
+UI_RESTRICT_TC_4	"Valitse ajanjakso jossa on vapaita tilauksia"						/* max 80 */
+UI_RESTRICT_TC_5	"Valitse vapaa ajanjakso Ä1..6Å"								/* max 80 */
+UI_RESTRICT_TC_6	"Virhe:  Ei tarpeeksi tilaustietoja"										/* max 80 */
+UI_RESTRICT_TC_7	"Ennakkotilauksille on oltava yhtiö"												/* max 80 */
+UI_RESTRICT_TC_8	"Ennakkotilaukset on ruudutettava"													/* max 80 */
+UI_RESTRICT_TC_9	"Vaihtoehtoisia aikoja ei ole vapaana 6:n ajanjakson sisällä.  Valitse toinen pvm/aika."	/* max 80 */
+UI_RESTRICT_TC_10	"Pyydetty ajanjakso ei ole vapaana.  Muuta ennenkuin lähetät tilauksen"	/* max 80 */
+UI_RESTRICT_TC_11 "Inga förbeställningtider tillgängliga i denna zon"
+UI_FLAT_RATE_1	"Missing Information for Flat Rate Calculation"
+UI_FLAT_RATE_2	"Problem with Time Periods Search"
+UI_FLAT_RATE_3	"Unable to open Tranpsport Category Table"
+UI_FLAT_RATE_4	"Unable to find Transport Category"
+UI_FLAT_RATE_5	"Unable to open RATE database"
+UI_FLAT_RATE_6	"Unable to find Base Rate Data ( time period, trans cat )"
+UI_FLAT_RATE_7	"Databas i City Navigator ej synkroniserad! Meddela dataenheten!"
+UI_FLAT_RATE_8	"Stämmer hämt-adressen:"
+UI_FLAT_RATE_9	"Unable to open RATE database (RELATIONS)"
+UI_FLAT_RATE_10	"Unable to open RATE database (RELATION DATA)"
+UI_FLAT_RATE_11	"Unable to open RATE database (HOLIDAY)"
+UI_FLAT_RATE_12	"Unable to open RATE database (TIME PERIODS)"
+UI_FLAT_RATE_13	"Unable to open RATE database (SEASONS)"
+UI_FLAT_RATE_14	"City Navigator Out of Service"
+UI_FLAT_RATE_15 "För sent att uppdatera fastpris!"
+UI_CL_MSG_1	"Call Message Entry Screen       "
+UI_CL_MSG_2	"Skrivare"
+UI_CL_MSG_3	"Taxameter"
+UI_CL_MSG_4     "Medellande"
+UI_CL_MSG_5     "<blank line>"
+$ Place new text here. Don't worry about file name. Placing new text
+$ at end (instead of in the middle) prevents the text pointers from
+$ getting out of sync.
+UI_TEXT_1	"Ei voi aloittaa. Dispatch joko ei ole toiminnassa tai on vielä aloittamassa."
+UI_TEXT_2	"Yritä hetken kuluttua uudelleen"
+UI_TEXT_3	"Välityskatko"		/* 80 */
+UI_TEXT_4   "Ruutu ei ole ruututiedostossa"      /* 80 */
+UI_TEXT_5   "Ajajan TN ei ole ajajatiedostossa"   /* 80 */
+UI_TEXT_6   "Auton TN ei ole autotiedostossa" /* 80 */
+UI_TEXT_7	"Ei voi välittää ennakkotilauksia. Valitse ensin NYT." /* 80 */
+UI_TEXT_8	"Suurin arvo on 9999,99" /* 80; insert appropriate monetary separator */
+UI_TEXT_9	"Oletko varma, että haluat poistaa tämän jatkuvan tilauksen (K/E)?"
+UI_TEXT_10	"Ei voi poistaa jatkuvan tilauksen tietuetta"
+UI_TEXT_11	"Jatkuvan tilauksen tietue poistettu"
+UI_TEXT_12	"Jatk.til.nro"
+UI_TEXT_13	"Toistoviestejä  ei sallita valitulle vastaanottajalle" /* 80 */
+UI_TEXT_14	"Viesti poistettu" /* 80 */
+UI_TEXT_15	"H Ä T Ä H Ä L Y T Y S !" /* 80, Maintain spaces between characters */
+UI_TEXT_16	"Ajaja on painanut auton hätäpaininta." /* 80 */
+UI_TEXT_17	"Uudista poikkeusnäyttö nähdäksesi hätätilan." /* 80 */
+UI_TEXT_18	"Siirry poikkeusnäyttöön nähdäksesi hätätilanteen." /* 80 */
+UI_TEXT_19	"Paina <RETURN> jatkaaksesi" /* 80 */
+UI_TEXT_20	"Toinen välittäjä on hyväksynyt hätätilanteen." /* 80 */
+UI_TEXT_21	"Anna huomautus HÄTÄTILAN hyväksymisen oheen (paina RETURN kun olet valmis):" /* 80 */
+UI_TEXT_22	"Jos lähetät yksittäiselle ajajalle tai taksille, sinun täytyy käyttää yksittäistä yhtiötä"
+UI_TEXT_23	"On määriteltävä yksittäinen ruutu"
+UI_TEXT_24	"Anna '*', jos til. menee välittäjille, til.ottajille tai systeeminhoitajille"
+UI_TEXT_25	"On annettava ruutunumero"
+UI_TEXT_26	"UUSI"
+UI_TEXT_27	"VANHA"
+UI_TEXT_28	"Ei enempää viestejä"
+UI_TEXT_29	"Ei seuraavaa postilaatikkoviestiä"
+UI_TEXT_30	"Ei edellistä postilaatikkoviestiä"
+UI_TEXT_31	"Annettua käyttäjätyyppiä ei ole"
+UI_TEXT_32	"On annettava ajoneuvon numero ensin"
+UI_TEXT_33	"Tilauspuhelulla on jo PITO"
+UI_TEXT_34	"LEVY ON MELKEIN TÄYNNÄ"
+UI_TEXT_35      "PÄÄTE YHT. EI TOIMI"
+UI_TEXT_36      "CM:1 NAK MDT"
+UI_TEXT_37      "CM:1 NAK PRINT"
+UI_TEXT_38      "CM:1 NAK TXM"
+UI_TEXT_39      "CM:2 NAK MDT"
+UI_TEXT_40      "CM:2 NAK PRINT"
+UI_TEXT_41      "CM:2 NAK TXM"
+UI_TEXT_42      "CM:3 NAK MDT"
+UI_TEXT_43      "CM:3 NAK PRINT"
+UI_TEXT_44      "CM:3 NAK TXM"
+UI_TEXT_45      "API-KLIENT AVBROTT"
+UI_TEXT_46      "API-KLIENT STARTAD"
+UI_TEXT_47      "SKRIVARE"
+UI_TEXT_48      "TAXAMETER"
+UI_TEXT_49      "MDT"
+UI_TEXT_50      "To       :"
+UI_TEXT_51      "Message  :"
+UI_TEXT_52      "ACK"
+UI_TEXT_53      "Call Messages"
+UI_TEXT_54      "Call Msgs :"
+UI_TEXT_55      "Paina <RETURN> jatkaaksesi"
+UI_TEXT_56      "Moms"
+UI_TEXT_57      "Via-adress"
+UI_TEXT_58      "Faktura ref"
+UI_TEXT_59      "       BIL ATTRIBUT             "
+UI_TEXT_60      "       FÖR ATTRIBUT            "
+UI_TEXT_61	" ruudussa "
+UI_TEXT_62	"ketjussa"
+UI_TEXT_63      "Customer record has changed. Would you like to save these changes (Y/N)?"
+UI_TEXT_64      "Attribute Filters only valid for Broadcast Messages"
+UI_TEXT_65      "Attr. Filters:"
+UI_TEXT_66      "Driver Attribute Filters only valid for Driver Messages"
+UI_TEXT_67      "Vehicle Attribute Filters only valid for Vehicle Messages"
+UI_TEXT_68      "Käytt Nimi:"
+UI_TEXT_69      "Kontant"
+UI_TEXT_70	"New Account"
+UI_TEXT_71	"Repeat Customer"
+UI_TEXT_72	"A-Number Unavailable"
+UI_TEXT_73	"ODOTTAA TAKSIN VAHVISTUSTA %s"
+UI_TEXT_74	"KUTSUN ON HYVÄKSYNYT AUTO %d             "
+UI_TEXT_75	"PAINA <RETURN> JATKAAKSESI     "
+UI_TEXT_76	"HALUATKO LOPETTA HAUN (K/E)"
+UI_TEXT_77	"KUTSUN VAHVISTUS"
+

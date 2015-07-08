@@ -1,0 +1,54 @@
+{
+|***********************************************************************
+|                 RCS INFO
+|
+|  @(#)  $RCSfile: acad.per,v $
+|  @(#)  $Revision: 1.3 $
+|  @(#)  $Date: 2005/04/21 06:52:15 $
+|  @(#)  $Author: jwelch $
+|  @(#)  $Source: /taxi-scan/taxi_proj/cvs/taxi-scan/src/forms/finnish/acad.per,v $
+|
+|  Copyright (c) 1994 - MobileSoft Consulting, Inc. Woodinville WA
+|
+|**********************************************************************/
+|ident "@(#) head:$RCSfile: acad.per,v $	$Revision: 1.3 $"
+}
+
+database mads
+screen
+{
+Tili
+    Yhti|   Tilin numero	 Account Address Nbr
+    [a]     [f000              ] [ b]
+Nouto-osoite
+    Katunumero             Kadun nimi                             Huoneisto Kunta         Postinro
+    [f002  ]               [f003                ]                 [f004 ]   [a3 ]         [f005 ]
+Yhteys
+    Numero
+    [f007              ]
+
+    Huomautus
+    [f008                          ]
+}
+end
+tables
+acadtmp
+fleet
+account
+attributes
+a = acadtmp.acad_fleet,REQUIRED, UPSHIFT, COMMENTS="Yhti|n tunnusnumero", LOOKUP JOINING * fleet.fl_id;
+f000 = acadtmp.acad_account,REQUIRED,UPSHIFT,COMMENTS="Tilin tai luottokortin numero", PICTURE="##################", LOOKUP JOINING * account.ac_nbr;
+b = acadtmp.acad_index,REQUIRED, COMMENTS="Number assigned to this Account Address";
+f002 = acadtmp.acad_st_nbr,RIGHT,COMMENTS="Asiakasosoitteen katunumero";
+f003 = acadtmp.acad_st_name,UPSHIFT,COMMENTS="Kadun nimi";
+f004 = acadtmp.acad_apartment, UPSHIFT, COMMENTS="Huoneiston numero";
+a3 = acadtmp.acad_city_name,UPSHIFT,COMMENTS="Kaupunki";
+f005 = acadtmp.acad_zip_code,COMMENTS="Postinumero";
+f007 = acadtmp.acad_phone_nbr, UPSHIFT, COMMENTS="Puhelinnumero";
+f008 = acadtmp.acad_comment, UPSHIFT, COMMENTS="Noutoalueen selitys karttatiedostosta";
+end
+instructions
+	delimiters "()";
+end
+
+

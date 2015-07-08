@@ -1,0 +1,325 @@
+/***********************************************************************
+*                 RCS INFO
+*
+*  @(#)  $RCSfile: ac_main.c,v $
+*  @(#)  $Revision: 1.7 $
+*  @(#)  $Date: 2004/02/02 18:55:32 $
+*  @(#)  $Author: jwelch $
+*  @(#)  $Source: /taxi-scan/taxi_proj/cvs/taxi-scan/src/auto_call/ac_main.c,v $
+*
+*  Copyright (c) 1994 - MobileSoft Consulting, Inc. Woodinville WA
+*
+***********************************************************************/
+
+static char rcsid[] = "$Id: ac_main.c,v 1.7 2004/02/02 18:55:32 jwelch Exp $";
+
+
+#include <stdio.h>
+#include <signal.h>
+#include <sys/types.h>
+#include <sys/resource.h>
+#include <sys/wait.h>
+#include <setjmp.h>
+#include <fcntl.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <sys/un.h>
+#include <netdb.h>
+#include <errno.h>
+#include <sys/param.h>
+#include <sys/time.h>
+#include <errno.h>
+
+#include "language.h"
+#include "taxipak.h"
+#include "taxi_error.h"
+#include "taxi_db.h"
+#include "AutoCall_private.h"
+#define DECLARING
+#include "ui_strdefs.h"
+#include "comm_strdefs.h"
+#include "writer_strdefs.h"
+
+#define TES_SVC   "TES_svc"
+int newsockfd;
+struct offsets *offset;
+char port;
+int death_process();
+static sigjmp_buf  xts_jmpbuf;
+
+int LostConnect()
+{
+  close( newsockfd );
+  exit( -1 );  
+}
+
+main ( argc, argv)
+     int  argc;
+     char **argv;
+{
+  int                   sockfd, clilen, childpid, fd, rc;
+  struct servent        *sp;
+  struct sockaddr_in    cli_addr, serv_addr;
+  char                  RecvBuf[132];
+  int                   NbrConnections = 1;
+  struct linger xlinger;
+  int intval;
+  int session = 0;
+  char nlspath[80];
+  static char put_nlspath[80];
+  int  putenv();
+  struct sigaction action;
+  sigset_t sig_set;
+  int ret_setmask=0;
+
+  strcpy(nlspath, "/usr/taxi/catalogs/finnish/%N.cat");
+  sprintf(put_nlspath, "NLSPATH=%s", nlspath);
+  putenv(put_nlspath);    
+  setlocale(LC_ALL, "");
+  open_catalog(&COMMON_m_catd, "common", 0, 0);
+  open_catalog(&UI_m_catd, "ui", 0, 0);
+  open_catalog(&WRITER_catd, "writer", 0, 0);
+
+  if ((sp = getservbyname( TES_SVC, "tcp")) == NULL)
+    {
+      perror("Unable to get TES service");
+      exit(-1);
+    }
+  
+  if ( (sockfd = socket(AF_INET, SOCK_STREAM, 0)) < 0)
+    perror("server: can't open stream socket");
+
+  intval = sizeof(struct linger);
+  if (getsockopt(sockfd, SOL_SOCKET, SO_LINGER, &xlinger, &intval) < 0)
+    {
+      perror("Get socket option failed: LINGER ");
+      return(-1);
+    }
+  
+  intval = sizeof(struct linger);
+  xlinger.l_onoff=0;
+  xlinger.l_linger=0;
+  if (setsockopt(sockfd, SOL_SOCKET, SO_LINGER, &xlinger, intval) < 0)
+    {
+      perror( "Set socket option failed: LINGER ");
+      return(-1);
+    }
+  if (setsockopt(sockfd, SOL_SOCKET, SO_REUSEADDR, &intval, sizeof(int)) < 0)
+    {
+      perror( "Set socket option failed: REUSEADDR ");
+      return(-1);
+    }
+  
+  bzero((char *) &serv_addr, sizeof(serv_addr));
+  serv_addr.sin_family = AF_INET;
+  serv_addr.sin_addr.s_addr = htonl(INADDR_ANY);
+  serv_addr.sin_port = sp->s_port;
+  
+  if (bind(sockfd, (struct sockaddr *) &serv_addr, sizeof(serv_addr)) < 0)
+    {
+      perror("server: can't bind local address");
+      exit( -1 );
+    }
+  
+  listen(sockfd, NbrConnections);
+
+  clilen = sizeof( cli_addr );
+
+  //  sigaction(SIGCHLD, SA_NOCLDWAIT);
+  //signal(SIGCHLD, SIG_IGN);  
+  while ( 1 )
+    {
+      //      signal(SIGCHLD,death_process);
+      sigsetjmp(xts_jmpbuf, 1);
+      signal(SIGCHLD, death_process);
+      newsockfd = accept( sockfd, ( struct sockaddr * ) &cli_addr, &clilen );
+      
+      if ( newsockfd <= 0 )
+	{
+	  perror( "Error on accept" );
+	  exit ( -1 );
+	}
+      ++session;
+      if ( session >= 1000 )
+	session = 1;
+
+      sigemptyset(&sig_set);
+      sigaddset(&sig_set, SIGCHLD);
+      ret_setmask=sigprocmask(SIG_SETMASK, &sig_set, NULL);
+      
+      rc = fork();
+
+      sigemptyset(&sig_set);
+      ret_setmask=sigprocmask(SIG_SETMASK, &sig_set, NULL);
+      
+      if ( rc == -1 )
+	{
+	  perror( "Error forking..." );
+	  exit( -1 );
+	}
+      
+      /** Child  **/
+      if ( rc == 0 )
+	{
+	  close( sockfd );
+	  //	  sigaction(SIGCHLD, SA_NOCLDWAIT);
+	  //	  signal(SIGCHLD, SIG_IGN);	            
+	  //	  signal( SIGURG, LostConnect );
+
+	  action.sa_handler = SIG_IGN;
+	  action.sa_flags = SA_NOCLDWAIT;
+	  sigaction(SIGCHLD, &action, NULL);
+	  signal(SIGCHLD, SIG_IGN);
+	  signal(SIGURG, LostConnect);
+	  
+	  ManageRequests( newsockfd, session );
+	  Client_to_AutoCall( newsockfd, NULL, TES_CLIENT_DISCONNECT, session );
+	  close( newsockfd );	  
+	  exit( -1 );
+	}
+      /** Parent **/
+      else
+	{
+	  close( newsockfd );
+	}
+    }
+
+  TerminateConnection( newsockfd );
+
+  exit(1);
+}
+
+TerminateConnection( sClient )
+{
+  close( sClient );
+  exit(-1);
+}
+
+ManageRequests( sClient, session )
+     int    sClient;
+     int    session;
+{
+  AC_MSG       *ClientMsg;
+  TES_MSG      *TESMsg;
+  int          msg_length, TES_type;
+  char         msgType[ TES_TYPE_LEN + 1 ];
+  char         RecvBuf[ BUFSIZ ];
+  char         *pRecvBuf;
+  int          done = 0, rc;
+
+  rc = open_table(STRNAME_FILE_ID, DB_READ_WRITE | DB_MANUAL_LOCK);
+  rc = open_table(ADDRESS_FILE_ID, DB_READ_WRITE | DB_MANUAL_LOCK);
+  rc = open_table(SUBZONE_FILE_ID, DB_READ_WRITE | DB_MANUAL_LOCK);
+  rc = open_table(GEOADDR_ADDR_FILE_ID, DB_READ_WRITE | DB_MANUAL_LOCK);
+  rc = open_table(GEOADDR_LINE_FILE_ID, DB_READ_WRITE | DB_MANUAL_LOCK);
+  rc = open_table(GEOADDR_POINT_FILE_ID, DB_READ_WRITE | DB_MANUAL_LOCK);
+  
+  
+  
+  while ( !done )
+    {
+      bzero( RecvBuf, sizeof( RecvBuf ) );
+      /** First read first two bytes to get message size **/
+      if ( ( rc = read( sClient, RecvBuf, AC_MSG_SIZE_LEN ) ) <= 0 )
+	return ( -1 );
+      
+      msg_length = (int) strtol( RecvBuf, ( char ** ) 0, 16 );
+
+      if ( ( msg_length > 256 ) || ( msg_length <= 0 ) )
+	continue;
+
+      pRecvBuf = &RecvBuf[2];
+
+      /* Reference Port */
+      if ( ( rc = read( sClient, pRecvBuf, 1 ) ) < 0 )
+	return( -1 );
+
+      /* decrement length since we've just read a one byte field */
+      --msg_length;
+
+      /* global port reference */
+      port = RecvBuf[2];
+      
+      pRecvBuf = &RecvBuf[3];
+      if ( ( rc = read( sClient, pRecvBuf, msg_length ) ) < 0 )
+	return( -1 );
+      
+      ClientMsg = ( AC_MSG * ) RecvBuf;
+      
+      TESMsg = ( TES_MSG * ) ClientMsg->MsgTES;
+      strncpy( msgType, TESMsg->TEStype, TES_TYPE_LEN );
+      TES_type = atoi(msgType);
+      Client_to_AutoCall( sClient, TESMsg, TES_type, session );
+      
+      switch ( TES_type )
+	{
+	case TES_STARTED:
+	  StartedRqst( sClient, session );
+	  break;
+	case TES_TERMINATE:
+	  TerminateRqst( sClient, session );
+	  break;
+	case TES_CANCEL_CALL:
+	  CancelCall( sClient, TESMsg, session );
+	  break;
+	case TES_GEN_EXCEPTION:
+	  GenKOReply( sClient, TES_KO, session );
+	  break;
+	case TES_UPDATE_CALL:
+	  GenKOReply( sClient, TES_KO, session );
+	  break;
+	case TES_GET_ACCT_INFO:
+	  AccountInfo( sClient, TESMsg, session );
+	  break;
+	case TES_REQ_ACCT_CALL:
+	  AccountCallRqst( sClient, TESMsg, session );
+	  break;
+	case TES_VALID_ACCT:
+	  AccountValidate( sClient, TESMsg, session );
+	  break;
+	case TES_GET_PROFILE:
+	  ProfileGet( sClient, TESMsg, session );
+	  break;
+	case TES_ADD_PROFILE:
+	  ProfileAdd( sClient, TESMsg, session );
+	  break;
+	case TES_UPDATE_PROFILE:
+	  ProfileUpdate( sClient, TESMsg, session );
+	  break;
+	case TES_REMOVE_PROFILE:
+	  ProfileRemove( sClient, TESMsg, session );
+	  break;
+	case TES_GET_ADDR:
+	  ProfileAddressGet( sClient, TESMsg, session );
+	  break;
+	case TES_UPDATE_ADDR:
+	  ProfileAddressUpdate( sClient, TESMsg, session );
+	  break;
+	case TES_ADD_ADDR:
+	  ProfileAddressAdd( sClient, TESMsg, session );
+	  break;
+	case TES_REMOVE_ADDR:
+	  ProfileAddressRemove( sClient, TESMsg, session );
+	  break;
+	default:
+	  GenKOReply( sClient, TES_KO, session );
+	  break;
+	}
+
+    }
+}
+	  
+
+death_process() 
+{
+        int pid; 
+        int status; 
+        struct rusage usage; 
+ 
+        while ((pid=wait3(&status,WNOHANG,&usage)) > 0) 
+	{
+
+	}
+	siglongjmp(xts_jmpbuf, 1);
+			
+}

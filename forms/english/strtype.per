@@ -1,0 +1,31 @@
+{
+|***********************************************************************
+|                 RCS INFO
+|
+|  @(#)  $RCSfile: strtype.per,v $
+|  @(#)  $Revision: 1.2 $
+|  @(#)  $Date: 1999/03/19 21:27:00 $
+|  @(#)  $Author: taxiadm $
+|  @(#)  $Source: /taxi-scan/taxi_proj/cvs/taxi-scan/src/forms/english/strtype.per,v $
+|
+|  Copyright (c) 1994 - MobileSoft Consulting, Inc. Woodinville WA
+|
+|**********************************************************************/
+|ident "@(#) head:$RCSfile: strtype.per,v $	$Revision: 1.2 $"
+}
+database mads
+screen
+{
+						STREET TYPE FILE MAINTENANCE
+
+Abbrev     Actual  Description
+[a0 ]      [a1 ]   [f000        ]
+}
+end
+tables
+strtype
+attributes
+a0 = strtype.st_abbrev,UPSHIFT,REQUIRED,COMMENTS="Street type or an abbreviation (e.g. ST)";
+a1 = strtype.st_actual,UPSHIFT,REQUIRED,COMMENTS="Actual street type, if an abbreviation (e.g. STR)";
+f000 = strtype.st_desc,UPSHIFT,COMMENTS="Street type full description";
+end

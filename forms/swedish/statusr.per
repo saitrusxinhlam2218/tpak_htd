@@ -1,0 +1,36 @@
+database mads
+screen
+{
+Bilpark  ID nr       Användarstatistik från   Användarstatistik till
+[a]      [f000]      [f001              ]     [f002              ]  
+
+Best     Passagerare Leverans  Typ "X"        Väckning         Borttagn     Retur       
+         [f007]      [f008]    [f009]         [f010]          [f011]        [f012]
+
+Best     Ej zonade   Avbest    Meddelanden    Man. tilldelade ]sidosatta    Undantag
+         [f013]      [f014]    [f015]         [f016]          [f017]        [f018]
+}
+end
+tables
+statusr
+attributes
+a = statusr.su_fleet,REQUIRED,UPSHIFT,NOUPDATE,COMMENTS="Bilpark ID";
+f000 = statusr.su_user_id,REQUIRED,RIGHT,NOUPDATE,COMMENTS="Användar ID" ;
+f001 = statusr.su_from_dt_tm,RIGHT,COMMENTS="Tidsperiodens början"; 
+f002 = statusr.su_to_dt_tm,RIGHT,COMMENTS="Tidsperiodens slut"; 
+f007 = statusr.su_pass_calls,RIGHT,COMMENTS="Antal passagerarbeställningar";
+f008 = statusr.su_del_calls,RIGHT,COMMENTS="Antal leveransbeställningar";
+f009 = statusr.su_typex_calls,RIGHT,COMMENTS="Antal beställningar av typ 'X'" ;
+f010 = statusr.su_wkup_calls,RIGHT,COMMENTS="Antal väckningsbetällningar";
+f011 = statusr.su_killed,RIGHT,COMMENTS="Antal best. som tagits bort av användaren under tidsperioden";
+f012 = statusr.su_callbacks,RIGHT,COMMENTS="Antal retursamtal som bearbetats av användaren under tidsp.";
+f013 = statusr.su_unzoned,RIGHT,COMMENTS="Antal ej zonade best. som skrivits in av användaren under tidsp. ";
+f014 = statusr.su_cancelled,RIGHT,COMMENTS="Antal beställningar som avbeställts av användaren under tidsp.";
+f015 = statusr.su_messages,RIGHT,COMMENTS="Antal meddelanden som skickats av anv. under tidsp.";
+f016 = statusr.su_man_assigns,RIGHT,COMMENTS="Antal best. som tilldelats manuellt av använd. under tidsp.";
+f017 = statusr.su_overrides,RIGHT,COMMENTS="Antal best. som tvångstilldelats av en trafikled.";
+f018 = statusr.su_exceptions,RIGHT,COMMENTS="Antal undantag som berabetats av en trafikled.";
+end
+instructions
+   delimiters "()";
+end

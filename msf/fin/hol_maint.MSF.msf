@@ -1,0 +1,37 @@
+$ #***********************************************************************
+$ #                 RCS INFO
+$ #
+$ #  @(#)  $RCSfile: hol_maint.MSF,v $
+$ #  @(#)  $Revision: 1.3 $
+$ #  @(#)  $Date: 1998/06/18 15:28:41 $
+$ #  @(#)  $Author: taxiadm $
+$ #  @(#)  $Source: /taxi-scan/taxi_proj/cvs/taxi-scan/src/msf/fin/hol_maint.MSF,v $
+$ #
+$ #  Copyright (c) 1994 - MobileSoft Consulting, Inc. Dublin, OH
+$ #
+$ #**********************************************************************/
+$#ident "@(#) head:$RCSfile: hol_maint.MSF,v $	$Revision: 1.3 $"
+
+$ static char rcsidÄÅ = "$Id: hol_maint.MSF,v 1.3 1998/06/18 15:28:41 taxiadm Exp $";
+
+$quote "
+$delset 1
+$set 1
+
+$ /*    NOTE TO THE TRANSLATOR                          */
+$ /*    Quoted text will be followed by a maximum string length if the  */
+$ /*    text length is different than the number of chars in the string.*/
+$ /*    If no string length is entered default to the current number of */
+$ /*    characters.  A comment about the string is also included where  */
+$ /*    necessary.                                                      */
+
+1	"Pyhäpäivän pvm"
+2	"Pyhäpäivän nimi"
+3       "hol_scr.out"
+4	"No record found, ADD first"
+5	"Pyhäpäivän vuosi"
+6	"Pyhäpäivän kuukausi"
+7	"Pyhäpäivän päivä"
+8	"Pyhäpäivän kuvaus"
+9	"Väärä syöttö, anna K tai E"
+10	"Väärä valinta - ole hyvä anna (L/U) lisätäksesi tai aloittaaksesi uuden"

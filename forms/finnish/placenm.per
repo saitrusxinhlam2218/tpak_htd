@@ -1,0 +1,36 @@
+database mads
+screen
+{
+						Paikannimitiedoston näyttö
+
+Hakemisto             Paikannimi                     Katunumero             Nimi                                   Kunta  Puoli       
+[f002              ]  [f000                ]         [f003  ]               [f001                ]                 [a3 ] [a]
+
+Postinro   Ala-ruutu X-koord                 Y-koord
+[f004 ]    [f005 ]   [f006                ]  [f007                ]
+
+Karttasivu     Karttaruutu    Huomautus                        Paikall
+[f08]          [a4  ]         [f009                          ] [c]
+}
+end
+tables
+placenm
+attributes
+f002 = placenm.pl_index,UPSHIFT,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Systeemin antama numero kadunnimitiedostosta";
+f000 = placenm.pl_name,UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="Paikannimi";
+f003 = placenm.pl_street_nbr,UPSHIFT,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Katunumero";
+f001 = placenm.pl_str_name,UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="Kadun nimi";
+a3 = placenm.pl_str_city,UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="Kuntakoodi";
+a = placenm.pl_odd_even,UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="P-parillinen,R-paRiton,' '-molemmat";
+f004 = placenm.pl_str_zip,UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="Postinumero tälle paikalle";
+f005 = placenm.pl_str_subzone,UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="Alaruutu joka liittyy tähän paikkaan";
+f006 = placenm.pl_str_x_coord,UPSHIFT,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Kadun x-koordinaatti";
+f007 = placenm.pl_str_y_coord,UPSHIFT,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Kadun y-koordinaatti";
+f08  = placenm.pl_map_ref_page,UPSHIFT,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Karttasivun viitenumero";
+a4 = placenm.pl_map_ref_block,UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="Karttaruudun merkki";
+f009 = placenm.pl_str_comment,UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="Huomautus tästä paikkatietueesta";
+c = placenm.pl_local,UPSHIFT,NOENTRY,NOUPDATE,COMMENTS="Viittaako tämä osoite paikallisajoon (K/E)?";
+end
+instructions
+   delimiters "()";
+end

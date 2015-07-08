@@ -1,0 +1,39 @@
+$ /****************************************************************************
+$ *                                                                           *
+$ *                           S C C S   I N F O                               *
+$ *                                                                           *
+$ * @(#)  da_view.MSF.fin; Rel: 10.1.3.1; Get date: 5/18/95 at 10:18:11
+$ * @(#)  Last delta: 12/5/94 at 11:02:44
+$ * @(#)  SCCS File: /taxi/sccs/s.da_view.MSF.fin
+$ *                                                                           *
+$ * Copyright (c) 1990 - MDI Seattle                                          *
+$ *                                                                           *
+$ *****************************************************************************/
+$ #ident "@(#) head:da_view.MSF.fin	10.1.3.1"
+
+$quote "
+$set 1
+
+1	"                    "
+2	"\n\n%s      TAKSISYSTEEMIT\n"
+3	"\n%sRaportti %s ei ole saatavana\n"
+4	"%s<CR> kun haluat jatkaa..... "
+5	"\n\n%sSeuraavat raportit ovat saatavana:\n\n"
+6	"\n\n\n\n%sAnna pvm seuraavassa muodossa: %s\n%stai 'e' jos lopetat.\n"
+7	"\n\n%sTULOSTUKSEN TEKEE \n\n"
+8	"%s1. Näyttö\n"
+9	"%s2. Kirjoitin\n\n"
+10	"%stai 'e' jos lopetat: "
+11	"\n%sAnna käypä tulostuslaite.\n"
+12	"%s               NÄMÄ RAPORTIT SAA TULOSTAA\n"
+13	"\n%sAnna numero 1..%d valitaksesi tietty raportti,\n"
+14	"%stai 'e' jos lopetat, '*' kaikille raporteille: "
+15	"\n%sVastaus EI kelpaa.  "
+16	"<CR> jatkaaksesi .... "
+17	"Tiedoston AVAUSVIRHE %s iserrno %d\n"
+18	"Tiedoston SULKEMISVIRHE %d iserrno %d\n"
+19	"%sTAKSISYSTEEMIN AJOSSA OLEVAT YHTIÖT\n"
+20	"%sTunniste    Yhtiö\n\n"
+21	"%sValitse raportoitavien yhtiöiden tunnisteet.\n"
+22	"%sEsimerkiksi: AB\n"
+23	"%stai 'e' jos lopetat, '*' kaikkien yhtiöiden raporteille: "

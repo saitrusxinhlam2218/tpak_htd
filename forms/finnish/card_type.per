@@ -1,0 +1,49 @@
+{
+|***********************************************************************
+|                 RCS INFO
+|
+|  @(#)  $RCSfile: card_type.per,v $
+|  @(#)  $Revision: 1.3 $
+|  @(#)  $Date: 1998/11/06 02:03:18 $
+|  @(#)  $Author: taxiadm $
+|  @(#)  $Source: /taxi-scan/taxi_proj/cvs/taxi-scan/src/forms/finnish/card_type.per,v $
+|
+|  Copyright (c) 1994 - MobileSoft Consulting, Inc. Woodinville WA
+|
+|**********************************************************************/
+|ident "@(#) head:$RCSfile: card_type.per,v $	$Revision: 1.3 $"
+}
+
+
+database mads
+screen
+{
+
+						CARD TYPE DATA MAINTENANCE
+
+ACCEPT/REJECT		PREFIX LOW	PREFIX HIGH		COMMENT
+[a]			[f001       ]   [f002       ]           [f003                                   ]
+
+SERVICE CODE INDEX      SERVICE CODE NBR
+[f004]                  [f005   ]
+
+TYPE INDEX              TYPE NBR
+[f006]                  [f007   ]
+
+}
+end
+tables
+card_type
+attributes
+a=ct_accept_rej,UPSHIFT;
+f001=ct_card_low;
+f002=ct_card_high;
+f003=ct_comment,UPSHIFT;
+f004=ct_service_index;
+f005=ct_service_nbr;
+f006=ct_type_index;
+f007=ct_type_nbr;
+
+instructions
+	delimiters "()";
+end

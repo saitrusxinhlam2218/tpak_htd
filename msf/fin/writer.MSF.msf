@@ -1,0 +1,68 @@
+$ /****************************************************************************
+$ *                                                                           *
+$ *                           S C C S   I N F O                               *
+$ *                                                                           *
+$ * @(#)  writer.MSF.fin; Rel: 10.1.3.1; Get date: 5/18/95 at 10:20:30
+$ * @(#)  Last delta: 12/5/94 at 11:09:59
+$ * @(#)  SCCS File: /taxi/sccs/s.writer.MSF.fin
+$ *                                                                           *
+$ * Copyright (c) 1990 - MDI Seattle                                          *
+$ *                                                                           *
+$ *****************************************************************************/
+$ #ident "@(#) head:writer.MSF.fin	10.1.3.1"
+
+$quote "
+$delset 1
+$set 1
+
+1	"HYVKS"
+2	"HAKUAIKA"
+3	"KUTSU"
+4	"NOUTO"
+5	"KPYSTY"
+6	"EIKIITOS"
+7	"SULJE"
+8	"PUHE"
+9	"KODOTA"
+10	"AIKARAJA"
+11	"YLIMAUTO"
+12	"MYÖHMITT"
+13	"LYHMITT"
+14	"JULLIKKA"
+15	"PPUHE"
+16	"AJAJALTA"
+17	"AJOTARJ"
+18	"HERÄTYS"
+19	"AJAJALLE"
+20	"PYHÅPV"
+21	"SYSTEEMI"
+22	"KÄSIN"
+23	"TYYPPI"
+24	"MRIKKI"
+25	"HYVKS"
+26	"EIHYVKS"
+27	"KÄSIRUUD"
+28	"KÄSIJAKO"
+29	"PERUUTUS"
+30	"MONIAJO"
+31	"VÄLITYS"
+32	"PITO"
+33	"KYSELY"
+34	"UUDESTI"
+35	"JAKOTIL"
+36	"VLITETTY"
+37	"VALMIS"
+38	"LOPET"
+39	"AVOIN"
+40	"PERUTTU"
+41	"ODOTTAA"
+42	"KIRJATTU"
+43	"PVTETTY"
+44	"KOMMENT"
+45	"TXM BOM"
+46	"BOM"
+47	"AVSLUTAD"
+48	"ENNAKKO"
+49	"TRIP NAK"
+50	"KIINN KV"
+51	"IRROT KV"

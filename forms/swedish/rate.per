@@ -1,0 +1,21 @@
+database mads
+screen
+{
+						Pris-fil underhåll
+
+Bilpark    Från zon/postnr    Till zon/postnr       Fast pris     
+[a]        [f000     ]        [f001     ]           [f002   ]    
+}
+end
+tables
+rate
+attributes
+a = rate.rt_fleet,REQUIRED,UPSHIFT,COMMENTS="Bilpark ID";
+f000 = rate.rt_zone_zip_nbr1,RIGHT,REQUIRED,COMMENTS="En zon eller ett postnummer";
+f001 = rate.rt_zone_zip_nbr2,RIGHT,REQUIRED,COMMENTS="En zon eller ett postnummer";
+f002 = rate.rt_flat_rat,FORMAT="####.##",RIGHT,INCLUDE=(0.00 to 9999.999),
+	COMMENTS="Pris för denna service. Maximum är 9999.99 ('.' måste användas som decimaler)";
+end
+instructions
+   delimiters "()";
+end

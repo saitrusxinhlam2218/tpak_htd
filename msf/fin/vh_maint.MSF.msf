@@ -1,0 +1,199 @@
+$ /****************************************************************************
+$ *                                                                           *
+$ *                           S C C S   I N F O                               *
+$ *                                                                           *
+$ * @(#)  vh_maint.MSF.fin; Rel: 10.1.3.2; Get date: 8/9/95 at 11:11:39
+$ * @(#)  Last delta: 8/9/95 at 11:11:31
+$ * @(#)  SCCS File: /taxi/sccs/s.vh_maint.MSF.fin
+$ *                                                                           *
+$ * Copyright (c) 1990 - MDI Seattle                                          *
+$ *                                                                           *
+$ *****************************************************************************/
+$ #ident "@(#) head:vh_maint.MSF.fin/usr/taxi/enh_src/src/msf/fin	10.1.3.2"
+
+$ /*
+$  * Message file for PROGRAM: vh_maint
+$  * CATALOG:   vh_maint.cat
+$  * MNEMONICS: vh_m_strdefs.h
+$  */
+
+$quote "
+$delset 1
+$set 1
+
+$ /*    NOTE TO THE TRANSLATOR                          */
+$ /*    Quoted text will be followed by a maximum string length if the  */
+$ /*    text length is different than the number of chars in the string.*/
+$ /*    If no string length is entered default to the current number of */
+$ /*    characters.  A comment about the string is also included where  */
+$ /*    necessary.                                                      */
+
+1	"12:00" 					
+2	"24:00" 				
+3	"Väärä yhtiön TN"				/* 50	*/
+4	"On annettava arvo"				/* 50   */
+5	"00.00.00"			
+6	"00:00 "		
+7	"On annettava arvo"				/* 50   */
+8	"On annettava arvo (1 - 9999)"		/* 50, replace ÄÅ with ()   */
+9	"On annettava arvo (1 - 3839)"		/* 50 , replace ÄÅ with ()  */
+10	"Yhtiön tunniste"				/* 50   */
+11	"Yhtiön numero joka vastaa tämän auton yhtiötä"
+12	"Auton numero"				/* 50   */
+13	"Tämän auton MDT-terminaalin MID"	/* 50   */
+14	"Auton rekisterinumero"			/* 50   */
+15	"Auton merkki"					/* 50   */
+16	"Auton malli"					/* 50   */
+17	"K/E. Toimiiko MDT-terminaali tässä autossa"	/* Check constant for Y/N	*/
+18	"K/E. Toimiiko tämän auton mittari vai ei"		/* Check constant for Y/N	*/
+19	"Osoittaa että tässä autossa on lupa 1"	/* 50	*/
+20	"Osoittaa että tässä autossa on lupa 2"	/* 50   */
+21	"Osoittaa että tässä autossa on lupa 3"	/* 50   */
+22	"Osoittaa että tässä autossa on lupa 4"	/* 50   */
+23	"Osoittaa että tässä autossa on lupa 5"	/* 50   */
+24	"Osoittaa että tässä autossa on lupa 6"	/* 50   */
+25	"Osoittaa että tässä autossa on lupa 7"	/* 50   */
+26	"Osoittaa että tässä autossa on lupa 8"	/* 50   */
+27	"Osoittaa että tässä autossa on lupa 9"	/* 50   */
+28	"Osoittaa että tässä autossa on lupa 10"	/* 50   */
+29	"Osoittaa että tässä autossa on lupa 11"	/* 50   */
+30	"Osoittaa että tässä autossa on lupa 12"	/* 50   */
+31	"Osoittaa että tässä autossa on lupa 13"	/* 50   */
+32	"Osoittaa että tässä autossa on lupa 14"	/* 50   */
+33	"Osoittaa että tässä autossa on lupa 15"	/* 50   */
+34	"Osoittaa että tässä autossa on lupa 16"	/* 50   */
+35	"Osoittaa että tällä autolla on merkintä 1"	/* 50   */
+36	"Osoittaa että tällä autolla on merkintä 2"	/* 50   */
+37	"Osoittaa että tällä autolla on merkintä 3"	/* 50   */
+38	"Osoittaa että tällä autolla on merkintä 4"	/* 50   */
+39	"Osoittaa että tällä autolla on merkintä 5"	/* 50   */
+40	"Osoittaa että tällä autolla on merkintä 6"	/* 50   */
+41	"Osoittaa että tällä autolla on merkintä 7"	/* 50   */
+42	"Osoittaa että tällä autolla on merkintä 8"	/* 50   */
+43	"Auton edellinen ajokieltopvm (PP.KK.VV)"	/* put date in proper format	*/
+44	"Auton edellinen ajokieltoaika (tt:mm)"	/* do not translate Äa/pÅ	*/
+45	"Pvm jolloin auto viimeksi palasi palvelukseen (PP.KK.VV)"	/* put date in proper format    */
+46	"Aika jolloin auto viimeksi palasi palvelukseen (tt:mm)"	/* do not translate Äa/pÅ       */
+47	"Syy auton poistamiseen(sisäinen)"	/* 50   */
+48	"E ei ajokieltoa, K ajokielto  matkustaja-ajoille"	/* check constants for Y/N 	*/
+49	"E ei ajokieltoa, K ajokielto tavara-ajoille"		/* check constants for Y/N      */
+50	"E ei ajokieltoa, K ajokielto X-tyypin ajoille"		/* check constants for Y/N      */
+51	"Poistoviesti joka lähetetään autolle"	/* 50   */
+52	"Tätä autoa koskevat huomautukset"		/* 50   */
+53	"Edellinen pvm kun auto ilmoitti hätätilan (PP.KK.VV)"	/* put date in proper format    */
+54	"Edellinen aika kun auto ilmoitti hätätilan (tt:mm)"	/* do not translate Äa/pÅ       */
+55	"Pvm jolloin edellinen hätätila selvitettiin (PP.KK.VV)"		/* put date in proper format    */
+56	"Aika jolloin edellinen hätätila selvitettiin (tt:mm)"	/* do not translate Äa/pÅ       */
+57	"Edellinen pvm jona auto aloitti (PP.KK.VV)"			/* put date in proper format    */
+58	"Edell aika jona auto aloitti (tt:mm)"			/* do not translate Äa/pÅ       */
+59	"Edellinen pvm jona auto lopetti (PP.KK.VV)"			/* put date in proper format    */
+60	"Edellinen aika jona auto lopetti (tt:mm)"		/* do not translate Äa/pÅ       */
+61	"Tämän auton edellinen ajaja"			/* 50   */
+62	"Tämän auton viimeksi hoitama ajo"		/* 50   */
+63	"Montako kertaa tämä auto on kirjattu viime vuoron aikana"
+64	"Montako kertaa autolle annettiin ehdollisia kirjauksia ed. vuoron aikana"
+65	"Montako kertaa autolle annettiin matkalla kirjauksia ed. vuoron aikana"
+66	"Montako kertaa autolle annettiin ei-hyvks edellisen vuoron aikana"
+67	"Montako kertaa auto antoi hylkäyksiä edellisen vuoron aikana"
+68	"Montako kutsua tällä autolla oli edellisen vuoron aikana"
+69	"Montako ei-ajoa autolla oli edellisen vuoron aikana"
+70	"Montako käsipystyä autolla oli edellisen vuoron aikana"
+71	"Montako tarj.pyyntöä autolta edellisen vuoron aikana"
+72	"Montako puhepyyntöä auto antoi edellisen vuoron aikana"
+73	"Montako viestiä auto lähetti välittäjälle edellisen vuoron aikana"
+74	"Montako taukoa auto otti edellisen vuoron aikana"
+75	"Montako ajoa autolle ohjattiin käsin edellisen vuoron aikana"
+76	"Montako ajoa autolle jaettiin edellisen vuoron aikana"
+77	"Montako lyhyttä mittaria auto yritti edellisen vuoron aikana"
+78	"Montako myöhäistä mittaria sattui auton edellisen vuoron aikana"
+79	"Montako kyselyä autolta tuli edellisen vuoron aikana"
+80	"Tietuetta ei löydy, LISÄÄ ensin!"			/* 50   */
+81	"Yhtiötiedoston avausvirhe"				/* 50   */
+82	"Yhtiötiedoston sulkemisvirhe"			/* 50   */
+83	"On annettava arvo"				/* 50   */
+84	"Paina ESC suorittaaksesi"				/* 50   */
+85	"Auto on jo olemassa"			/* 50   */
+86	"MID on jo olemassa"				/* 50   */
+87	"Autotiedoston lukuvirhe"			/* 50   */
+88	"Yhtiö"
+89	"Auto"
+90	"MID"
+91	"Rek.no."
+92	"Merk"
+93	"Malli"						/* 12	*/
+94	"MDT OK"
+95	"Mitt OK"
+96	"Luvat"
+97	"Merkinnät"
+98	"Kieltopvm"
+99	"Paluupvm"
+100	"Kiellon syy"
+101	"M"						/* Use constant for 'P' passenger	*/
+102	"T"						/* Use constant for 'D' delivery	*/
+103	"X"						/* Use constant for 'X' Type X		*/
+104	"Kieltoviesti"				/* 30	*/
+105	"Ajajaa koskevat huomautukset"				/* 30	*/
+106	"Edellinen hälytys"
+107	"Hälytys selvitetty"
+108	"Aloitus"					/* 15	*/
+109	"Lopetus"					/* 15	*/
+110	"Ajaja"
+111	"Hoidettu ajo"
+112	"RUUT"
+113	"ERUUT"
+114	"MRUUT"
+115	"EIHYVKS"
+116	"HYLK"
+117	"KUTSU"
+118	"JULLI"
+119	"KÄSP"
+120	"TRJ"
+121	"PUHE"
+122	"VIES"
+123	"TAUKO"
+124	"Välitks"
+125	"Ajoja"
+126	"Lyhyt M"					/* short meter	*/
+127	"Myöh M"					/* late meter	*/
+128	"Kysely"
+129	"00.00.00"					/* do not translate	*/
+130	"00:00"						/* do not translate	*/
+131	"vh_scr.out"					/* do not translate     */
+132	"Aikataulu"
+133    "Aikataulun numero (1..25) johon tämä auto liittyy, tai (0), jos ei aikataulua."
+134    "("  /* change to '(' for languages containing 'Ä' in the character set */
+135    ")"  /* change to ')' for languages containing 'Å' in the character set */
+136    "Väärä syöttö, anna K tai E"		/* max 80 */
+137    "1-MDT sekä ITM 2-MDT V03 mutta ei ITM 3-MDT V02 4-MDT420 5-MDT420 sekä TaxiMat 6-MDT420 sekä ITM 7-MDT V03 sekä TaxiMat"/* 70 char max */
+138    "Puuttuvien kuittien lukumäärä"    /* up to 70 characters */
+139    "Termin.tyyppi"         /* maximum of 13 characters */
+140    "Kuitteja puuttuu"      /* max of 16 characters */
+141	"Invalid choice - Please enter (A/C) to append or create"
+142	"Väri"
+143	"Puhelin"
+144	"Väri"
+145	"Puhelin"
+146     "Osoittaa että tällä autolla on merkintä 13"    /* 50   */
+147     "Osoittaa että tällä autolla on merkintä 14"    /* 50   */
+148     "Osoittaa että tällä autolla on merkintä 15"    /* 50   */
+149     "Osoittaa että tällä autolla on merkintä 16"    /* 50   */
+150     "Osoittaa että tällä autolla on merkintä 17"    /* 50   */
+151     "Osoittaa että tällä autolla on merkintä 18"    /* 50   */
+152     "Osoittaa että tällä autolla on merkintä 19"    /* 50   */
+153     "Osoittaa että tällä autolla on merkintä 20"    /* 50   */
+154     "Osoittaa että tällä autolla on merkintä 21"    /* 50   */
+155     "Osoittaa että tällä autolla on merkintä 22"    /* 50   */
+156     "Osoittaa että tällä autolla on merkintä 23"    /* 50   */
+157     "Osoittaa että tällä autolla on merkintä 24"    /* 50   */
+158     "Osoittaa että tällä autolla on merkintä 25"    /* 50   */
+159     "Osoittaa että tällä autolla on merkintä 26"    /* 50   */
+160     "Osoittaa että tällä autolla on merkintä 27"    /* 50   */
+161     "Osoittaa että tällä autolla on merkintä 28"    /* 50   */
+162     "Osoittaa että tällä autolla on merkintä 29"    /* 50   */
+163     "Osoittaa että tällä autolla on merkintä 30"    /* 50   */
+164     "Osoittaa että tällä autolla on merkintä 31"    /* 50   */
+165     "Osoittaa että tällä autolla on merkintä 32"    /* 50   */
+166	"Väri"
+167	"Puhelin"
+168	"Väri"
+169	"Puhelin"

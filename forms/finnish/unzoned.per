@@ -1,0 +1,34 @@
+database mads
+screen
+{
+					Ruuduttamattoman osoitetiedoston hoito
+
+Tilaus nro              Tilauspvm    Tilausaika Kirjaaja    Ruutunro   Ruuduttaja Tilaus     Laskutusnumero
+[f000                ]  [f001     ]  [f002  ]   [f003]      [f04]      [f005]     [a]        [f007              ]
+
+       Katunumero           Kadunnimi                                   Alue
+       [f006  ]             [f008                ]                      [a5 ]
+
+Risteys                     Risteyskatu                                
+                            [f010                ]                      
+}
+end
+tables
+unzoned
+attributes
+f000 = unzoned.uz_call_nbr,RIGHT,REQUIRED,NOUPDATE,COMMENTS="Tilausnumero johon tämä osoite liittyy";
+f001 = unzoned.uz_call_date,COMMENTS="Tilauksen pvm";
+f002 = unzoned.uz_call_time,RIGHT,COMMENTS="Tilauksen kellonaika";
+f003 = unzoned.uz_entered_by,RIGHT,COMMENTS="Tilauksen kirjanneen käyttäjän tunnusnumero";
+f04  = unzoned.uz_zoned_as,RIGHT,COMMENTS="Tälle osoitteelle annettu ruutunumero";
+f005 = unzoned.uz_zoned_by,RIGHT,COMMENTS="Tämän tilauksen ruuduttaneen käyttäjän tunnusnumero";
+a = unzoned.uz_type_of_service,UPSHIFT,COMMENTS="Tilaustyyppi (esim. 'M'atkustaja)";
+f007 = unzoned.uz_charge_nbr,COMMENTS="Tilin numero";
+f006 = unzoned.uz_street_nbr,RIGHT,COMMENTS="Katunumero";
+f008 = unzoned.uz_str_place_name1,UPSHIFT,REQUIRED,COMMENTS="Kadun nimi, paikannimi, alias etc.";
+a5 = unzoned.uz_city,UPSHIFT,COMMENTS="Kunnan nimi";
+f010 = unzoned.uz_str_place_name2,UPSHIFT,COMMENTS="Risteyskadun nimi";
+end
+instructions
+   delimiters "()";
+end

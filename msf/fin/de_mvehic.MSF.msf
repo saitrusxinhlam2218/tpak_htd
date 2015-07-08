@@ -1,0 +1,24 @@
+$ /****************************************************************************
+$ *                                                                           *
+$ *                           S C C S   I N F O                               *
+$ *                                                                           *
+$ * @(#)  de_mvehic.MSF.fin; Rel: 10.1.3.1; Get date: 5/18/95 at 10:18:39
+$ * @(#)  Last delta: 12/5/94 at 11:03:31
+$ * @(#)  SCCS File: /taxi/sccs/s.de_mvehic.MSF.fin
+$ *                                                                           *
+$ * Copyright (c) 1990 - MDI Seattle                                          *
+$ *                                                                           *
+$ *****************************************************************************/
+$ #ident "@(#) head:de_mvehic.MSF.fi/usr/users/brian/enh_src/src/msf/fin	10.1.3.1"
+
+$quote "
+$delset 1
+$set 1
+
+1	"\n\t\tEI yhtiöitä raportoitavana.\n "
+2	"\t\tOle hyvä ja aja ohjelma myöhemmin. <CR> kun haluat jatkaa.."
+3	"\n                    Anna ajajan tunnusnumero:"
+4	"\n                    Valitse aloituspvm (tilauksenkirj.muoto; Enter on tänään):"
+5	"\n                    Valitse aloitusaika (tilauks.kirj.muoto:"
+6	"\n                    Valitse lopetuspvm (tilauks.kirj.muoto; <CR> on tänään):"
+7	"\n                    Valitse lopetusaika (tilauks.kirj.muoto; <CR> on NYT):"

@@ -1,0 +1,33 @@
+{
+|***********************************************************************
+|                 RCS INFO
+|
+|  @(#)  $RCSfile: veh_cmsg.per,v $
+|  @(#)  $Revision: 1.2 $
+|  @(#)  $Date: 1999/02/01 12:46:20 $
+|  @(#)  $Author: taxiadm $
+|  @(#)  $Source: /taxi-scan/taxi_proj/cvs/taxi-scan/src/forms/finnish/veh_cmsg.per,v $
+|
+|  Copyright (c) 1994 - MobileSoft Consulting, Inc. Woodinville WA
+|
+|**********************************************************************/
+|ident "@(#) head:$RCSfile: veh_cmsg.per,v $	$Revision: 1.2 $"
+}
+
+database mads
+screen
+{
+
+
+Viesti nro	Viestiteksti
+[a1 ]		[f000                                                           ]
+}
+end
+tables
+veh_cmsg
+attributes
+a1 = veh_cmsg.vhcmsg_nbr,include = (0 to 999),REQUIRED,RIGHT,COMMENTS="Valmissanoman numero (0 - 999)";
+f000 = veh_cmsg.vhcmsg_text,UPSHIFT,COMMENTS="Valmissanoman teksti";
+instructions
+   delimiters "()";
+end

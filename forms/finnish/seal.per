@@ -1,0 +1,19 @@
+database mads
+screen
+{
+						Lupatiedoston hoito
+
+Numero    Kuvaus                  Lyhenne 
+[f0]      [f001                ]  [a0 ]
+}
+end
+tables
+seal
+attributes
+f0   = seal.sl_seal_nbr,include=(1 to 16),RIGHT,REQUIRED,COMMENTS="Luvan numero (vain 1 - 16 kelpaavat)";
+f001 = seal.sl_desc,UPSHIFT,COMMENTS="Luvan kuvaus";
+a0 = seal.sl_abbrev,UPSHIFT,COMMENTS="Lyhenne jota käytetään näytöllä kenttänimikkeinä";
+end
+instructions
+   delimiters "()";
+end

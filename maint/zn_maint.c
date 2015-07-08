@@ -1,0 +1,316 @@
+static char sz__FILE__[]="@(#)zn_maint.c	10.1(ver) Date Release 12/2/94" ;
+ /****************************************************************************
+ *                                                                           *
+ *                           S C C S   I N F O                               *
+ *                                                                           *
+ * @(#)  zn_maint.c; Rel: 10.1.0.0; Get date: 4/18/95 at 16:48:51
+ * @(#)  Last delta: 12/2/94 at 11:22:49
+ * @(#)  SCCS File: /taxi/sccs/s.zn_maint.c
+ *                                                                           *
+ *****************************************************************************/
+
+#include <stdio.h>
+#include <errno.h>
+#include <sys/types.h>
+#include <sys/ipc.h>
+#include <cursesX.h>
+#include <signal.h>
+#include <isam.h>
+
+#define DECLARING
+#include "comm_strdefs.h"
+#include "zn_m_strdefs.h"
+#include "mad_error.h"
+#include "mads_types.h"
+#include "key.h"
+#include "zn_maint.h"
+#include "zn_msg.h"
+#include "language.h"
+#include "Fleet_db.h"
+
+/*  Declare an array of pointers to functions which check the field entered
+ *  for validity.  
+ */
+
+extern int (*check_field[])();	/* Array of pointers to routines to validate the data input by the user */
+int bAttrSelect;
+extern struct zone_scr_fields zone_scr_flds[];
+extern int zone_cl_flds();
+extern int read_field();
+extern char buf[];		/* buffer used for interface to db routine */
+extern char req_buf[];		/* buffer used for interface to db routine */
+extern int iserrno;		/* C-isam error number */
+extern int errno;		/* Error number returned from system calls */
+
+char o_file[F_NAME_SIZE];	/* output file as specified by the user */
+char mode[2];			/* user specifies Append or Create */
+
+extern int prt_query_hdr(), prt_add_hdr();
+extern int prt_scr(), process_intr();
+extern void prt_hdr(), prt_labels();
+extern char read_request(), prompt_confirm();
+extern int prompt_fname(), prompt_mode();
+extern int prt_data(), process_input(), send_ipc();
+extern int prt_upd_hdr(), prt_error(), prt_cisam_err();
+extern int prt_unix_err(), clear_flds();
+extern int clear_err_line(), clear_hdr_line();
+extern int process_query(), process_next();
+extern int process_previous(), process_add();
+extern int process_update(), process_remove(), process_output();
+int i,j = 0;
+int  temp_flag = 0;
+int  error_flag = 1;
+int  nbr_flag = 0;
+int  fl_flag = 0;
+int  skip_seals;
+int ret_val;			/* return value  */
+int intr_allowed;		/* interrupts allowed */
+int saw_intr;			/* indicates an interrupt signal was entered */
+char intr_char;			/* interrupt character */
+int end_read_field;		/* flag, 0/1, set to end read_field function */
+short ipc_required;		/* Set if a field changed which is in shared memory */
+char read_buf[BUFFER_SIZE];	/* buffer for reading fields */
+int piu = 1;			/* field number to start reading input from */
+int field_entered;		/* field entered or not */
+int key_val;			/* value of key entered */
+int cur_list;			/* Indicates a row is in the current list */
+int record_nbr;			/* C-ISAM record number */
+int err_n_fld;			/* set if an error in field condition exists */
+int doing_add;			/* performing add operation */
+int file_open;			/* set when zone file opened and check in cleanup */
+struct df_maint df_maint_ipc;	/* structure for passing information to dispatch  */
+struct cisam_zn *zn_ptr;	/* pointer to zone file structure */
+struct cisam_fl *fl_ptr;	/* pointer to fleet file structure */
+struct cisam_sl *sl_ptr;	/* pointer to seal file structure */
+struct cisam_zn  zn_buf;
+struct cisam_zn *temp_zn_ptr;
+int    scr_nbr;
+
+struct offsets *offset;
+struct offsets *get_offsets();
+/*****************************************************************************
+*  zone_maint - main for the zone file file maintenance program.
+*******************************************************************************/
+
+main(argc,argv)
+int argc;
+char **argv;
+{
+	char request;		/*  User request : Q, N, P, A, U, R, O, or E */
+        char nlspath[80];
+        static char put_nlspath[80];
+        int  putenv();	
+
+	/*
+	 * Set up for internationalization by setting the locale and opening the catalog
+	 */
+	strcpy(nlspath, "/usr/taxi/catalogs/finnish/%N.cat");
+	sprintf(put_nlspath, "NLSPATH=%s", nlspath);
+	putenv(put_nlspath);	
+	setlocale(LC_ALL, "");
+	open_catalog( &COMMON_m_catd, "common", 0, 0);
+	open_catalog( &ZN_MAINT_m_catd, "zn_maint", 0, 0);
+
+#ifdef DEBUG
+        if((trace_fp=fopen(TRACE_FILE,"a")) == NULL){
+                ERROR(' '," ",TRACE_FILE);
+                cleanup();
+        }
+#endif
+
+	file_open = 0;
+
+	init();
+
+	fl_ptr = (struct cisam_fl *) req_buf;
+	sl_ptr = (struct cisam_sl *) req_buf;
+	temp_zn_ptr = (struct cisam_zn *) req_buf;
+	zn_ptr = &zn_buf;
+	prt_hdr();
+	prt_labels();
+
+	/*  Get the first record from the zone file */
+	temp_zn_ptr->fleet = 'A';
+	temp_zn_ptr->nbr = 0;
+
+	if(db(ZONE_FILE_ID,READ_KEYS,&zn_key1,ISGTEQ,0) < 0) 
+		prt_error(catgets(ZN_MAINT_m_catd, ZN_MAINT_SET, ZN_MAINT_4, "No record found, ADD first"));
+	else  {
+		/*  Display the data from the first record */
+		memcpy((char *)zn_ptr,req_buf,sizeof(struct cisam_zn));
+		prt_data();
+
+		record_nbr = isrecnum; 	/* save record number for future read */
+		cur_list = 1;		/* valid row in current list */
+	}
+
+	if(db(FLEET_FILE_ID,OPEN,&fl_key1,ISINOUT+ISMANULOCK,0) < 0)  {
+		prt_error(OPEN_FLEET_ERR_1);
+		sleep(3);
+		cleanup();
+	}
+
+	db(SEAL_FILE_ID,OPEN,&sl_key1,ISINOUT+ISMANULOCK,0);
+	for(i = 1; i <= 16; ++i) {	
+		sl_ptr->seal_nbr = i;
+		if ( db_read_key(SEAL_FILE_ID,sl_ptr,&sl_key1,ISEQUAL) == SUCCESS )
+		  {
+		    mvprintw(L_PKUP_SLS_ROW,L_P_SL_1_COL+j,"%s",sl_ptr->abbrev);
+		    refresh();
+		    j += 4;
+		  }
+		else
+		  break;
+	}
+
+	/*  Input the users request (Query, Next, Previous, Add, Update, Remove, Output, Exit). */
+
+	 while(request = read_request())  {
+		fl_flag = 0;
+		nbr_flag = 0;
+		skip_seals = 0;
+		error_flag = 1;
+		ipc_required = 0;
+	    	switch(request)  {
+                case M_SCREEN:
+                  clear_err_line();
+                  if(scr_nbr == 1)  {
+                    scr_nbr = 2;
+                    clear();
+                    prt_hdr();
+                    prt_labels();
+                    if(cur_list)
+                      prt_data();
+                  }
+                  else if(scr_nbr == 2)  {
+                    scr_nbr = 1;
+                    clear();
+                    prt_hdr();
+                    prt_labels();
+                    if(cur_list)
+                      prt_data();
+                  }
+                  break;
+                  
+			case M_QUERY:
+				clear_err_line();
+				process_query();
+		    		ipc_required = 0;
+				break;
+
+			case M_NEXT:
+				clear_err_line();
+				process_next();
+				break;
+
+			case M_PREVIOUS:
+				clear_err_line();
+				process_previous();
+				break;
+
+			case M_ADD:
+				clear_err_line();
+				j = 0;
+				process_add();
+				if (ipc_required)
+				  send_ipc();
+				break;
+
+			case M_UPDATE:
+				clear_err_line();
+				j = 0;
+				process_update();
+				if (ipc_required)
+				  send_ipc();
+				break;
+
+			case M_REMOVE:
+				clear_err_line();
+				process_remove();
+				if (ipc_required)
+				  send_ipc();
+				break;
+
+			case M_OUTPUT:
+				clear_err_line();
+				process_output();
+				break;
+		
+			case M_EXIT:
+				cleanup();
+				break;
+
+			default:
+				cleanup();
+				break;
+		}
+
+	    }
+
+	    cleanup();
+	    catclose( COMMON_m_catd );
+	    catclose( ZN_MAINT_m_catd );
+}
+
+/******************************************************************************
+* init - open files, initialize variables, setup signals, prepare curses.
+*******************************************************************************/
+
+init()
+{
+	intr_allowed = 0;	/* interrupts not allowed */
+	saw_intr = 0;		/* an interrupt signal has not been entered */
+	cur_list = 0;		/* no row in current list */
+	scr_nbr = 1;		/* start with screen number 1 */        
+	initscr();
+	noecho();
+/*
+	keypad(stdscr,TRUE);
+*/
+        term_setup(getenv("TERM"));
+        config_tty();
+
+	cbreak();
+
+	signal(SIGQUIT,SIG_IGN);
+	signal(SIGINT,process_intr);
+	signal(SIGTERM,cleanup);
+	signal(SIGHUP,cleanup);
+	signal(SIGPIPE,cleanup);
+	signal(SIGTSTP, SIG_IGN);
+
+	if((offset = get_offsets()) == 0)  {
+		prt_error(NO_ATTACH);
+		sleep(3);
+		cleanup();
+	}
+
+	if((db(ZONE_FILE_ID,OPEN,&zn_key1,ISINOUT+ISMANULOCK,0)) < 0)  {   
+		prt_error(ZONE_OPEN_ERR);
+		sleep(3);
+		cleanup();
+	} else
+		file_open = 1;
+
+	return;
+}
+
+/******************************************************************************
+* cleanup - if an error has occured, close files and terminate curses.
+*******************************************************************************/
+
+cleanup()
+{
+	if (file_open)
+		if(db(ZONE_FILE_ID,CLOSE,&zn_key1,ISEQUAL,0) < 0) 
+			prt_error(ZONE_CLOSE_ERR);
+
+	nocbreak();
+	echo();
+	erase();
+	refresh();
+	endwin();
+
+	exit(0);
+}
+

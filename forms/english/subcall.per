@@ -1,0 +1,154 @@
+{
+|***********************************************************************
+|                 RCS INFO
+|
+|  @(#)  $RCSfile: subcall.per,v $
+|  @(#)  $Revision: 1.2 $
+|  @(#)  $Date: 1999/03/19 21:27:01 $
+|  @(#)  $Author: taxiadm $
+|  @(#)  $Source: /taxi-scan/taxi_proj/cvs/taxi-scan/src/forms/english/subcall.per,v $
+|
+|  Copyright (c) 1994 - MobileSoft Consulting, Inc. Woodinville WA
+|
+|**********************************************************************/
+|ident "@(#) head:$RCSfile: subcall.per,v $	$Revision: 1.2 $"
+}
+database mads
+screen
+{
+						SUBSCRIPTION CALL FILE DISPLAY
+
+Call Number             Fleet  Type   
+[f000                ]  [a]    [f001 ] 
+
+Pickup Street # Suffix Pre-dir Name                   Type    Post-dir   Apt/Room  City   Zone    Pickup Address Comment
+       [f003  ] [c]    [a0]    [f004                ] [a1 ]   [a2]       [f006 ]   [a6 ]  [f008]   [f002                          ]
+
+Intersection           Pre-dir Name                   Type    Post-dir  Passenger Name          Phone Area   Number    Extension
+                       [a3]    [f005                ] [a4 ]   [a5]      [f007                ]  [a7 ]        [f009   ] [f010 ] 
+ 
+Dest   Street # Suffix Pre-dir Name                   Type   Post-dir    Apt/Room  City   Zone    Destination Address Comment
+       [f015  ] [d]    [a8]    [f016                ] [a9 ]  [b0]        [f017 ]   [b1 ]  [f018]   [f014                          ]
+ 
+General Comment
+[f011                                                            ]
+                 Vehicle         Attributes              Driver          Attributes
+Personal Req      Flag     1  2  3  4  5  6  7  8         Flag     1  2  3  4  5  6  7  8      # Veh   Priority    Advise Arrival 
+[f019]   [e]      [f]     [j][k][l][m][n][o][p][q]        [g]     [r][s][t][u][v][w][x][y]       [h]     [f022]    [z]
+}
+screen
+{
+						SUBSCRIPTION CALL FILE DISPLAY
+
+Charge Number           Requested By            Person To See         Call Rate     From Date    To Date         Local
+[f023              ]  [f024                ]  [f025                ]  [f026   ]     [f027     ]  [f028     ]     [b]
+
+                   Monday   Tuesday  Wednesday  Thursday  Friday   Saturday  Sunday                            Map
+Scheduled Pickup   [f029]   [f031]   [f033]     [f035]    [f037]   [f039]    [f041]          Pickup Coord  [f055    ]
+One Time Change    [f030]   [f032]   [f034]     [f036]    [f038]   [f040]    [f042]          Dest Coord    [f056    ]
+
+Date Entered  Time Entered  POD   Entered By  Changed By    Call Number 1           Call Number 2        
+[f048     ]    [f049  ]     [i]   [f044]      [f045]        [f046                ]  [f047                ]
+
+Additional Information 1    Additional Information 2    Driver Msg                             Company Name          
+[f050                     ] [f051                     ] [f054                                ] [f053                     ]
+}
+end
+tables
+subcall zone
+attributes
+f000 = subcall.sc_nbr,RIGHT,REQUIRED,NOENTRY,COMMENTS="System assigned subscription call number";
+a = subcall.sc_fleet = zone.zn_fleet,QUERYCLEAR,UPSHIFT,REQUIRED,NOENTRY,COMMENTS="Fleet indicator";
+f001 = subcall.sc_extend_type,UPSHIFT,NOENTRY,COMMENTS="Extended call type";
+f003 = subcall.sc_pckup_str_nbr,RIGHT,NOENTRY,COMMENTS="A six digit street number";
+c = subcall.sc_pckup_str_suf,UPSHIFT,RIGHT,NOENTRY,COMMENTS="A alpha street number suffix";
+a0 = subcall.sc_pckup_pre_dir,UPSHIFT,NOENTRY,COMMENTS="Pickup street pre_direction";
+f004 = subcall.sc_pckup_str_name,UPSHIFT,NOENTRY,COMMENTS="Pickup street name";
+a1 = subcall.sc_pckup_str_type,UPSHIFT,NOENTRY,COMMENTS="E.G.'AVE' in 120 W. North Ave";
+a2 = subcall.sc_pckup_post_dir,UPSHIFT,NOENTRY,COMMENTS="E.G. 'NW' in 120  29th St NW";
+f006 = subcall.sc_pckup_apt_room,UPSHIFT,NOENTRY,COMMENTS="Pickup apt number or room number";
+a6 = subcall.sc_pckup_city,UPSHIFT,NOENTRY,COMMENTS="Abbreviation of the pickup city";
+f008 = subcall.sc_pckup_zone = zone.zn_nbr,QUERYCLEAR,RIGHT,include=(1 to 999),NOENTRY,COMMENTS="User entered or computer generated pickup zone number";
+f002 = subcall.sc_pckup_adr_cmnt,UPSHIFT,NOENTRY,COMMENTS="Pickup address comment from the geo file";
+a3 = subcall.sc_intr_pre_dir,UPSHIFT,NOENTRY,COMMENTS="Intersection street pre-direction";
+f005 = subcall.sc_intr_str_name,UPSHIFT,NOENTRY,COMMENTS="Intersection street name";
+a4 = subcall.sc_intr_str_type,UPSHIFT,NOENTRY,COMMENTS="Intersection street type";
+a5 = subcall.sc_intr_post_dir,UPSHIFT,NOENTRY,COMMENTS="Intersection post direction";
+f007 = subcall.sc_passenger_name,UPSHIFT,NOENTRY,COMMENTS="Name of passenger";
+a7 = subcall.sc_phone_area,NOENTRY,COMMENTS="Telephone area code";
+f009 = subcall.sc_phone_nbr,NOENTRY,COMMENTS="Telephone number";
+f010 = subcall.sc_phone_ext,NOENTRY,COMMENTS="Telephone extension";
+f015 = subcall.sc_dest_str_nbr,RIGHT,NOENTRY,COMMENTS="A six digit street number";
+d = subcall.sc_dest_str_suf,UPSHIFT,NOENTRY,COMMENTS="An alpha street number suffix";
+a8 = subcall.sc_dest_pre_dir,UPSHIFT,NOENTRY,COMMENTS="Destination address pre-direction";
+f016 = subcall.sc_dest_str_name,UPSHIFT,NOENTRY,COMMENTS="Destination street name";
+a9 = subcall.sc_dest_str_type,UPSHIFT,NOENTRY,COMMENTS="E.G. 'AVE' in 120 W. North Ave";
+b0 = subcall.sc_dest_post_dir,UPSHIFT,NOENTRY,COMMENTS="E.G. 'NW' in 120 29th St NW";
+f017 = subcall.sc_dest_apt_room,UPSHIFT,NOENTRY,COMMENTS="Destination apt number or room number";
+b1 = subcall.sc_dest_city,UPSHIFT,NOENTRY,COMMENTS="Abbreviation of the destination city";
+f018 = subcall.sc_dest_zone,RIGHT,include=(1 to 9999),NOENTRY,COMMENTS="User entered or computer generated dest zone number";
+f014 = subcall.sc_dest_adr_cmnt,UPSHIFT,NOENTRY,COMMENTS="Destination address comment from geo file";
+f011 = subcall.sc_general_cmnt,UPSHIFT,NOENTRY,COMMENTS="Comment";
+f019 = subcall.sc_personal_veh,RIGHT,include=(0 to 9999,NULL),NOENTRY,COMMENTS="Vehicle number of the vehicle specifically requested by the customer";
+e = subcall.sc_personal_rqst,UPSHIFT,include=(O,I,NULL),NOENTRY,COMMENTS="'O'nly the vehicle specified may pickup customer or 'I'f available";
+f = subcall.sc_veh_attr_flag,UPSHIFT,include=(Y,N),NOENTRY,autonext,COMMENTS="Y/N. Vehicles with specific characteristics are required to carry out this call";
+j = subcall.sc_veh_attr[1,1],UPSHIFT,include=(Y,N,NULL),NOENTRY,autonext,COMMENTS="Y/N. Defines vehicle attribute.";
+k = subcall.sc_veh_attr[2,2],UPSHIFT,include=(Y,N," "),NOENTRY,autonext,COMMENTS="Y/N. Defines vehicle attribute.";
+l = subcall.sc_veh_attr[3,3],UPSHIFT,include=(Y,N," "),NOENTRY,autonext,COMMENTS="Y/N. Defines vehicle attribute.";
+m = subcall.sc_veh_attr[4,4],UPSHIFT,include=(Y,N," "),NOENTRY,autonext,COMMENTS="Y/N. Defines vehicle attribute.";
+n = subcall.sc_veh_attr[5,5],UPSHIFT,include=(Y,N," "),NOENTRY,autonext,COMMENTS="Y/N. Defines vehicle attribute.";
+o = subcall.sc_veh_attr[6,6],UPSHIFT,include=(Y,N," "),NOENTRY,autonext,COMMENTS="Y/N. Defines vehicle attribute.";
+p = subcall.sc_veh_attr[7,7],UPSHIFT,include=(Y,N," "),NOENTRY,autonext,COMMENTS="Y/N. Defines vehicle attribute.";
+q = subcall.sc_veh_attr[8,8],UPSHIFT,include=(Y,N," "),NOENTRY,autonext,COMMENTS="Y/N. Defines vehicle attribute.";
+g = subcall.sc_drv_attr_flag,UPSHIFT,include=(Y,N),NOENTRY,autonext,COMMENTS="Y/N. Drivers with specific characteristics are required to carry out this call";
+r = subcall.sc_drv_attr[1,1],UPSHIFT,include=(Y,N,NULL),NOENTRY,COMMENTS="Defines Driver attribute required to carry out this call";
+s = subcall.sc_drv_attr[2,2],UPSHIFT,include=(Y,N," "),NOENTRY,COMMENTS="Defines Driver attribute required to carry out this call";
+t = subcall.sc_drv_attr[3,3],UPSHIFT,include=(Y,N," "),NOENTRY,COMMENTS="Defines Driver attribute required to carry out this call";
+u = subcall.sc_drv_attr[4,4],UPSHIFT,include=(Y,N," "),NOENTRY,COMMENTS="Defines Driver attribute required to carry out this call";
+v = subcall.sc_drv_attr[5,5],UPSHIFT,include=(Y,N," "),NOENTRY,COMMENTS="Defines Driver attribute required to carry out this call";
+w = subcall.sc_drv_attr[6,6],UPSHIFT,include=(Y,N," "),NOENTRY,COMMENTS="Defines Driver attribute required to carry out this call";
+x = subcall.sc_drv_attr[7,7],UPSHIFT,include=(Y,N," "),NOENTRY,COMMENTS="Defines Driver attribute required to carry out this call";
+y = subcall.sc_drv_attr[8,8],UPSHIFT,include=(Y,N," "),NOENTRY,COMMENTS="Defines Driver attribute required to carry out this call";
+h = subcall.sc_nbr_of_vehs,include=(1 to 9),NOENTRY,COMMENTS="Number of vehicles needed to service call";
+f022 = subcall.sc_priority,include=(1 to 63),RIGHT,NOENTRY,COMMENTS="Call priority";
+z = subcall.sc_advise_arrival,NOENTRY,include=(Y,N),default="N",UPSHIFT,COMMENTS="Whether the driver should advise the dispatcher upon arrival (Y,N)";
+f023 = subcall.sc_charge_nbr,NOENTRY,COMMENTS="Customer account number or charge card";
+f024 = subcall.sc_requested_by,UPSHIFT,NOENTRY,COMMENTS="Name of person requesting services";
+f025 = subcall.sc_person_to_see,UPSHIFT,NOENTRY,COMMENTS="Person to see at the destination address";
+f026 = subcall.sc_call_rate,RIGHT,FORMAT="####.##",NOENTRY,COMMENTS="Rate from the rate table, being given to customers";
+f027 = subcall.sc_from_date,NOENTRY,COMMENTS="Beginning date of subscription service";
+f028 = subcall.sc_to_date,NOENTRY,COMMENTS="Ending date of subscription service";
+b = subcall.sc_local,UPSHIFT,include=(Y,N),NOENTRY,COMMENTS="Y/N. Whether this call is a local run or not";
+f029 = subcall.sc_mon_time,RIGHT,NOENTRY,COMMENTS="Pickup time for each Monday of the week";
+f030 = subcall.sc_mon_time_change,RIGHT,NOENTRY,COMMENTS="A one time Monday time change";
+f031 = subcall.sc_tue_time,RIGHT,NOENTRY,COMMENTS="Pickup time for each Tuesday of the week";
+f032 = subcall.sc_tue_time_change,RIGHT,NOENTRY,COMMENTS="A one time Tuesday time change";
+f033 = subcall.sc_wed_time,RIGHT,NOENTRY,COMMENTS="Pickup time for each Wednesday of the week";
+f034 = subcall.sc_wed_time_change,RIGHT,NOENTRY,COMMENTS="A one time Wednesday time change";
+f035 = subcall.sc_thu_time,RIGHT,NOENTRY,COMMENTS="Pickup time for each Thursday of the week";
+f036 = subcall.sc_thu_time_change,RIGHT,NOENTRY,COMMENTS="A one time Thursday time change";
+f037 = subcall.sc_fri_time,RIGHT,NOENTRY,COMMENTS="Pickup time for each Friday of the week";
+f038 = subcall.sc_fri_time_change,RIGHT,NOENTRY,COMMENTS="A one time Friday time change";
+f039 = subcall.sc_sat_time,RIGHT,NOENTRY,COMMENTS="Pickup time for each Saturdat of the week";
+f040 = subcall.sc_sat_time_change,RIGHT,NOENTRY,COMMENTS="A one time Saturday time change";
+f041 = subcall.sc_sun_time,RIGHT,NOENTRY,COMMENTS="Pickup time for each Sunday of the week";
+f042 = subcall.sc_sun_time_change,RIGHT,NOENTRY,COMMENTS="A one time Sunday time change";
+f055 = subcall.sc_pckup_pmap,UPSHIFT,NOENTRY,COMMENTS="Formated pickup address map info for the driver";
+f056 = subcall.sc_dest_dmap,UPSHIFT,NOENTRY,COMMENTS="Formated destination address map info for the driver";
+f048 = subcall.sc_date_in,NOENTRY,NOUPDATE,COMMENTS="Date this call was entered";
+f049 = subcall.sc_time_in,NOENTRY,NOUPDATE,COMMENTS="Time this call was entered";
+i = subcall.sc_pod_required,UPSHIFT,include=(Y,N),NOENTRY,COMMENTS="Y/N. Whether  proof of delivery is required";
+f044 = subcall.sc_enter_by,RIGHT,NOENTRY,NOUPDATE,COMMENTS="User ID of person who entered this call";
+f045 = subcall.sc_last_changed_by,RIGHT,NOENTRY,COMMENTS="User ID of the last person who changed this subscription call";
+f046 = subcall.sc_call_nbr1,RIGHT,NOENTRY,COMMENTS="Call number of the call subscription call for the next 24 hours";
+f047 = subcall.sc_call_nbr2,RIGHT,NOENTRY,COMMENTS="Call number of the call generated from this subs call for the 25-48 hours";
+f050 = subcall.sc_ac_addt1_info1,UPSHIFT,NOENTRY,COMMENTS="Information entered in response to the prompt from account file";
+f051 = subcall.sc_ac_addt1_info2,UPSHIFT,NOENTRY,COMMENTS="Information  entered in response to the prompt from account file";
+f054 = subcall.sc_driver_msg,UPSHIFT,NOENTRY,COMMENTS="Message to be sent to the driver from account file if this is a charge call";
+f053 = subcall.sc_company_name,UPSHIFT,NOENTRY,COMMENTS="Company name if a charge account call";
+
+instructions
+composites <subcall.sc_fleet, subcall.sc_pckup_zone>
+	*<zone.zn_fleet, zone.zn_nbr>
+end
+

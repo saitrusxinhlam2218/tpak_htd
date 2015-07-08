@@ -1,0 +1,53 @@
+{
+|***********************************************************************
+|                 RCS INFO
+|
+|  @(#)  $RCSfile: callh.per,v $
+|  @(#)  $Revision: 1.5 $
+|  @(#)  $Date: 1998/01/08 19:35:21 $
+|  @(#)  $Author: taxiadm $
+|  @(#)  $Source: /taxi-scan/taxi_proj/cvs/taxi-scan/src/forms/danish/callh.per,v $
+|
+|  Copyright (c) 1994 - MobileSoft Consulting, Inc. Woodinville WA
+|
+|**********************************************************************/
+|ident "@(#) head:$RCSfile: callh.per,v $	$Revision: 1.5 $"
+}
+database mads
+screen
+{
+						VEDLIGEH. AF BEST. HISTORIK
+
+Best.nummer               Undtagelseskode         Vognpark       Hændelsestype
+[f000                ]    [c ]                   [a]         [b]
+
+
+ Hændl.beskr.      Dato        Tid      Vgnnr    Chauf-ID    Bruger-ID
+       [f005    ] [f003     ] [f004  ]  [f006]   [f007 ]     [f008]
+
+Taget affære      Dato        Tid      Vgnnr     Chauf-ID    Bruger-ID
+       [f009    ] [f010     ] [f011  ] [f013]    [f014 ]     [f015]
+}
+end
+tables
+callh
+attributes
+f000 = callh.ch_call_nbr,NOENTRY,NOUPDATE,RIGHT,COMMENTS="Best.nr. på denne tur";
+c = callh.ch_exception_nbr,NOENTRY,RIGHT,COMMENTS="Undtagelseskode.  Svarer til nummer i undtagelsestype-filen";
+a = callh.ch_fleet,NOENTRY,UPSHIFT,COMMENTS="Vognpark-ID";
+b = callh.ch_event_type,NOENTRY,UPSHIFT,include=(R,E),default="R",COMMENTS="'R'egulær systemsfunktioner eller 'E'mulerer en mdt terminal";
+f005 = callh.ch_event_desc,NOENTRY,UPSHIFT,COMMENTS="Hændelsen som fandt sted";
+f003 = callh.ch_status_date,NOENTRY,NOENTRY,NOUPDATE,COMMENTS="Hændelsesdato";
+f004 = callh.ch_status_time,NOENTRY,NOENTRY,NOUPDATE,COMMENTS="Hændelsestid";
+f006 = callh.ch_veh_nbr,NOENTRY,RIGHT,COMMENTS="Vognnummer som kørte denne tur";
+f007 = callh.ch_drv_id,NOENTRY,RIGHT,COMMENTS="Chauffør-ID involveret i denne hændelse";
+f008 = callh.ch_user_id,NOENTRY,RIGHT,COMMENTS="Bruger-ID involveret i denne hændelse";
+f009 = callh.ch_action_taken,NOENTRY,UPSHIFT,COMMENTS="Den handling som chauffør/bruger tog for at afklare hændelsen";
+f010 = callh.ch_action_date,NOENTRY,NOENTRY,NOUPDATE,COMMENTS="Dato der blev taget affære";
+f011 = callh.ch_action_time,NOENTRY,NOENTRY,NOUPDATE,COMMENTS="Tid der blev taget affære";
+f013 = callh.ch_action_veh_nbr,NOENTRY,RIGHT,COMMENTS="Nummer på vognen som tog affære";
+f014 = callh.ch_action_drv_id,NOENTRY,RIGHT,COMMENTS="ID på den chauffør som tog affære";
+f015 = callh.ch_action_user_id,NOENTRY,RIGHT,COMMENTS="ID på brugeren som tog affære";
+instructions
+   delimiters "()";
+end

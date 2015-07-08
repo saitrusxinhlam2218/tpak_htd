@@ -1,0 +1,75 @@
+{
+|***********************************************************************
+|                 RCS INFO
+|
+|  @(#)  $RCSfile: receipts.per,v $
+|  @(#)  $Revision: 1.2 $
+|  @(#)  $Date: 1999/03/22 14:17:26 $
+|  @(#)  $Author: taxiadm $
+|  @(#)  $Source: /taxi-scan/taxi_proj/cvs/taxi-scan/src/forms/english/receipts.per,v $
+|
+|  Copyright (c) 1994 - MobileSoft Consulting, Inc. Woodinville WA
+|
+|**********************************************************************/
+|ident "@(#) head:$RCSfile: receipts.per,v $	$Revision: 1.2 $"
+}
+
+
+
+database mads
+screen
+{
+
+						RECEIPT DATA MAINTENANCE
+
+ID		DATE-TIME	DATE	   TIME		VEHICLE		TRANSACTION NUMBER		
+[f000    ]	[f001     ]	[f009    ] [f010    ]	[f002  ]	[f003     ]
+
+CALL NUMBER	PROCESSED	AMOUNT	   EXTRAS	DISTANCE	START TIME	END TIME
+[f004     ]	[a]		[f011 ]	   [f012]	[f013 ]		[f014]		[f015]
+
+DRIVER NUMBER	CAR NUMBER	BIZ NUMBER	TRIP TYPE		PAYMENT TYPE
+[f016  ]	[f017    ]	[f018   ]	[b ]			[c]
+
+CREDIT CARD
+[f019                                     ]
+
+RECEIPT TEXT
+[f005                                                            ]
+[f006                                                            ]
+[f007                                                            ]
+[f008                                                            ]
+
+}
+end
+tables
+receipts
+attributes
+f000=receipts.rd_serial_num,REQUIRED;
+f001=receipts.rd_trans_dt_tm;
+f009=receipts.rd_date;
+f010=receipts.rd_time;
+f002=receipts.rd_veh_nbr;
+f003=receipts.rd_itm_trans_nbr;
+f004=receipts.rd_call_nbr;
+a=receipts.rd_processed;
+f011=receipts.rd_amount;
+f012=receipts.rd_extras;
+f013=receipts.rd_distance;
+f014=receipts.rd_start;
+f015=receipts.rd_end;
+f016=receipts.rd_driver_nbr;
+f017=receipts.rd_car_nbr;
+f018=receipts.rd_biz_nbr;
+b=receipts.rd_trip_type;
+c=receipts.rd_payment_type;
+f019=receipts.rd_credit_card;
+f005=receipts.rd_itm_text[1,64];
+f006=receipts.rd_itm_text[65,128];
+f007=receipts.rd_itm_text[129,192];
+f008=receipts.rd_itm_text[193,256];
+
+
+instructions
+	delimiters "()";
+end

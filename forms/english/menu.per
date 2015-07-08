@@ -1,0 +1,38 @@
+{
+|***********************************************************************
+|                 RCS INFO
+|
+|  @(#)  $RCSfile: menu.per,v $
+|  @(#)  $Revision: 1.2 $
+|  @(#)  $Date: 1999/03/19 21:26:42 $
+|  @(#)  $Author: taxiadm $
+|  @(#)  $Source: /taxi-scan/taxi_proj/cvs/taxi-scan/src/forms/english/menu.per,v $
+|
+|  Copyright (c) 1994 - MobileSoft Consulting, Inc. Woodinville WA
+|
+|**********************************************************************/
+|ident "@(#) head:$RCSfile: menu.per,v $	$Revision: 1.2 $"
+}
+database mads
+screen
+{
+						MENU FILE MAINTENANCE
+
+Number        Command   Last Menu Item    Type    Description
+[f000    ]    [abc]     [a]               [b]     [f002                             ]
+
+UNIX Command                                Previous Screen
+[f003                                    ]  [c]
+}
+end
+tables
+menu
+attributes
+f000 = menu.mf_nbr,RIGHT,NOENTRY,NOUPDATE,COMMENTS="Sequentital number assigned used for permission cross_reference";
+abc = menu.mf_command,RIGHT,REQUIRED,NOUPDATE,COMMENTS="A command string assigned to each menu item";
+a = menu.mf_last_menu_item,include=(Y,N),UPSHIFT,COMMENTS="Y/N. whether this menu item is the last one on the menu or not";
+b = menu.mf_type,UPSHIFT,include=(E,M,I),COMMENTS="A menu item may be a 'M'enu, 'E'xternal executable,'I'nternal excutable";
+f002 = menu.mf_desc,COMMENTS="The actual character description that will be displayed on the menu";
+f003 = menu.mf_unix_string,COMMENTS="UNIX command to be executed if menu item is external executable";
+c = menu.mf_prev_scr_flag,UPSHIFT,COMMENTS="Previous screen flag";
+end
