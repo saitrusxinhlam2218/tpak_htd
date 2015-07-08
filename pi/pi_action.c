@@ -5504,6 +5504,7 @@ int pi_update_call( struct order_struc *order_data, struct return_struc *return_
 	if (future_call)
 	  {
 	    call_ptr->extended_type[TIMEC_TYPE_OFF] = TIMEC;
+	    call_ptr->extended_type[TIMEC_TYPE_OFF+1] = ' ';
 	    strcpy( call_ptr->status, catgets(WRITER_catd, 1, 41, "PENDING" ) );
 	    cipc.call_type.time = TRUE;
 	  }

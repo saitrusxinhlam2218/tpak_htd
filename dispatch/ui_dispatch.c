@@ -111,6 +111,7 @@ read_pipe()
 	  }
 	break;
 
+
       case EXCEPT_REQ:
 	if ((poffset + sizeof(struct excpt_rec)) > bytes_read)
 	  {

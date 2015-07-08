@@ -1537,6 +1537,7 @@ int ilink_redispatch;
    ZONE_HNDL hZone = HNDL_NULL;
    FLEET_HNDL fleet_hndl = HNDL_NULL;
    VEH_HNDL   veh_hndl;
+   struct cisam_cl *cl_ptr;   
    
 
    if ((call_ptr = (struct calls *) Call_activate(call_ipc_rec_ptr, &exists)) == NULL)
@@ -1753,6 +1754,14 @@ int ilink_redispatch;
    
    if (type > 0)
    {
+     if (call_ptr->status.accepted)
+       {
+	 cl_ptr = Call_get_record(call_ptr->c_isam_num, call_ptr->call_number);
+	 if ((cl_ptr != NULL) && (!strncmp(cl_ptr->extended_type, "KE", 2)))
+	   Call_send_assign((CALL_HNDL)call_ptr, (VEH_HNDL)(call_ptr->veh_ptr));
+	 return ((CALL_HNDL)call_ptr);
+       }
+     
       if (type == WAKE_UP && ((mads_time + fleet[call_ptr->fleet]->time_call_freq +
 			       fleet[call_ptr->fleet]->wakeup_lead_time + 60) < call_ptr->due_time))
       {
@@ -1775,8 +1784,15 @@ int ilink_redispatch;
    } else
    {
 
-     if (!call_ptr->status.offered)
+     if (call_ptr->status.accepted)
+       {
+	 cl_ptr = Call_get_record(call_ptr->c_isam_num, call_ptr->call_number);
+	 if ((cl_ptr != NULL) && (!strncmp(cl_ptr->extended_type, "KE", 2)))
+	   Call_send_assign((CALL_HNDL)call_ptr, (VEH_HNDL)(call_ptr->veh_ptr));
+       }
+     else if (!call_ptr->status.offered)
        Call_match((CALL_HNDL) call_ptr);
+
 
      //     if ( ( (short)Call_get_value( (CALL_HNDL) call_ptr, CALL_TYPE_ILINK ) == TRUE ) &&
      //          ( call_ipc_rec_ptr->ilink_timeout > 0 ) )
