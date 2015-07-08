@@ -14,6 +14,15 @@
 *.la
 *.lo
 
+# named binaries
+dispatch
+pi
+ui
+dr_maint
+fl_maint
+vh_maint
+async
+
 # Shared objects (inc. Windows DLLs)
 *.dll
 *.so
