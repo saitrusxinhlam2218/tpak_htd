@@ -34,22 +34,41 @@ typedef struct _KELANODE_REC
   char   booking_id[21];
   char   full_booking_id[65];
   char   manual_descript[256];
+  short    version;
 } KELANODE_REC;
 #ifdef KEY_SRC
 struct keydesc kelanode_key1 = {
-  ISNODUPS,
-  2,
-  {{ 0, 64, CHARTYPE},
-   { 64, INTSIZE, INTTYPE } }
+  ISDUPS,
+  1,
+  {{ 0, 64, CHARTYPE}}
 };
+
 struct keydesc kelanode_key2= {
-  ISNODUPS,
-  2,
-  {{ 66, LONGSIZE, LONGTYPE},
-   { 64, INTSIZE, INTTYPE } }
+  ISDUPS,
+  1,
+  {{ 66, LONGSIZE, LONGTYPE}}
 };
+
+struct keydesc kelanode_key3= {
+  ISNODUPS,
+  3,
+  {{ 66, LONGSIZE, LONGTYPE},
+   { 64, INTSIZE, INTTYPE },
+   { 743, INTSIZE, INTTYPE}}
+};
+
+struct keydesc kelanode_key4= {
+  ISNODUPS,
+  3,
+  {{ 0, 64, CHARTYPE},
+   { 64, INTSIZE, INTTYPE },
+   { 743, INTSIZE, INTTYPE}}
+};
+
 #else
 extern struct keydesc kelanode_key1;
 extern struct keydesc kelanode_key2;
+extern struct keydesc kelanode_key3;
+extern struct keydesc kelanode_key4;
 #endif
 #endif
