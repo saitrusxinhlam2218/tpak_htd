@@ -1404,9 +1404,10 @@ Call_send_cancel(call_hndl, veh_hndl)
 /*********************************************************/
 
 RET_STATUS
-Call_send_assign(call_hndl, veh_hndl)
+Call_send_assign(call_hndl, veh_hndl, update)
    CALL_HNDL call_hndl;
    VEH_HNDL veh_hndl;
+   BOOLEAN update;
 {
    /* GENERALLY TEMPORARY */
    struct calls *call_ptr;
@@ -1414,7 +1415,7 @@ Call_send_assign(call_hndl, veh_hndl)
 
    call_ptr = (struct calls *) call_hndl_to_ptr(call_hndl);
    veh_ptr = (struct veh_driv *) veh_hndl_to_ptr(veh_hndl);
-   return (send_assign((char *) Veh_get_value(veh_hndl, VEH_MID), call_ptr, veh_ptr));
+   return (send_assign((char *) Veh_get_value(veh_hndl, VEH_MID), call_ptr, veh_ptr, update));
 }				/* end Call_send_assign */
 
 /****************************************************/
@@ -1758,7 +1759,7 @@ int ilink_redispatch;
        {
 	 cl_ptr = Call_get_record(call_ptr->c_isam_num, call_ptr->call_number);
 	 if ((cl_ptr != NULL) && (!strncmp(cl_ptr->extended_type, "KE", 2)))
-	   Call_send_assign((CALL_HNDL)call_ptr, (VEH_HNDL)(call_ptr->veh_ptr));
+	   Call_send_assign((CALL_HNDL)call_ptr, (VEH_HNDL)(call_ptr->veh_ptr), TRUE);
 	 return ((CALL_HNDL)call_ptr);
        }
      
@@ -1788,7 +1789,7 @@ int ilink_redispatch;
        {
 	 cl_ptr = Call_get_record(call_ptr->c_isam_num, call_ptr->call_number);
 	 if ((cl_ptr != NULL) && (!strncmp(cl_ptr->extended_type, "KE", 2)))
-	   Call_send_assign((CALL_HNDL)call_ptr, (VEH_HNDL)(call_ptr->veh_ptr));
+	   Call_send_assign((CALL_HNDL)call_ptr, (VEH_HNDL)(call_ptr->veh_ptr), TRUE);
        }
      else if (!call_ptr->status.offered)
        Call_match((CALL_HNDL) call_ptr);

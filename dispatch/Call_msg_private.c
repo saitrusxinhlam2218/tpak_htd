@@ -332,7 +332,7 @@ Call_msg_itm_ack( veh_hndl )
 		  sprintf(error_str,"Error call_m_action_notify_func - call %d timer not in list",(int)Call_get_value(call_hndl, CALL_NBR));
 		  ERROR(' ',"", error_str);
 		}	      
-	      Call_send_assign(call_hndl, veh_hndl );
+	      Call_send_assign(call_hndl, veh_hndl, FALSE );
 	    }
 	  break;
 	}
@@ -450,7 +450,7 @@ Call_msg_itm_nak( veh_hndl )
 		 /* NAK received after one of the retries */
 		 Call_msg_update_ack( cmsg_hndl );
 		 Call_delete_timer( call_hndl, T_M_ACTION );		 
-		 Call_send_assign( call_hndl, veh_hndl );
+		 Call_send_assign( call_hndl, veh_hndl, FALSE );
 		 return( SUCCESS );
 	       }
 	   }

@@ -5511,14 +5511,15 @@ int pi_update_call( struct order_struc *order_data, struct return_struc *return_
 	else
 	  {
 	    call_ptr->extended_type[TIMEC_TYPE_OFF] = ' ';
-	    strcpy(call_ptr->status, catgets(WRITER_catd, 1, 39, "UNASSGND" ));
+	    call_ptr->extended_type[TIMEC_TYPE_OFF+1] = ' ';
+	    //	    strcpy(call_ptr->status, catgets(WRITER_catd, 1, 39, "UNASSGND" ));
 	    cipc.call_type.time = FALSE;
 	  }
 	bzero(&cipc.veh_attr, sizeof(struct veh_attributes));
 	bzero(&cipc.drv_attr, sizeof(struct drv_attributes));
 	for (counter = 0; counter < 32; counter ++)
 	  {
-	    if (call_ptr->veh_attr[counter] = YES)
+	    if (call_ptr->veh_attr[counter] == YES)
 	      set_attr_bit(counter, sizeof(struct veh_attributes), &cipc.veh_attr);
 	    if (call_ptr->drv_attr[counter] == YES)
 	      set_attr_bit(counter, sizeof(struct drv_attributes), &cipc.drv_attr);

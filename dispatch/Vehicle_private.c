@@ -1358,10 +1358,10 @@ veh_state(veh_ptr, op, state, argument, argument2)
 			   /* increment M_ACTION retry counter */
 			 }
 		       else
-			 Call_send_assign((CALL_HNDL)argument, (VEH_HNDL) veh_ptr);
+			 Call_send_assign((CALL_HNDL)argument, (VEH_HNDL) veh_ptr, FALSE);
 		     }
 		   else
-		     Call_send_assign((CALL_HNDL) argument, (VEH_HNDL) veh_ptr);
+		     Call_send_assign((CALL_HNDL) argument, (VEH_HNDL) veh_ptr, FALSE);
 		 }
 	       
 	       /* Update Vehicle's GPS state for TaxiGEO */
@@ -2458,7 +2458,8 @@ veh_state(veh_ptr, op, state, argument, argument2)
 		 bzero(&kelanode_rec, sizeof(KELANODE_REC));
 		 kelanode_rec.tpak_id = veh_ptr->call_ptr->call_number;
 		 kelanode_rec.nbr = veh_ptr->kela_node;
-		 if ( db_read_key(KELANODE_FILE_ID, &kelanode_rec, &kelanode_key2, ISEQUAL) == SUCCESS )
+		 kelanode_rec.nbr = 0;
+		 if ( db_read_key(KELANODE_FILE_ID, &kelanode_rec, &kelanode_key3, ISEQUAL) == SUCCESS )
 		   {
 		     mk_outb_text("");
 		     sprintf(tmp_buf,"KELA: %s", kelanode_rec.booking_id);
@@ -2478,7 +2479,8 @@ veh_state(veh_ptr, op, state, argument, argument2)
 		 bzero(&kelanode_rec, sizeof(KELANODE_REC));
 		 kelanode_rec.tpak_id = veh_ptr->call_ptr->call_number;
 		 kelanode_rec.nbr = veh_ptr->kela_node;
-		 if ( db_read_key(KELANODE_FILE_ID, &kelanode_rec, &kelanode_key2, ISEQUAL) == SUCCESS )
+		 kelanode_rec.version = 0;
+		 if ( db_read_key(KELANODE_FILE_ID, &kelanode_rec, &kelanode_key3, ISEQUAL) == SUCCESS )
 		   {
 		     tm_ptr = localtime(&mads_time);
 		     strftime(kelanode_rec.arrival_time, 25, "%Y-%m-%dT%H:%M:%S", tm_ptr);

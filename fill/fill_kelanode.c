@@ -20,6 +20,9 @@ fill_kelanode_key(req_buf, buf)
 
   stlong(kn->tpak_id, &buf[offset]);
   offset += LONGSIZE;
+
+  stint(kn->version, &buf[743]);
+  offset += INTSIZE;
   
 }
 
@@ -89,7 +92,8 @@ void fill_kelanode(req_buf, buf, action)
   stchar(kn->manual_descript, &buf[offset], sizeof(kn->manual_descript)-1);
   offset += sizeof(kn->manual_descript)-1;    
 
-
+  stint(kn->version, &buf[offset]);
+  offset += INTSIZE;
   
 }
 
@@ -158,6 +162,9 @@ unfill_kelanode(req_buf, buf)
   offset += sizeof(kn->full_booking_id)-1;
 
   ldchar(&buf[offset], sizeof(kn->manual_descript)-1, kn->manual_descript);
-  offset += sizeof(kn->manual_descript)-1;          
+  offset += sizeof(kn->manual_descript)-1;
+
+  kn->version = ldint(&buf[offset]);
+  offset += INTSIZE;  
 
 }

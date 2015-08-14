@@ -2264,7 +2264,7 @@ except_action_message_from_driver(exception_shuttle)
 			    {
                               if ( exception_call->status.accepted )
 				send_assign(exception_call->veh_ptr->mid, 
-					    exception_call, exception_call->veh_ptr);
+					    exception_call, exception_call->veh_ptr, FALSE);
 			    }
 			
 			rc = remove_exception(exception);
@@ -3792,7 +3792,7 @@ action_resend(exception_call)
 	if ((exception_call->veh_ptr != NULL) &&
 	    ( Call_get_state( (CALL_HNDL)call_hndl, CALL_ACCEPT_STATE ) ) )
 		send_assign(exception_call->veh_ptr->mid, 
-				exception_call, exception_call->veh_ptr);
+			    exception_call, exception_call->veh_ptr, FALSE);
 
 	return( SUCCESS );
 }

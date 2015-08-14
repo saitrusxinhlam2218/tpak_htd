@@ -1257,7 +1257,8 @@ Veh_process_key(
 	      bzero(&kelanode_rec, sizeof(KELANODE_REC));
 	      kelanode_rec.tpak_id = veh_ptr->call_ptr->call_number;
 	      kelanode_rec.nbr = veh_ptr->kela_node;
-	      if ( db_read_key(KELANODE_FILE_ID, &kelanode_rec, &kelanode_key2, ISEQUAL) == SUCCESS )
+	      kelanode_rec.version = 0;
+	      if ( db_read_key(KELANODE_FILE_ID, &kelanode_rec, &kelanode_key3, ISEQUAL) == SUCCESS )
 		{
 		  tmtime = time((time_t)0);
 		  stime = (char *)ctime(&tmtime);
@@ -1296,7 +1297,7 @@ Veh_process_key(
                     }
                   else
                     {
-                      send_assign( veh_ptr->mid, veh_ptr->call_ptr, veh_ptr );
+                      send_assign( veh_ptr->mid, veh_ptr->call_ptr, veh_ptr, FALSE );
                       return( SUCCESS );
                     }                  
                 }

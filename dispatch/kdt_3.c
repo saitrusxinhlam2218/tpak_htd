@@ -932,12 +932,12 @@ void kela_request_form_hndl(msg, veh_ptr, term_id)
       msg->text[strlen(msg->text)-4] = '\0';
       booking_id = (int)strtol(pField2, (char **) 0, 16);
       byte_ptr = (unsigned char *)booking_id;
-      mask = 0x80;
+      mask = 0x01;
       for (jj=0;jj<=8;jj++)
 	{
 	  if (booking_id & mask)
 	    id_array[jj]=1;
-	  mask >>=1;
+	  mask <<=1;
 	}
       
       db_open(KELANODE_FILE_ID, ISINOUT | ISMANULOCK);
@@ -945,12 +945,13 @@ void kela_request_form_hndl(msg, veh_ptr, term_id)
       countKelaNodes = 0;
       dbmode = ISEQUAL;
       strncpy(kelanode_rec.rte_id, msg->text,(pField-msg->text));
+      kelanode_rec.version = 0;
       for (i=0; i< 8; i++)
 	{
 	  if (id_array[i] == 1) // need this booking ID
 	    {
 	      kelanode_rec.nbr = i+1;
-	      if (db_read_key(KELANODE_FILE_ID, &kelanode_rec, &kelanode_key1, dbmode) == SUCCESS)
+	      if (db_read_key(KELANODE_FILE_ID, &kelanode_rec, &kelanode_key4, dbmode) == SUCCESS)
 		{
 		  strcpy(tmp_pax, kelanode_rec.passenger);
 		  if (strstr(tmp_pax,"/") != NULL)
