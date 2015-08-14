@@ -186,7 +186,7 @@ RET_STATUS  Call_redispatch(CALL_HNDL, int);
 RET_STATUS  Call_release_locks(void);
 void        Call_remove_reject_veh(int, int);
 RET_STATUS  Call_reset_state(CALL_HNDL, int, HNDL);
-RET_STATUS  Call_send_assign(CALL_HNDL, VEH_HNDL);
+RET_STATUS  Call_send_assign(CALL_HNDL, VEH_HNDL, BOOLEAN);
 RET_STATUS  Call_send_cancel(CALL_HNDL, VEH_HNDL);
 RET_STATUS  Call_send_offer(CALL_HNDL, VEH_HNDL);
 RET_STATUS  Call_set_rec_info(CALL_REC_HNDL, int, HNDL);

@@ -1334,7 +1334,7 @@ struct cisam_cl *cp;						/* pointer to call structure with user supplied data *
 {
     int  i, j;
     int  len, old_len;
-    char driver_msg_cmnt[39];
+    char driver_msg_cmnt[65];
     char *start;
     char *end_comment;
     char old_str[65];
@@ -1343,7 +1343,7 @@ struct cisam_cl *cp;						/* pointer to call structure with user supplied data *
     char *spacing;
 
     if (*cp->driver_msg)
-        sprintf(driver_msg_cmnt, "/%s/", cp->driver_msg);
+        sprintf(driver_msg_cmnt, "%s", cp->driver_msg);
     else
         driver_msg_cmnt[0] = '\0';
 
@@ -1392,7 +1392,7 @@ struct cisam_cl *cp;						/* pointer to call structure with user supplied data *
     }
 
     /* If couldn't find old driver msg comment then only add driver msg comment if there's room for it (+1 is for space) */
-    else if (strlen(cp->general_cmnt) + strlen(driver_msg_cmnt) + 1 <= 64)
+    else if (strlen(cp->general_cmnt) + strlen(driver_msg_cmnt)  <= 64)
     {
 	if (cp->general_cmnt[0] == '\0' || cp->general_cmnt[0] == ' ')
 	    strcpy(cp->general_cmnt, driver_msg_cmnt);

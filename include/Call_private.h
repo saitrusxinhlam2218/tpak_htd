@@ -118,7 +118,7 @@ typedef struct cisam_cl
   short approve_by;                    /* call taker number that approved this charge.       */
   char  ac_addt1_info1[26];             /* Information entered in respons to the prompt from the account file (ac_header_3). */
   char  ac_addt1_info2[26];             /* Information entered on respons to the prompt from the account file (ac_header_4).  */
-  char   driver_msg[37];
+  char   driver_msg[65];
   char   pckup_pmap[9];
   char   dest_dmap[9];
   char  status_bits[5];                  /* 32 flags. used by the user interface process to tag future and pending subsc */

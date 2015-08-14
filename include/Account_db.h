@@ -39,7 +39,7 @@ typedef struct    cisam_ac
       char   header_2[31];              /* Field header of second field to be displayed if enable by account entry clerk. */
       char   header_3[16];              /* Header for an entry field          */
       char   header_4[16];              /* Header for an entry field          */
-      char   driver_msg[37];            /* A message to be relayed to the driver. */
+      char   driver_msg[65];            /* A message to be relayed to the driver. */
       short  priority;                  /* A priority given to this account.  will override default priority, if higher */
       char   show_pckup_adr;            /*"Y"/"N".  "Y"=place account pickup address on the call entry screen automatically */
       char   phone_number[19];          /* internationalization phone number */
