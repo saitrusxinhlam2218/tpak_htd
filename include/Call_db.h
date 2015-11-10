@@ -27,7 +27,7 @@
 #define CL_DUE_DATE_TIME     CL_CHARGE_NBR        + 124 /** 557 **/
 #define CL_VEH_NBR           CL_DUE_DATE_TIME     + 110 /** 667 **/
 #define CL_DRV_ID            CL_VEH_NBR           + 2   /** 669 **/
-#define CL_PASS_NAME_KEY     CL_DRV_ID            + 151 /** 820 **/
+#define CL_PASS_NAME_KEY     848
 #define CL_EXT_NBR           CL_PASS_NAME_KEY     + 27  /** 847 **/
 #define CL_SHIFT_NBR                                      0
 #define CL_SHIFT_FLEET             CL_SHIFT_NBR               + 10
