@@ -11,7 +11,7 @@ static char sz__FILE__[]="@(#)ui_process.c	10.1.2.1(ver) Date Release 12/2/94" ;
 #include <cursesX.h>
 #include <ctype.h>
 #include <string.h>
-
+#include <sys/msg.h>
 #include "ui_strdefs.h"
 #include "ui_def.h"
 #include "ui_error.h"
@@ -28,6 +28,8 @@ extern char *ptr_item_desc[];		/* array of pointers to point to desc of items on
 extern int map_array[];			/* to map scr_name to index into menus structure */
 extern int (*security[])();		/* pointers to functions for checking users permissions */
 extern short clear_err_flag;		/* set if an error msg appears on last line */
+extern int msgkey;
+extern int pid;
 
 int process_dummy(); 			/* a dummy function ... not called */
 /* declare functions used for processing the various user interface tasks */
@@ -57,6 +59,9 @@ process()
 	int i;				/* scratch variable */
 	int cursor_column;
 	void move_highlight();		/* moves the highlight from one line to the other */
+	char message_on_queue[5120];
+	long msgtype = 0;
+	int rc = 0;
 
 	/* Location of cursor depends on length of last line of menu */
 	cursor_column = strlen(catgets(UI_m_catd, UI_1, UI_UI_DISP_M_4, "Enter carriage return to execute selection:  "));
@@ -70,6 +75,17 @@ process()
 		 * display, if the screen is a UI_SCREEN, then the process loop should navigate the program 
 		 * such that the appropriate routine is called 
 		 */
+
+	  // cleanup any stale messages on queue
+	  bzero(message_on_queue, 5120);
+	  msgtype = (long)pid;
+	  rc = 0;
+	  
+	  while (rc != -1)
+	    rc = msgrcv(msgkey, message_on_queue, 1024, msgtype, MSG_NOERROR | IPC_NOWAIT);
+	  
+
+	  
 		if ( scr_type == UI_MENU )  {
 		        display_time();
 			move(CURSOR_ROW_MENU, cursor_column); 	/* move the cursor to the input position */

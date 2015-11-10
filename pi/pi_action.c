@@ -1257,7 +1257,7 @@ int EnterCallinTaxiPak( struct call_ext *cur_call, int nCallIndex,struct cisam_c
 			      }
 			  }
 
-                        if ( cur_call->to_addr_zone == 0 )
+                        if (cur_call->to_addr_zone == 0 )
                           zone_addr( call_ptr, DEST_ADDR, &zip );
 
                         
@@ -5427,12 +5427,14 @@ int pi_update_call( struct order_struc *order_data, struct return_struc *return_
     short pi_fail_ok,     /* Return-value (PI_OK/PI_FAIL).    */
       counter, i;     /* Common loop counters.      */
     int call_nbr;
+    int zip = 0;
     int return_code = 1;	/* Internal func. return-code.(OK=1)		*/
     int db_call_num;      /* The call-number assigned to the call_ptr.  */
     ACCT_DATA_REC *spCurCall;
     char *position;   /* Current position in data-block.    */
     struct call_ipc_rec sCallRec;
     struct cisam_cl *call_ptr;
+    struct cisam_cl call_record;
     struct cisam_ch call_history, *callh_ptr;
     time_t min_time, now_time;
     char min_ascii_time[7];char min_ascii_date[12];
@@ -5459,10 +5461,12 @@ int pi_update_call( struct order_struc *order_data, struct return_struc *return_
     
     if (call_nbr > 0)
       {
-	call_ptr = (struct cisam_cl *)req_buf;
+	bzero(&call_record, sizeof(struct cisam_cl));
+	
+	call_ptr = (struct cisam_cl *)&call_record;
 	call_ptr->nbr = call_nbr;
 
-	if((db(CALL_FILE_ID,READ_KEYS,&cl_key1,ISEQUAL+ISLOCK,0)) < 0)
+	if((db_read_key(CALL_FILE_ID,&call_record,&cl_key1,ISEQUAL+ISLOCK) != SUCCESS))
 	  {
 	    printf( "Failed with isam error (%d)\n", iserrno );
 	    ERROR( "Call does not exist" );		/* Log the error... */
@@ -5482,13 +5486,17 @@ int pi_update_call( struct order_struc *order_data, struct return_struc *return_
 	else
 	  future_call = 1;    /* Call is a legal future-call... */
 
-	cipc.old_due_time = call_ptr->due_date_time;	
+	//future_call = 1;
+	//	cipc.old_due_time = call_ptr->due_date_time;	
 	call_ptr->due_date_time = (time_t)get_internal_time((char *)spCurCall->due_date, (char *)spCurCall->due_time);
 	PI_to_TP_date(spCurCall->due_date, call_ptr->due_date);
 	PI_to_TP_time(spCurCall->due_time, call_ptr->due_time);
 	strcpy(call_ptr->pckup_str_name, spCurCall->from_addr_street);
+	strncpy(call_ptr->pckup_str_key, spCurCall->from_addr_street, 4);
 	call_ptr->pckup_str_nbr = atoi(spCurCall->from_addr_number);
 	strcpy(call_ptr->pckup_city, spCurCall->from_addr_city);
+	zone_addr(call_ptr, PICKUP_ADDR, &zip);
+	strcpy(call_ptr->dest_str_name, spCurCall->to_addr_street);
 
 	cipc.u_prcs_id = pid;
 	cipc.rec_type = CALL_REQ;
@@ -5505,7 +5513,7 @@ int pi_update_call( struct order_struc *order_data, struct return_struc *return_
 	  {
 	    call_ptr->extended_type[TIMEC_TYPE_OFF] = TIMEC;
 	    call_ptr->extended_type[TIMEC_TYPE_OFF+1] = ' ';
-	    strcpy( call_ptr->status, catgets(WRITER_catd, 1, 41, "PENDING" ) );
+	    //	    strcpy( call_ptr->status, catgets(WRITER_catd, 1, 41, "PENDING" ) );
 	    cipc.call_type.time = TRUE;
 	  }
 	else
@@ -5525,7 +5533,7 @@ int pi_update_call( struct order_struc *order_data, struct return_struc *return_
 	      set_attr_bit(counter, sizeof(struct drv_attributes), &cipc.drv_attr);
 	  }
 	
-	if ((db(CALL_FILE_ID, UPDATE_REC, &cl_key1, 0, 0)) < 0)		/* R2 */
+	if ((db_update(CALL_FILE_ID, &call_record) != SUCCESS))
 	  {
 	    printf( "Failed with isam error (%d)\n", iserrno );
 	    ERROR("Error updating <call record>");

@@ -1526,6 +1526,8 @@ veh_state(veh_ptr, op, state, argument, argument2)
 		      }
 		    if (level_offered != -1)
 		      {
+#ifdef FOO
+			// attempt to move vehicle to end of queue on penalty '3' setting
 			if (zone_ptr->level_reject_penalty[level_offered] == '3')
 			  {
 			    (void)Veh_reset_state((VEH_HNDL)veh_ptr, VEH_POSTED_STATE, HNDL_NULL, HNDL_NULL);
@@ -1536,11 +1538,11 @@ veh_state(veh_ptr, op, state, argument, argument2)
 				Zone_add_veh(veh_ptr->zone_num, (VEH_HNDL)veh_ptr);
 			      }
 			  }
+#endif
 		      }
 		  }
 	      }
 	    
-#ifdef FOO
 	    call_ptr = (struct calls *) argument2;
 
 	    if (argument == CALL_NO_ACCEPT_PENALTY)
@@ -1549,8 +1551,28 @@ veh_state(veh_ptr, op, state, argument, argument2)
 	       veh_ptr->no_accepts += 1;
 	    }
 
+	    // 10-29-15: Move to end of queue on no-accept
+	    tmp = veh_ptr->zone_num;
+	    (void) Veh_reset_state((VEH_HNDL) veh_ptr, VEH_ON_CALL_STATE, HNDL_NULL, HNDL_NULL);
+	    if ((char)Zone_get_value(zone_hndl, ZONE_TYPE) != ZN_STAND)
+	      {
+		veh_ptr->t_status.posted = 1;
+		Vehicle_change_q_priority((VEH_HNDL)veh_ptr, veh_ptr->priority);
+		(void) Zone_add_veh(tmp, (VEH_HNDL) veh_ptr);
+		(void) Dispatcher_veh_match((VEH_HNDL) veh_ptr, tmp);
+	      }
 	    /* veh_ptr->t_status.offered = 0; */
 	    /* veh_ptr->call_ptr = NULL; */
+#ifdef FOO
+	    if ( (char)Zone_get_value(zone_hndl, ZONE_TYPE) != ZN_STAND )
+	      {
+		// Book into zone 995
+		(short)argument = 995;
+		(void) Veh_reset_state((VEH_HNDL) veh_ptr, VEH_POSTED_STATE, HNDL_NULL, HNDL_NULL);
+		(void) Veh_set_state((VEH_HNDL) veh_ptr, VEH_POSTED_STATE, (HNDL) argument);
+	      }
+#endif
+#ifdef FOO
 	    if ((int) argument)
 	    {
 
@@ -1577,7 +1599,7 @@ veh_state(veh_ptr, op, state, argument, argument2)
 		  tmp = veh_ptr->zone_num;
 		  (void) Veh_reset_state((VEH_HNDL) veh_ptr, VEH_ON_CALL_STATE, HNDL_NULL, HNDL_NULL);
 
-		  if ( ( tmp > 0 ) && ( argument == CALL_NO_ACCEPT_PENALTY ) )
+		  if ( ( tmp > 0 ) )// && ( argument == CALL_NO_ACCEPT_PENALTY ) )
 		    {
 		      veh_ptr->t_status.posted = 1;
 		      Vehicle_change_q_priority((VEH_HNDL)veh_ptr, veh_ptr->priority);
@@ -1622,6 +1644,7 @@ veh_state(veh_ptr, op, state, argument, argument2)
                   (void) Dispatcher_veh_match((VEH_HNDL) veh_ptr, veh_ptr->zone_num);
 	    }
 #endif
+
 	    return (SUCCESS);
 	 }
 

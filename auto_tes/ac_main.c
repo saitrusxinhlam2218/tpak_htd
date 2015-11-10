@@ -297,19 +297,26 @@ ManageRequests( sClient, session )
 
 death_process() 
 {
-        int pid;
+        long pid;
 	long msgtype = 0;
 	int rc = 0;
         int status; 
         struct rusage usage; 
 	char   message_on_queue[5120];
 
+	bzero( message_on_queue, 5120 );
+	msgtype = (long)getpid();
+	rc = 0;
+	while ( rc != -1 )
+	  rc = msgrcv( readid, message_on_queue, 1024, msgtype, MSG_NOERROR | IPC_NOWAIT );
+	
         while ((pid=wait3(&status,WNOHANG,&usage)) > 0) 
 	{
-	  //  bzero( message_on_queue, 5120 );
-	  //msgtype = (long)pid;
-	  //while ( rc != -1 )
-	  //  rc = msgrcv( readid, message_on_queue, 1024, msgtype, MSG_NOERROR | IPC_NOWAIT );
+	  	  bzero( message_on_queue, 5120 );
+	  	  msgtype = (long)pid;
+	  	  rc = 0;
+	  	  while ( rc != -1 )
+	  	    rc = msgrcv( readid, message_on_queue, 1024, msgtype, MSG_NOERROR | IPC_NOWAIT );
 	}
 			
 }

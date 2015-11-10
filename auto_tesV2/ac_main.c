@@ -10,7 +10,6 @@
 *  Copyright (c) 2000 - MobileSoft Consulting, Inc. Dublin OH
 *
 ***********************************************************************/
-#ident "@(#) head:$RCSfile: ac_main.c,v $	$Revision: 1.3 $"
 
 static char rcsid[] = "$Id: ac_main.c,v 1.3 2002/03/25 17:48:26 jwelch Exp $";
 
@@ -62,7 +61,7 @@ static char rcsid[] = "$Id: ac_main.c,v 1.3 2002/03/25 17:48:26 jwelch Exp $";
 #define PERMS    0666
 
 int newsockfd;
-int readid;  // message queue id
+extern int msgkey;
 struct offsets *offset;
 int death_process();
 static sigjmp_buf  xts_jmpbuf;
@@ -117,6 +116,8 @@ main ( argc, argv)
   struct sigaction action;
   sigset_t sig_set;
   int ret_setmask=0;
+  char   message_on_queue[5120];
+  long pid = 0;long msgtype = 0;
   
 	//  init_mgr_locale();
 
@@ -251,7 +252,13 @@ main ( argc, argv)
 	  
 	  TPak_shm_init();
 	  ManageRequests( newsockfd, session );
-	  Client_to_AutoCall( newsockfd, NULL, TES_CLIENT_DISCONNECT, session );	  
+	  Client_to_AutoCall( newsockfd, NULL, TES_CLIENT_DISCONNECT, session );
+	  //Clean up message queue
+	  bzero( message_on_queue, 5120 );
+	  msgtype = (long)getpid();
+	  rc = 0;
+	  while ( rc != -1 )
+	    rc = msgrcv( msgkey, message_on_queue, 1024, msgtype, MSG_NOERROR | IPC_NOWAIT );	  
 	  exit( -1 );
 	}
       /** Parent **/
@@ -362,15 +369,26 @@ ManageRequests( sClient, session )
 
 death_process() 
 {
-        int pid;
+        long pid;
 	long msgtype = 0;
 	int rc = 0;
         int status; 
-        struct rusage usage; 
+        struct rusage usage;
+	char   message_on_queue[5120];	
 
+	bzero( message_on_queue, 5120 );
+	msgtype = (long)getpid();
+	rc = 0;
+	while ( rc != -1 )
+	  rc = msgrcv( msgkey, message_on_queue, 1024, msgtype, MSG_NOERROR | IPC_NOWAIT );
+	
         while ((pid=wait3(&status,WNOHANG,&usage)) > 0) 
 	{
-
+	  bzero( message_on_queue, 5120 );
+	  msgtype = (long)pid;
+	  rc = 0;
+	  while ( rc != -1 )
+	    rc = msgrcv( msgkey, message_on_queue, 1024, msgtype, MSG_NOERROR | IPC_NOWAIT );
 	}
 	siglongjmp(xts_jmpbuf, 1);	
 			

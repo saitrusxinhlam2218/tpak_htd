@@ -13,6 +13,7 @@ static char sz__FILE__[]="@(#)ui_cleanup.c	10.1.2.1(ver) Date Release 12/2/94" ;
 
 #include <cursesX.h>
 #include <sys/types.h>
+#include <sys/msg.h>
 #include <errno.h>
 #include <signal.h>
 
@@ -40,6 +41,8 @@ extern short clear_err_flag; 		/* set if last line contains an error msg */
 extern int Kill_parent_when_done;
 extern char *ui_errlist[];
 extern int LineMgrIndex;
+extern int msgkey;
+extern int pid;
 
 void
 close_all_db_files()
@@ -65,6 +68,9 @@ void cleanup()
 	int i;
 	static int called = 0;
         int rc;
+        char              message_on_queue[5120];
+        long msgtype = 0;
+	
 
 	if (called) exit(1);
 	called = 1;
@@ -138,6 +144,14 @@ void cleanup()
 	catclose(UI_m_catd);
 	catclose(COMMON_m_catd);
 	catclose(WRITER_catd);
+
+
+
+	// Clean any messages off of the message queue
+        bzero( &message_on_queue, 5120 );
+        msgtype = (long)pid;
+        while ( rc != -1 )
+          rc = msgrcv( msgkey, message_on_queue, 1024, msgtype, MSG_NOERROR | IPC_NOWAIT );
 
 	fflush(stdout);
 

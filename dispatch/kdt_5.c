@@ -811,6 +811,19 @@ struct veh_driv *veh_ptr;
      }
 #endif
 
+      if (call_ptr->vehicle_attributes.attr31 ||
+	  call_ptr->driver_attributes.attr11)
+	{
+	  (void)add_outb_text(CR);
+	  if (call_ptr->vehicle_attributes.attr31)
+	    add_outb_text("IN");
+	  if (call_ptr->driver_attributes.attr11 && call_ptr->vehicle_attributes.attr31)
+	    add_outb_text(" PP");
+	  else if (call_ptr->driver_attributes.attr11)
+	    add_outb_text("PP");
+	  
+	}
+
    switch (offer_opt)
    {
    case ZONE_ONLY:
@@ -2048,7 +2061,7 @@ struct veh_driv *veh_ptr;
 	       {
 		 if (kelanode_rec.version != 0)
 		   continue;
-		 if (countKelaNodes > 4)
+		 if (countKelaNodes > 6)
 		   break;
 		 if (kelanode_rec.tpak_id != cl_ptr->nbr)
 		   break;
@@ -2437,51 +2450,140 @@ struct veh_driv *veh_ptr;
 		  add_outb_text(kela_details_temp);
 		  send_msg_mmp(veh_ptr->mid, TEXT_DISPLAY, veh_ptr);
 		  kela_details_temp[0] = '\0';		  
+		}		  
+	      // Node 4
+	      kelanode_rec.nbr++;
+	      if (db_read_key(KELANODE_FILE_ID, &kelanode_rec, &kelanode_key3, ISEQUAL) == SUCCESS)
+		{
 		  
-		  // Node 4
-		  kelanode_rec.nbr++;
-		  if (db_read_key(KELANODE_FILE_ID, &kelanode_rec, &kelanode_key3, ISEQUAL) == SUCCESS)
+		  strcpy(tmp_pax, kelanode_rec.passenger);
+		  if (strstr(tmp_pax,"/") != NULL)
 		    {
-
-		      strcpy(tmp_pax, kelanode_rec.passenger);
-		      if (strstr(tmp_pax,"/") != NULL)
-			{
-			  *(strstr(tmp_pax,"/")) = ' ';
-			}
-		      if (update)
-			sprintf(kela_details_temp, "%sREITTIMUUTOS! (%d/%d)%sKELA ID: %s%s%s: %s %d %s %s%sAIKA: %s%sASIAKAS: %s,%s%s%s",
-				kela_details_temp,
-				kelanode_rec.nbr, countKelaNodes, CR,
-				kelanode_rec.booking_id, CR, (kelanode_rec.type=='D'?"KOHDE":"NOUTO"),
-				kelanode_rec.street, kelanode_rec.streetnbr, kelanode_rec.streetletter, kelanode_rec.city, CR,
-				(strlen(kelanode_rec.pickuptime)==19?(kelanode_rec.pickuptime+strlen(kelanode_rec.pickuptime) - 8):"00:00"),CR,      
-				kelanode_rec.passenger, kelanode_rec.phone, CR,
-				kelanode_rec.manual_descript);
-		      else
-			sprintf(kela_details_temp, "%s(%d/%d)%sKELA ID: %s%s%s: %s %d %s %s%sAIKA: %s%sASIAKAS: %s,%s%s%s",
-				kela_details_temp,
-				kelanode_rec.nbr, countKelaNodes, CR,
-				kelanode_rec.booking_id, CR, (kelanode_rec.type=='D'?"KOHDE":"NOUTO"),
-				kelanode_rec.street, kelanode_rec.streetnbr, kelanode_rec.streetletter, kelanode_rec.city, CR,
-				(strlen(kelanode_rec.pickuptime)==19?(kelanode_rec.pickuptime+strlen(kelanode_rec.pickuptime) - 8):"00:00"),CR,      
-				kelanode_rec.passenger, kelanode_rec.phone, CR,
-				kelanode_rec.manual_descript);			
-
-		      if (!sm_get(sm, kelanode_rec.full_booking_id, buf, sizeof(buf)))
-			{
-			  sprintf(kela_resp_temp, "%s%02x;%020s;%s;x;", kela_resp_temp,
-				  kelanode_rec.nbr,
-				  kelanode_rec.full_booking_id,
-				  tmp_pax);
-			  sm_put(sm,kelanode_rec.full_booking_id, kelanode_rec.rte_id);
-			}		  		      
-
-		      mk_outb_text("");
-		      add_outb_text(kela_details_temp);
-		      send_msg_mmp(veh_ptr->mid, TEXT_DISPLAY, veh_ptr);
-		      kela_details_temp[0] = '\0';		      
+		      *(strstr(tmp_pax,"/")) = ' ';
 		    }
+		  if (update)
+		    sprintf(kela_details_temp, "%sREITTIMUUTOS! (%d/%d)%sKELA ID: %s%s%s: %s %d %s %s%sAIKA: %s%sASIAKAS: %s,%s%s%s",
+			    kela_details_temp,
+			    kelanode_rec.nbr, countKelaNodes, CR,
+			    kelanode_rec.booking_id, CR, (kelanode_rec.type=='D'?"KOHDE":"NOUTO"),
+			    kelanode_rec.street, kelanode_rec.streetnbr, kelanode_rec.streetletter, kelanode_rec.city, CR,
+			    (strlen(kelanode_rec.pickuptime)==19?(kelanode_rec.pickuptime+strlen(kelanode_rec.pickuptime) - 8):"00:00"),CR,      
+			    kelanode_rec.passenger, kelanode_rec.phone, CR,
+			    kelanode_rec.manual_descript);
+		  else
+		    sprintf(kela_details_temp, "%s(%d/%d)%sKELA ID: %s%s%s: %s %d %s %s%sAIKA: %s%sASIAKAS: %s,%s%s%s",
+			    kela_details_temp,
+			    kelanode_rec.nbr, countKelaNodes, CR,
+			    kelanode_rec.booking_id, CR, (kelanode_rec.type=='D'?"KOHDE":"NOUTO"),
+			    kelanode_rec.street, kelanode_rec.streetnbr, kelanode_rec.streetletter, kelanode_rec.city, CR,
+			    (strlen(kelanode_rec.pickuptime)==19?(kelanode_rec.pickuptime+strlen(kelanode_rec.pickuptime) - 8):"00:00"),CR,      
+			    kelanode_rec.passenger, kelanode_rec.phone, CR,
+			    kelanode_rec.manual_descript);			
+		  
+		  if (!sm_get(sm, kelanode_rec.full_booking_id, buf, sizeof(buf)))
+		    {
+		      sprintf(kela_resp_temp, "%s%02x;%020s;%s;x;", kela_resp_temp,
+			      kelanode_rec.nbr,
+			      kelanode_rec.full_booking_id,
+			      tmp_pax);
+		      sm_put(sm,kelanode_rec.full_booking_id, kelanode_rec.rte_id);
+		    }		  		      
+		  
+		  mk_outb_text("");
+		  add_outb_text(kela_details_temp);
+		  send_msg_mmp(veh_ptr->mid, TEXT_DISPLAY, veh_ptr);
+		  kela_details_temp[0] = '\0';		      
 		}
+
+	      // Node 5
+	      kelanode_rec.nbr++;
+	      if (db_read_key(KELANODE_FILE_ID, &kelanode_rec, &kelanode_key3, ISEQUAL) == SUCCESS)
+		{
+		  
+		  strcpy(tmp_pax, kelanode_rec.passenger);
+		  if (strstr(tmp_pax,"/") != NULL)
+		    {
+		      *(strstr(tmp_pax,"/")) = ' ';
+		    }
+		  if (update)
+		    sprintf(kela_details_temp, "%sREITTIMUUTOS! (%d/%d)%sKELA ID: %s%s%s: %s %d %s %s%sAIKA: %s%sASIAKAS: %s,%s%s%s",
+			    kela_details_temp,
+			    kelanode_rec.nbr, countKelaNodes, CR,
+			    kelanode_rec.booking_id, CR, (kelanode_rec.type=='D'?"KOHDE":"NOUTO"),
+			    kelanode_rec.street, kelanode_rec.streetnbr, kelanode_rec.streetletter, kelanode_rec.city, CR,
+			    (strlen(kelanode_rec.pickuptime)==19?(kelanode_rec.pickuptime+strlen(kelanode_rec.pickuptime) - 8):"00:00"),CR,      
+			    kelanode_rec.passenger, kelanode_rec.phone, CR,
+			    kelanode_rec.manual_descript);
+		  else
+		    sprintf(kela_details_temp, "%s(%d/%d)%sKELA ID: %s%s%s: %s %d %s %s%sAIKA: %s%sASIAKAS: %s,%s%s%s",
+			    kela_details_temp,
+			    kelanode_rec.nbr, countKelaNodes, CR,
+			    kelanode_rec.booking_id, CR, (kelanode_rec.type=='D'?"KOHDE":"NOUTO"),
+			    kelanode_rec.street, kelanode_rec.streetnbr, kelanode_rec.streetletter, kelanode_rec.city, CR,
+			    (strlen(kelanode_rec.pickuptime)==19?(kelanode_rec.pickuptime+strlen(kelanode_rec.pickuptime) - 8):"00:00"),CR,      
+			    kelanode_rec.passenger, kelanode_rec.phone, CR,
+			    kelanode_rec.manual_descript);			
+		  
+		  if (!sm_get(sm, kelanode_rec.full_booking_id, buf, sizeof(buf)))
+		    {
+		      sprintf(kela_resp_temp, "%s%02x;%020s;%s;x;", kela_resp_temp,
+			      kelanode_rec.nbr,
+			      kelanode_rec.full_booking_id,
+			      tmp_pax);
+		      sm_put(sm,kelanode_rec.full_booking_id, kelanode_rec.rte_id);
+		    }		  		      
+		  
+		  mk_outb_text("");
+		  add_outb_text(kela_details_temp);
+		  send_msg_mmp(veh_ptr->mid, TEXT_DISPLAY, veh_ptr);
+		  kela_details_temp[0] = '\0';		      
+		}
+
+	      // Node 6
+	      kelanode_rec.nbr++;
+	      if (db_read_key(KELANODE_FILE_ID, &kelanode_rec, &kelanode_key3, ISEQUAL) == SUCCESS)
+		{
+		  
+		  strcpy(tmp_pax, kelanode_rec.passenger);
+		  if (strstr(tmp_pax,"/") != NULL)
+		    {
+		      *(strstr(tmp_pax,"/")) = ' ';
+		    }
+		  if (update)
+		    sprintf(kela_details_temp, "%sREITTIMUUTOS! (%d/%d)%sKELA ID: %s%s%s: %s %d %s %s%sAIKA: %s%sASIAKAS: %s,%s%s%s",
+			    kela_details_temp,
+			    kelanode_rec.nbr, countKelaNodes, CR,
+			    kelanode_rec.booking_id, CR, (kelanode_rec.type=='D'?"KOHDE":"NOUTO"),
+			    kelanode_rec.street, kelanode_rec.streetnbr, kelanode_rec.streetletter, kelanode_rec.city, CR,
+			    (strlen(kelanode_rec.pickuptime)==19?(kelanode_rec.pickuptime+strlen(kelanode_rec.pickuptime) - 8):"00:00"),CR,      
+			    kelanode_rec.passenger, kelanode_rec.phone, CR,
+			    kelanode_rec.manual_descript);
+		  else
+		    sprintf(kela_details_temp, "%s(%d/%d)%sKELA ID: %s%s%s: %s %d %s %s%sAIKA: %s%sASIAKAS: %s,%s%s%s",
+			    kela_details_temp,
+			    kelanode_rec.nbr, countKelaNodes, CR,
+			    kelanode_rec.booking_id, CR, (kelanode_rec.type=='D'?"KOHDE":"NOUTO"),
+			    kelanode_rec.street, kelanode_rec.streetnbr, kelanode_rec.streetletter, kelanode_rec.city, CR,
+			    (strlen(kelanode_rec.pickuptime)==19?(kelanode_rec.pickuptime+strlen(kelanode_rec.pickuptime) - 8):"00:00"),CR,      
+			    kelanode_rec.passenger, kelanode_rec.phone, CR,
+			    kelanode_rec.manual_descript);			
+		  
+		  if (!sm_get(sm, kelanode_rec.full_booking_id, buf, sizeof(buf)))
+		    {
+		      sprintf(kela_resp_temp, "%s%02x;%020s;%s;x;", kela_resp_temp,
+			      kelanode_rec.nbr,
+			      kelanode_rec.full_booking_id,
+			      tmp_pax);
+		      sm_put(sm,kelanode_rec.full_booking_id, kelanode_rec.rte_id);
+		    }		  		      
+		  
+		  mk_outb_text("");
+		  add_outb_text(kela_details_temp);
+		  send_msg_mmp(veh_ptr->mid, TEXT_DISPLAY, veh_ptr);
+		  kela_details_temp[0] = '\0';		      
+		}	      	      
+	      
+	      
 
 	      sm_delete(sm);
 	      db_close(KELANODE_FILE_ID);

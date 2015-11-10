@@ -297,10 +297,12 @@ da_zones(fleet_id,start_date,start_time,start_dt_tm,end_date,end_time,ending_dt_
     }	
     /* sum the zones within the super zone and grand totals */
     for (indx=0;indx<25;indx++) {
+      if (zone_no < 1000) {
       all_super_zone_hr_count[zone_to_super[zone_no]][indx] += all_zone_hr_count[zone_no][indx];
       all_total_zone_hr_count[indx] += all_zone_hr_count[zone_no][indx];
       accepted_super_zone_hr_count[zone_to_super[zone_no]][indx] += accepted_zone_hr_count[zone_no][indx];
       accepted_total_zone_hr_count[indx] += accepted_zone_hr_count[zone_no][indx];
+      }
     }
   }
   ccode=db(SHIFT_FILE_ID,CLOSE,&sh_key3,ISNEXT,0);

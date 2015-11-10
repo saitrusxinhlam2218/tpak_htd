@@ -28,12 +28,16 @@ SRCS =	async.c \
 	udp_link.c \
 	hash.c
 
+SRCS2 = hot.c
+
 OBJS =	$(SRCS:.c=.o)
+OBJS2 = $(SRCS2:.c=.o)
 INC =	../include
 LIB =	-L../lib -lcommon
 PGM =	async
+PGM2 = hot
 DEST =	../../../usr/taxi/bin
-all:	$(PGM)
+all:	$(PGM) $(PGM2)
 
 clean:
 	rm -f $(PGM) $(OBJS)
@@ -43,6 +47,12 @@ install:	$(PGM)
 
 $(PGM):	$(OBJS)
 	$(CC) -g -o $(PGM) $(OBJS) $(EXT_OBJS) $(LIB)
+
+$(PGM2): $(OBJS2)
+	$(CC) -g -o $(PGM2) $(OBJS2)
+
+
+hot.o:	hot.c
 
 async.o:	$(INC)/IPCS.h $(INC)/STDIO.h $(INC)/acc.h $(INC)/async.h $(INC)/ipcpriority.h $(INC)/mmp.h \
 		$(INC)/msg.h $(INC)/parman.h $(INC)/std.h /usr/include/ctype.h /usr/include/errno.h /usr/include/fcntl.h \

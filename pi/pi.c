@@ -774,6 +774,14 @@ int		CheckChildren( int nCode )
 
   void kill_pi( int code)
   {
+	long msgtype = 0;
+	int rc = 0;
+	char message_on_queue[5120];
+	msgtype = (long)getpid();
+	rc = 0;		
+	while (rc != -1)
+	  rc = msgrcv(msgkey, message_on_queue, 1024, msgtype, MSG_NOERROR | IPC_NOWAIT);
+	
 	printf( "Ending PI execution\n");
 	exit( 0 );
   }
@@ -1473,14 +1481,28 @@ void  MakeHbToServers()
 
 void	KillProc( int code )
 {
+	long msgtype = 0;
+	int rc = 0;
+	char message_on_queue[5120];
+	
 	if ( bSuperServer )
 	{
 		printf( "Exiting Killed by SIGTERM signal\n" );
+		bzero(message_on_queue, 5120);
+		msgtype = (long)getpid();
+		rc = 0;		
+		while (rc != -1)
+		  rc = msgrcv(msgkey, message_on_queue, 1024, msgtype, MSG_NOERROR | IPC_NOWAIT);		
 		kill( 0, SIGTERM );
 		exit(SIGNAL_EXIT);
 	}
 
 	printf( "Child exiting by SIGTERM signal\n" );
+	bzero(message_on_queue, 5120);
+	msgtype = (long)getpid();
+	rc = 0;		
+	while (rc != -1)
+	  rc = msgrcv(msgkey, message_on_queue, 1024, msgtype, MSG_NOERROR | IPC_NOWAIT);			
 	exit(SIGNAL_EXIT);
 		
 }
@@ -1512,7 +1534,10 @@ void main(int argc, char **argv)
   int select_result;
   char sLocale[80];
   char    CatPathName[64];        
-  
+
+  long msgtype = 0;
+  char message_on_queue[5120];
+	
   RemoveLogFiles();
   
   printf("\n\n\n\nWelcome to TaxiPak's PI 4.5   2001-Oct-28 (c)1997-2001 MobileSoft Consulting, Inc.\n\n");
@@ -1691,6 +1716,10 @@ void main(int argc, char **argv)
 		  last_msg_time = (time_t)time(0);
 		  if ((rc = HandleClient()) < 0)
 		    {
+		      msgtype = (long)getpid();
+		      rc = 0;		
+		      while (rc != -1)
+			rc = msgrcv(msgkey, message_on_queue, 1024, msgtype, MSG_NOERROR | IPC_NOWAIT);				      
 		      kill(getpid(),SIGKILL);
 		      ended = 1;
 		      break;

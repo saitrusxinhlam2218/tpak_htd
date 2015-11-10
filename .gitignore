@@ -26,7 +26,8 @@ up_maint
 zn_maint
 mf_maint
 geo_maint
-
+da_report
+da_purge
 # Shared objects (inc. Windows DLLs)
 *.dll
 *.so

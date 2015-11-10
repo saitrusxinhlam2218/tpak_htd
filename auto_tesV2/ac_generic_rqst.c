@@ -10,7 +10,6 @@
 *  Copyright (c) 2000 - MobileSoft Consulting, Inc. Dublin OH
 *
 ***********************************************************************/
-#ident "@(#) head:$RCSfile: ac_generic_rqst.c,v $	$Revision: 1.5 $"
 
 static char rcsid[] = "$Id: ac_generic_rqst.c,v 1.5 2004/02/02 18:55:53 jwelch Exp $";
 
@@ -19,6 +18,7 @@ static char rcsid[] = "$Id: ac_generic_rqst.c,v 1.5 2004/02/02 18:55:53 jwelch E
 #include <sys/types.h>
 #include <sys/ipc.h>
 #include <sys/wait.h>
+#include <sys/msg.h>
 #include <fcntl.h>
 #include <signal.h>
 #include <sys/time.h>
@@ -49,7 +49,7 @@ static char rcsid[] = "$Id: ac_generic_rqst.c,v 1.5 2004/02/02 18:55:53 jwelch E
 #include "Zone_db.h"
 
 
-
+int msgkey;
 extern struct fleets *fleet[];
 void  t_out_hdlr();
 
@@ -460,7 +460,7 @@ ReqStandTaxi( sClient, pTESMsg, session )
     ZONE_RESP_HNDL hZoneResp;
     ZONE_REC  zone_rec;
     int pid = getpid();
-    int msgkey;
+
     char  *p = NULL;
 
     pTESData = pTESMsg->TESdata;
@@ -865,6 +865,15 @@ writer_add_hist()
 void
 t_out_hdlr()
 {
+  int rc = 0;
+  char   message_on_queue[5120];
+  long pid = 0;long msgtype = 0;  
+  //Clean up message queue
+  bzero( message_on_queue, 5120 );
+  msgtype = (long)getpid();
+  rc = 0;
+  while ( rc != -1 )
+    rc = msgrcv( msgkey, message_on_queue, 1024, msgtype, MSG_NOERROR | IPC_NOWAIT );	    
   printf("Request timed out...\n");
   exit(0);
 }

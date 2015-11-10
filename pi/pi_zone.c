@@ -131,7 +131,7 @@ int *zip;
       rc = read_placename(call_pt,pck_dst,zip);				/* no, try to zone place name */
 
     /* DEST_ADDR */
-    else
+    else if (strlen(st_name))
       rc = read_placename(call_pt,pck_dst,zip);				/* no, try to zone place name */
     return(rc);									/* return code */
 }
