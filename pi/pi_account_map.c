@@ -22,7 +22,8 @@ static char sz__FILE__[]="@(#)ab_map.c	10.1(ver) Date Release 12/2/94" ;
 #include <pwd.h>
 #include <signal.h>
 #include <errno.h>
-
+#include <nl_types.h>
+#include <locale.h>
 /*
  *	taxi includes
  */
@@ -45,7 +46,7 @@ static char sz__FILE__[]="@(#)ab_map.c	10.1(ver) Date Release 12/2/94" ;
 #include "pi_struc.h"
 #include "enhance.h"
 #include "switch_ext.h"
-
+#include "language.h"
 /*
  *	ab includes
  */
@@ -241,7 +242,8 @@ m4100_prepare_call_for_db(account, account_order, call)
         time_t now_time,
           min_time,
           max_time;
-        double x_coord = 0.0, y_coord = 0.0;                
+        double x_coord = 0.0, y_coord = 0.0;
+	char sLocale[32];
         
 	memset((char *)call, '\0', sizeof(*call));
 
@@ -317,6 +319,7 @@ m4100_prepare_call_for_db(account, account_order, call)
         call->dest_str_suf = account_order->to_addr_suffix;
         strcpy(call->dest_city, (account_order->to_addr_city));
 
+	account_order->priority[2] = '\0';
         if (strlen(account_order->priority))
           call->priority = atoi(account_order->priority);
         else
@@ -367,6 +370,24 @@ m4100_prepare_call_for_db(account, account_order, call)
         account_order->gpsy[7] = '\0';
         call->gps_long = (double)atoi(account_order->gpsx);
         call->gps_lat = (double)atoi(account_order->gpsy);
+
+	account_order->fare_amount[7] = '\0';
+	account_order->vat[7] = '\0';
+	if (strlen(account_order->fare_amount))
+	  {
+	    strcpy( sLocale, TPAK_LOCALE );
+	    setlocale(LC_ALL, sLocale);
+	    call->fare_amount = atof(account_order->fare_amount);
+	    call->call_rate = atof(account_order->fare_amount);	    
+	    setlocale(LC_ALL, "");
+	}
+	if (strlen(account_order->vat))
+	  {
+	    strcpy( sLocale, TPAK_LOCALE );
+	    setlocale(LC_ALL, sLocale);	    
+	    call->vat = atof(account_order->vat);
+	    setlocale(LC_ALL, "");
+	  }
 /*
  *	since call is a now call
  */

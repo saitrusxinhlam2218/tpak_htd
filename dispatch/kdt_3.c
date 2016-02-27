@@ -385,7 +385,8 @@ struct	veh_driv	*veh_ptr;
   extern char *scratch_ptr;
   struct calls *call_ptr;
   KELANODE_REC kelanode_rec;
-  char kela_details_temp[TMP_STR_LEN];  
+  char kela_details_temp[TMP_STR_LEN];
+  struct cisam_cl *cl_ptr;  
   
   if (veh_ptr == NULL)
     {
@@ -471,6 +472,22 @@ struct	veh_driv	*veh_ptr;
 	    }
 	  reset_pkt_entry((unsigned int) strtol(msg->pkt_id, 
 					    (char **) 0, 16),veh_ptr->veh_nbr);
+
+	  // VPU trips send 'fast location update' message
+	  call_ptr = veh_ptr->call_ptr;
+	  if ( call_ptr != NULL)
+	    {
+	      if ((cl_ptr = get_call_record(call_ptr->c_isam_num, call_ptr->call_number)) != NULL)
+		{
+		  if (!strncmp(cl_ptr->extended_type, "KV",2))
+		    {
+		      mk_outb_text("");
+		      add_outb_text("%SZ200096%SZ23000F");
+		      send_msg_mmp(veh_ptr->mid, TEXT_DISPLAY, veh_ptr);
+		    }
+		}
+	    }
+
 	  
 	  break;
 	case ITM_MDT_PKT_TYPE:

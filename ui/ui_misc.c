@@ -743,14 +743,14 @@ int get_rate(clear_or_print,need_rate,tzip1,tzip2)
 	case BASIC_CALL_SCR:
 	  call_struct.call_rate = 0.0;
 	  attrset( A_UNDERLINE );
-	  mvprintw( B_RATE_ROW, B_RATE_COL, "%7.0f", 0.0 );
+	  mvprintw( B_RATE_ROW, B_RATE_COL, "%7.2f", 0.0 );
 	  mvprintw( B_VAT_ROW, B_VAT_COL, "%5.2f", 0.0 );
 	  attrset( 0 );
 	  break;
 	case EXTENDED_CALL_SCR:
 	  call_struct.call_rate = 0.0;
 	  attrset( A_UNDERLINE );
-	  mvprintw( E_RATE_ROW, E_RATE_COL, "%7.0f", 0.0 );
+	  mvprintw( E_RATE_ROW, E_RATE_COL, "%7.2f", 0.0 );
 	  mvprintw( E_VAT_ROW, E_VAT_COL, "%5.2f", 0.0 );
 	  attrset( 0 );
 	  break;

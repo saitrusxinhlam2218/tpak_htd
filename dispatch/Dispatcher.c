@@ -841,11 +841,30 @@ Dispatcher_Nordic_veh_select(
 		    fprintf( fpGPSDispatchTrace, "%.8s Call %08d Zone %03d CALL->VEHICLE (FIFO-x) ",
 			    &stime[11], CalltoMatch->call_number, CalltoMatch->pickup_zone);
 		    
-		    fprintf( fpGPSDispatchTrace, "Veh %04d Zone %03d QP %02d Level %d INSHIFT PR %d \n",
+		    fprintf( fpGPSDispatchTrace, "Veh %04d Zone %03d QP %02d Level %d INSHIFT PR %d%d%d%d%d%d%d%d%d%d%d%d%d%d%d%d \n",
 			    (short)Veh_get_value( vehicle_in_zone, VEH_NBR ),
 			    (short)Veh_get_value( vehicle_in_zone, VEH_ZONE_NBR ),
 			    (short)Veh_get_value( vehicle_in_zone, VEH_Q_POSITION ),
-			    level, (short)CalltoMatch->vehicle_attributes.attr26 );
+			     level,
+			     (short)CalltoMatch->driver_attributes.attr16,
+			     (short)CalltoMatch->driver_attributes.attr17,
+			     (short)CalltoMatch->driver_attributes.attr18,
+			     (short)CalltoMatch->driver_attributes.attr19,
+			     (short)CalltoMatch->driver_attributes.attr20,
+			     (short)CalltoMatch->driver_attributes.attr21,
+			     (short)CalltoMatch->driver_attributes.attr22,
+			     (short)CalltoMatch->driver_attributes.attr23,
+			     (short)CalltoMatch->driver_attributes.attr24,
+			     (short)CalltoMatch->driver_attributes.attr25,
+			     (short)CalltoMatch->driver_attributes.attr26,
+			     (short)CalltoMatch->driver_attributes.attr27,
+			     (short)CalltoMatch->driver_attributes.attr28,
+			     (short)CalltoMatch->driver_attributes.attr29,
+			     (short)CalltoMatch->driver_attributes.attr30,
+			     (short)CalltoMatch->driver_attributes.attr31,
+			     (short)CalltoMatch->driver_attributes.attr32);
+
+		    
 		    
 		    fclose( fpGPSDispatchTrace );
 		  }	   
@@ -864,11 +883,29 @@ Dispatcher_Nordic_veh_select(
 		    fprintf( fpGPSDispatchTrace, "%.8s Call %08d Zone %03d CALL->VEHICLE (FIFO-x) ",
 			    &stime[11], CalltoMatch->call_number, CalltoMatch->pickup_zone);
 		    
-		    fprintf( fpGPSDispatchTrace, "Veh %04d Zone %03d QP %02d Level %d OUTSHIFT PR %d \n",
+		    fprintf( fpGPSDispatchTrace, "Veh %04d Zone %03d QP %02d Level %d OUTSHIFT PR %d%d%d%d%d%d%d%d%d%d%d%d%d%d%d%d \n",
 			    (short)Veh_get_value( vehicle_in_zone, VEH_NBR ),
 			    (short)Veh_get_value( vehicle_in_zone, VEH_ZONE_NBR ),
 			    (short)Veh_get_value( vehicle_in_zone, VEH_Q_POSITION ),
-			    level, (short)CalltoMatch->vehicle_attributes.attr26 );
+			     level,
+			     (short)CalltoMatch->driver_attributes.attr16,
+			     (short)CalltoMatch->driver_attributes.attr17,
+			     (short)CalltoMatch->driver_attributes.attr18,
+			     (short)CalltoMatch->driver_attributes.attr19,
+			     (short)CalltoMatch->driver_attributes.attr20,
+			     (short)CalltoMatch->driver_attributes.attr21,
+			     (short)CalltoMatch->driver_attributes.attr22,
+			     (short)CalltoMatch->driver_attributes.attr23,
+			     (short)CalltoMatch->driver_attributes.attr24,
+			     (short)CalltoMatch->driver_attributes.attr25,
+			     (short)CalltoMatch->driver_attributes.attr26,
+			     (short)CalltoMatch->driver_attributes.attr27,
+			     (short)CalltoMatch->driver_attributes.attr28,
+			     (short)CalltoMatch->driver_attributes.attr29,
+			     (short)CalltoMatch->driver_attributes.attr30,
+			     (short)CalltoMatch->driver_attributes.attr31,
+			     (short)CalltoMatch->driver_attributes.attr32);			     
+
 		    
 		    fclose( fpGPSDispatchTrace );
 		  }	   
@@ -913,7 +950,7 @@ Dispatcher_Nordic_veh_select(
        }
      break;
    case OPEN_OUTSHIFT:
-   NON_PREMIUM_OUTSHIFT:
+   case NON_PREMIUM_OUTSHIFT:
    default:
      ;
    }

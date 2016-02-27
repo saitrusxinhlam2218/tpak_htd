@@ -1241,6 +1241,8 @@ int EnterCallinTaxiPak( struct call_ext *cur_call, int nCallIndex,struct cisam_c
 			    LatLong_to_UTM( dLat, dLong, &dNorth, &dEast );
 			    call_ptr->pckup_zone = GetCustomerZone(7, dEast, dNorth);
 			    cur_call->from_addr_zone = call_ptr->pckup_zone;
+			    call_ptr->gps_lat = dNorth;
+			    call_ptr->gps_long = dEast;
 			  }			
 
 			    // Check to see if trip is zoned

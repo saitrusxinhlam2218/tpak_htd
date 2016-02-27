@@ -922,7 +922,7 @@ prt_bold_fields(cp)
 	mvprintw(B_PRIORITY_ROW,B_PRIORITY_COL,"%d",cp->priority);
 
 	if ( cp->call_rate )
-		mvprintw(B_RATE_ROW,B_RATE_COL,"%7.0f",cp->call_rate);
+		mvprintw(B_RATE_ROW,B_RATE_COL,"%7.2f",cp->call_rate);
 
 	if ( cp->vat )
 	        mvprintw(B_VAT_ROW,B_VAT_COL,"%5.2f",cp->vat);
@@ -1364,7 +1364,7 @@ prt_eold_fields(cp)
 	mvprintw(E_PRIORITY_ROW,E_PRIORITY_COL,"%d",cp->priority);
 
 	if ( cp->call_rate )
-		mvprintw(E_RATE_ROW,E_RATE_COL,"%7.0f",cp->call_rate);
+		mvprintw(E_RATE_ROW,E_RATE_COL,"%7.2f",cp->call_rate);
 	if ( cp->vat )
 	        mvprintw(E_VAT_ROW, E_VAT_COL, "%5.2f",cp->vat);
 

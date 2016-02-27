@@ -183,7 +183,7 @@ char *data_pkg;
   int cl_nbr;
 
   call_rec = (PI_CALL_REC *)data_pkg;
-  sprintf(szLogMsg, "%s PI_LOG_ATTR <%d> <%-31.31s><%-31.31s>\n",
+  sprintf(szLogMsg, "%s PI_LOG_ATTR <%d> <%-32.32s><%-32.32s>\n",
 	  direction, call_rec->call_number,
 	  call_rec->car_attrib,
 	  call_rec->driver_attrib);

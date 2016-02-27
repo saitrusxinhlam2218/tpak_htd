@@ -666,7 +666,10 @@ Call_activate(call_buf, call_exists)	/* WAS add_call */
    struct cisam_cl  db_call;
    TC_HNDL          tc_hndl, found_tc_hndl = HNDL_NULL;
    TC_STRUCT        *pTimeCall;
-   ZONE_TC_LIST_HNDL    tc_list_hndl;   
+   ZONE_TC_LIST_HNDL    tc_list_hndl;
+   FILE      *fpGPSDispatchTrace;
+   char      *ctime(), *stime;
+   time_t    tmtime;   
 
    *call_exists = 0;		/* don't know if call exists yet */
 
@@ -821,6 +824,52 @@ Call_activate(call_buf, call_exists)	/* WAS add_call */
    memcpy(&new_call->vehicle_attributes, &call_buf->veh_attr, sizeof(struct veh_attributes));
    memcpy(&new_call->driver_attributes, &call_buf->drv_attr, sizeof(struct drv_attributes));
 
+   if (!strncmp(db_call.extended_type, "KE", 2))
+     {
+       if ( ( fpGPSDispatchTrace = fopen( GPS_TRACE_FILE, "a" ) ) != NULL )
+	 {
+	   tmtime = time( (time_t *) 0 );
+	   stime = ctime( &tmtime );
+	   fprintf(fpGPSDispatchTrace, "%.8s Call %08d ATTR_DEBUG ",
+		   &stime[11], db_call.nbr);
+	   if (new_call->driver_attributes.attr16)
+	     fprintf(fpGPSDispatchTrace, "16 ");
+	   if (new_call->driver_attributes.attr17)
+	     fprintf(fpGPSDispatchTrace, "17 ");
+	   if (new_call->driver_attributes.attr18)
+	     fprintf(fpGPSDispatchTrace, "18 ");
+	   if (new_call->driver_attributes.attr19)
+	     fprintf(fpGPSDispatchTrace, "19 ");
+	   if (new_call->driver_attributes.attr20)
+	     fprintf(fpGPSDispatchTrace, "20 ");
+	   if (new_call->driver_attributes.attr21)
+	     fprintf(fpGPSDispatchTrace, "21 ");
+	   if (new_call->driver_attributes.attr22)
+	     fprintf(fpGPSDispatchTrace, "22 ");
+	   if (new_call->driver_attributes.attr23)
+	     fprintf(fpGPSDispatchTrace, "23 ");
+	   if (new_call->driver_attributes.attr24)
+	     fprintf(fpGPSDispatchTrace, "24 ");
+	   if (new_call->driver_attributes.attr25)
+	     fprintf(fpGPSDispatchTrace, "25 ");
+	   if (new_call->driver_attributes.attr26)
+	     fprintf(fpGPSDispatchTrace, "26 ");
+	   if (new_call->driver_attributes.attr27)
+	     fprintf(fpGPSDispatchTrace, "27 ");
+	   if (new_call->driver_attributes.attr28)
+	     fprintf(fpGPSDispatchTrace, "28 ");
+	   if (new_call->driver_attributes.attr29)
+	     fprintf(fpGPSDispatchTrace, "29 ");
+	   if (new_call->driver_attributes.attr30)
+	     fprintf(fpGPSDispatchTrace, "30 ");
+	   if (new_call->driver_attributes.attr31)
+	     fprintf(fpGPSDispatchTrace, "31 ");
+	   if (new_call->driver_attributes.attr32)
+	     fprintf(fpGPSDispatchTrace, "32 ");	   
+	   fprintf(fpGPSDispatchTrace, "\n");
+	   fclose(fpGPSDispatchTrace);
+	 }
+     }
    /* Make sure we're on the map */
    new_call->call_msg_nbr = call_buf->call_msg_nbr;
    if (0)

@@ -1191,7 +1191,8 @@ veh_state(veh_ptr, op, state, argument, argument2)
    HNDL  argument;
    HNDL  argument2;
 {
-  int   tmp = 0, iMoffDelay, j;
+  int   iMoffDelay, j;
+  short tmp = 0, call_zone = 0;
    short zone_nbr, break_time = 0;
    short newer_zone_nbr = 0;
    FLEET_HNDL fleet_hndl;
@@ -1217,6 +1218,7 @@ veh_state(veh_ptr, op, state, argument, argument2)
    struct cisam_sh s_sched;
    struct cisam_ss s_shift;
    struct cisam_s_version sv;
+   struct cisam_cl *cl_ptr;
    int mode = 0;
    struct tm *tm_ptr;
    int curTime = 0;
@@ -1477,9 +1479,12 @@ veh_state(veh_ptr, op, state, argument, argument2)
 
 	    if ((char)argument == '3')
 	      {
-		(void)Veh_reset_state((VEH_HNDL)veh_ptr, VEH_POSTED_STATE, HNDL_NULL, HNDL_NULL);
-		if (veh_ptr->zone_num > 0)
+		call_ptr = (struct calls *) argument2;
+		call_zone = call_ptr->pickup_zone;
+		tmp = veh_ptr->zone_num;
+		if ((tmp == call_zone))
 		  {
+		    (void)Veh_reset_state((VEH_HNDL)veh_ptr, VEH_POSTED_STATE, HNDL_NULL, HNDL_NULL);
 		    veh_ptr->t_status.posted = 1;
 		    Vehicle_change_q_priority((VEH_HNDL)veh_ptr, veh_ptr->priority);
 		    Zone_add_veh(veh_ptr->zone_num, (VEH_HNDL)veh_ptr);
@@ -1551,27 +1556,33 @@ veh_state(veh_ptr, op, state, argument, argument2)
 	       veh_ptr->no_accepts += 1;
 	    }
 
-	    // 10-29-15: Move to end of queue on no-accept
+	    // 11-25-15: unbook vehicle and book into zone 995
+	    // if vehicle booked into same zone as call
+	    // and call zone is a non-stand zone
+	    // If booked into a stand zone and trip is offered from same
+	    // stand zone, move taxi to end of queue
 	    tmp = veh_ptr->zone_num;
-	    (void) Veh_reset_state((VEH_HNDL) veh_ptr, VEH_ON_CALL_STATE, HNDL_NULL, HNDL_NULL);
-	    if ((char)Zone_get_value(zone_hndl, ZONE_TYPE) != ZN_STAND)
+	    call_zone = call_ptr->pickup_zone;
+	    if ((tmp == call_zone) &&
+		((char)Zone_get_value(zone_hndl, ZONE_TYPE) != ZN_STAND))
 	      {
-		veh_ptr->t_status.posted = 1;
-		Vehicle_change_q_priority((VEH_HNDL)veh_ptr, veh_ptr->priority);
-		(void) Zone_add_veh(tmp, (VEH_HNDL) veh_ptr);
-		(void) Dispatcher_veh_match((VEH_HNDL) veh_ptr, tmp);
-	      }
-	    /* veh_ptr->t_status.offered = 0; */
-	    /* veh_ptr->call_ptr = NULL; */
-#ifdef FOO
-	    if ( (char)Zone_get_value(zone_hndl, ZONE_TYPE) != ZN_STAND )
-	      {
-		// Book into zone 995
 		(short)argument = 995;
 		(void) Veh_reset_state((VEH_HNDL) veh_ptr, VEH_POSTED_STATE, HNDL_NULL, HNDL_NULL);
 		(void) Veh_set_state((VEH_HNDL) veh_ptr, VEH_POSTED_STATE, (HNDL) argument);
 	      }
-#endif
+	    else if ((tmp == call_zone) &&
+		     ((char)Zone_get_value(zone_hndl, ZONE_TYPE) == ZN_STAND))
+	      {
+		(void) Veh_reset_state((VEH_HNDL) veh_ptr, VEH_ON_CALL_STATE, HNDL_NULL, HNDL_NULL);
+		(void) Veh_reset_state((VEH_HNDL) veh_ptr, VEH_POSTED_STATE, HNDL_NULL, HNDL_NULL);
+		veh_ptr->t_status.posted = 1;
+		Vehicle_change_q_priority((VEH_HNDL)veh_ptr, veh_ptr->priority);
+		(void) Zone_add_veh(tmp, (VEH_HNDL) veh_ptr);
+		//(void) Dispatcher_veh_match((VEH_HNDL) veh_ptr, tmp);
+	      }
+	    /* veh_ptr->t_status.offered = 0; */
+	    /* veh_ptr->call_ptr = NULL; */
+
 #ifdef FOO
 	    if ((int) argument)
 	    {
@@ -3088,7 +3099,20 @@ veh_state(veh_ptr, op, state, argument, argument2)
 	 veh_ptr->t_status.pckup = 1;
 	 veh_ptr->t_status.noshow = 0;
 
-
+	  // VPU trips send 'fast location update' message
+	  call_ptr = veh_ptr->call_ptr;
+	  if ( call_ptr != NULL)
+	    {
+	      if ((cl_ptr = get_call_record(call_ptr->c_isam_num, call_ptr->call_number)) != NULL)
+		{
+		  if (!strncmp(cl_ptr->extended_type, "KV",2))
+		    {
+		      mk_outb_text("");
+		      add_outb_text("%SZ2000C8%SZ230190");
+		      send_msg_mmp(veh_ptr->mid, TEXT_DISPLAY, veh_ptr);
+		    }
+		}
+	    }
 	 
 	 /* FLAG REQUEST HNDLING ??? */
 	 if (veh_ptr->t_status.flag)

@@ -253,6 +253,8 @@ typedef struct _ACCT_DATA_REC
   char          call_comment[65];
   char          gpsx[8];
   char          gpsy[8];
+  char          fare_amount[8];
+  char          vat[8];
 } ACCT_DATA_REC;
 #define ACCT_DATA_REC_SIZE sizeof(ACCT_DATA_REC)
 

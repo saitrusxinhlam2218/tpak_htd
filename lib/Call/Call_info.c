@@ -58,6 +58,7 @@ call_value(call_hndl, op, attr, value)
    int  tmp_time;
    long lead_time;
    unsigned char *addr;
+   short nb_bytes = 0;
    char error_str[80];
 
    if (op == PUT)
@@ -308,41 +309,32 @@ call_value(call_hndl, op, attr, value)
       return(HNDL_ERR);      
       
    case CALL_VEH_DRIV_ATTR:
-      /* see taxi_sup - call_check_attr_on */
-      /* TRUE or FALSE */
-      if (op != GET)
-      {
-	 ERROR(' ', "", " Illegal operation on CALL_VEH_DRIV_ATTR");
+     if (op != GET)
+       {
+         ERROR(' ', "", " Illegal operation on CALL_VEH_DRIV_ATTR");
          if (op == PUT)
-             return((HNDL) FAIL);
+	   return((HNDL) FAIL);
          else
-	    return (HNDL_ERR);
-      }
-      addr = (unsigned char *) &call_ptr->vehicle_attributes;
-      if (*addr)
-	 return ((HNDL) TRUE);
-      else
-      {
-	 ++addr;
+	   return (HNDL_ERR);
+       }
+     addr = (unsigned char *) &call_ptr->vehicle_attributes;
+     for ( nb_bytes = 0; nb_bytes < 4; nb_bytes++)
+       {
 	 if (*addr)
 	   return ((HNDL) TRUE);
-	 else
-	   {
-	     addr = (unsigned char *) &call_ptr->driver_attributes;
-	     if (*addr)
-	       return ((HNDL) TRUE);
-	     else
-	       {
-		 ++addr;
-		 if ( *addr )
-		   return ((HNDL) TRUE);
-		 else
-		   return ((HNDL) FALSE);
-	       }
-	   }
-      }
+	 addr++;
+       }
+     addr = (unsigned char *) &call_ptr->driver_attributes;
+     for ( nb_bytes = 0; nb_bytes < 4; nb_bytes++)
+       {
+	 if (*addr)
+	   return ((HNDL) TRUE);
+	 addr++;
+       }
+     return ((HNDL) FALSE);
 
-      break;
+     break;
+
    case CALL_VEH_ATTR_HNDL:
       if (op == PUT)
       {
