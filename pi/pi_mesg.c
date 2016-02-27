@@ -8,7 +8,6 @@ static char sz__FILE__[]="@(#)pi_mesg.c	10.1.2.1(ver) Date Release 12/2/94";
  * @(#)  SCCS File: /taxi/sccs/s.pi_mesg.c
  *                                                                           *
  *****************************************************************************/
-#ident "@(#) head:mesg_funcs.c	6.13.0.0"
 
 #include <stdio.h>
 #include <isam.h>

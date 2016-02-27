@@ -35,6 +35,10 @@ char *data_pkg;
     MakeLogEntry( szLogMsg );
     break;
 
+  case PI_LOG_ATTR:
+    LogMsg_Attr( direction, data_pkg );
+    MakeLogEntry( szLogMsg );
+    break;
   case PI_DISPATCH_CALL:
     LogMsg_Dispatch_Call( direction, data_pkg );
     MakeLogEntry( szLogMsg );
@@ -169,6 +173,21 @@ char *data_pkg;
               call_rec->detail_type, call_rec->msg_nbr);
       
     }
+}
+
+LogMsg_Attr( direction, data_pkg )
+char *direction;
+char *data_pkg;
+{
+  PI_CALL_REC *call_rec;
+  int cl_nbr;
+
+  call_rec = (PI_CALL_REC *)data_pkg;
+  sprintf(szLogMsg, "%s PI_LOG_ATTR <%d> <%-31.31s><%-31.31s>\n",
+	  direction, call_rec->call_number,
+	  call_rec->car_attrib,
+	  call_rec->driver_attrib);
+  
 }
 
 LogMsg_Dispatch_Call( direction, data_pkg )

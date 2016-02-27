@@ -336,8 +336,6 @@ init_disp()
 	}  /* end shmget */
 
 	/* attach the shared memory segment */
-	sprintf(szLogMsg, "shmid %d seg_size %d", shmid, seg_size);
-	MakeLogEntry(szLogMsg);
         if ( (A_shm_ptr = shmat(shmid, (const void *)0x0a00000010000000, 0)) == (char *)-1 )  {	
 		/* shmat failed */
 	  sprintf(szLogMsg, "Cannot attach SHARED-MEMORY %d %d", shmid, errno);
@@ -354,7 +352,6 @@ init_disp()
 #endif
 
 
-	MakeLogEntry("After shm attach");
 	/* get semaphore id to be used to lock the array of excepts in  shared memory. Note that "Dispatch" should 
 	 * create the set of 2 semaphores - a read semaphore and a write semaphore
 	 */
@@ -370,7 +367,6 @@ init_disp()
 	/* initialize the pointer to point to the offsets structure in shared memory */
 	offset  = (struct offsets *)A_shm_ptr;
 
-	MakeLogEntry("offset dispatch check");
 	i = 0;
 	if ( !offset->status.dispatch )
 	  {

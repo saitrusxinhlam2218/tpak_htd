@@ -797,6 +797,8 @@ Call_activate(call_buf, call_exists)	/* WAS add_call */
      }
    bzero( &new_call->vehicle_attributes, sizeof(new_call->vehicle_attributes) );
    bzero( &new_call->driver_attributes, sizeof(new_call->driver_attributes) );
+   
+#ifdef FOO
    if ( db_call.veh_attr_flag == YES )
      {
        for ( i = 0; i < ATTR_MAX; i++ )
@@ -814,13 +816,10 @@ Call_activate(call_buf, call_exists)	/* WAS add_call */
 	 }
      }
 
-#ifdef FOO
-   else
-     {
-       memcpy(&new_call->vehicle_attributes, &call_buf->veh_attr, sizeof(struct veh_attributes));
-       memcpy(&new_call->driver_attributes, &call_buf->drv_attr, sizeof(struct drv_attributes));
-     }
 #endif
+
+   memcpy(&new_call->vehicle_attributes, &call_buf->veh_attr, sizeof(struct veh_attributes));
+   memcpy(&new_call->driver_attributes, &call_buf->drv_attr, sizeof(struct drv_attributes));
 
    /* Make sure we're on the map */
    new_call->call_msg_nbr = call_buf->call_msg_nbr;

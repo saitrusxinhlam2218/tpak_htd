@@ -897,33 +897,23 @@ int
 Vehicle_match_attr( unsigned char *addr1, unsigned char *addr2 )
 {
   
-  if (1)
+  if (*addr2 == (*addr1 & *addr2)) /* checks 1-8 */
     {
-      if (*addr2 == (*addr1 & *addr2)) /* checks 1-8 */
+      ++addr1;
+      ++addr2;
+      if ( *addr2 == ( *addr1 & *addr2 ) ) /* checks 9-16 */
 	{
 	  ++addr1;
 	  ++addr2;
-	  if ( *addr2 == ( *addr1 & *addr2 ) ) /* checks 9-16 */
+	  if ( *addr2 == ( *addr1 & *addr2 ) ) /* checks 17-24 */
 	    {
 	      ++addr1;
 	      ++addr2;
-	      if ( *addr2 == ( *addr1 & *addr2 ) ) /* checks 17-24 */
-		{
-		  ++addr1;
-		  ++addr2;
-		  if ( *addr2 == ( *addr1 & *addr2 ) ) /* checks 25-32 */
-		    return(TRUE);
-		}
+	      if ( *addr2 == ( *addr1 & *addr2 ) ) /* checks 25-32 */
+		return(TRUE);
 	    }
 	}
     }
-  else
-    {
-      if ( *addr2 == ( *addr1 & *addr2 ) )
-	{
-	  if (*addr2 == (*addr1 & *addr2))
-	    return (TRUE);
-	}
-    }
+  
   return (FALSE);
 }

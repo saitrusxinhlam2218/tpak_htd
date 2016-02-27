@@ -586,6 +586,7 @@ int pi_dispatch_call( struct order_struc *order_data, struct return_struc *retur
 		{
 				/* Updating Call and Call history databases */
                                 LogMsg( PI_DISPATCH_CALL, EXTP_TO_PI, (void *)spCurCall );
+				LogMsg( PI_LOG_ATTR, EXTP_TO_PI, (void *)spCurCall);
                                 if ( glEnhSwitch & ENH0002 )
                                   db_call_num = EnterNonExtCallinTaxiPak( (struct call_ext *)spCurCall, i, call_ptr, NON_EXT_CALL, CALL_REQ, &sCallRec );
                                 else

@@ -187,6 +187,7 @@ typedef struct cinf
 #define PI_VEH_STATUS       36
 #define PI_COORD_TRANSFORM  66
 
+#define PI_LOG_ATTR         99
 /* Attribute offsets */
 /*********************/
 
