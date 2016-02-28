@@ -801,25 +801,6 @@ Call_activate(call_buf, call_exists)	/* WAS add_call */
    bzero( &new_call->vehicle_attributes, sizeof(new_call->vehicle_attributes) );
    bzero( &new_call->driver_attributes, sizeof(new_call->driver_attributes) );
    
-#ifdef FOO
-   if ( db_call.veh_attr_flag == YES )
-     {
-       for ( i = 0; i < ATTR_MAX; i++ )
-	 {
-	   if ( db_call.veh_attr[i] == YES )
-	     TC_set_bit( i, 1, &new_call->vehicle_attributes );
-	 }
-     }
-   if ( db_call.drv_attr_flag == YES )
-     {
-       for ( i = 0; i < ATTR_MAX; i++ )
-	 {
-	   if ( db_call.drv_attr[i] == YES )
-	     TC_set_bit( i, 1, &new_call->driver_attributes );
-	 }
-     }
-
-#endif
 
    memcpy(&new_call->vehicle_attributes, &call_buf->veh_attr, sizeof(struct veh_attributes));
    memcpy(&new_call->driver_attributes, &call_buf->drv_attr, sizeof(struct drv_attributes));

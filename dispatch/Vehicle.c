@@ -910,7 +910,27 @@ Vehicle_match_attr( unsigned char *addr1, unsigned char *addr2 )
 	      ++addr1;
 	      ++addr2;
 	      if ( *addr2 == ( *addr1 & *addr2 ) ) /* checks 25-32 */
-		return(TRUE);
+		{
+		  ++addr1;
+		  ++addr2;
+		  if ( *addr2 == ( *addr1 & *addr2 )) /* checkec 33 - 40 */
+		    {
+		      ++addr1;
+		      ++addr2;
+		      if ( *addr2 == ( *addr1 & *addr2 )) // checks 41 - 48
+			{
+			  ++addr1;
+			  ++addr2;
+			  if ( *addr2 == ( *addr1 & *addr2 )) // checks 49 - 56
+			    {
+			      ++addr1;
+			      ++addr2;
+			      if ( *addr2 == ( *addr1 & *addr2 )) // checkes 57 - 64
+				return(TRUE);
+			    }
+			}
+		    }
+		}
 	    }
 	}
     }

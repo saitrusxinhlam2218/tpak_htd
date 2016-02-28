@@ -295,7 +295,7 @@ Veh_rec_2_obj(VEH *dest, VEH_REC *src)
    tmp_susp_typex_call = dest->vehicle_attr.susp_typex_call;
 
    addr = (unsigned char*)&dest->vehicle_attr;		            
-     for(i=0;i<4;i++)
+     for(i=0;i<8;i++)
        {
 	 mask = 0x80;
 	 for (j=0; j<=7;j++)
