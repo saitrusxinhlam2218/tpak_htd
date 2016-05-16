@@ -801,25 +801,6 @@ Call_activate(call_buf, call_exists)	/* WAS add_call */
    bzero( &new_call->vehicle_attributes, sizeof(new_call->vehicle_attributes) );
    bzero( &new_call->driver_attributes, sizeof(new_call->driver_attributes) );
    
-#ifdef FOO
-   if ( db_call.veh_attr_flag == YES )
-     {
-       for ( i = 0; i < ATTR_MAX; i++ )
-	 {
-	   if ( db_call.veh_attr[i] == YES )
-	     TC_set_bit( i, 1, &new_call->vehicle_attributes );
-	 }
-     }
-   if ( db_call.drv_attr_flag == YES )
-     {
-       for ( i = 0; i < ATTR_MAX; i++ )
-	 {
-	   if ( db_call.drv_attr[i] == YES )
-	     TC_set_bit( i, 1, &new_call->driver_attributes );
-	 }
-     }
-
-#endif
 
    memcpy(&new_call->vehicle_attributes, &call_buf->veh_attr, sizeof(struct veh_attributes));
    memcpy(&new_call->driver_attributes, &call_buf->drv_attr, sizeof(struct drv_attributes));
@@ -830,8 +811,8 @@ Call_activate(call_buf, call_exists)	/* WAS add_call */
 	 {
 	   tmtime = time( (time_t *) 0 );
 	   stime = ctime( &tmtime );
-	   fprintf(fpGPSDispatchTrace, "%.8s Call %08d ATTR_DEBUG ",
-		   &stime[11], db_call.nbr);
+	   fprintf(fpGPSDispatchTrace, "%.8s Call %08d ATTR_DEBUG PERS %d %c",
+		   &stime[11], db_call.nbr, call_buf->personal_veh, call_buf->personal_rqst);
 	   if (new_call->driver_attributes.attr16)
 	     fprintf(fpGPSDispatchTrace, "16 ");
 	   if (new_call->driver_attributes.attr17)

@@ -81,7 +81,39 @@ struct veh_attributes {		/* attributes for vehicles */
 	unsigned attr29: 1;
 	unsigned attr30: 1;
 	unsigned attr31: 1;
-	unsigned attr32: 1;	
+	unsigned attr32: 1;
+	unsigned attr33 : 1;
+	unsigned attr34 : 1;
+	unsigned attr35 : 1;
+	unsigned attr36 : 1;
+	unsigned attr37 : 1;
+	unsigned attr38 : 1;
+	unsigned attr39 : 1;
+	unsigned attr40 : 1;
+	unsigned attr41 : 1;
+	unsigned attr42 : 1;
+	unsigned attr43: 1;
+	unsigned attr44: 1;
+	unsigned attr45: 1;
+	unsigned attr46: 1;
+	unsigned attr47: 1;
+	unsigned attr48: 1;
+	unsigned attr49: 1;
+	unsigned attr50: 1;
+	unsigned attr51: 1;
+	unsigned attr52: 1;
+	unsigned attr53: 1;
+	unsigned attr54: 1;
+	unsigned attr55: 1;
+	unsigned attr56: 1;
+	unsigned attr57: 1;
+	unsigned attr58: 1;
+	unsigned attr59: 1;
+	unsigned attr60: 1;
+	unsigned attr61: 1;
+	unsigned attr62: 1;
+	unsigned attr63: 1;
+	unsigned attr64: 1;	  
 	unsigned susp_pass_call : 1;	/* allowed to pickup passenger calls */
 	unsigned susp_del_call : 1;  	/* allowed to pickup delivery calls */
 	unsigned susp_typex_call : 1;  	/* allowed to pickup  x calls */
@@ -118,7 +150,39 @@ struct drv_attributes {		/* attributes for drivers */
 	unsigned attr29: 1;
 	unsigned attr30: 1;
 	unsigned attr31: 1;
-	unsigned attr32: 1;		
+	unsigned attr32: 1;
+	unsigned attr33 : 1;
+	unsigned attr34 : 1;
+	unsigned attr35 : 1;
+	unsigned attr36 : 1;
+	unsigned attr37 : 1;
+	unsigned attr38 : 1;
+	unsigned attr39 : 1;
+	unsigned attr40 : 1;
+	unsigned attr41 : 1;
+	unsigned attr42 : 1;
+	unsigned attr43: 1;
+	unsigned attr44: 1;
+	unsigned attr45: 1;
+	unsigned attr46: 1;
+	unsigned attr47: 1;
+	unsigned attr48: 1;
+	unsigned attr49: 1;
+	unsigned attr50: 1;
+	unsigned attr51: 1;
+	unsigned attr52: 1;
+	unsigned attr53: 1;
+	unsigned attr54: 1;
+	unsigned attr55: 1;
+	unsigned attr56: 1;
+	unsigned attr57: 1;
+	unsigned attr58: 1;
+	unsigned attr59: 1;
+	unsigned attr60: 1;
+	unsigned attr61: 1;
+	unsigned attr62: 1;
+	unsigned attr63: 1;
+	unsigned attr64: 1;	    
 	unsigned susp_pass_call : 1;	/* allowed to pickup passenger calls */
 	unsigned susp_del_call : 1;  	/* allowed to pickup delivery calls */
 	unsigned susp_typex_call : 1;  	/* allowed to pickup  x calls */

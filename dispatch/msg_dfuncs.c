@@ -506,8 +506,8 @@ struct cisam_ml *mlp;								/* pointer to message log buffer */
     
     attributes_set = 0;
 
-    strcpy( attr_buf, mlp->veh_attr );
-    strcat( attr_buf, mlp->drv_attr );
+    strncpy( attr_buf, mlp->veh_attr, 32 );
+    strncat( attr_buf, mlp->drv_attr, 32 );
     
 
     format_msg(mlp);

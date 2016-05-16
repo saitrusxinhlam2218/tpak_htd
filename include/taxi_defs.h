@@ -23,7 +23,7 @@
 #define DATE_LEN        9
 #endif
 #define NAME_LEN	20	/* For names of people */
-#define ATTR_MAX 	32	/* maximum number of attributes */
+#define ATTR_MAX 	64	/* maximum number of attributes */
 #define NUM_ATTR        ATTR_MAX /* for compatability */
 #define LEVEL_MAX       9
 #define NUM_SEALS	16

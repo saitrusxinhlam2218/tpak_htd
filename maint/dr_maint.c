@@ -288,7 +288,7 @@ init()
 	  }
 	
 	if (1)
-	  MaxAttrs = 32;
+	  MaxAttrs = 64;
 	else
 	  MaxAttrs = 8;
 

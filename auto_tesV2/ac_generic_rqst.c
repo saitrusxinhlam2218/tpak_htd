@@ -222,11 +222,11 @@ Account_to_CallInfo( pPostAddress, pTESCall, pAccount )
   strcpy( Pickup->street.type, pPostAddress->street.type );
   strcpy( Pickup->city_name, pPostAddress->city_name );
 
-  strncpy(pTESCall->pickup.requested_attributes.vehicle, pAccount->veh_attr, ATTR_MAX);
-  pTESCall->pickup.requested_attributes.vehicle[ATTR_MAX] = EOS;
+  strncpy(pTESCall->pickup.requested_attributes.vehicle, pAccount->veh_attr, 32);
+  pTESCall->pickup.requested_attributes.vehicle[32] = EOS;
 
-  strncpy(pTESCall->pickup.requested_attributes.driver, pAccount->drv_attr, ATTR_MAX);
-  pTESCall->pickup.requested_attributes.driver[ATTR_MAX] = EOS;
+  strncpy(pTESCall->pickup.requested_attributes.driver, pAccount->drv_attr, 32);
+  pTESCall->pickup.requested_attributes.driver[32] = EOS;
   
   /** Now we can attempt to zone the address **/
   zip = 0;  

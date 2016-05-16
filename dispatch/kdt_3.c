@@ -479,10 +479,16 @@ struct	veh_driv	*veh_ptr;
 	    {
 	      if ((cl_ptr = get_call_record(call_ptr->c_isam_num, call_ptr->call_number)) != NULL)
 		{
-		  if (!strncmp(cl_ptr->extended_type, "KV",2))
+		  if ((!strncmp(cl_ptr->extended_type, "KV",2)))
 		    {
 		      mk_outb_text("");
 		      add_outb_text("%SZ200096%SZ23000F");
+		      send_msg_mmp(veh_ptr->mid, TEXT_DISPLAY, veh_ptr);
+		    }
+		  else if (!strncmp(cl_ptr->extended_type, "TH", 2))
+		    {
+		      mk_outb_text("");
+		      add_outb_text("%SZ200096%SZ23000A");
 		      send_msg_mmp(veh_ptr->mid, TEXT_DISPLAY, veh_ptr);
 		    }
 		}

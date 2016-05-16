@@ -19,8 +19,8 @@ typedef struct _tc_struct
   time_t             lead_time;
   int                fleet;
   short              zone;
-  char               drv_attr[33];
-  char               veh_attr[33];
+  char               drv_attr[65];
+  char               veh_attr[65];
   unsigned int       personal:1;
   unsigned int       mult:1;
   struct _tc_struct  *next;

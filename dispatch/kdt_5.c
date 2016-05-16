@@ -341,6 +341,7 @@ redo:
       /* need a CR ???? */
       return (len);
 
+   case TH_FORMAT:
    case H_FORMAT:
 
       /* LINE 1 ********************************************* LINE */
@@ -1589,6 +1590,9 @@ struct veh_driv *veh_ptr;
 	  (cl_ptr->ext_nbr == NOT_EXTERNAL) &&
 	  (strlen(cl_ptr->charge_nbr) > 0) && (0))
 	assign_opt = DETAIL10;
+
+      if ((cl_ptr->extended_type[0] == 'T') && (cl_ptr->extended_type[1] == 'H'))
+	assign_opt = TH_FORMAT;
       
       if (mult_num == 0 && cl_ptr->grouped_with)
       {
@@ -1803,11 +1807,11 @@ struct veh_driv *veh_ptr;
 	   if ((cl_ptr->call_rate != 0.0) && (cl_ptr->send_rate == YES ) )
 #endif
 	   {
-	     add_outb_text(CALL_RATE_HDR);
+	     //	     add_outb_text(CALL_RATE_HDR);
 #ifdef SCANDINAVIA
-	     sprintf(str_temp, "%7.2f%s", cl_ptr->call_rate, currency_symbol);
+	    sprintf(str_temp, "------------------------------%%RKIINTEÄ HINTA %7.2f%s%%R------------------------------%%R", cl_ptr->call_rate, " EUR");	    	     
 #else
-	     sprintf(str_temp, "%s%7.2f", currency_symbol, cl_ptr->call_rate);
+	    sprintf(str_temp, "------------------------------%%RKIINTEÄ HINTA %7.2f%s%%R------------------------------%%R", cl_ptr->call_rate, " EUR");	    	     
 #endif
 	     len += add_outb_text(str_temp);
 	   } 
@@ -1832,6 +1836,114 @@ struct veh_driv *veh_ptr;
 	 }
 	 break;
 
+      case TH_FORMAT:
+	 /* LINES 1 & 2 ****************************************** LINE */
+	 (void) mk_pickup_address(assign_opt, cl_ptr, COMPLETE_ADDRESS, 0);  /* 2 lines */
+	 len = 0;
+	 add_outb_text(CR);
+	 if (cl_ptr->general_cmnt)
+	   mk_comment(cl_ptr);
+	 len = 0;
+	 if (cl_ptr->passenger_name)
+	   {
+	     sprintf(str_temp, "%s %s", "ASIAKAS:", cl_ptr->passenger_name);
+	     add_outb_text(str_temp);
+	     add_outb_text(CR);
+	   }
+
+	 len = 0;
+	 
+	 len += mk_attr_fields(1, ABRIV, call_ptr, veh_ptr);
+	 if ( len > 0 )
+	   add_outb_text(CR);
+
+	 if (cl_ptr->extended_type[3] == 'L')  // customer is paying in the vehicle not with app
+	   {
+	     add_outb_text("EI MAKSETA AUTOSSA");
+	     add_outb_text(CR);
+	     add_outb_text("TEE YHTIÖLASKUTUS PERILLÄ,");
+	     add_outb_text(CR);
+	     add_outb_text("KUITTI TOIMITETAAN SÄHKÖISESTI");
+	     add_outb_text(CR);
+	   }
+	 else
+	   {
+	     add_outb_text("KYYTI MAKSETAAN AUTOSSA");
+	     add_outb_text(CR);
+	   }
+
+	 /* STREET NAME - DESTINATION */
+
+	 if (strlen(cl_ptr->dest_str_name) || strlen(cl_ptr->dest_city))
+	   {
+	     len += add_outb_text("KOHDE:");
+	     if (strlen(cl_ptr->dest_str_name))
+	       {
+		 len += add_outb_text(cl_ptr->dest_str_name);
+	       }
+	     if (strlen(cl_ptr->dest_str_type))
+	       {
+		 len += add_outb_space();
+		 len += add_outb_text(cl_ptr->dest_str_type);
+	       }
+	     if (cl_ptr->dest_str_nbr)
+	       {
+		 sprintf(str_temp, "%d", cl_ptr->dest_str_nbr);
+		 len += add_outb_space();
+		 len += add_outb_text(str_temp);
+	       }
+	     if (cl_ptr->dest_city)
+	       {
+		 len += add_outb_space();
+		 len += add_outb_text(cl_ptr->dest_city);
+	       }
+	     add_outb_text(CR);
+	   }
+	 /* STREET TYPE - DESTINATION */
+	 //	 if (strlen(cl_ptr->dest_str_type))
+	 //	 {
+	 //	    len += add_outb_space();
+	 //	    len += add_outb_text(cl_ptr->dest_str_type);
+	 //	 }
+	 /* CITY - DESTINATION */
+	 //	 if (strlen(cl_ptr->dest_city))
+	 //	 {
+	 //	    len += add_outb_space();
+	 //	    len += add_outb_text(cl_ptr->dest_city);
+	 //	 }	 
+	 //	 if (len > MAX_DISPLAY_LENGTH)
+	 //	 {
+	 //	    len -= MAX_DISPLAY_LENGTH;
+	 //	    while ((len >= 0) && len--)
+	 //	       delete_outb_char();
+	 //	 }
+	 //	 if (cl_ptr->dest_str_nbr)
+	 //	 {
+	 //	    sprintf(str_temp, "%d", cl_ptr->dest_str_nbr);
+	 //	    len += add_outb_text(str_temp);
+	 //	    len += add_outb_space();
+	 //	 } else if (strlen(cl_ptr->dest_apt_room) || strlen(cl_ptr->dest_dmap))
+	 //	   for (ii = 0; ii < sizeof(cl_ptr->dest_str_nbr); ii++)
+	 //	     len += add_outb_space();
+	 
+	 
+	 /* APARTMENT NUMBER - DESTINATION */
+	 //	 if (add_outb_text(cl_ptr->dest_apt_room))
+	 //	 {
+	 //	    len += add_outb_space();
+	 //	    len += strlen(cl_ptr->dest_apt_room) + 1;
+	 //	 } else if (strlen(cl_ptr->dest_apt_room) || cl_ptr->dest_str_nbr)
+	 //	    for (ii = 0; ii < sizeof(cl_ptr->dest_apt_room); ii++)
+	 //	       len += add_outb_space();
+
+
+	 len += add_outb_text(CALL_NUMBER_HDR);
+	 sprintf(str_temp, "%06d", cl_ptr->nbr);
+
+	 len += add_outb_text(str_temp);	 
+
+	break;
+	
       case H_FORMAT:
 
 	 /* LINES 1 & 2 ****************************************** LINE */
@@ -2005,11 +2117,12 @@ struct veh_driv *veh_ptr;
 	 if (( cl_ptr->call_rate != 0.0) && ( cl_ptr->send_rate == YES ) )
 #endif
 	 {
-	    add_outb_text(CALL_RATE_HDR);
+	   //	    add_outb_text(CALL_RATE_HDR);
 #ifdef SCANDINAVIA
-	    sprintf(str_temp, "%7.2f%s", cl_ptr->call_rate, currency_symbol);
+	    sprintf(str_temp, "------------------------------%%RKIINTEÄ HINTA %7.2f%s%%R------------------------------%%R", cl_ptr->call_rate, " EUR");	    
 #else
-	    sprintf(str_temp, "%s%7.2f", currency_symbol, cl_ptr->call_rate);
+	    sprintf(str_temp, "------------------------------%%RKIINTEÄ HINTA %7.2f%s%%R------------------------------%%R", cl_ptr->call_rate, " EUR");	    	    
+
 #endif
 	    len += add_outb_text(str_temp);
 	 }
@@ -2113,14 +2226,6 @@ struct veh_driv *veh_ptr;
 	    add_outb_text(ADVISE_ARRIVAL_HDR);
 #endif
 
-#ifdef FOO
-	 if (len > MAX_DISPLAY_LENGTH)
-	 {
-	    len -= MAX_DISPLAY_LENGTH;
-	    while ((len >= 0) && len--)
-	       delete_outb_char();
-	 }
-#endif
 	 break;
 
       case DETAIL2 :
