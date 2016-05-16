@@ -2372,6 +2372,16 @@ veh_state(veh_ptr, op, state, argument, argument2)
 
       case STATE_RESET:
 
+	if ((veh_ptr->call_ptr != NULL) &&
+	    ((cl_ptr = get_call_record(veh_ptr->call_ptr->c_isam_num, veh_ptr->call_ptr->call_number)) != NULL)) {	
+	  if ((!strncmp(cl_ptr->extended_type, "TH", 2)))
+	    {
+	      mk_outb_text("");
+	      add_outb_text("%SZ2000C8%SZ230190");
+	      send_msg_mmp(veh_ptr->mid, TEXT_DISPLAY, veh_ptr);
+	    }
+	}
+
 	 writer_gps_state( veh_hndl, VEH_GPS_STATE_IDLE );
 	 
 	 if (veh_ptr->t_status.crse_annul == 1)
@@ -3105,7 +3115,7 @@ veh_state(veh_ptr, op, state, argument, argument2)
 	    {
 	      if ((cl_ptr = get_call_record(call_ptr->c_isam_num, call_ptr->call_number)) != NULL)
 		{
-		  if (!strncmp(cl_ptr->extended_type, "KV",2))
+		  if ((!strncmp(cl_ptr->extended_type, "KV",2)))
 		    {
 		      mk_outb_text("");
 		      add_outb_text("%SZ2000C8%SZ230190");
