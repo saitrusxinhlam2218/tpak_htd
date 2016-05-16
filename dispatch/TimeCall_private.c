@@ -489,8 +489,8 @@ TC_load( CALL_HNDL call_hndl, TC_HNDL tc_hndl )
   unsigned char *drv_addr;
   unsigned char *veh_addr;
   unsigned char mask = 0x01;
-  char          drv_attr[32];
-  char          veh_attr[32];
+  char          drv_attr[64];
+  char          veh_attr[64];
   TC_STRUCT     *pTimeCall;
   
   if ( call_hndl == HNDL_NULL || tc_hndl == HNDL_NULL )
