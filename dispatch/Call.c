@@ -811,8 +811,8 @@ Call_activate(call_buf, call_exists)	/* WAS add_call */
 	 {
 	   tmtime = time( (time_t *) 0 );
 	   stime = ctime( &tmtime );
-	   fprintf(fpGPSDispatchTrace, "%.8s Call %08d ATTR_DEBUG ",
-		   &stime[11], db_call.nbr);
+	   fprintf(fpGPSDispatchTrace, "%.8s Call %08d ATTR_DEBUG PERS %d %c",
+		   &stime[11], db_call.nbr, call_buf->personal_veh, call_buf->personal_rqst);
 	   if (new_call->driver_attributes.attr16)
 	     fprintf(fpGPSDispatchTrace, "16 ");
 	   if (new_call->driver_attributes.attr17)
