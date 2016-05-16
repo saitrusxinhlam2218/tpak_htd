@@ -567,7 +567,7 @@ ACCT_DATA_REC           *pAccountOrder;
 	memset((char *)&dispatch_call->drv_attr, '\0', 
 					sizeof(struct drv_attributes));
 
-	for (i = 0; i < ATTR_MAX; i++)
+	for (i = 0; i < 32; i++)
 	  {
             if ( pAccountOrder->car_attrib[i] == YES )
               //		if (db_call->veh_attr[i] == YES)

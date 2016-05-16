@@ -1636,7 +1636,8 @@ int EnterNonExtCallinTaxiPak( struct call *cur_call, int nCallIndex,struct cisam
 
 
 			max_attr = 32;
-
+			bzero(&spCallRec->veh_attr, sizeof(struct veh_attributes));
+			bzero(&spCallRec->drv_attr, sizeof(struct drv_attributes));
 			for ( counter = 0; counter < max_attr; counter++ )
 				{
 					if ( cur_call->car_attrib[ counter ] == YES )
@@ -1663,6 +1664,7 @@ int EnterNonExtCallinTaxiPak( struct call *cur_call, int nCallIndex,struct cisam
                         // This will prevent 'zone_addr' from setting the GPS
                         // position using Tatort2000
 
+			
                         if ( ( atoi( cur_call->gpsx ) > 0 ) &&
                              ( atoi( cur_call->gpsy ) > 0 ) ) {
                           
@@ -1878,6 +1880,7 @@ int EnterNonExtCallinTaxiPak( struct call *cur_call, int nCallIndex,struct cisam
 					if ( call_ptr->drv_attr[ counter ] == YES )
 						set_attr_bit( counter, sizeof( struct drv_attributes ), &spCallRec->drv_attr );
 				}
+
 			
 			spCallRec->gps_lat = call_ptr->gps_lat;
 			spCallRec->gps_long = call_ptr->gps_long;
