@@ -87,6 +87,7 @@ struct drvr_info {                      /* driver info from driver database */
 #define DETAIL9                '9'
 #define DETAIL10               'A'
 #define KOGE_FORMAT            'B'
+#define TH_FORMAT              'C'
 #define POST                    0
 #define E_POST                  1
 #define CPOST                   3
