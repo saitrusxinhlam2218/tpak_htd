@@ -493,7 +493,7 @@ Account_to_CallInfo( pPostAddress, pTESCall, pAccount )
   pTESCall->pickup.due_date_time = time( 0 );
 
   /* set some attributes */
-  for ( i = 0; i < ATTR_MAX; i++ )
+  for ( i = 0; i < 32; i++ )
     {
       if ( pAccount->drv_attr[i] == YES )
 	pTESCall->pickup.requested_attributes.driver[i] = YES;
@@ -506,6 +506,12 @@ Account_to_CallInfo( pPostAddress, pTESCall, pAccount )
 	pTESCall->pickup.requested_attributes.vehicle[i] = NO;
     }
 
+  //  for ( i = 32; i < ATTR_MAX; i++)
+  //    {
+  //      pTESCall->pickup.requested_attributes.driver[i] = NO;
+  //      pTESCall->pickup.requested_attributes.vehicle[i] = NO;
+  //    }
+  
   //Hard coding some attributes for Helsinki Taxi
   pTESCall->pickup.requested_attributes.driver[19] = YES;
   pTESCall->pickup.requested_attributes.driver[25] = YES;
