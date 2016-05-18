@@ -2377,7 +2377,7 @@ veh_state(veh_ptr, op, state, argument, argument2)
 	  if ((!strncmp(cl_ptr->extended_type, "TH", 2)))
 	    {
 	      mk_outb_text("");
-	      add_outb_text("%SZ2000C8%SZ230190");
+	      add_outb_text("%SZ490000%SZ1E000A%SZ2000C8%SZ210190"); //%SZ2000C8%SZ230190");
 	      send_msg_mmp(veh_ptr->mid, TEXT_DISPLAY, veh_ptr);
 	    }
 	}

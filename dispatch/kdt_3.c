@@ -488,7 +488,7 @@ struct	veh_driv	*veh_ptr;
 		  else if (!strncmp(cl_ptr->extended_type, "TH", 2))
 		    {
 		      mk_outb_text("");
-		      add_outb_text("%SZ200096%SZ23000A");
+		      add_outb_text("%SZ490000%SZ1E0064%SZ200007%SZ210007"); //%SZ200096%SZ23000A");
 		      send_msg_mmp(veh_ptr->mid, TEXT_DISPLAY, veh_ptr);
 		    }
 		}
