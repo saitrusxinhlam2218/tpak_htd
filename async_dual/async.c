@@ -943,6 +943,11 @@ alc_tx()
 		     case '1':
 		       strcat(DescriptBuff, " STATUS_DISP");
 		       break;
+		     case '6':
+		       sprintf(DescriptBuff," PRINT_TEXT");
+		       Tbuf[32] = '\0';
+		       strncpy(Tbuf, Tmsg->text, 32);
+		       break;		       
 		     case '2':
 		       switch(Tmsg->p_fields[1])
 			 {
@@ -950,7 +955,6 @@ alc_tx()
 			   sprintf(DescriptBuff," MSG_DISP");
 			   Tbuf[32] = '\0';
 			   strncpy(Tbuf, Tmsg->text, 32);
-			   printf("Message: %s\n", Tbuf);
 			   break;
 			 case '1':
 			   sprintf(DescriptBuff," OFFER_DISP");

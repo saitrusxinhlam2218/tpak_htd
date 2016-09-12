@@ -60,6 +60,8 @@
 #define POLY_DOWNLOAD      "240000"
 #define KELA_DETAILS       "229000"
 #define FROM_ITM        "231"
+#define PRINT_BLOCK        "260000"
+
 /* V03 credit types */
 #define CARD_TYPE1_V03     '1'
 #define CARD_TYPE_ACCT_V03 '2'

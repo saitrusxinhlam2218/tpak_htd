@@ -95,6 +95,8 @@ void alarm_noop();
 time_t get_internal_time(char *, char *);
 time_t conversion(char *);
 short GetCustomerZone( int, double, double );
+short GetCustomerZone2( int, double, double );
+bool pointInPolygon(int, POINT_POLY *, double, double);
 extern MEM_ZONE *fleetMemZones[FLEET_MAX][ZONE_MAX];
 
 /* Global structures and variables. */
@@ -1213,8 +1215,8 @@ int EnterCallinTaxiPak( struct call_ext *cur_call, int nCallIndex,struct cisam_c
 			    pMPKCall->gpsx[8] = '\0';
 			    dLong = (double)atof(pMPKCall->gpsx)/1000000.0;
 			    LatLong_to_UTM( dLat, dLong, &dNorth, &dEast );
-			    printf( "Zone - %d\n", GetCustomerZone(7, dEast, dNorth ) );
-			    call_ptr->pckup_zone = GetCustomerZone(7, dEast, dNorth);
+			    printf( "Zone - %d\n", GetCustomerZone2(7, dEast, dNorth ) );
+			    call_ptr->pckup_zone = GetCustomerZone2(7, dEast, dNorth);
 			  }
 			else if ( ! strncmp(call_ptr->extended_type, "KE", 2) )
 			  {
@@ -1226,7 +1228,7 @@ int EnterCallinTaxiPak( struct call_ext *cur_call, int nCallIndex,struct cisam_c
 			    pMPKCall->gpsx[2] = *nl_langinfo(RADIXCHAR);
 			    dLong = (double)atof(pMPKCall->gpsx);
 			    LatLong_to_UTM( dLat, dLong, &dNorth, &dEast );
-			    call_ptr->pckup_zone = GetCustomerZone(7, dEast, dNorth);
+			    call_ptr->pckup_zone = GetCustomerZone2(7, dEast, dNorth);
 			    cur_call->from_addr_zone = call_ptr->pckup_zone;
 			  }
 			else if ( ! strncmp(call_ptr->extended_type, "KV", 2) )
@@ -1239,7 +1241,7 @@ int EnterCallinTaxiPak( struct call_ext *cur_call, int nCallIndex,struct cisam_c
 			    pMPKCall->gpsx[2] = *nl_langinfo(RADIXCHAR);
 			    dLong = (double)atof(pMPKCall->gpsx);
 			    LatLong_to_UTM( dLat, dLong, &dNorth, &dEast );
-			    call_ptr->pckup_zone = GetCustomerZone(7, dEast, dNorth);
+			    call_ptr->pckup_zone = GetCustomerZone2(7, dEast, dNorth);
 			    cur_call->from_addr_zone = call_ptr->pckup_zone;
 			    call_ptr->gps_lat = dNorth;
 			    call_ptr->gps_long = dEast;
@@ -5450,7 +5452,7 @@ int pi_update_call( struct order_struc *order_data, struct return_struc *return_
     /**********************/
     /* FORMAT-check part. */
     /**********************/
-    if ( order_data->data_len != ACCT_DATA_REC_SIZE )
+    if ( order_data->data_len != 425 )
       return( MakeResponseMsg( return_data, (short) PI_INVALID_LEN,
 			       "Invalid msg length : PI_UPDATE_CALL" ) );    
     
@@ -5537,6 +5539,14 @@ int pi_update_call( struct order_struc *order_data, struct return_struc *return_
 	      set_attr_bit(counter, sizeof(struct veh_attributes), &cipc.veh_attr);
 	    if (call_ptr->drv_attr[counter] == YES)
 	      set_attr_bit(counter, sizeof(struct drv_attributes), &cipc.drv_attr);
+	  }
+
+	if (strlen(spCurCall->car_number))
+	  {
+	    call_ptr->personal_veh = atoi(spCurCall->car_number);
+	    call_ptr->personal_rqst = ONLY_PERS_REQ;
+	    cipc.personal_rqst = ONLY_PERS_REQ;
+	    cipc.personal_veh = atoi(spCurCall->car_number);
 	  }
 	
 	if ((db_update(CALL_FILE_ID, &call_record) != SUCCESS))
@@ -6327,6 +6337,66 @@ void LatLong_to_UTM( double Lat, double Long, double *pNorthing, double *pEastin
 					 +(61.0-58.0*T+T*T+600.0*C-330.0*eccPrimeSquared)*A*A*A*A*A*A/720.0));
 }
 
+short GetCustomerZone2( int fl_nbr, double cust_x, double cust_y )
+{
+  VEH          *veh_ptr;
+  ZONE         *zone_ptr;
+  POINT_POLY   cust_point, p1, p2;
+  POINT_POLY   *zone_poly;
+  int          nbr_points, i, j;
+  double       minx_value, maxx_value,miny_value,maxy_value;
+  double xinters;
+  int          counter = 0;
+  MEM_ZONE *pZone;
+  short best_zone = 0;
+  
+
+  printf("Customer point %f, %f\n", cust_x, cust_y);
+  cust_point.x = cust_x;
+  cust_point.y = cust_y;
+
+  for ( j = 1; j < ZONE_MAX; j++ )
+    {
+      if (( pZone = fleetMemZones[fl_nbr][j] ) != HNDL_NULL )
+	{
+	  zone_poly = (POINT_POLY *)pZone->zone_poly;
+	  p1 = zone_poly[0];
+	  nbr_points = pZone->poly_points;
+	  if (pointInPolygon(nbr_points, zone_poly, cust_x, cust_y) == TRUE)
+	    {
+	      if (j == 53)
+		{
+		  best_zone = j;
+		  printf("Best zone1 = %d\n", j);
+		  continue;
+		}
+	      else
+		{
+		  printf("Best zone2 = %d\n", j);
+		  return(j);
+		}
+	    }
+	}
+    }
+
+  return best_zone;
+
+}
+
+bool pointInPolygon(int polyCorners, POINT_POLY *pZonePoly, double x, double y) {
+
+  int   i, j=polyCorners-1 ;
+  bool  oddNodes=FALSE      ;
+
+  for (i=0; i<polyCorners; i++) {
+    if (pZonePoly[i].y<y && pZonePoly[j].y>=y
+	||  pZonePoly[j].y<y && pZonePoly[i].y>=y) {
+      if (pZonePoly[i].x+(y-pZonePoly[i].y)/(pZonePoly[j].y-pZonePoly[i].y)*(pZonePoly[j].x-pZonePoly[i].x)<x) {
+        oddNodes=!oddNodes; }}
+    j=i; }
+
+  return oddNodes;
+}
 
 short GetCustomerZone( int fl_nbr, double cust_x, double cust_y )
 {
@@ -6336,7 +6406,8 @@ short GetCustomerZone( int fl_nbr, double cust_x, double cust_y )
   int  nbr_points, i, j;
   double xinters;
   int counter = 0;
-
+  int best_zone = 0;
+  
   cust_point.x = cust_x;
   cust_point.y = cust_y;
   
@@ -6371,11 +6442,15 @@ short GetCustomerZone( int fl_nbr, double cust_x, double cust_y )
 	  if ( counter % 2 == 0 )
 	    continue;
 	  else
-	    return(j); 
+	    {
+	      printf("Best zone = %d\n", j);
+	      best_zone = j;
+	      //	      return(j);
+	    }
 	}
     }
       
-  return 0;
+  return best_zone;
 }
 ZonePolyCalculateCentroid( MEM_ZONE *zone_ptr )
 {

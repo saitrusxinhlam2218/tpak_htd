@@ -1576,7 +1576,17 @@ int ilink_redispatch;
    // Make sure that unlinked MULTI trips are not present in a zone
    if ( ( call_ptr->call_type.multiple == 1 ) && ( exists == 1 ) && ( call_ptr->grouped_with <= 0 ) )
      Zone_remove_call( call_ptr->pickup_zone, (CALL_HNDL) call_ptr );
-       
+
+   cl_ptr = Call_get_record(call_ptr->c_isam_num, call_ptr->call_number);
+   if ((!strncmp(cl_ptr->extended_type, "KE", 2)) &&
+       (!strcmp(cl_ptr->status, CANCELD)))
+     {
+       if (call_ipc_rec_ptr->call_type.time == 1)
+	 writer_time_call(call_ptr->call_number);
+       else
+	 writer_unassgn(call_ptr->call_number);
+     }
+   
    if ( ilink_redispatch == TRUE )
      {
        Call_set_value( (CALL_HNDL)call_ptr, CALL_TYPE_ILINK_REJECT, (HNDL)TRUE );
