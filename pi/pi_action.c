@@ -368,6 +368,62 @@ int pi_zone_address( struct order_struc *order_data, struct return_struc *return
     return( return_code ); 
   } /* end PI_ZONE_ADDRESS */
 
+int pi_customer_zone( struct order_struc *order_data, struct return_struc *return_data )
+{
+  short pi_fail_ok, counter, i;
+  int  return_code;
+  COORD_TRANSFORM in_mess;
+  double inlat, inlon, outx, outy, dNorth, dEast;
+  char  *position;
+
+  //  if ( order_data->data_len != sizeof(COORD_TRANSFORM) )
+  //  {
+  //    return_data->data_len = 0;
+  //    position = return_data->data;
+  //    pi_fail_ok = PI_INVALID_LEN;
+  //    return_code = ins_to_data_blk( PI_SHORT_TYPE, &position, (char *) &pi_fail_ok, &return_data->data_len );
+  //    return( return_code );
+  //  }
+
+  position = order_data->data;
+  return_code = get_from_data_blk( sizeof( COORD_TRANSFORM ), &position, (char *) &in_mess, &order_data->data_len );
+
+  if ( return_code < 1 )
+    {
+      return_data->data_len = 0;
+      position = return_data->data;
+
+      pi_fail_ok = PI_INVALID_VALUE;
+      return_code = ins_to_data_blk( PI_SHORT_TYPE, &position, (char *) &pi_fail_ok, &return_data->data_len );
+      return( return_code );
+    }
+  return_data->data_len = 0;
+  position = return_data->data;
+
+  inlat = (double)atof(in_mess.latitude);
+  inlon = (double)atof(in_mess.longitude);
+
+  LatLong_to_UTM( inlat, inlon, &dNorth, &dEast );
+  printf( "Zone - %d\n", GetCustomerZone2(7, dEast, dNorth));
+  sprintf(in_mess.zone, "%03d", GetCustomerZone2(7, dEast, dNorth));
+
+  return_code = ins_to_data_blk( sizeof(COORD_TRANSFORM) + 4, &position, (char *) &in_mess, &return_data->data_len ); 
+  if ( return_code < 1 )
+    {
+      return_data->data_len = 0;
+      position = return_data->data;
+      
+      ERROR( "Invalid block length (too long)" );	/* Log the error... */
+      
+      pi_fail_ok = PI_INVALID_VALUE;
+      return_code = ins_to_data_blk( PI_SHORT_TYPE, &position, (char *) &pi_fail_ok, &return_data->data_len );
+      return( return_code ); 
+    }  
+  return( return_code );
+  
+}
+
+
 int pi_coord_transform( struct order_struc *order_data, struct return_struc *return_data )
 {
   short pi_fail_ok, counter, i;
@@ -401,24 +457,6 @@ int pi_coord_transform( struct order_struc *order_data, struct return_struc *ret
   position = return_data->data;
 
 
-  if ( in_mess.direction == '1' )
-    {
-      inx = (double)atof(in_mess.coord_x);
-      iny = (double)atof(in_mess.coord_y);
-      //      ST74ToWGS84( inx, iny, &outx, &outy );
-      sprintf(in_mess.latitude, "%8.6f", outy);
-      sprintf(in_mess.longitude, "%8.6f", outx);      
-    }
-  else
-    {
-      inx = (double)atof(in_mess.longitude);
-      iny = (double)atof(in_mess.latitude);
-      //      WGS84ToST74( inx, iny, &outx, &outy );
-      sprintf(in_mess.coord_x, "%9.0f", outx);
-      sprintf(in_mess.coord_y, "%9.0f", outy);
-    }
-
-                     
   return_code = ins_to_data_blk( PI_SHORT_TYPE, &position, (char *) &pi_fail_ok, &return_data->data_len );
   
   if ( return_code < 1 )
