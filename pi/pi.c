@@ -1027,6 +1027,19 @@ void  HandleClientMsg( unsigned char *temp_data, struct socket_inf *Client, cloc
 			MakeStat( nMsgNum, (clock()-StartTime) );
 			break;
 
+
+	case PI_CUSTOMER_ZONE:
+	  if ( pi_customer_zone( &order_data, &return_data ) )
+	    {
+	      MakeAckMessage( temp_data, Client, return_data );
+	    }
+	  else
+	    {
+	      printf("PI-error: pi_customer_zone failed with a return value = 0.\n");
+	      exit(TAXI_ERROR);
+	    }
+	  break;
+	  
         case PI_COORD_TRANSFORM:
           if ( pi_coord_transform( &order_data, &return_data ) )
             {

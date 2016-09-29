@@ -1544,6 +1544,7 @@ struct veh_driv *veh_ptr;
    int   countKelaNodes = 0;
    int   nodePairs = 0;
    BOOLEAN bSendKela = FALSE;
+   BOOLEAN bSendMPK = FALSE;
    int dbmode = ISFIRST;
    char kela_details_temp[TMP_STR_LEN];
    char kela_resp_temp[TMP_STR_LEN];
@@ -2217,6 +2218,7 @@ struct veh_driv *veh_ptr;
 
 	 // add an invisible field on MPK trips for HTD
 	 bSendKela = FALSE;
+	 bSendMPK = FALSE;
 	 veh_ptr->kela_node = 0;
 	 
 	 if ( !strncmp(cl_ptr->extended_type, "KE", 2) )
@@ -2468,6 +2470,7 @@ struct veh_driv *veh_ptr;
                 {
                   sprintf(str_temp, "%s1;1;%s;%s.", "%.K", (sMPKnode + 3), (sMPKnode + 3));
                   len += add_outb_text(str_temp);
+		  bSendMPK = TRUE;
                 }
             }
 	  
@@ -2490,6 +2493,20 @@ struct veh_driv *veh_ptr;
        }
       clr_pkt_id();
 
+      // MPK DETAILS MESSAGE - gets mobirouter ID out to TXM
+      if (bSendMPK)
+	{
+	  sMPKnode = strstr(cl_ptr->general_cmnt, "ID:");
+	  if (sMPKnode != NULL)
+	    {
+	      bzero(kela_resp_temp, TMP_STR_LEN);
+	      sprintf(kela_resp_temp, "%s;01;;;;", (sMPKnode + 3));
+	      mk_outb_text("");
+	      add_outb_text(kela_resp_temp);
+	      send_msg_mmp(term_id, KELA_DETAILS, veh_ptr);
+	    }
+
+	}
       // KELA DETAILS MESSAGE
       // send_msg_mmp(term_id, KELA_DETAILS , veh_ptr);
       if (bSendKela)
