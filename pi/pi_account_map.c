@@ -329,12 +329,16 @@ m4100_prepare_call_for_db(account, account_order, call)
 	/* Added the lines to add the driver_msg to the general comment for account trips to fix TC00034 */
         dr_length = strlen(call->driver_msg);                     /* string length of driver_msg comment */
         cl_length = strlen(call->general_cmnt);                   /* string length of general comment */
-        if (cl_length > 0 && (cl_length + dr_length) <= 65)      /* do we need to or can we shuffle comments around? */
+        if (cl_length > 0 && (cl_length + dr_length) <= 62)      /* do we need to or can we shuffle comments around? */
 	{
             strcat(call->general_cmnt," /");
             strcat(call->general_cmnt,call->driver_msg);
             strcat(call->general_cmnt,"/");
-        }
+        } else if ((cl_length <= 0) && (call->driver_msg <= 65)) //no general comment - use entire driver message
+	  {
+	    strcat(call->general_cmnt, call->driver_msg);
+	    strcat(call->general_cmnt, "/");
+	  }
 
 	strncpy(call->charge_nbr, account->nbr, sizeof(call->charge_nbr));
 	call->veh_attr_flag = NO;
