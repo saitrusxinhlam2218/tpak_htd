@@ -862,6 +862,7 @@ char 	*argv[];
 		spaces1, time(0) - start, spaces2, recs_purged);
 
 
+#ifdef FOO
 	if (db_open( TL_FILE_ID, ISINOUT | ISMANULOCK ) == SUCCESS )
 	  {
 	    fprintf(sys_mgr_mail_file,"TLAYER");
@@ -888,6 +889,7 @@ char 	*argv[];
 	    fprintf(sys_mgr_mail_file,"%s%d%s%d\n",
 		    spaces1, time(0) - start, spaces2, recs_purged);	
 	  }
+#endif
 	
 	end_time = time(0);
 	total_time = end_time - start_time;
