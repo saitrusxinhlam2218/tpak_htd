@@ -2500,7 +2500,7 @@ struct veh_driv *veh_ptr;
 	  if (sMPKnode != NULL)
 	    {
 	      bzero(kela_resp_temp, TMP_STR_LEN);
-	      sprintf(kela_resp_temp, "%s;01;;;;", (sMPKnode + 3));
+	      sprintf(kela_resp_temp, "%s;01;%s;;;", (sMPKnode + 3), (sMPKnode +3));
 	      mk_outb_text("");
 	      add_outb_text(kela_resp_temp);
 	      send_msg_mmp(term_id, KELA_DETAILS, veh_ptr);
