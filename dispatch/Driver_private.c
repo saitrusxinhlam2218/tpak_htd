@@ -566,11 +566,11 @@ driver_state(driver_hndl, op, state, argument)
    HNDL  argument;
 {
    struct veh_driv *driver_ptr;
-   int   tmp;
+   unsigned char  tmp;
    FLEET_HNDL fleet_hndl;
    FLEET_DRIVER_VEH_LIST_HNDL fleet_driver_list;
    short ii,i;
-   unsigned char *drv_bit_ptr;
+   unsigned char *drv_bit_ptr = 0;
    char error_str[80];
 
 #ifdef ASSERT
@@ -632,19 +632,6 @@ driver_state(driver_hndl, op, state, argument)
 	 if (Fleet_driver_veh_list_add(fleet_driver_list, (VEH_HNDL) driver_ptr) == FAIL)
              ERROR(driver_ptr->fleet,"","Fleet_driver_veh_list_add");
 
-
-	 drv_bit_ptr = (unsigned char *) &driver_ptr->driver_attr;
-	 for (i=0; i<4;i++)
-	   {
-	     tmp = 0x80;	     
-	     for (ii = 0; ii <=7; ii++)
-	       {
-		 if (*drv_bit_ptr & tmp)
-		   ++fleet[driver_ptr->fleet_nbr]->now_driv_attr[ii + (i*8)];
-		 tmp >>= 1;
-	       }
-	     ++drv_bit_ptr;
-	   }
 	 send_undeliv(driver_ptr);
 	 return (SUCCESS);
 
@@ -665,19 +652,6 @@ driver_state(driver_hndl, op, state, argument)
               ERROR(driver_ptr->fleet,"", error_str);
 #endif
          }
-
-	 drv_bit_ptr = (unsigned char *) &driver_ptr->driver_attr;	 
-	 for (i=0; i<4;i++)
-	   {
-	     tmp = 0x80;	     
-	     for (ii = 0; ii <=7; ii++)
-	       {
-		 if (*drv_bit_ptr & tmp)
-		   --fleet[driver_ptr->fleet_nbr]->now_driv_attr[ii + (i*8)];
-		 tmp <<= 1;
-	       }
-	     ++drv_bit_ptr;
-	   }	 
 
 	 return (SUCCESS);
 
