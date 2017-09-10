@@ -185,6 +185,7 @@ typedef struct cinf
 #define PI_GET_CALLH        34
 #define PI_UPDATE_CALL      35
 #define PI_VEH_STATUS       36
+#define PI_CUSTOMER_ZONE    37
 #define PI_COORD_TRANSFORM  66
 
 #define PI_LOG_ATTR         99

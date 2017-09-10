@@ -273,11 +273,9 @@ typedef struct _BOOK_SLOTS
 
 typedef struct _COORD_TRANSFORM_
 {
-  char          direction;
-  char          coord_x[10];
-  char          coord_y[10];
   char          latitude[10];
   char          longitude[10];
+  char          zone[3];
 } COORD_TRANSFORM;
 
 typedef struct _PRE_BOOK_INFO
