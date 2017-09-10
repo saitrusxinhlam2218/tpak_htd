@@ -54,3 +54,8 @@ autocall
 core
 core.*
 *#
+
+# CVS
+*/CVS/*
+*/._CVS/*
+*.frm
