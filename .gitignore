@@ -14,6 +14,9 @@
 *.la
 *.lo
 
+# tar balls
+*.tar
+
 # named binaries
 dispatch
 pi
@@ -25,9 +28,13 @@ async
 up_maint
 zn_maint
 mf_maint
+in_maint
 geo_maint
 da_report
 da_purge
+auto_tes
+autocall
+
 # Shared objects (inc. Windows DLLs)
 *.dll
 *.so

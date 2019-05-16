@@ -981,6 +981,7 @@ Dispatcher_vehicle_call_compatible(
    int   zone_nbr;
    char  call_match_class, driver_class;
    struct veh_driv  *veh_ptr;
+   struct calls *call_ptr;
    char tmp_str[512];
 
    G7_print("%.11s\tDispatcher_vehicle_call_compatible call %d vehicle %d\n",
@@ -991,7 +992,20 @@ Dispatcher_vehicle_call_compatible(
     */
 
    veh_ptr = (struct veh_driv *)veh_hndl;
+   call_ptr = (struct calls *)call_hndl;
 
+
+   // personal?
+   if ((call_ptr->personal_vehicle > 0)) {
+     if ((veh_ptr->veh_nbr != call_ptr->personal_vehicle) && (call_ptr->personal_request == ONLY_PERS_REQ))
+       {
+	 sprintf(tmp_str, "Veh/Call mismatch-prevented personal vehicle dispatch (cl_nbr %d personal %d vehicle %d)",
+		 (int)Call_get_value(call_hndl, CALL_NBR), call_ptr->personal_vehicle, veh_ptr->veh_nbr);
+	 ERROR(' ', "", tmp_str);
+	 return(FALSE);
+       }
+   }
+   
    if ( (short)Call_get_value( call_hndl, CALL_FLEET_NBR ) !=
         (short)Veh_get_value( veh_hndl, VEH_FLEET_NBR ) )
      {

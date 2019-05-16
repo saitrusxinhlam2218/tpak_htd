@@ -32,7 +32,7 @@ static char rcsid[] = "$Id: pi_test.c,v 1.3 1999/04/12 18:49:07 taxiadm Exp $";
 
 #define PORT_PI         3000
 #define SERVICE_PI      "pi"
-#define HOST_PI         "speedy"
+#define HOST_PI         "localhost"
 char szLogMsg[512];
 char PacNum = '0';
 
@@ -102,9 +102,64 @@ main()
       return ( -1 );
     }
 
-  pi_test_zone_info( num_socket );
+  pi_test_zone_address( num_socket );
+  
+  //pi_test_zone_info( num_socket );
 
   
+}
+
+pi_test_zone_address( int sockfd )
+{
+  char      pi_buf[ BUFSIZ ];
+  int       rc = 0;
+  int       nMsgType;
+  short     MsgSize;
+  int       cl_nbr;
+
+
+  PI_CALL_REC cl_rec;
+
+  bzero( &cl_rec, sizeof(PI_CALL_REC) );
+  bzero( pi_buf, BUFSIZ );
+
+  /** fill in some test call values **/
+  pi_test_fill_call( &cl_rec );
+
+  pi_buf[0] = '*';
+  memcpy( &pi_buf[6], &cl_rec, sizeof( PI_CALL_REC ) );
+  MsgSize = sizeof( PI_CALL_REC ) + 4;
+  memcpy( &pi_buf[1], &MsgSize, sizeof(short) );
+  memcpy( &pi_buf[3], &PacNum, sizeof(char));
+  ++PacNum;
+  pi_buf[4] = 0x00;
+  nMsgType = 1;
+  memcpy( &pi_buf[5], &nMsgType, sizeof(char) );
+  memcpy( &pi_buf[MsgSize+2], "#", 1);
+
+  rc = send( sockfd, pi_buf, MsgSize + 4 );
+
+  bzero( pi_buf, BUFSIZ );
+  rc = ReceivePIdata( sockfd, pi_buf );
+
+  cl_nbr = *(int *)&pi_buf[8];
+
+  bzero( pi_buf, BUFSIZ );
+  pi_buf[0] = '*';
+  memcpy( &pi_buf[6], &cl_nbr, sizeof( int ) );
+  MsgSize = sizeof( int ) + 4;
+  memcpy( &pi_buf[1], &MsgSize, sizeof(short) );
+  memcpy( &pi_buf[3], &PacNum, sizeof(char));
+  ++PacNum;
+  pi_buf[4] = 0x00;
+  nMsgType = 4;
+  memcpy( &pi_buf[5], &nMsgType, sizeof(char) );
+  memcpy( &pi_buf[MsgSize+2], "#", 1);
+
+  rc = send( sockfd, pi_buf, MsgSize + 4 );
+
+  bzero( pi_buf, BUFSIZ );
+  rc = ReceivePIdata( sockfd, pi_buf );
 }
 
 pi_test_call( int sockfd )
@@ -223,6 +278,7 @@ pi_test_ext_call( int sockfd )
 
 }
 
+  
 pi_test_zone_info( int sockfd )
 {
   char      pi_buf[ BUFSIZ ];
@@ -350,17 +406,17 @@ pi_test_message( int sockfd )
 
 pi_test_fill_call( PI_CALL_REC *pcl )
 {
-  pcl->fleet = 'A';
+  pcl->fleet = 'H';
   pcl->call_number = 0;
   pcl->priority = 20;
   pcl->call_group = 0;
   pcl->call_position = '0';
   pcl->number_of_calls = '0';
   pcl->number_of_vehicles = 0x01;
-  strcpy(pcl->call_type, "P    ");
-  strcpy(pcl->from_addr_street, "STAMGATAN");
-  pcl->from_addr_number = 3;
-  strcpy(pcl->from_addr_city,"STO");
+  strcpy(pcl->call_type, "M    ");
+  strcpy(pcl->from_addr_street, "SILTASAARENKATU");
+  pcl->from_addr_number = 8;
+  strcpy(pcl->from_addr_city,"HEL");
   pcl->from_addr_zone = 814;
   strcpy(pcl->from_addr_cmnt, "HELLO I'M A COMMENT");
   strcpy(pcl->passenger, "MICKEY \\\\\\\\" );

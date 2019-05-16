@@ -1764,7 +1764,7 @@ int  *field_entered;		/* indicates if data was entered or not */
 
   if ( !strncmp(read_buf, "XX", 2) )
     {
-      for ( i = 0; i < 31; i++ )
+      for ( i = 0; i < 63; i++ )
         dr_ptr->attributes[i] = NO;
       stay_put = 1;
       mvwprintw(stdscr, D_ATTR_ROW, D_ATTR_1_COL, "  ");
@@ -1776,7 +1776,7 @@ int  *field_entered;		/* indicates if data was entered or not */
       mvwprintw(stdscr, D_ATTR_ROW, D_ATTR_1_COL, "  ");      
       found_it = 0;
       stay_put = 1;
-      for ( i = 0; i < 31; i++ )
+      for ( i = 0; i < 63; i++ )
         {
           if ((!strncmp(fleet[0]->vd_attr_info[i].drv_attr, read_buf, 2)) &&
               (fleet[0]->vd_attr_info[i].drv_attr[0] != EOS))
@@ -1799,7 +1799,7 @@ int  *field_entered;		/* indicates if data was entered or not */
 
   col = 1;
   row = D_ATTR_ROW+1;
-  for ( i = 0; i < 31; i++ )
+  for ( i = 0; i < 63; i++ )
     {
       if ( dr_ptr->attributes[i] == YES )
         {

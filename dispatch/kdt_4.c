@@ -310,7 +310,7 @@ authorize(veh_ptr)
        /* build an extension to the sign on message that includes attribute descriptors */
        bzero( attribute_buf, sizeof( attribute_buf ) );
        /* vehicle attributes comes first */
-       for ( i = 0; i < ATTR_MAX; i++ )
+       for ( i = 0; i < 32; i++ )
 	 {
 	   if ( test_bit( i, sizeof( veh_ptr->vehicle_attr ), &veh_ptr->vehicle_attr ) )
 	     {
@@ -325,7 +325,7 @@ authorize(veh_ptr)
 	   else
 	     strcat( attribute_buf, "  " );
 	 }
-       for ( i = 0; i < ATTR_MAX; i++ )
+       for ( i = 0; i < 32; i++ )
 	 {
 	   if ( test_bit( i, sizeof( veh_ptr->driver_attr ), &veh_ptr->driver_attr ) )
 	     {

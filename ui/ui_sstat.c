@@ -583,7 +583,7 @@ disp_attr_sum()
   veh_row = 8;
   drv_row = 8;
   
-  for(i=0; i<ATTR_MAX; i++) {
+  for(i=0; i<32; i++) {
 		if ( strlen(fleet[ss_chosen_fleet]->vd_attr_info[i].veh_attr) )
 		  {
 		    mvprintw(veh_row,veh_col,"%2.2s-%-17.17s   %4d  %5d",
@@ -636,7 +636,7 @@ disp_vh_drv()
     char tm_buf[7];							/* time buffer for conversion */
     struct veh_rqst vrq;						/* structure for requesting vehicle detail info */
     VEH_RESP_REC *vrp;					/* structure for vehicle detail responses */
-    VEH_RESP_HNDL  hVehResp;
+    VEH_RESP_HNDL  hVehResp = NULL;
     struct cisam_dr *drp;						/* pointer to driver's C-Isam record */
     int  rc, times_thru;
     char error_str[80];
@@ -652,6 +652,9 @@ disp_vh_drv()
     
     if(ss_chosen_fleet < 0)
       return;								/* invalid fleet chosen */
+
+    VEH_RESP_REC vehresp_rec;
+    bzero(&vehresp_rec, sizeof(VEH_RESP_REC));
     
     if(ss_chosen_veh > 0)
       {						/* vehicle # exists for this driver ? */
@@ -664,8 +667,8 @@ disp_vh_drv()
 
 	    	msgsnd(msgkey,
 	       (struct msgbuf *)&vrq,sizeof(struct veh_rqst), IPC_NOWAIT);
-	hVehResp = TMALLOC( VEH_RESP_REC, 1 );
-	vrp = ( VEH_RESP_REC * )hVehResp;
+		//		hVehResp = malloc( sizeof(VEH_RESP_REC));
+		vrp = ( VEH_RESP_REC * )&vehresp_rec;
 	
 	times_thru = 0;
 	while (times_thru <= 2) 
@@ -683,7 +686,8 @@ disp_vh_drv()
 		    sprintf(error_str,
 			    "Error %d reading ipc message from DISPATCH", errno);
 		    ERROR(' ',"User-IPC", error_str);
-		    TFREE( hVehResp );
+		    if (hVehResp)
+		      //		      free( hVehResp );
 		    return(0);
 		  }
 		if (++times_thru == 2) 
@@ -691,7 +695,8 @@ disp_vh_drv()
 		    prt_error(UI_SYSTEM_DOWN, "");
 		    ERROR(' ',"User-IPC", 
 			  "Timeout reading ipc message from DISPATCH");
-		    TFREE( hVehResp );
+		    if (hVehResp)
+		      //		      free( hVehResp );
 		    return(0);
 		  }
 	      }
@@ -704,7 +709,8 @@ disp_vh_drv()
 			    catgets(UI_m_catd, UI_1, UI_UI_SSTAT_74, 
 				    "Error reading from dispatch in msgrcv"));
 		  ERROR(' ',"User-IPC", "Invalid msg from dispatch DISPATCH");
-		  TFREE( hVehResp );
+		  if (hVehResp);
+		  //		  free( hVehResp );
 		  return(0);
 	    	}
 	  }	    
@@ -761,7 +767,7 @@ disp_vh_drv()
     	mask = 0x80;
     	vbpt = (unsigned char *)&vrp->veh_attr;
     	dbpt = (unsigned char *)&vrp->drv_attr;
-    	for(i = 0; i < ATTR_MAX; i++) { /* MRB */
+    	for(i = 0; i < 32; i++) { /* MRB */
 		if (*vbpt & mask)
 		  {
 		    if ( veh_col < SS_DET_TEXT1 )
@@ -857,7 +863,8 @@ disp_vh_drv()
 
 
     	refresh();								/* re-draw screen */
-	TFREE( hVehResp );	  
+	if (hVehResp)
+	  //	TFREE( hVehResp );	  
     	return(0);
 	}
       else if(ss_choice == 2){							/* get driver info from disk */
@@ -898,7 +905,7 @@ disp_vh_drv()
 	mvprintw(4,SS_DET_INFO1,"%6.6s",tm_buf);
 	drp->id ? mvprintw(2,27,"%-28s",drp->name) : mvprintw(2,27,"                            ");
 	drv_col = 17;
-    	for(i=0; i<ATTR_MAX; i++) {
+    	for(i=0; i<32; i++) {
 	        
 		if (drp->attributes[i] == YES)
 		  {
@@ -918,7 +925,7 @@ disp_vh_drv()
     	mvprintw(S_DRIV_ROW,S_DRIV_COL,"%-5d",drp->id);				/* and driver */
     	refresh();								/* re-draw screen */
       }
-	TFREE( hVehResp );
+	//	TFREE( hVehResp );
       }
 }
 
@@ -1271,7 +1278,7 @@ DoVehDrivDetail()
 	  mvwprintw( WVehDrivDetail, 6, 4, catgets(UI_m_catd, UI_1, UI_UI_SSTAT_11, "Veh Attributes ") );
 	  mvwprintw( WVehDrivDetail, 7, 4, catgets(UI_m_catd, UI_1, UI_UI_SSTAT_17, "Drv Attributes ") );
 	  attr_col = 25;
-	  for ( i = 0; i< ATTR_MAX; i++ )
+	  for ( i = 0; i< 32; i++ )
 	    {
 	      if ( veh_rec.attr[i] == YES )
 		{
@@ -1290,7 +1297,7 @@ DoVehDrivDetail()
 	  else
 	    mvwprintw( WVehDrivDetail, 5, 25, "%s", drv_rec.phone );
 	  attr_col = 25;
-	  for ( i = 0; i< ATTR_MAX; i++ )
+	  for ( i = 0; i< 32; i++ )
 	    {
 	      if ( drv_rec.attributes[i] == YES )
 		{

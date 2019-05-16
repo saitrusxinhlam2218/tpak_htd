@@ -341,6 +341,41 @@ redo:
       /* need a CR ???? */
       return (len);
 
+   case TH_FORMAT:
+      /* PICKUP_STR_NAME */
+      if (add_outb_text(cl_ptr->pckup_str_name));
+      {
+	 len += add_outb_space();
+	 len += strlen(cl_ptr->pckup_str_name);
+      }
+
+      /* STREET TYPE - PCKUP */
+      if (add_outb_text(cl_ptr->pckup_str_type))
+      {
+	 len += strlen(cl_ptr->pckup_str_type);
+      }
+
+      if (cl_ptr->pckup_str_nbr)
+      {
+	 sprintf(str_temp, "%d", cl_ptr->pckup_str_nbr);
+	 len = add_outb_text(str_temp);
+	 len += add_outb_space();
+      } else if (strlen(cl_ptr->pckup_apt_room) || strlen(cl_ptr->pckup_pmap)
+		 || is_time_call(cl_ptr))
+	 len = add_outb_text("      ");
+
+      /* APARTMENT NUMBER - PICKUP */
+      if (add_outb_text(cl_ptr->pckup_apt_room))
+	 len += add_outb_space();
+      else if (strlen(cl_ptr->pckup_apt_room) || cl_ptr->pckup_str_nbr ||
+	       is_time_call(cl_ptr))
+	 for (ii = 0; ii < sizeof(cl_ptr->pckup_apt_room); ii++)
+	    len += add_outb_space();
+      
+      /* CITY - PCKUP */
+      len += add_outb_space();
+      len += add_outb_text(cl_ptr->pckup_city);
+     return (len);
    case H_FORMAT:
 
       /* LINE 1 ********************************************* LINE */
@@ -359,6 +394,7 @@ redo:
 	 len += strlen(cl_ptr->pckup_str_type);
       }
 
+      
       if (type == STREET_ONLY)
 	 return (len);
 
@@ -968,6 +1004,8 @@ struct veh_driv *veh_ptr;
 	 (void) add_outb_text(BLOCK_HDR);
 	 (void) add_outb_text(&call_ptr->pickup_pmap[MAP_START]);
       }
+
+
       
       break;
 
@@ -1004,6 +1042,13 @@ struct veh_driv *veh_ptr;
 #endif
 
 
+      if (cl_ptr->call_rate != 0.0)
+	{
+	  (void) add_outb_text(CR);	  
+	  sprintf(str_temp, "------------------------------%%RKIINTEÄ HINTA %7.2f%s%%R------------------------------%%R", cl_ptr->call_rate, " EUR");
+	  add_outb_text(str_temp);
+	}
+   
    /* Set packet id to catch NAK */
    send_pkt_id(OFFER_PKT_TYPE, call_ptr->call_number,
 	       (int)Veh_get_value((VEH_HNDL)veh_ptr, VEH_NBR));
@@ -1499,6 +1544,7 @@ struct veh_driv *veh_ptr;
    int   countKelaNodes = 0;
    int   nodePairs = 0;
    BOOLEAN bSendKela = FALSE;
+   BOOLEAN bSendMPK = FALSE;
    int dbmode = ISFIRST;
    char kela_details_temp[TMP_STR_LEN];
    char kela_resp_temp[TMP_STR_LEN];
@@ -1507,6 +1553,7 @@ struct veh_driv *veh_ptr;
    char tmp_pax[32];
    char buf[255];
    StrMap *sm;
+   char *pTemp = NULL;   
 
    sm = sm_new(10);
    
@@ -1589,6 +1636,9 @@ struct veh_driv *veh_ptr;
 	  (cl_ptr->ext_nbr == NOT_EXTERNAL) &&
 	  (strlen(cl_ptr->charge_nbr) > 0) && (0))
 	assign_opt = DETAIL10;
+
+      if ((cl_ptr->extended_type[0] == 'T') && (cl_ptr->extended_type[1] == 'H'))
+	assign_opt = TH_FORMAT;
       
       if (mult_num == 0 && cl_ptr->grouped_with)
       {
@@ -1803,11 +1853,11 @@ struct veh_driv *veh_ptr;
 	   if ((cl_ptr->call_rate != 0.0) && (cl_ptr->send_rate == YES ) )
 #endif
 	   {
-	     add_outb_text(CALL_RATE_HDR);
+	     //	     add_outb_text(CALL_RATE_HDR);
 #ifdef SCANDINAVIA
-	     sprintf(str_temp, "%7.2f%s", cl_ptr->call_rate, currency_symbol);
+	    sprintf(str_temp, "------------------------------%%RKIINTEÄ HINTA %7.2f%s%%R------------------------------%%R", cl_ptr->call_rate, " EUR");	    	     
 #else
-	     sprintf(str_temp, "%s%7.2f", currency_symbol, cl_ptr->call_rate);
+	    sprintf(str_temp, "------------------------------%%RKIINTEÄ HINTA %7.2f%s%%R------------------------------%%R", cl_ptr->call_rate, " EUR");	    	     
 #endif
 	     len += add_outb_text(str_temp);
 	   } 
@@ -1832,6 +1882,131 @@ struct veh_driv *veh_ptr;
 	 }
 	 break;
 
+      case TH_FORMAT:
+	 /* LINES 1 & 2 ****************************************** LINE */
+	 (void) mk_pickup_address(assign_opt, cl_ptr, COMPLETE_ADDRESS, 0);  /* 2 lines */
+	 len = 0;
+	 add_outb_text(CR);
+	 if (cl_ptr->general_cmnt)
+	   mk_comment(cl_ptr);
+	 len = 0;
+
+	 
+	 if (cl_ptr->passenger_name)
+	   {
+	     sprintf(str_temp, "%s %s", "ASIAKAS:", cl_ptr->passenger_name);
+	     add_outb_text(str_temp);
+	     add_outb_text(CR);
+	   }
+
+	 len = 0;
+
+	 pTemp = strstr(cl_ptr->general_cmnt, "PUH.");
+	 if ( strlen( cl_ptr->phone_number ) && (pTemp == NULL))
+	   {
+	     len += add_outb_text( "PUH: ");
+	     len += add_outb_text( cl_ptr->phone_number );
+	     add_outb_text(CR);
+	   }	 
+	 
+	 if (strlen(cl_ptr->dest_str_name) || strlen(cl_ptr->dest_city))
+	   {
+	     len += add_outb_text("KO:");
+	     if (strlen(cl_ptr->dest_str_name))
+	       {
+		 len += add_outb_text(cl_ptr->dest_str_name);
+	       }
+	     if (strlen(cl_ptr->dest_str_type))
+	       {
+		 len += add_outb_space();
+		 len += add_outb_text(cl_ptr->dest_str_type);
+	       }
+	     if (cl_ptr->dest_str_nbr)
+	       {
+		 sprintf(str_temp, "%d", cl_ptr->dest_str_nbr);
+		 len += add_outb_space();
+		 len += add_outb_text(str_temp);
+	       }
+	     if (cl_ptr->dest_city)
+	       {
+		 len += add_outb_space();
+		 len += add_outb_text(cl_ptr->dest_city);
+	       }
+	     add_outb_text(CR);
+	   }
+
+	 if (cl_ptr->extended_type[3] == 'L')  // customer is paying in the vehicle not with app
+	   {
+	     add_outb_text("EI MAKSETA AUTOSSA");
+	     add_outb_text(CR);
+	     add_outb_text("TEE YHTIÖLASKUTUS (51E/Y-LA)");
+	     add_outb_text(CR);
+	     add_outb_text("KUITTI TOIMITETAAN SÄHKÖISESTI");
+	     add_outb_text(CR);
+	   }
+	 else
+	   {
+	     add_outb_text("KYYTI MAKSETAAN AUTOSSA");
+	     add_outb_text(CR);
+	   }
+
+	 /* STREET NAME - DESTINATION */
+
+
+	 /* STREET TYPE - DESTINATION */
+	 //	 if (strlen(cl_ptr->dest_str_type))
+	 //	 {
+	 //	    len += add_outb_space();
+	 //	    len += add_outb_text(cl_ptr->dest_str_type);
+	 //	 }
+	 /* CITY - DESTINATION */
+	 //	 if (strlen(cl_ptr->dest_city))
+	 //	 {
+	 //	    len += add_outb_space();
+	 //	    len += add_outb_text(cl_ptr->dest_city);
+	 //	 }	 
+	 //	 if (len > MAX_DISPLAY_LENGTH)
+	 //	 {
+	 //	    len -= MAX_DISPLAY_LENGTH;
+	 //	    while ((len >= 0) && len--)
+	 //	       delete_outb_char();
+	 //	 }
+	 //	 if (cl_ptr->dest_str_nbr)
+	 //	 {
+	 //	    sprintf(str_temp, "%d", cl_ptr->dest_str_nbr);
+	 //	    len += add_outb_text(str_temp);
+	 //	    len += add_outb_space();
+	 //	 } else if (strlen(cl_ptr->dest_apt_room) || strlen(cl_ptr->dest_dmap))
+	 //	   for (ii = 0; ii < sizeof(cl_ptr->dest_str_nbr); ii++)
+	 //	     len += add_outb_space();
+	 
+	 
+	 /* APARTMENT NUMBER - DESTINATION */
+	 //	 if (add_outb_text(cl_ptr->dest_apt_room))
+	 //	 {
+	 //	    len += add_outb_space();
+	 //	    len += strlen(cl_ptr->dest_apt_room) + 1;
+	 //	 } else if (strlen(cl_ptr->dest_apt_room) || cl_ptr->dest_str_nbr)
+	 //	    for (ii = 0; ii < sizeof(cl_ptr->dest_apt_room); ii++)
+	 //	       len += add_outb_space();
+
+
+	 len += add_outb_text(CALL_NUMBER_HDR);
+	 sprintf(str_temp, "%06d ", cl_ptr->nbr);
+
+	 len += add_outb_text(str_temp);
+
+	 len += mk_attr_fields(1, ABRIV, call_ptr, veh_ptr);
+
+	 if (cl_ptr->call_rate != 0.0)
+	   {
+	     (void) add_outb_text(CR);	  
+	     sprintf(str_temp, "------------------------------%%RKIINTEÄ HINTA %7.2f%s%%R------------------------------%%R", cl_ptr->call_rate, " EUR");
+	     add_outb_text(str_temp);
+	   }
+
+	break;
+	
       case H_FORMAT:
 
 	 /* LINES 1 & 2 ****************************************** LINE */
@@ -2005,11 +2180,12 @@ struct veh_driv *veh_ptr;
 	 if (( cl_ptr->call_rate != 0.0) && ( cl_ptr->send_rate == YES ) )
 #endif
 	 {
-	    add_outb_text(CALL_RATE_HDR);
+	   //	    add_outb_text(CALL_RATE_HDR);
 #ifdef SCANDINAVIA
-	    sprintf(str_temp, "%7.2f%s", cl_ptr->call_rate, currency_symbol);
+	    sprintf(str_temp, "------------------------------%%RKIINTEÄ HINTA %7.2f%s%%R------------------------------%%R", cl_ptr->call_rate, " EUR");	    
 #else
-	    sprintf(str_temp, "%s%7.2f", currency_symbol, cl_ptr->call_rate);
+	    sprintf(str_temp, "------------------------------%%RKIINTEÄ HINTA %7.2f%s%%R------------------------------%%R", cl_ptr->call_rate, " EUR");	    	    
+
 #endif
 	    len += add_outb_text(str_temp);
 	 }
@@ -2042,6 +2218,7 @@ struct veh_driv *veh_ptr;
 
 	 // add an invisible field on MPK trips for HTD
 	 bSendKela = FALSE;
+	 bSendMPK = FALSE;
 	 veh_ptr->kela_node = 0;
 	 
 	 if ( !strncmp(cl_ptr->extended_type, "KE", 2) )
@@ -2113,14 +2290,6 @@ struct veh_driv *veh_ptr;
 	    add_outb_text(ADVISE_ARRIVAL_HDR);
 #endif
 
-#ifdef FOO
-	 if (len > MAX_DISPLAY_LENGTH)
-	 {
-	    len -= MAX_DISPLAY_LENGTH;
-	    while ((len >= 0) && len--)
-	       delete_outb_char();
-	 }
-#endif
 	 break;
 
       case DETAIL2 :
@@ -2293,7 +2462,18 @@ struct veh_driv *veh_ptr;
               add_outb_text( bcast_buf );
             }          
 	  //        }
-      
+
+	  if ( !strncmp(cl_ptr->extended_type, "MPK", 3) )
+            {
+              sMPKnode = strstr(cl_ptr->general_cmnt, "ID:");
+              if (sMPKnode != NULL) // we have a mobirouter ID
+                {
+                  sprintf(str_temp, "%s1;1;%s;%s.", "%.K", (sMPKnode + 3), (sMPKnode + 3));
+                  len += add_outb_text(str_temp);
+		  bSendMPK = TRUE;
+                }
+            }
+	  
       send_pkt_id(ASSIGN_PKT_TYPE, 0,
 		  (int)Veh_get_value((VEH_HNDL)veh_ptr, VEH_NBR));
       if (mult_num > 1)
@@ -2313,6 +2493,20 @@ struct veh_driv *veh_ptr;
        }
       clr_pkt_id();
 
+      // MPK DETAILS MESSAGE - gets mobirouter ID out to TXM
+      if (bSendMPK)
+	{
+	  sMPKnode = strstr(cl_ptr->general_cmnt, "ID:");
+	  if (sMPKnode != NULL)
+	    {
+	      bzero(kela_resp_temp, TMP_STR_LEN);
+	      sprintf(kela_resp_temp, "%s;01;;;;", (sMPKnode + 3));
+	      mk_outb_text("");
+	      add_outb_text(kela_resp_temp);
+	      send_msg_mmp(term_id, KELA_DETAILS, veh_ptr);
+	    }
+
+	}
       // KELA DETAILS MESSAGE
       // send_msg_mmp(term_id, KELA_DETAILS , veh_ptr);
       if (bSendKela)
@@ -2360,7 +2554,11 @@ struct veh_driv *veh_ptr;
 			  tmp_pax);
 		  mk_outb_text("");
 		  add_outb_text(kela_details_temp);
+		  send_msg_mmp(veh_ptr->mid, PRINT_BLOCK, veh_ptr);
+		  mk_outb_text("");
+		  add_outb_text(kela_details_temp);		  
 		  send_msg_mmp(veh_ptr->mid, TEXT_DISPLAY, veh_ptr);
+		  //		  send_msg_mmp(veh_ptr->mid, PRINT_BLOCK, veh_ptr);
 		  kela_details_temp[0] = '\0';
 		}
 	      // node 2
@@ -2404,6 +2602,9 @@ struct veh_driv *veh_ptr;
 
 		  mk_outb_text("");
 		  add_outb_text(kela_details_temp);
+		  send_msg_mmp(veh_ptr->mid, PRINT_BLOCK, veh_ptr);
+		  mk_outb_text("");
+		  add_outb_text(kela_details_temp);		  
 		  send_msg_mmp(veh_ptr->mid, TEXT_DISPLAY, veh_ptr);
 		  kela_details_temp[0] = '\0';
 		  
@@ -2448,6 +2649,9 @@ struct veh_driv *veh_ptr;
 
 		  mk_outb_text("");
 		  add_outb_text(kela_details_temp);
+		  send_msg_mmp(veh_ptr->mid, PRINT_BLOCK, veh_ptr);
+		  mk_outb_text("");
+		  add_outb_text(kela_details_temp);		  
 		  send_msg_mmp(veh_ptr->mid, TEXT_DISPLAY, veh_ptr);
 		  kela_details_temp[0] = '\0';		  
 		}		  
@@ -2491,6 +2695,9 @@ struct veh_driv *veh_ptr;
 		  
 		  mk_outb_text("");
 		  add_outb_text(kela_details_temp);
+		  send_msg_mmp(veh_ptr->mid, PRINT_BLOCK, veh_ptr);
+		  mk_outb_text("");
+		  add_outb_text(kela_details_temp);		  
 		  send_msg_mmp(veh_ptr->mid, TEXT_DISPLAY, veh_ptr);
 		  kela_details_temp[0] = '\0';		      
 		}
@@ -2535,6 +2742,9 @@ struct veh_driv *veh_ptr;
 		  
 		  mk_outb_text("");
 		  add_outb_text(kela_details_temp);
+		  send_msg_mmp(veh_ptr->mid, PRINT_BLOCK, veh_ptr);
+		  mk_outb_text("");
+		  add_outb_text(kela_details_temp);		  
 		  send_msg_mmp(veh_ptr->mid, TEXT_DISPLAY, veh_ptr);
 		  kela_details_temp[0] = '\0';		      
 		}
@@ -2579,6 +2789,9 @@ struct veh_driv *veh_ptr;
 		  
 		  mk_outb_text("");
 		  add_outb_text(kela_details_temp);
+		  send_msg_mmp(veh_ptr->mid, PRINT_BLOCK, veh_ptr);
+		  mk_outb_text("");
+		  add_outb_text(kela_details_temp);		  
 		  send_msg_mmp(veh_ptr->mid, TEXT_DISPLAY, veh_ptr);
 		  kela_details_temp[0] = '\0';		      
 		}	      	      

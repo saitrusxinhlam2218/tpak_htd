@@ -801,25 +801,6 @@ Call_activate(call_buf, call_exists)	/* WAS add_call */
    bzero( &new_call->vehicle_attributes, sizeof(new_call->vehicle_attributes) );
    bzero( &new_call->driver_attributes, sizeof(new_call->driver_attributes) );
    
-#ifdef FOO
-   if ( db_call.veh_attr_flag == YES )
-     {
-       for ( i = 0; i < ATTR_MAX; i++ )
-	 {
-	   if ( db_call.veh_attr[i] == YES )
-	     TC_set_bit( i, 1, &new_call->vehicle_attributes );
-	 }
-     }
-   if ( db_call.drv_attr_flag == YES )
-     {
-       for ( i = 0; i < ATTR_MAX; i++ )
-	 {
-	   if ( db_call.drv_attr[i] == YES )
-	     TC_set_bit( i, 1, &new_call->driver_attributes );
-	 }
-     }
-
-#endif
 
    memcpy(&new_call->vehicle_attributes, &call_buf->veh_attr, sizeof(struct veh_attributes));
    memcpy(&new_call->driver_attributes, &call_buf->drv_attr, sizeof(struct drv_attributes));
@@ -830,8 +811,8 @@ Call_activate(call_buf, call_exists)	/* WAS add_call */
 	 {
 	   tmtime = time( (time_t *) 0 );
 	   stime = ctime( &tmtime );
-	   fprintf(fpGPSDispatchTrace, "%.8s Call %08d ATTR_DEBUG ",
-		   &stime[11], db_call.nbr);
+	   fprintf(fpGPSDispatchTrace, "%.8s Call %08d ATTR_DEBUG PERS %d %c",
+		   &stime[11], db_call.nbr, call_buf->personal_veh, call_buf->personal_rqst);
 	   if (new_call->driver_attributes.attr16)
 	     fprintf(fpGPSDispatchTrace, "16 ");
 	   if (new_call->driver_attributes.attr17)
@@ -1595,7 +1576,17 @@ int ilink_redispatch;
    // Make sure that unlinked MULTI trips are not present in a zone
    if ( ( call_ptr->call_type.multiple == 1 ) && ( exists == 1 ) && ( call_ptr->grouped_with <= 0 ) )
      Zone_remove_call( call_ptr->pickup_zone, (CALL_HNDL) call_ptr );
-       
+
+   cl_ptr = Call_get_record(call_ptr->c_isam_num, call_ptr->call_number);
+   if ((!strncmp(cl_ptr->extended_type, "KE", 2)) &&
+       (!strcmp(cl_ptr->status, CANCELD)))
+     {
+       if (call_ipc_rec_ptr->call_type.time == 1)
+	 writer_time_call(call_ptr->call_number);
+       else
+	 writer_unassgn(call_ptr->call_number);
+     }
+   
    if ( ilink_redispatch == TRUE )
      {
        Call_set_value( (CALL_HNDL)call_ptr, CALL_TYPE_ILINK_REJECT, (HNDL)TRUE );

@@ -286,6 +286,15 @@ Veh_process_key(
 	 send_text_predefined(veh_ptr->mid, NOT_SIGN_IN, veh_ptr);
 	 return (FAIL);
       }
+      if (veh_ptr->t_status.accepted)
+      {
+	if (veh_ptr->call_ptr != NULL)
+	  {
+	    call_ptr = veh_ptr->call_ptr;
+	    Call_send_assign((CALL_HNDL)call_ptr, (VEH_HNDL)veh_ptr, FALSE);
+	  }
+	return(SUCCESS);
+      }
       if (veh_ptr->t_status.meter_on)
       {
 
@@ -300,11 +309,11 @@ Veh_process_key(
 	send_text_predefined(veh_ptr->mid, NO_ACPT_NO_OFFR, veh_ptr);
 	return (FAIL);
       }
-      if (veh_ptr->t_status.accepted)
-      {
-	send_text_predefined(veh_ptr->mid, NO_ACPT_ACPT, veh_ptr);
-	return (FAIL);
-      }
+      //      if (veh_ptr->t_status.accepted)
+      //      {
+      //	send_text_predefined(veh_ptr->mid, NO_ACPT_ACPT, veh_ptr);
+      //	return (FAIL);
+      //      }
       
       call_ptr = veh_ptr->call_ptr;
 
