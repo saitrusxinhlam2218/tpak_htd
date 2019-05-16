@@ -783,6 +783,8 @@ veh_bit_update(veh_ptr, direction)	/* WAS part of d_sign_in */
 	    {
 	      if (*veh_bit_ptr & tmp)
 		++fleet[veh_ptr->fleet_nbr]->now_veh_attr[j + (ii*8)];
+	      if (*drv_bit_ptr & tmp)
+		++fleet[veh_ptr->fleet_nbr]->now_driv_attr[j + (ii*8)];
 	    }
 	  else
 	    {
@@ -793,10 +795,16 @@ veh_bit_update(veh_ptr, direction)	/* WAS part of d_sign_in */
 		  if (fleet[veh_ptr->fleet_nbr]->now_veh_attr[j + (ii*8)] > 0)
 		    --fleet[veh_ptr->fleet_nbr]->now_veh_attr[j + (ii*8)];
 		}
+	      if (*drv_bit_ptr & tmp)
+		{
+		  if (fleet[veh_ptr->fleet_nbr]->now_driv_attr[j + (ii*8)] > 0)
+		    --fleet[veh_ptr->fleet_nbr]->now_driv_attr[j + (ii*8)];
+		}
 	    }
 	  tmp >>= 1;
 	}
       ++veh_bit_ptr;
+      ++drv_bit_ptr;
     }
 
 
